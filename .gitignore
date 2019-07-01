@@ -2,4 +2,6 @@
 *.rel
 *.gci
 
+create.sh
+
 build.*/
