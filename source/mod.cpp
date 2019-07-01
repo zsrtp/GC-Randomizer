@@ -1,6 +1,7 @@
 #include "mod.h"
 #include "patch.h"
 #include "types.h"
+#include <global.h>
 
 #include <gc/buttons.h>
 #include <tp/f_ap_game.h>
@@ -35,9 +36,9 @@ namespace mod
 		gMod = this;
 		
 		// Set the initial console color
-		u32 ConsoleColor = 0x0000001E;
-		setConsoleColor(ConsoleColor);
 		
+		setConsoleColor(0, 0, 0, 30);
+
 		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute, []()
 		{
 			gMod->run();
