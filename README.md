@@ -11,10 +11,10 @@
 > After downloading the DevTools you want to adjust some files for the  **Makefile** to match your **elf2rel** and **gcipack** path(s)
 
 **Linux/Unix:**
-`
-$ sudo cp /path/to/elf2rel /usr/bin/elf2rel
-$ echo 'python3 /path/to/gcipack.py "$@"' > /usr/bin/gcipack && sudo chmod +x /usr/bin/gcipack
-`
+
+`$ sudo cp /path/to/elf2rel /usr/bin/elf2rel`
+
+`$ echo 'python3 /path/to/gcipack.py "$@"' > /usr/bin/gcipack && sudo chmod +x /usr/bin/gcipack`
 
 In this case the **Makefile** does not need to be changed, however if you don't want to add the binaries/scripts to your *PATH* or *bin*  you should edit the Makefile (see Windows variant)
 
