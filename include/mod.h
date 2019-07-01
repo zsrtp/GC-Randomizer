@@ -19,6 +19,8 @@ private:
 private:
 	void (*fapGm_Execute_trampoline)() = nullptr;
 	
+	bool (*checkTreasureRupeeReturn_trampoline)(int amount) = nullptr;
+
 	void (*createItemForTrBox_trampoline)(const float[3], 
 		s32, s32, s32, const float[3], const float[3]) = nullptr;
 };

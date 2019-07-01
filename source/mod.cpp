@@ -9,6 +9,7 @@
 #include <tp/d_com_inf_game.h>
 #include <tp/d_kankyo.h>
 #include <tp/d_map_path_dmap.h>
+#include <tp/d_a_alink.h>
 
 #include <cstdio>
 #include <cstring>
@@ -42,6 +43,15 @@ namespace mod
 			gMod->run();
 		});
 		
+		checkTreasureRupeeReturn_trampoline = patch::hookFunction(tp::d_a_alink::checkTreasureRupeeReturn, [](
+			int amount)
+		{
+			// Disable this function as this check happens before the replacement
+			// Might render an item unobtainable if you're having rupees
+			return false;
+		});
+
+
 		createItemForTrBox_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo, [](
 			const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
 		{
@@ -82,7 +92,7 @@ namespace mod
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
-	
+
 	void Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, 
 		s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
 	{

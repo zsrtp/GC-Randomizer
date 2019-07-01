@@ -7,6 +7,9 @@
 // f_ap_game.o
 80018B14:fapGm_Execute
 
+// d_a_alink.h
+8011a908:checkTreasureRupeeReturn
+
 // f_op_actor_mng.o
 8001BD1C:createItemForTrBoxDemo
 
