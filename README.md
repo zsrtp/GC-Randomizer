@@ -27,3 +27,13 @@ In this case the **Makefile** does not need to be changed, however if you don't 
 
 ### Usage
 WiP
+
+### Credits and special thanks to
+* Piston for TTYD-Tools
+* Zephiles for porting them to TP and helping to set them up properly aswell as hours of testing, debugging and providing help
+* Taka for helping *a lot* with testing and gathering meta-data for chests
+* Skyreon for also helping with REL testing
+* Hornlitz for writing down all chests + some information on how to access them
+* Jacquaid for his TPHD rando logic and general information
+* Dragonbane for providing inifinite amounts of information and being a constant source of Game knowledge
+* Everyone who contributed to researching the game and/or was involved in the Ultimate TP Spreadsheet
