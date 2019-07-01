@@ -14,7 +14,7 @@
 
 `$ sudo cp /path/to/elf2rel /usr/bin/elf2rel`
 
-`$ echo 'python3 /path/to/gcipack.py "$@"' > /usr/bin/gcipack && sudo chmod +x /usr/bin/gcipack`
+`$ sudo echo 'python3 /path/to/gcipack.py "$@"' > /usr/bin/gcipack && sudo chmod +x /usr/bin/gcipack`
 
 In this case the **Makefile** does not need to be changed, however if you don't want to add the binaries/scripts to your *PATH* or *bin*  you should edit the Makefile (see Windows variant)
 
