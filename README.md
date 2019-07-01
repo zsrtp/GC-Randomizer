@@ -6,7 +6,7 @@
 > 
 ### Build Requirements
 * [DevkitPPC](https://devkitpro.org/)
-* [GC-DevTools](/zsrtp/GC-DevTools)
+* [GC-DevTools](https://github.com/zsrtp/GC-DevTools)
 
 > After downloading the DevTools you want to adjust some files for the  **Makefile** to match your **elf2rel** and **gcipack** path(s)
 
