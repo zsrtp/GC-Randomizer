@@ -12,17 +12,17 @@ bool checkForButtonInput(u32 buttonCombo)
 
 void setConsoleColor(u32 rgba)
 {
-	*reinterpret_cast<u32*>(tp::JFWSystem::systemConsole->wConsoleColor) = rgba;
+	*reinterpret_cast<u32*>(tp::JFWSystem::systemConsole->ConsoleColor) = rgba;
 }
 
 void setConsole(bool activeFlag, u32 totalLines)
 {
 	tp::JFWSystem::SystemConsole* Console = tp::JFWSystem::systemConsole;
-	Console->wConsoleEnabled = activeFlag;
+	Console->consoleEnabled = activeFlag;
 	
 	for (u32 i = 0; i < totalLines; i++)
 	{
-		Console->wConsoleLine[i].wShowLine = activeFlag;
+		Console->consoleLine[i].showLine = activeFlag;
 	}
 }
 
