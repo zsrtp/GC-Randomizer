@@ -2,14 +2,12 @@
 
 #include "types.h"
 
-namespace tp::m_Do_ext {
+namespace tp::m_Do_ext
+{
+	extern "C"
+	{
+		void* getArchiveHeapPtr();
 
-extern "C" {
-
-void* getArchiveHeapPtr();
-
-extern void* archiveHeap;
-
-}
-
+		extern void* archiveHeap;
+	}
 }

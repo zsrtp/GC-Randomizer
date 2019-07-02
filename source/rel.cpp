@@ -1,21 +1,19 @@
-extern "C" {
+extern "C"
+{
+	typedef void (*PFN_voidfunc)();
+	__attribute__((section (".ctors"))) extern PFN_voidfunc _ctors_start[];
+	__attribute__((section (".ctors"))) extern PFN_voidfunc _ctors_end[];
+	__attribute__((section (".dtors"))) extern PFN_voidfunc _dtors_start[];
+	__attribute__((section (".dtors"))) extern PFN_voidfunc _dtors_end[];
 
-typedef void (*PFN_voidfunc)();
-__attribute__((section (".ctors"))) extern PFN_voidfunc _ctors_start[];
-__attribute__((section (".ctors"))) extern PFN_voidfunc _ctors_end[];
-__attribute__((section (".dtors"))) extern PFN_voidfunc _dtors_start[];
-__attribute__((section (".dtors"))) extern PFN_voidfunc _dtors_end[];
-
-void _prolog();
-void _epilog();
-void _unresolved();
-
+	void _prolog();
+	void _epilog();
+	void _unresolved();
 }
 
-namespace mod {
-
-extern void main();
-
+namespace mod
+{
+	extern void main();
 }
 
 void _prolog()
@@ -25,7 +23,6 @@ void _prolog()
 	{
 		(*ctor)();
 	}
-	
 	// Run mod main
 	mod::main();
 }
@@ -41,5 +38,5 @@ void _epilog()
 
 void _unresolved(void)
 {
-	
+
 }

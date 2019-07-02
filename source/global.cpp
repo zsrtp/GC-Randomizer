@@ -5,16 +5,14 @@
 #include <tp/m_Do_controller_pad.h>
 #include <tp/JFWSystem.h>
 
-struct ChestDisplayInfo chestDisplayInfo;
-
 bool checkForButtonInput(u32 buttonCombo)
 {
 	return tp::m_Do_controller_pad::cpadInfo.wButtonInput & buttonCombo;
 }
 
-void setConsoleColor(u8 R, u8 G, u8 B, u8 A)
+void setConsoleColor(u32 RGBA)
 {
-	*reinterpret_cast<u32*>(tp::JFWSystem::systemConsole->wConsoleColor) = (R << 24) | (G << 16) | (B << 8) | A;
+	*reinterpret_cast<u32*>(tp::JFWSystem::systemConsole->wConsoleColor) = RGBA;
 }
 
 void setConsole(bool activeFlag, u32 totalLines)

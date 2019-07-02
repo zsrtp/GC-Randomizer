@@ -1,13 +1,11 @@
 #pragma once
 
-#include <types.h>
+#include "types.h"
 
-namespace tp::f_ap_game {
-
-    extern "C" {
-
-    void fapGm_Execute();
-
-}
-
+namespace tp::f_ap_game
+{
+	extern "C"
+	{
+		void fapGm_Execute();
+	}
 }

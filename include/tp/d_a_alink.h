@@ -1,13 +1,11 @@
 #pragma once
 
-#include <types.h>
+#include "types.h"
 
-namespace tp::d_a_alink {
-
-    extern "C" {
-
-    bool checkTreasureRupeeReturn(int amount);
-
-}
-
+namespace tp::d_a_alink
+{
+	extern "C"
+	{
+		bool checkTreasureRupeeReturn(void*, s32);
+	}
 }
