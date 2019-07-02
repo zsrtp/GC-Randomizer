@@ -22,7 +22,6 @@ namespace tp::d_com_inf_game
 		u8 unk_5dac[0x18060];
 	} __attribute__((__packed__));
 
-
 	static_assert(sizeof(GameInfo) == 0x1DE10);
 
 	extern "C"
