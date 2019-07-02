@@ -2,6 +2,8 @@
 
 #include "types.h"
 
+#include <tp/d_map_path_dmap.h>
+
 #define getPlayerPos tp::d_map_path_dmap::getMapPlayerPos
 
 extern "C"
