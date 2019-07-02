@@ -1,7 +1,7 @@
 #pragma once
 
 #include "global.h"
-#include "types.h"
+#include "defines.h"
 
 namespace mod::patch
 {

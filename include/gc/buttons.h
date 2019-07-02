@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.h"
+#include "defines.h"
 
 enum PAD_INPUTS : u16
 {

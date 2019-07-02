@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.h"
+#include "defines.h"
 
 namespace tp::f_op_actor_mng
 {

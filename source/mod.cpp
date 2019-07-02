@@ -1,15 +1,10 @@
 #include "mod.h"
 #include "patch.h"
-#include "types.h"
+#include "defines.h"
 #include "global.h"
 
-#include <gc/buttons.h>
 #include <tp/f_ap_game.h>
 #include <tp/f_op_actor_mng.h>
-#include <tp/JFWSystem.h>
-#include <tp/d_com_inf_game.h>
-#include <tp/d_kankyo.h>
-#include <tp/d_map_path_dmap.h>
 #include <tp/d_a_alink.h>
 
 #include <cstdio>
@@ -63,7 +58,7 @@ namespace mod
 	
 	void Mod::run()
 	{
-		// Runs each frame
+		// Runs once each frame
 
 		// Call original function
 		fapGm_Execute_trampoline();
@@ -71,7 +66,7 @@ namespace mod
 
 	void Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
 	{
-		// Runs when link picks up an item with text and is holding it towards the camera
+		// Runs once when Link picks up an item with text and is holding it towards the camera
 
 		// Call original function
 		createItemForTrBox_trampoline(pos, item, unk3, unk4, unk5, unk6);

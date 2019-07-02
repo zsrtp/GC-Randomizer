@@ -1,5 +1,5 @@
 #include "global.h"
-#include "types.h"
+#include "defines.h"
 
 #include <gc/OSCache.h>
 #include <tp/m_Do_controller_pad.h>
