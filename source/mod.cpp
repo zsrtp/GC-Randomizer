@@ -34,7 +34,7 @@ namespace mod
 	void Mod::init()
 	{
 		// Set the initial console color
-		setConsoleColor(100 << 16 | 100 << 8 || 50);
+		setConsoleColor(0x00A0A0A0);
 
 		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
 			[]()
@@ -63,7 +63,7 @@ namespace mod
 	
 	void Mod::run()
 	{
-		// runs each frame
+		// Runs each frame
 
 		// Call original function
 		fapGm_Execute_trampoline();
@@ -71,7 +71,7 @@ namespace mod
 
 	void Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
 	{
-		// runs when link picks up an item with text and is holding it towards the camera
+		// Runs when link picks up an item with text and is holding it towards the camera
 
 		// Call original function
 		createItemForTrBox_trampoline(pos, item, unk3, unk4, unk5, unk6);

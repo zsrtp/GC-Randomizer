@@ -10,9 +10,9 @@ bool checkForButtonInput(u32 buttonCombo)
 	return tp::m_Do_controller_pad::cpadInfo.wButtonInput & buttonCombo;
 }
 
-void setConsoleColor(u32 RGBA)
+void setConsoleColor(u32 rgba)
 {
-	*reinterpret_cast<u32*>(tp::JFWSystem::systemConsole->wConsoleColor) = RGBA;
+	*reinterpret_cast<u32*>(tp::JFWSystem::systemConsole->wConsoleColor) = rgba;
 }
 
 void setConsole(bool activeFlag, u32 totalLines)

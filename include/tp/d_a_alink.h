@@ -6,6 +6,6 @@ namespace tp::d_a_alink
 {
 	extern "C"
 	{
-		bool checkTreasureRupeeReturn(void*, s32);
+		bool checkTreasureRupeeReturn(void* unused, s32 amount);
 	}
 }
