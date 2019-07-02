@@ -28,5 +28,4 @@ namespace tp::JFWSystem
 	{
 		extern SystemConsole* systemConsole;
 	}
-
 }
