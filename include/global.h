@@ -2,7 +2,6 @@
 
 #include "defines.h"
 
-
 extern "C"
 {
 	bool checkForButtonInput(u32 buttonCombo);

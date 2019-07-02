@@ -12,7 +12,6 @@ namespace tp::d_com_inf_game
 		float wPosition[3];
 	} __attribute__((__packed__));
 
-
 	// Should try to fill in the missing variables at some point
 	struct GameInfo
 	{
@@ -30,5 +29,4 @@ namespace tp::d_com_inf_game
 	{
 		extern GameInfo dComIfG_gameInfo;
 	}
-
 }

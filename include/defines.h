@@ -12,5 +12,4 @@ typedef unsigned char		u8;
 typedef	signed char			s8;
 
 // Function mnemonics
-
 #define getPlayerPos tp::d_map_path_dmap::getMapPlayerPos

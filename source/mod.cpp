@@ -9,7 +9,6 @@
 
 namespace mod
 {
-
 	Mod* gMod = nullptr;
 
 	void main()
@@ -34,7 +33,7 @@ namespace mod
 				gMod->run();
 			}
 		);
-		
+
 		checkTreasureRupeeReturn_trampoline = patch::hookFunction(tp::d_a_alink::checkTreasureRupeeReturn,
 			[](void* unused, s32 amount)
 			{
@@ -43,7 +42,6 @@ namespace mod
 				return false;
 			}
 		);
-
 
 		createItemForTrBox_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
 			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
