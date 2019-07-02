@@ -2,7 +2,7 @@
 
 #include <tp/d_map_path_dmap.h>
 
-// Datatypes
+// Data types
 typedef unsigned long long	u64;
 typedef	signed long long	s64;
 typedef unsigned int		u32;
