@@ -7,9 +7,6 @@
 #include <tp/f_op_actor_mng.h>
 #include <tp/d_a_alink.h>
 
-#include <cstdio>
-#include <cstring>
-
 namespace mod
 {
 
