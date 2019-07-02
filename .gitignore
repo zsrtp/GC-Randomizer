@@ -1,6 +1,7 @@
 *.elf
 *.rel
 *.gci
+*.bak
 
 create.sh
 
