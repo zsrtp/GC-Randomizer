@@ -1,4 +1,4 @@
-# Twilight Princess Randomizer
+# Twilight Princess REL base
 
 #### Disclaimer
 
@@ -25,8 +25,8 @@ In this case the **Makefile** does not need to be changed, however if you don't 
 
 > *It is suggested to create a `bin` folder inside the Randomizer and copy the binary/script (`elf2rel`, `gcipack.py`) inside there - then use `bin/elf2rel[.exe]` and `bin/gcipack.py` as paths*
 
-### Usage
-WiP
+### Info
+This is template code without any game changing logic whatsoever
 
 ### Credits and special thanks to
 * Piston for TTYD-Tools
