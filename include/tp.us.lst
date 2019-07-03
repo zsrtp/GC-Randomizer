@@ -5,7 +5,7 @@
 80450C34:archiveHeap
 
 // f_ap_game.o
-80018B14:fapGm_Execute
+80018A6C:fapGm_Execute
 
 // d_a_alink.h
 8011a6fc:checkTreasureRupeeReturn
