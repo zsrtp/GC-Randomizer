@@ -7,14 +7,14 @@
 // f_ap_game.o
 80018B14:fapGm_Execute
 
-// d_a_alink.h
-8011a908:checkTreasureRupeeReturn
-
 // f_op_actor_mng.o
 8001BD1C:createItemForTrBoxDemo
 
 // d_map_path_dmap.o
 8003EF8C:getMapPlayerPos
+
+// d_a_alink.h
+8011A908:checkTreasureRupeeReturn
 
 // JKRExpHeap.o
 802CFF28:do_alloc_JKRExpHeap

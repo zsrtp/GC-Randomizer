@@ -13,6 +13,9 @@
 // d_map_path_dmap.o
 8003EE5C:getMapPlayerPos
 
+// d_a_alink.h
+8011A734:checkTreasureRupeeReturn
+
 // JKRExpHeap.o
 802D15C4:do_alloc_JKRExpHeap
 802D1C48:do_free_JKRExpHeap
