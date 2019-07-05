@@ -8,8 +8,9 @@ namespace tp::m_Do_controller_pad
 	struct CPadInfo
 	{
 		u8 unk_0[0x30];
-		u32 wButtonInput;
-		u8 unk_34[0xCC];
+		u32 buttonInput;
+		u32 buttonInputTrg;
+		u8 unk_38[0xC8];
 	} __attribute__((__packed__));
 
 	static_assert(sizeof(CPadInfo) == 0x100);

@@ -1,3 +1,6 @@
+// memory
+80003458:memset
+
 // m_Do_ext.o
 // text
 8000EDA8:getArchiveHeapPtr

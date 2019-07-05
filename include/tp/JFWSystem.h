@@ -15,7 +15,7 @@ namespace tp::JFWSystem
 	struct SystemConsole
 	{
 		u8 unk_0[0x60];
-		u8 ConsoleColor[4]; // rgba
+		u8 consoleColor[4]; // rgba
 		u8 unk_64[0x4];
 		bool consoleEnabled;
 		u8 unk_69[3];
