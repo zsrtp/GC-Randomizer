@@ -13,6 +13,8 @@ namespace mod
 		private:
 			void run();
 			
+			void assemblyOverwrites();
+			
 			void procCreateItemForTrBoxDemo(const float[3], s32, s32, s32, const float[3], const float[3]);
 			
 		private:

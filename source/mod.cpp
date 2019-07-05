@@ -24,6 +24,9 @@ namespace mod
 
 	void Mod::init()
 	{
+		// Perform any necessary assembly overwrites
+		assemblyOverwrites();
+
 		// Set the initial console color
 		setConsoleColor(0x00A0A0A0);
 
@@ -65,5 +68,25 @@ namespace mod
 
 		// Call original function
 		createItemForTrBox_trampoline(pos, item, unk3, unk4, unk5, unk6);
+	}
+
+	void Mod::assemblyOverwrites()
+	{
+		// Get the addresses to overwrite
+		#ifdef TP_US
+		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
+		#elif defined TP_EU
+		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B878);
+		#elif defined TP_JP
+		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
+		#endif
+
+		// Perform the overwrites
+
+		/* If the address is loaded into the cache before the overwrite is made, 
+		then the cache will need to be cleared after the overwrite */
+
+		// Enable the crash screen
+		*enableCrashScreen = 0x48000014; // b 0x14
 	}
 }
