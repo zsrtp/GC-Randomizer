@@ -2,6 +2,10 @@
 
 #include <tp/d_map_path_dmap.h>
 
+#include <cstddef>
+
+using std::size_t;
+
 // Data types
 typedef unsigned long long	u64;
 typedef	signed long long	s64;
