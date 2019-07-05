@@ -1,6 +1,6 @@
 #include "patch.h"
-#include "global.h"
 #include "defines.h"
+#include "memory.h"
 
 namespace mod::patch
 {
@@ -21,10 +21,10 @@ namespace mod::patch
 		u32 delta = reinterpret_cast<u32>(destination) - reinterpret_cast<u32>(ptr);
 
 		branch |= (delta & 0x03FFFFFC);
-		
+
 		u32* p = reinterpret_cast<u32*>(ptr);
 		*p = branch;
 
-		clear_DC_IC_Cache(ptr, sizeof(u32));
+		memory::clear_DC_IC_Cache(ptr, sizeof(u32));
 	}
 }

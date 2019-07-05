@@ -1,7 +1,7 @@
 #include "mod.h"
-#include "patch.h"
 #include "defines.h"
-#include "global.h"
+#include "systemconsole.h"
+#include "patch.h"
 
 #include <tp/f_ap_game.h>
 #include <tp/f_op_actor_mng.h>
@@ -28,7 +28,7 @@ namespace mod
 		assemblyOverwrites();
 
 		// Set the initial console color
-		setConsoleColor(0x00A0A0A0);
+		systemconsole::setConsoleColor(0x00A0A0A0);
 
 		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
 			[]()

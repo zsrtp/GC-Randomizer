@@ -1,7 +1,7 @@
 #pragma once
 
-#include "global.h"
 #include "defines.h"
+#include "memory.h"
 
 namespace mod::patch
 {
@@ -18,7 +18,7 @@ namespace mod::patch
 
 		// Original instruction
 		trampoline[0] = instructions[0];
-		clear_DC_IC_Cache(&trampoline[0], sizeof(u32));
+		memory::clear_DC_IC_Cache(&trampoline[0], sizeof(u32));
 
 		// Branch to original function past hook
 		writeBranch(&trampoline[1], &instructions[1]);
