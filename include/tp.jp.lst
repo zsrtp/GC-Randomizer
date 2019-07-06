@@ -1,5 +1,6 @@
 // memory
 80003458:memset
+80368528:memcmp
 
 // m_Do_ext.o
 // text
