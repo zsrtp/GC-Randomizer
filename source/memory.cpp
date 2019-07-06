@@ -14,7 +14,7 @@ namespace mod::memory
 
 	void clear_DC_IC_Cache(void* ptr, u32 size)
 	{
-		gc::OSCache::DCFlushRange(ptr, size);
-		gc::OSCache::ICInvalidateRange(ptr, size);
+		gc::os_cache::DCFlushRange(ptr, size);
+		gc::os_cache::ICInvalidateRange(ptr, size);
 	}
 }

@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-namespace tp::JKRExpHeap
+namespace tp::jkr_exp_heap
 {
 	extern "C"
 	{

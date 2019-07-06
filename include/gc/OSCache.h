@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-namespace gc::OSCache
+namespace gc::os_cache
 {
 	extern "C"
 	{
