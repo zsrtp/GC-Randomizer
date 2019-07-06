@@ -16,4 +16,4 @@ typedef	signed char 		s8;
 
 // Mnemonics
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos
-#define sysConsolePtr 		tp::jfw_System::systemConsole
+#define sysConsolePtr 		tp::jfw_system::systemConsole
