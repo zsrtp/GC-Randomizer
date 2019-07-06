@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-namespace tp::JFWSystem
+namespace tp::jfw_System
 {
 	struct ConsoleLine
 	{

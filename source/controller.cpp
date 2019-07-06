@@ -7,12 +7,12 @@ namespace mod::controller
 {
 	bool checkForButtonInput(u32 buttonCombo)
 	{
-		return (tp::m_Do_controller_pad::cpadInfo.buttonInput & buttonCombo) == buttonCombo;
+		return (tp::m_do_controller_pad::cpadInfo.buttonInput & buttonCombo) == buttonCombo;
 	}
 
 	bool checkForButtonInputSingleFrame(u32 buttonCombo)
 	{
-		tp::m_Do_controller_pad::CPadInfo* PadInfo = &tp::m_Do_controller_pad::cpadInfo;
+		tp::m_do_controller_pad::CPadInfo* PadInfo = &tp::m_do_controller_pad::cpadInfo;
 		if ((PadInfo->buttonInput & buttonCombo) == buttonCombo)
 		{
 			if (PadInfo->buttonInputTrg & buttonCombo)

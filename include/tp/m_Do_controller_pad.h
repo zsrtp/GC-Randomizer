@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-namespace tp::m_Do_controller_pad
+namespace tp::m_do_controller_pad
 {
 	// Should try to fill in the missing variables at some point
 	struct CPadInfo
