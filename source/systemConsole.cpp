@@ -3,9 +3,9 @@
 
 #include <tp/JFWSystem.h>
 
-namespace mod::systemconsole
+namespace mod::system_console
 {
-	void setBackground(u32 rgba)
+	void setBackgroundColor(u32 rgba)
 	{
 		u32* ConsoleColor = reinterpret_cast<u32*>(sysConsolePtr->consoleColor);
 		*ConsoleColor = rgba;
@@ -13,7 +13,7 @@ namespace mod::systemconsole
 
 	void setState(bool activeFlag, u32 totalLines)
 	{
-		tp::jfw_System::SystemConsole* Console = sysConsolePtr;
+		tp::jfw_system::SystemConsole* Console = sysConsolePtr;
 		Console->consoleEnabled = activeFlag;
 
 		for (u32 i = 0; i < totalLines; i++)
