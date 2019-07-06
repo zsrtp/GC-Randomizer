@@ -1,9 +1,6 @@
 // memory
 80003458:memset
 
-// mem.o
-8036608C:memcmp
-
 // m_Do_ext.o
 // text
 8000EDF4:getArchiveHeapPtr
@@ -84,6 +81,9 @@
 803621DC:_savegpr_29
 803621E0:_savegpr_30
 803621E4:_savegpr_31
+
+// mem.o
+8036608C:memcmp
 
 // printf.o
 803664DC:sprintf
