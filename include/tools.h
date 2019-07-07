@@ -11,7 +11,7 @@ namespace mod::tools
 
 		/**
 		 * Generates a simple random number (not perfectly random but good enough for most purposes)
-		 * Note: It's best to use with a clock that advances randomSeed (or when using defines.h RAND_SEED)
+		 * Note: It's best to use with a clock that advances randomSeed
 		 * (C) http://xoshiro.di.unimi.it/splitmix64.c
 		 * 
 		 * @param max The maximum number to return
