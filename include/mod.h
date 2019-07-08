@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include "item.h"
 
 namespace mod
 {
@@ -12,6 +13,16 @@ namespace mod
 			
 		private:
 			void run();
+
+			// Conditions used by the generator to determine wether a check is already reachable
+			u16 currentPlayerConditions;
+
+			// Assumed fill
+			u16 startConditions = 0xFFFF;
+
+			char version[6];
+
+			u16 getItemFlags(u8 item);
 
 			void assemblyOverwrites();
 

@@ -10,12 +10,11 @@ namespace mod::array
 		// TODO
 	}
 
-	s32 indexOf(void* needle, void** haystack, size_t n, size_t count)
+	s32 indexOf(u16 needle, u16* haystack, size_t count)
 	{
-		u32 length = count * n;
-		for (u32 i = 0; i < length; i += n)
+		for (u32 i = 0; i < count; i++)
 		{
-			if (memcmp(needle, haystack[i], n) == 0)
+			if (haystack[i] == needle)
 			{
 				return static_cast<s32>(i);
 			}

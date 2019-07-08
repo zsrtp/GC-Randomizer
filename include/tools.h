@@ -7,7 +7,7 @@ namespace mod::tools
 	extern "C"
 	{
 		// Seed for getRandom
-		static u64 randomSeed = 0x9e3779b97f4a7c15;
+		static u64 randomSeed = 0x1;
 
 		/**
 		 * Generates a simple random number (not perfectly random but good enough for most purposes)
@@ -18,5 +18,13 @@ namespace mod::tools
 		 * @returns A random integer between 0 and max, excluding max
 		 */
 		u32 getRandom(u32 max);
+
+		/**
+		 * Generates a simple u16 checksum
+		 * 
+		 * @param data The data you need a checksum for
+		 * @param count The number of bytes
+		 */
+		u16 fletcher16(u8 *data, size_t count);
 	}
 }

@@ -11,4 +11,19 @@ namespace mod::tools
 
 		return (z % max);
 	}
+
+	u16 fletcher16(u8 *data, size_t count)
+	{
+		u16 sum1 = 0;
+		u16 sum2 = 0;
+		size_t index;
+
+		for (index = 0; index < count; ++index)
+		{
+			sum1 = (sum1 + data[index]) % 255;
+			sum2 = (sum2 + sum1) % 255;
+		}
+
+		return (sum2 << 8) | sum1;
+	}
 }
