@@ -81,6 +81,7 @@
 8036300C:_savegpr_29
 80363010:_savegpr_30
 80363014:_savegpr_31
+8036328C:__umoddi3
 
 // mem.o
 80366EBC:memcmp
