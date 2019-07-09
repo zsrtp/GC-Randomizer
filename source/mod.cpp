@@ -216,11 +216,12 @@ namespace mod
 				if (sItem->type == item::ItemType::Key)
 				{
 					dItem = sItem;
-				}
+				}/*
 				else if(sItem->itemID == items::Iron_Boots)
 				{
+					Iron boots are not in the list only the fake ones
 					dItem = sItem;
-				}
+				}*/
 				else if (sItem->itemID == items::Ordon_Goat_Cheese)
 				{
 					dItem = sItem;
