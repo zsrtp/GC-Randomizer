@@ -43,7 +43,6 @@ namespace mod::event
 				if(e.Accuracy == LoadEventAccuracy::Stage)
 				{
 					e.Trigger();
-					break;
 				}
 
 				if(room == e.Room)
@@ -51,7 +50,6 @@ namespace mod::event
 					if(e.Accuracy == LoadEventAccuracy::Stage_Room)
 					{
 						e.Trigger();
-						break;
 					}
 
 					if(spawn == e.Spawn)
@@ -59,14 +57,12 @@ namespace mod::event
 						if(e.Accuracy == LoadEventAccuracy::Stage_Room_Spawn)
 						{
 							e.Trigger();
-							break;
 						}
 
 						if(state == e.State)
 						{
 							// Cannot be more accurate, trigger without checking
 							e.Trigger();
-							break;
 						}
 					}
 				}
