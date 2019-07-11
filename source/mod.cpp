@@ -8,13 +8,18 @@
 #include "controller.h"
 #include "tools.h"
 #include "array.h"
+#include "eventListener.h"
+#include "stage.h"
 
+#include <tp/f_op_scene_req.h>
+#include <tp/d_com_inf_game.h>
 #include <tp/f_ap_game.h>
 #include <tp/f_op_actor_mng.h>
 #include <tp/d_a_alink.h>
 #include <tp/JFWSystem.h>
 #include <cstdio>
 #include <cstring>
+
 
 namespace mod
 {
@@ -24,6 +29,16 @@ namespace mod
 	{
 		Mod* mod = new Mod();
 		mod->init();
+	}
+
+	void giveEpona()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "Event: giveEpona");
+		// Unset Epona stolen flag
+		gameInfo.scratchPad.wQuestLogData[0x7F5] &= ~0x80;
+
+		// Set Epona tamed flag
+		gameInfo.scratchPad.wQuestLogData[0x7F6] |= 0x2;
 	}
 
 	Mod::Mod()
@@ -38,16 +53,20 @@ namespace mod
 		
 		// Set the initial console color
 		system_console::setBackgroundColor(0x00A0A0A0);
-		system_console::setState(true, 20);
+		system_console::setState(true, 21);
 
 		// Set version
-		strcpy(version, "v0.2b");
+		strcpy(version, "v0.3b");
 
 		sprintf(sysConsolePtr->consoleLine[0].line, "AECX' TP Randomizer %s", version);
 		strcpy(sysConsolePtr->consoleLine[1].line, "Controls:");
 		strcpy(sysConsolePtr->consoleLine[2].line, "  [R + Z] Toggle console");
 		strcpy(sysConsolePtr->consoleLine[3].line, "  [L + Z + B] New seed (time dependent)");
 		strcpy(sysConsolePtr->consoleLine[4].line, "  You have to set one initially!");
+
+		// Give the player epona when he's at sewers
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Castle_Sewers], 0, 0, 0, giveEpona, event::LoadEventAccuracy::Stage);
+
 
 		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
 			[]()
@@ -78,6 +97,18 @@ namespace mod
 		// Increment rando seed
 		tools::randomSeed += 0xf83b877a;
 
+		// If loading has started check for LoadEvents
+		if(isLoading && !loadTriggered)
+		{
+			eventListener->checkLoadEvents();
+			loadTriggered = true;
+		}
+		if(!isLoading)
+		{
+			loadTriggered = false;
+		}
+
+
 		// Runs once each frame
 		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
 		{
@@ -93,7 +124,7 @@ namespace mod
 			tp::jfw_system::SystemConsole* Console = sysConsolePtr;
 			// Print initial seed data for recreation
 			// Use lines 10 to 20!
-			sprintf(Console->consoleLine[10].line, "== GENERATOR %s ==", version);
+			sprintf(Console->consoleLine[10].line, "== GENERATOR - %s ==", version);
 			sprintf(Console->consoleLine[11].line, "Seed: %016llX", RAND_SEED);
 
 			size_t size = sizeof(item::ItemCheck);
@@ -103,7 +134,6 @@ namespace mod
 
 			u32 totalLoops = 0;
 			u32 threshhold = 0x000FFFFF;
-
 
 			u16 zeroes = 0;
 
@@ -219,7 +249,11 @@ namespace mod
 				}/*
 				else if(sItem->itemID == items::Iron_Boots)
 				{
-					Iron boots are not in the list only the fake ones
+					// Commented because only faked IBs are in the list currently
+					// Original won't be touched
+					// Will be needed once we put the original IB chest back in
+					// Unless we find a workaround to change the contents of that chest
+					// Bo will start talking infinitely if != IB
 					dItem = sItem;
 				}*/
 				else if (sItem->itemID == items::Ordon_Goat_Cheese)
@@ -236,7 +270,7 @@ namespace mod
 				dItem->source 		= sItem;
 
 				// Conditionhandling
-				currentPlayerConditions &= ~getItemFlags(dItem->itemID);
+				currentPlayerConditions &= ~item::getFlags(dItem->itemID, currentPlayerConditions);
 
 				numPlaced++;
 			} // numPlaced < numItems
@@ -253,79 +287,6 @@ namespace mod
 
 		// Call original function
 		fapGm_Execute_trampoline();
-	}
-
-	u16 Mod::getItemFlags(u8 item)
-	{
-		u16 flags = 0;
-		switch(item)
-		{
-			case items::Item::Lantern:
-				flags |= item::Condition::Lantern;
-			break;
-
-			case items::Item::Iron_Boots:
-				flags |= item::Condition::Iron_Boots;
-			break;
-
-			case items::Item::Boomerang:
-				flags |= item::Condition::Boomerang;
-			break;
-
-			case items::Item::Slingshot:
-				flags |= item::Condition::Slingshot;
-			break;
-
-			case items::Item::Heros_Bow:
-				flags |= item::Condition::Bow;
-			break;
-
-			case items::Item::Empty_Bomb_Bag:
-				flags |= item::Condition::Bombs;
-			break;
-
-			case items::Item::Bomb_Bag_Water_Bombs:
-				flags |= item::Condition::Water_Bombs;
-			break;
-
-			// TODO add quiver!
-
-			case items::Item::Ball_and_Chain:
-				flags |= item::Condition::Ball_And_Chain;
-			break;
-
-			case items::Item::Clawshot:
-				flags |= item::Condition::Clawshot;
-			break;
-
-			case items::Item::Clawshots:
-				flags |= item::Condition::Double_Clawshot;
-			break;
-
-			case items::Item::Spinner:
-				flags |= item::Condition::Spinner;
-			break;
-
-			case items::Item::Dominion_Rod:
-				flags |= item::Condition::Dominion_Rod;
-			break;
-
-			case items::Item::Zora_Armor:
-				flags |= item::Condition::Zora_Armor;
-			break;
-		}
-
-		// Special case(s)
-		if(item == items::Bomb_Bag_Regular_Bombs || item == items::Bomb_Bag_Water_Bombs || item == items::Heros_Bow)
-		{
-			if ((currentPlayerConditions & item::Condition::Bow) && ((currentPlayerConditions & item::Condition::Bombs) || (currentPlayerConditions & item::Condition::Water_Bombs)))
-			{
-				// We have bow && (bombs || waterbombs) = bombarrows
-				flags |= item::Condition::Bomb_Arrows;
-			}
-		}
-
-		return flags;
 	}
 
 	void Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])

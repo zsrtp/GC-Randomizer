@@ -1,10 +1,15 @@
 #pragma once
 
 #include "defines.h"
+#include "eventListener.h"
 #include "item.h"
+
+
 
 namespace mod
 {
+	void giveEpona();
+
 	class Mod
 	{
 		public:
@@ -22,7 +27,9 @@ namespace mod
 
 			char version[6];
 
-			u16 getItemFlags(u8 item);
+			bool loadTriggered;
+
+			event::EventListener* eventListener = new event::EventListener();
 
 			void assemblyOverwrites();
 

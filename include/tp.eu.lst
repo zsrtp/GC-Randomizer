@@ -4,8 +4,13 @@
 // m_Do_ext.o
 // text
 8000EDA8:getArchiveHeapPtr
+
 // data
 80452BF4:archiveHeap
+
+// data
+// f_op_scene_req.o 
+80452ca0:isUsingOfOverlap
 
 // f_ap_game.o
 80018B14:fapGm_Execute
@@ -91,6 +96,7 @@
 803673EC:snprintf
 
 // string.o
+803697c4:strcmp
 8036995C:strcpy
 
 // m_Do_controller_pad.o

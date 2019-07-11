@@ -4,6 +4,14 @@
 namespace mod::item
 {
 	/**
+	 * Returns the flag(s) to an item under certain conditions
+	 * 
+	 * @param item Internal item ID
+	 * @param currentPlayerConditions Current conditions of the player
+	 */
+	u16 getFlags(u8 item, u16 currentPlayerConditions);
+
+	/**
 	 * Bitwise conditions for ItemCheck
 	 */
 	enum Condition : u16
