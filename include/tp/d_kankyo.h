@@ -8,7 +8,7 @@ namespace tp::d_kankyo
 	struct EnvLight
 	{
 		u8 unk_0[0x98C];
-		u8 wCurrentRoom;
+		u8 currentRoom;
 		u8 unk_98d[0x983];
 	} __attribute__((__packed__));
 
