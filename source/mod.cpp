@@ -35,7 +35,7 @@ namespace mod
 	{
 		// Perform any necessary assembly overwrites
 		assemblyOverwrites();
-
+		
 		// Set the initial console color
 		system_console::setBackgroundColor(0x00A0A0A0);
 		system_console::setState(true, 20);
@@ -247,7 +247,7 @@ namespace mod
 
 			sum = tools::fletcher16(reinterpret_cast<u8*>(&item::checks), sizeof(item::checks));
 			sprintf(Console->consoleLine[14].line, "Checksum new: [%x]", sum);
-			sprintf(Console->consoleLine[15].line, "Zoroes: %d", zeroes);
+			sprintf(Console->consoleLine[15].line, "Zeroes: %d", zeroes);
 			sprintf(Console->consoleLine[16].line, "Done with %d/%d items", numPlaced, numItems);
 		}
 
