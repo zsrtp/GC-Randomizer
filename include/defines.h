@@ -30,13 +30,14 @@ typedef	signed char 		s8;
 #define MAX_LOAD_EVENTS 20 // eventListener
 
 // Mnemonics
+#define VERSION				"v0.4b"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos
 #define sysConsolePtr 		tp::jfw_system::systemConsole
 #define isLoading			tp::f_op_scene_req::isUsingOfOverlap
 
-// Stage translations for mode::stage::allStages[]
+// Stage translations for mod::stage::allStages[]
 #define Stage_Lakebed_Temple 0
 #define Stage_Morpheel 1
 #define Stage_Deku_Toad 2

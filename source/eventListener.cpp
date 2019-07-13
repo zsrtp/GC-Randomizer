@@ -15,12 +15,12 @@ namespace mod::event
 		sprintf(sysConsolePtr->consoleLine[20].line, "Event Listener Initialized.");
 	}
 
-	void EventListener::addLoadEvent(char* stage, u8 room, u8 spawn, u8 state, eventFunction trigger, LoadEventAccuracy accuracy)
+	void EventListener::addLoadEvent(char* stage, u8 room, u8 spawn, u8 state, u8 eventid, EventFunction trigger, LoadEventAccuracy accuracy)
 	{
 		if(loadEventIndex < MAX_LOAD_EVENTS)
 		{
 			// Add the event to the array
-			loadEvents[loadEventIndex] = {stage, room, spawn, state, trigger, accuracy};
+			loadEvents[loadEventIndex] = {stage, room, spawn, state, eventid, trigger, accuracy};
 
 			loadEventIndex++;
 		}
@@ -32,11 +32,11 @@ namespace mod::event
 		u8 room = gameInfo.nextStageVars.nextRoom;
 		u8 spawn = static_cast<u8>(gameInfo.nextStageVars.nextSpawnPoint);
 		u8 state = gameInfo.nextStageVars.nextState;
+		u8 eventid = gameInfo.eventSystem.currentEventID;
 
 		for(u8 i = 0; i < loadEventIndex; i++)
 		{
 			LoadEvent e = loadEvents[i];
-
 			if(strcmp(stage, e.Stage) == 0)
 			{
 				// Stage is minimum requirement
@@ -61,8 +61,16 @@ namespace mod::event
 
 						if(state == e.State)
 						{
-							// Cannot be more accurate, trigger without checking
-							e.Trigger();
+							if(e.Accuracy == LoadEventAccuracy::Stage_Room_Spawn_State)
+							{
+								e.Trigger();
+							}
+
+							if(eventid == e.Eventid)
+							{
+								// No accuracy check since it's already ::All
+								e.Trigger();
+							}
 						}
 					}
 				}

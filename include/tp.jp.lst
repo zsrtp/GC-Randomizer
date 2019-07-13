@@ -5,6 +5,10 @@
 // text
 8000EDF4:getArchiveHeapPtr
 
+// d_event.o
+80042778:defaultSkipStb
+800429d4:skipper
+
 // data
 8044AD74:archiveHeap
 
@@ -20,6 +24,9 @@
 
 // d_map_path_dmap.o
 8003EE5C:getMapPlayerPos
+
+// d_item.o
+80097F20:checkItemGet
 
 // d_a_alink.h
 8011A734:checkTreasureRupeeReturn

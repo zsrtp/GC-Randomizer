@@ -2,44 +2,53 @@
 
 #include "defines.h"
 #include "eventListener.h"
-#include "item.h"
-
-
+#include "chestRando.h"
 
 namespace mod
 {
-	void giveEpona();
-
 	class Mod
 	{
 		public:
 			Mod();
+			/**
+			 * Init this and other stuff in order for all
+			 * modifications to work
+			 */
 			void init();
-			
+
+			/**
+			 * Custom event listener that can
+			 * schedule function calls
+			 */
+			event::EventListener* eventListener;
+			ChestRandomizer* chestRandomizer;
+
+		// Functions
 		private:
-			void run();
-
-			// Conditions used by the generator to determine wether a check is already reachable
-			u16 currentPlayerConditions;
-
-			// Assumed fill
-			u16 startConditions = 0xFFFF;
-
-			char version[6];
-
-			bool loadTriggered;
-
-			event::EventListener* eventListener = new event::EventListener();
-
+			/**
+			 * Runs once each frame
+			 */
+			void procNewFrame();
+			
 			void assemblyOverwrites();
 
-			void procCreateItemForTrBoxDemo(const float[3], s32, s32, s32, const float[3], const float[3]);
+
+			s32 procCreateItemForTrBoxDemo(const float[3], s32, s32, s32, const float[3], const float[3]);
 			
+			s32 procEvtSkipper(void* evtPtr);
+
+		// Private members
+		//private:
+			
+
+		// Hook trampolines
 		private:
 			void (*fapGm_Execute_trampoline)() = nullptr;
 			
+			s32 (*evt_control_Skipper_trampoline)(void* eventPtr) = nullptr;
+
 			bool (*checkTreasureRupeeReturn_trampoline)(void*, s32) = nullptr;
 
-			void (*createItemForTrBox_trampoline)(const float[3], s32, s32, s32, const float[3], const float[3]) = nullptr;
+			s32 (*createItemForTrBox_trampoline)(const float[3], s32, s32, s32, const float[3], const float[3]) = nullptr;
 	};
 }

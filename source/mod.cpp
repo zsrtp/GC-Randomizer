@@ -1,16 +1,18 @@
-#include "mod.h"
 #include "defines.h"
+#include "mod.h"
+#include "global.h"
 #include "systemConsole.h"
 #include "patch.h"
-#include "item.h"
-#include "items.h"
-#include "itemChecks.h"
 #include "controller.h"
 #include "tools.h"
 #include "array.h"
 #include "eventListener.h"
 #include "stage.h"
+#include "game_patches.h"
+#include "chestRando.h"
 
+#include <tp/d_map_path_dmap.h>
+#include <tp/evt_control.h>
 #include <tp/f_op_scene_req.h>
 #include <tp/d_com_inf_game.h>
 #include <tp/f_ap_game.h>
@@ -20,10 +22,11 @@
 #include <cstdio>
 #include <cstring>
 
-
 namespace mod
 {
-	Mod* gMod = nullptr;
+	Mod* global::modPtr = nullptr;
+	ChestRandomizer* global::chestRandoPtr = nullptr;
+	event::EventListener* global::eventListenerPtr = nullptr;
 
 	void main()
 	{
@@ -31,47 +34,56 @@ namespace mod
 		mod->init();
 	}
 
-	void giveEpona()
-	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "Event: giveEpona");
-		// Unset Epona stolen flag
-		gameInfo.scratchPad.wQuestLogData[0x7F5] &= ~0x80;
-
-		// Set Epona tamed flag
-		gameInfo.scratchPad.wQuestLogData[0x7F6] |= 0x2;
-	}
-
 	Mod::Mod()
 	{
-		gMod = this;
+		eventListener = new event::EventListener();
+		chestRandomizer = new ChestRandomizer();
+		global::modPtr = this;
+		global::chestRandoPtr = this->chestRandomizer;
+		global::eventListenerPtr = this->eventListener;
 	}
 
 	void Mod::init()
 	{
 		// Perform any necessary assembly overwrites
 		assemblyOverwrites();
-		
+
+		// Init rando seed
+		tools::randomSeed = 0x9e3779b97f4a7c15;
+
 		// Set the initial console color
 		system_console::setBackgroundColor(0x00A0A0A0);
 		system_console::setState(true, 21);
 
-		// Set version
-		strcpy(version, "v0.3b");
-
-		sprintf(sysConsolePtr->consoleLine[0].line, "AECX' TP Randomizer %s", version);
+		sprintf(sysConsolePtr->consoleLine[0].line, "AECX' TP Randomizer %s", VERSION);
 		strcpy(sysConsolePtr->consoleLine[1].line, "Controls:");
 		strcpy(sysConsolePtr->consoleLine[2].line, "  [R + Z] Toggle console");
-		strcpy(sysConsolePtr->consoleLine[3].line, "  [L + Z + B] New seed (time dependent)");
-		strcpy(sysConsolePtr->consoleLine[4].line, "  You have to set one initially!");
-
-		// Give the player epona when he's at sewers
-		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Castle_Sewers], 0, 0, 0, giveEpona, event::LoadEventAccuracy::Stage);
+		strcpy(sysConsolePtr->consoleLine[3].line, "  [L + Z + B] Force New Rando");
+		strcpy(sysConsolePtr->consoleLine[4].line, "Auto rando upon new game!");
 
 
+		//   =================
+		//  | Custom events   |
+		//   =================
+
+		// Generate random data when a new game starts
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x1, 0x15, 0xFF, 0xFF, tools::triggerRandomGenerator, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		// Skip sewers when the load happens
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x0, 0x18, 0xFF, 0xFF, game_patch::skipSewers, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		// Fix BiTE
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x0, 0x17, 0xFF, 0xFF, game_patch::giveEpona, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+
+		//   =================
+		//  | Function Hooks  |
+		//   =================
+		
 		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
 			[]()
 			{
-				gMod->run();
+				global::modPtr->procNewFrame();
 			}
 		);
 
@@ -87,27 +99,38 @@ namespace mod
 		createItemForTrBox_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
 			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
 			{
-				gMod->procCreateItemForTrBoxDemo(pos, item, unk3, unk4, unk5, unk6);
+				return global::modPtr->procCreateItemForTrBoxDemo(pos, item, unk3, unk4, unk5, unk6);
+			}
+		);
+
+		evt_control_Skipper_trampoline = patch::hookFunction(tp::evt_control::skipper,
+			[](void* evtPtr)
+			{
+				return global::modPtr->procEvtSkipper(evtPtr);
 			}
 		);
 	}
-	
-	void Mod::run()
+
+	void Mod::procNewFrame()
 	{
-		// Increment rando seed
-		tools::randomSeed += 0xf83b877a;
+		// Increment seed
+		tools::getRandom(0);
+
+		// Print dbg
+	/*
+		sprintf(sysConsolePtr->consoleLine[10].line, "respawnCs: %p", &gameInfo.respawnCutscene);
+		sprintf(sysConsolePtr->consoleLine[11].line, "respawnAn: %p", &gameInfo.respawnAnimation);
+		sprintf(sysConsolePtr->consoleLine[12].line, "immediateC: %p", &gameInfo.eventSystem.immediateControl);
+		sprintf(sysConsolePtr->consoleLine[13].line, "cEvId: %p   nEvId: %p", &gameInfo.eventSystem.currentEventID, &gameInfo.eventSystem.nextEventID);
+		sprintf(sysConsolePtr->consoleLine[14].line, "cstage: %p  nstage: %p", &gameInfo.currentStage, &gameInfo.nextStageVars.nextStage);
+	*/
+
 
 		// If loading has started check for LoadEvents
-		if(isLoading && !loadTriggered)
+		if(isLoading)
 		{
 			eventListener->checkLoadEvents();
-			loadTriggered = true;
 		}
-		if(!isLoading)
-		{
-			loadTriggered = false;
-		}
-
 
 		// Runs once each frame
 		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
@@ -118,249 +141,41 @@ namespace mod
 
 		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_L | controller::PadInputs::Button_Z | controller::PadInputs::Button_B)))
 		{
-			// Generate seed
-			// TODO put this into extra function at some point?
-
-			tp::jfw_system::SystemConsole* Console = sysConsolePtr;
-			// Print initial seed data for recreation
-			// Use lines 10 to 20!
-			sprintf(Console->consoleLine[10].line, "== GENERATOR - %s ==", version);
-			sprintf(Console->consoleLine[11].line, "Seed: %016llX", RAND_SEED);
-
-			size_t size = sizeof(item::ItemCheck);
-			u16 numItems = sizeof(item::checks) / size;
-
-			u16 numPlaced = 0;
-
-			u32 totalLoops = 0;
-			u32 threshhold = 0x000FFFFF;
-
-			u16 zeroes = 0;
-
-			u16 sum = 0;
-
-			// Set current checksum
-			sum = tools::fletcher16(reinterpret_cast<u8*>(&item::checks), sizeof(item::checks));
-
-			// Reset conditions
-			currentPlayerConditions = startConditions;
-
-			// Reset items
-			for(u16 i = 0; i < numItems; i++)
-			{
-				item::checks[i].source = nullptr;
-				item::checks[i].destination = nullptr;
-			}
-
-			sprintf(Console->consoleLine[12].line, "[%d] Items reset", numItems);
-			sprintf(Console->consoleLine[13].line, "Checksum old: [%x]", sum);
-
-			// Represents the current sourceItem who's alias has to be found and set
-			item::ItemCheck* sItem;
-
-			// Represents the current destinationItem who's conditions have to be checked
-			item::ItemCheck* dItem;
-
-			while(numPlaced < numItems)
-			{
-				totalLoops++;
-				/**
-				 * Assumed fill:
-				 * We fill in the chests "backwards" that means
-				 * we assume we have everything and upon
-				 * placing the item we remove that item out of
-				 * the player's conditions
-				 */
-
-				bool sourceReachable = true;
-				bool destinationValid = true;
-
-				// Find source
-				do
-				{
-					totalLoops++;
-					u16 sourceIndex = tools::getRandom(numItems);
-
-					sItem = &item::checks[sourceIndex];
-
-					// Check whether the source already has a destination (has been placed)
-					while(sItem->destination)
-					{
-						sourceIndex++;
-						// Index is 0 based, numItems absolute
-						if(sourceIndex == numItems)
-						{
-							sourceIndex = 0;
-							zeroes++;
-						}
-						sItem = &item::checks[sourceIndex];
-						if(totalLoops > threshhold) goto ESCAPE;
-					}
-
-					// Store the player conditions with the indicating bit removed
-					u16 pCondition = (sItem->condition & ~item::Condition::AND);
-					// Make the necessary condition check
-					if(numPlaced > 100)
-					{
-						// Ignore conditions lol
-						sourceReachable = true;
-					}
-					else if(item::Condition::AND == (sItem->condition & item::Condition::AND))
-					{
-						// All items in pCondition have to in currentPlayerConditions
-						sourceReachable = (pCondition & currentPlayerConditions) == pCondition;
-					}
-					else
-					{
-						// One of the items in pCondition has to be in currentPlayerConditions
-						sourceReachable = (pCondition & currentPlayerConditions) != 0;
-					}
-
-					if(totalLoops > threshhold) goto ESCAPE;
-				} while(!sourceReachable);
-				// The chest we're replacing is now reachable
-
-				do
-				{
-					totalLoops++;
-					// Find destination that has no source yet
-
-					do
-					{
-						u16 destinationIndex = tools::getRandom(numItems);
-						dItem = &item::checks[destinationIndex];
-
-						if(totalLoops > threshhold) goto ESCAPE;
-					} while(dItem->source);
-
-
-					// Destination is not placed yet
-					// This is technically redundant but for code consistency I'll keep the while(!destinationValid)
-					destinationValid = true;
-
-					if (totalLoops > threshhold) goto ESCAPE;
-				} while (!destinationValid);
-				// The chest (content) we're receiving when opening sItem
-
-				// Fix special Items
-				if (sItem->type == item::ItemType::Key)
-				{
-					dItem = sItem;
-				}/*
-				else if(sItem->itemID == items::Iron_Boots)
-				{
-					// Commented because only faked IBs are in the list currently
-					// Original won't be touched
-					// Will be needed once we put the original IB chest back in
-					// Unless we find a workaround to change the contents of that chest
-					// Bo will start talking infinitely if != IB
-					dItem = sItem;
-				}*/
-				else if (sItem->itemID == items::Ordon_Goat_Cheese)
-				{
-					dItem = sItem;
-				}
-				else if (dItem->itemID == items::Ordon_Pumpkin)
-				{
-					dItem = sItem;
-				}
-
-				// Place item
-				sItem->destination 	= dItem;
-				dItem->source 		= sItem;
-
-				// Conditionhandling
-				currentPlayerConditions &= ~item::getFlags(dItem->itemID, currentPlayerConditions);
-
-				numPlaced++;
-			} // numPlaced < numItems
-
-			ESCAPE:
-			if(totalLoops > threshhold) sprintf(Console->consoleLine[17].line, "Infinite loop protection.");
-			else Console->consoleLine[17].line[0] = '\0';
-
-			sum = tools::fletcher16(reinterpret_cast<u8*>(&item::checks), sizeof(item::checks));
-			sprintf(Console->consoleLine[14].line, "Checksum new: [%x]", sum);
-			sprintf(Console->consoleLine[15].line, "Zeroes: %d", zeroes);
-			sprintf(Console->consoleLine[16].line, "Done with %d/%d items", numPlaced, numItems);
+			chestRandomizer->generate();
 		}
 
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
 
-	void Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
+	s32 Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
 	{
 		// Runs once when Link picks up an item with text and is holding it towards the camera
-		// identify soley by position
 
-		size_t size = sizeof(item::ItemCheck);
-		u16 numItems = sizeof(item::checks) / size;
-		
-
-		item::ItemCheck cItem;
-		bool replaceFound = false;
-
-		for(u16 i = 0; i < numItems; i++)
-		{
-			cItem = item::checks[i];
-			// Check pos against the item struct, floor the values due to fluctuations
-			// Don't check for coords if unique
-			if(item == cItem.itemID && (cItem.type == item::ItemType::Equip || cItem.type == item::ItemType::Gear))
-			{
-				// TODO move the sprintfs() to the end of the function and set the text dynamically+
-				replaceFound = true;
-				if(cItem.destination)
-				{
-					// Item found, load destination
-					u8 newItem = cItem.destination->itemID;
-					sprintf(sysConsolePtr->consoleLine[5].line, "[%d] item: %d -> %d", i, item, newItem);
-
-					item = newItem;
-					break;
-				}
-				else
-				{
-					sprintf(sysConsolePtr->consoleLine[5].line, "[%d] nullptr exception", i);
-					break;
-				}
-			}
-			else if ((static_cast<s32>(pos[0]) & ~0xF) == (static_cast<s32>(cItem.position[0]) & ~0xF))
-			{
-				if ((static_cast<s32>(pos[1]) & ~0xF) == (static_cast<s32>(cItem.position[1]) & ~0xF))
-				{
-					if ((static_cast<s32>(pos[2]) & ~0xF) == (static_cast<s32>(cItem.position[2]) & ~0xF))
-					{
-						replaceFound = true;
-						if(cItem.destination != nullptr)
-						{
-							// Item found, load destination
-							u8 newItem = cItem.destination->itemID;
-							sprintf(sysConsolePtr->consoleLine[5].line, "[%d] item: %d -> %d", i, item, newItem);
-
-							item = newItem;
-							break;
-						}
-						else
-						{
-							sprintf(sysConsolePtr->consoleLine[5].line, "[%d] nullptr exception", i);
-							break;
-						}
-					}
-				}
-			}
-		}
-		strcpy(sysConsolePtr->consoleLine[6].line, "Condition:");
-		sprintf(sysConsolePtr->consoleLine[7].line, BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(cItem.condition >> 7), BYTE_TO_BINARY(cItem.condition));
-		if(!replaceFound)
-		{
-			strcpy(sysConsolePtr->consoleLine[5].line, "No item replacement found.");
-		}
+		item = chestRandomizer->getItemReplacement(pos, item);
 
 		// Call original function
-		createItemForTrBox_trampoline(pos, item, unk3, unk4, unk5, unk6);
+		return createItemForTrBox_trampoline(pos, item, unk3, unk4, unk5, unk6);
 	}
 	
+	s32 Mod::procEvtSkipper(void* evtPtr)
+	{
+		// TODO: Make this a dynamic function that can be manipulated outside (struct csTrigger[])
+		// Runs when the user tries to skip a Cutscene		
+		if(0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Sacred_Grove]))
+		{
+			// We're at sacred grove
+			if(0x2 == gameInfo.eventSystem.currentEventID)
+			{
+				// Master Sword cutscene
+				//game_patch::masterSwordCutscene();
+				tools::setCutscene(true, true, cutscene_skip::onMasterSwordSkip);
+			}
+		}
+		// Call original function
+		return evt_control_Skipper_trampoline(evtPtr);
+	}
+
 	void Mod::assemblyOverwrites()
 	{
 		// Get the addresses to overwrite
