@@ -42,7 +42,7 @@ namespace mod::game_patch
 		// We should be wolf
 		setFirstTimeWolf();
 
-		// Set sewers flags (zelda cutscenes, unchained link, bla)
+		// Set sewers flags (zelda cutscenes, unchained wolf link, bla)
 		gameInfo.scratchPad.eventBits[0x05] |= 0x7A;
 
 		// Load back to Ordon Spring

@@ -27,6 +27,6 @@ namespace mod
 			 * @param pos The cXyz of the chest
 			 * @param item Internal Item ID of the item
 			 */
-			u8 getItemReplacement(const float pos[3], s32 item);
+			u8 getItemReplacement(const float pos[3], u8 item);
 	};
 }

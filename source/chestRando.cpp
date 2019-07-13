@@ -140,23 +140,27 @@ namespace mod
 			if (sItem->type == item::ItemType::Key)
 			{
 				dItem = sItem;
-			}/*
-			else if(sItem->itemID == items::Iron_Boots)
-			{
-				// Commented because only faked IBs are in the list currently
-				// Original won't be touched
-				// Will be needed once we put the original IB chest back in
-				// Unless we find a workaround to change the contents of that chest
-				// Bo will start talking infinitely if != IB
-				dItem = sItem;
-			}*/
+			}
 			else if (sItem->itemID == items::Ordon_Goat_Cheese)
 			{
 				dItem = sItem;
 			}
-			else if (dItem->itemID == items::Ordon_Pumpkin)
+			else if (sItem->itemID == items::Ordon_Pumpkin)
 			{
 				dItem = sItem;
+			}
+
+			else if (dItem->type == item::ItemType::Key)
+			{
+				sItem = dItem;
+			}
+			else if (dItem->itemID == items::Ordon_Goat_Cheese)
+			{
+				sItem = dItem;
+			}
+			else if (dItem->itemID == items::Ordon_Pumpkin)
+			{
+				sItem = dItem;
 			}
 
 			// Place item
@@ -179,7 +183,7 @@ namespace mod
 		sprintf(Console->consoleLine[16].line, "Done with %d/%d items", numPlaced, numItems);
 	}
 
-	u8 ChestRandomizer::getItemReplacement(const float pos[3], s32 item)
+	u8 ChestRandomizer::getItemReplacement(const float pos[3], u8 item)
 	{
 		// identify soley by position
 
@@ -223,10 +227,18 @@ namespace mod
 						if(cItem.destination != nullptr)
 						{
 							// Item found, load destination
-							u8 newItem = cItem.destination->itemID;
-							sprintf(sysConsolePtr->consoleLine[5].line, "[%d] item: %d -> %d", i, item, newItem);
+							item::ItemCheck* newItem = cItem.destination;
 
-							item = newItem;
+							u16 j;
+							for(j = 0; j < numItems; j++)
+							{
+								if(&item::checks[j] == newItem)
+									break;
+							}
+
+							sprintf(sysConsolePtr->consoleLine[5].line, "item: {%u}%u -> {%u}%u", i, item, j, newItem->itemID);
+
+							item = newItem->itemID;
 							break;
 						}
 						else
