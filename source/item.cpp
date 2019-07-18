@@ -62,14 +62,10 @@ namespace mod::item
 			break;
 		}
 
-		// Special case(s)
-		if(item == items::Bomb_Bag_Regular_Bombs || item == items::Bomb_Bag_Water_Bombs || item == items::Heros_Bow)
+		if ((currentPlayerConditions & item::Condition::Bow) && ((currentPlayerConditions & item::Condition::Bombs) || (currentPlayerConditions & item::Condition::Water_Bombs)))
 		{
-			if ((currentPlayerConditions & item::Condition::Bow) && ((currentPlayerConditions & item::Condition::Bombs) || (currentPlayerConditions & item::Condition::Water_Bombs)))
-			{
-				// We have bow && (bombs || waterbombs) = bombarrows
-				flags |= item::Condition::Bomb_Arrows;
-			}
+			// We have bow && (bombs || waterbombs) = bombarrows
+			flags |= item::Condition::Bomb_Arrows;
 		}
 
 		return flags;

@@ -32,7 +32,8 @@ namespace mod::item
 		Double_Clawshot = 0b0000000000010000,
 		Spinner 		= 0b0000000000001000,
 		Dominion_Rod 	= 0b0000000000000100,
-		Zora_Armor 		= 0b0000000000000010
+		Zora_Armor 		= 0b0000000000000010,
+		Small_Key		= 0b0000000000000001
 	};
 
 	enum ItemType : u8
@@ -55,7 +56,11 @@ namespace mod::item
 	{
 		u8 itemID;
 		u8 type;
-		u16 condition; // Bitwise condition
+		char* stage;
+		u8 room;
+		u8 sourceLayer;
+		u8 destLayer;
+		u16 condition;
 		float position[3];
 		ItemCheck* source;
 		ItemCheck* destination;

@@ -5,6 +5,11 @@
 // text
 8000EDA8:getArchiveHeapPtr
 
+// d_save.o
+80032B50:getRupeeMax
+800351EC:getSave
+80035220:putSave
+
 // d_event.o
 800428a8:defaultSkipStb
 80042b04:skipper
@@ -14,13 +19,18 @@
 
 // data
 // f_op_scene_req.o 
-80452ca0:isUsingOfOverlap
+804525D4:freezeActors
+80452CA0:isUsingOfOverlap
 
 // f_ap_game.o
 80018B14:fapGm_Execute
 
 // f_op_actor_mng.o
-8001BD1C:createItemForTrBoxDemo
+8001bC90:createItemForPresentDemo
+8001BC74:createItemForTrBoxDemo
+8001C17C:createItemForBoss
+8001C21C:createItemForMidBoss
+8001C260:createItemForDirectGet
 
 // d_map_path_dmap.o
 8003EF8C:getMapPlayerPos
@@ -29,7 +39,12 @@
 80098010:checkItemGet
 
 // d_a_alink.h
+800B2928:setStickData
+800bb6c4:checkHeavyStateOn
 8011A908:checkTreasureRupeeReturn
+
+// d_menu_collect.o
+801B3598:setWalletMaxNum
 
 // JKRExpHeap.o
 802CFF28:do_alloc_JKRExpHeap

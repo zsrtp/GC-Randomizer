@@ -50,6 +50,6 @@ namespace mod::tools
 		 * @param data The data you need a checksum for
 		 * @param count The number of bytes
 		 */
-		u16 fletcher16(u8 *data, size_t count);
+		u32 fletcher32(u16* data, size_t count);
 	}
 }

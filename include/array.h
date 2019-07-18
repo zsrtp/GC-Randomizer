@@ -7,16 +7,6 @@ namespace mod::array
 	extern "C"
 	{
 		/**
-		 * Shuffles all elements of an array
-		 * 
-		 * @param array 	Pointer to the array that's being shuffled
-		 * @param n 		Size of one element
-		 * @param count 	Number of elements within the array
-		 * @returns Nothing
-		 */
-		void shuffle(void** array, size_t n, size_t count);
-
-		/**
 		 * Checks whether an array contains a value and returns it's index
 		 * 
 		 * @param needle 	The value to be searched for

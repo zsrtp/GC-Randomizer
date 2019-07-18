@@ -14,249 +14,150 @@ namespace mod
 {
 	void ChestRandomizer::generate()
 	{
-		// Randomize the chest targets
-		tp::jfw_system::SystemConsole* Console = sysConsolePtr;
-		// Print initial seed data for recreation
-		// Use lines 10 to 20!
-		sprintf(Console->consoleLine[10].line, "== GENERATOR - %s ==", VERSION);
-		sprintf(Console->consoleLine[11].line, "Seed: %016llX", RAND_SEED);
-
-		size_t size = sizeof(item::ItemCheck);
-		u16 numItems = sizeof(item::checks) / size;
-
-		u16 numPlaced = 0;
-
-		u32 totalLoops = 0;
-		u32 threshhold = 0x000FFFFF;
-
-		u16 zeroes = 0;
-
-		u16 sum = 0;
-
-		// Set current checksum
-		sum = tools::fletcher16(reinterpret_cast<u8*>(&item::checks), sizeof(item::checks));
-
-		// Reset conditions
 		currentPlayerConditions = startConditions;
+		currentSeed = tools::randomSeed;
 
-		// Reset items
-		for(u16 i = 0; i < numItems; i++)
+		totalChecks = sizeof(item::checks)/sizeof(item::ItemCheck);
+
+		layerCheckCount = 0;
+		conditionCheckCount = 0;
+
+		// Set metadata
+		for(u16 i = 0; i < totalChecks; i++)
 		{
-			item::checks[i].source = nullptr;
-			item::checks[i].destination = nullptr;
+			// Check if this item has to be in a specific layer
+			if(item::checks[i].destLayer != 0xFF)
+			{
+				layerCheckCount++;
+			}
+			else if(item::checks[i].condition)
+			{
+				// Else if because layerChecks will be already placed when we process conditionChecks
+				// This source chest requires additional items to be reached
+				conditionCheckCount++;
+			}
 		}
 
-		sprintf(Console->consoleLine[12].line, "[%d] Items reset", numItems);
-		sprintf(Console->consoleLine[13].line, "Checksum old: [%x]", sum);
+		// Set up arrays
+		u16* layerCheckIndex = new u16[layerCheckCount];
+		u16* conditionCheckIndex = new u16[conditionCheckCount];
 
-		// Represents the current sourceItem who's alias has to be found and set
-		item::ItemCheck* sItem;
+		item::ItemCheck* sourceCheck;
+		item::ItemCheck* destCheck;
 
-		// Represents the current destinationItem who's conditions have to be checked
-		item::ItemCheck* dItem;
+		u16 l = 0; // layer index
+		u16 c = 0; // condition index
 
-		while(numPlaced < numItems)
+		// Extract indexes
+		for(u16 i = 0; i < totalChecks; i++)
 		{
-			totalLoops++;
-			/**
-			 * Assumed fill:
-			 * We fill in the chests "backwards" that means
-			 * we assume we have everything and upon
-			 * placing the item we remove that item out of
-			 * the player's conditions
-			 */
-
-			bool sourceReachable = true;
-			bool destinationValid = true;
-
-			// Find source
-			do
+			// Check if this item has to be in a specific layer
+			if(item::checks[i].destLayer != 0xFF)
 			{
-				totalLoops++;
-				u16 sourceIndex = tools::getRandom(numItems);
+				layerCheckIndex[l] = i;
+				l++;
+			}
+			else if(item::checks[i].condition)
+			{
+				conditionCheckIndex[c] = i;
+				c++;
+			}
+		}
 
-				sItem = &item::checks[sourceIndex];
-
-				// Check whether the source already has a destination (has been placed)
-				while(sItem->destination)
-				{
-					sourceIndex++;
-					// Index is 0 based, numItems absolute
-					if(sourceIndex == numItems)
-					{
-						sourceIndex = 0;
-						zeroes++;
-					}
-					sItem = &item::checks[sourceIndex];
-					if(totalLoops > threshhold) goto ESCAPE;
-				}
-
-				// Store the player conditions with the indicating bit removed
-				u16 pCondition = (sItem->condition & ~item::Condition::AND);
-				// Make the necessary condition check
-				if(numPlaced > 100)
-				{
-					// Ignore conditions lol
-					sourceReachable = true;
-				}
-				else if(item::Condition::AND == (sItem->condition & item::Condition::AND))
-				{
-					// All items in pCondition have to in currentPlayerConditions
-					sourceReachable = (pCondition & currentPlayerConditions) == pCondition;
-				}
-				else
-				{
-					// One of the items in pCondition has to be in currentPlayerConditions
-					sourceReachable = (pCondition & currentPlayerConditions) != 0;
-				}
-
-				if(totalLoops > threshhold) goto ESCAPE;
-			} while(!sourceReachable);
-			// The chest we're replacing is now reachable
+		// Place layer items
+		for(u16 i = layerCheckCount; i > 0; i--)
+		{
+			// Get the next layer check
+			destCheck = &item::checks[layerCheckIndex[i]];
 
 			do
 			{
-				totalLoops++;
-				// Find destination that has no source yet
+				sourceCheck = findSource(destCheck->destLayer);
+			} while(!validate(sourceCheck, destCheck));
 
-				do
-				{
-					u16 destinationIndex = tools::getRandom(numItems);
-					dItem = &item::checks[destinationIndex];
+			placeCheck(sourceCheck, destCheck);
+		}
 
-					if(totalLoops > threshhold) goto ESCAPE;
-				} while(dItem->source);
+		// Now Fill up sources with conditions before they're all filled up
+		for(u16 i = conditionCheckCount; i > 0; i--)
+		{
+			// Get next condition check
+			destCheck = &item::checks[conditionCheckIndex[i]];
 
-
-				// Destination is not placed yet
-				// This is technically redundant but for code consistency I'll keep the while(!destinationValid)
-				destinationValid = true;
-
-				if (totalLoops > threshhold) goto ESCAPE;
-			} while (!destinationValid);
-			// The chest (content) we're receiving when opening sItem
-
-			// Fix special Items
-			if (sItem->type == item::ItemType::Key)
+			do
 			{
-				dItem = sItem;
-			}
-			else if (sItem->itemID == items::Ordon_Goat_Cheese)
+				sourceCheck = findSource(destCheck->destLayer);
+			} while(!validate(sourceCheck, destCheck));
+		}
+
+		// Fill the rest
+		for(u16 i = 0; i < totalChecks; i++)
+		{
+			destCheck = &item::checks[i];
+			sourceCheck = findSource(destCheck->destLayer);
+
+			if(validate(sourceCheck, destCheck))
 			{
-				dItem = sItem;
+				placeCheck(sourceCheck, destCheck);
 			}
-			else if (sItem->itemID == items::Ordon_Pumpkin)
-			{
-				dItem = sItem;
-			}
+		}
 
-			else if (dItem->type == item::ItemType::Key)
-			{
-				sItem = dItem;
-			}
-			else if (dItem->itemID == items::Ordon_Goat_Cheese)
-			{
-				sItem = dItem;
-			}
-			else if (dItem->itemID == items::Ordon_Pumpkin)
-			{
-				sItem = dItem;
-			}
-
-			// Place item
-			sItem->destination 	= dItem;
-			dItem->source 		= sItem;
-
-			// Conditionhandling
-			currentPlayerConditions &= ~item::getFlags(dItem->itemID, currentPlayerConditions);
-
-			numPlaced++;
-		} // numPlaced < numItems
-
-		ESCAPE:
-		if(totalLoops > threshhold) sprintf(Console->consoleLine[17].line, "Infinite loop protection.");
-		else Console->consoleLine[17].line[0] = '\0';
-
-		sum = tools::fletcher16(reinterpret_cast<u8*>(&item::checks), sizeof(item::checks));
-		sprintf(Console->consoleLine[14].line, "Checksum new: [%x]", sum);
-		sprintf(Console->consoleLine[15].line, "Zeroes: %d", zeroes);
-		sprintf(Console->consoleLine[16].line, "Done with %d/%d items", numPlaced, numItems);
+		// Done
+		checkSum = tools::fletcher32(reinterpret_cast<u16*>(item::checks), sizeof(item::checks));
 	}
 
-	u8 ChestRandomizer::getItemReplacement(const float pos[3], u8 item)
+	void ChestRandomizer::placeCheck(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
 	{
-		// identify soley by position
+		// Place without asking
+		sourceCheck->destination = destCheck;
+		destCheck->source = sourceCheck;
 
-		size_t size = sizeof(item::ItemCheck);
-		u16 numItems = sizeof(item::checks) / size;
+		// Update player conditions!
+		currentPlayerConditions |= item::getFlags(destCheck->itemID, currentPlayerConditions);
+	}
 
-		item::ItemCheck cItem;
-		bool replaceFound = false;
-
-		for(u16 i = 0; i < numItems; i++)
+	item::ItemCheck* ChestRandomizer::findSource(u8 destLayer)
+	{
+		item::ItemCheck* itemCheck;
+		do
 		{
-			cItem = item::checks[i];
-			// Check pos against the item struct, floor the values due to fluctuations
-			// Don't check for coords if unique
-			if(item == cItem.itemID && (cItem.type == item::ItemType::Equip || cItem.type == item::ItemType::Gear))
-			{
-				// TODO move the sprintfs() to the end of the function and set the text dynamically+
-				replaceFound = true;
-				if(cItem.destination)
-				{
-					// Item found, load destination
-					u8 newItem = cItem.destination->itemID;
-					sprintf(sysConsolePtr->consoleLine[5].line, "[%d] item: %d -> %d", i, item, newItem);
+			u16 index = tools::getRandom(totalChecks);
 
-					item = newItem;
-					break;
-				}
-				else
-				{
-					sprintf(sysConsolePtr->consoleLine[5].line, "[%d] nullptr exception", i);
-					break;
-				}
-			}
-			else if ((static_cast<s32>(pos[0]) & ~0xF) == (static_cast<s32>(cItem.position[0]) & ~0xF))
-			{
-				if ((static_cast<s32>(pos[1]) & ~0xF) == (static_cast<s32>(cItem.position[1]) & ~0xF))
-				{
-					if ((static_cast<s32>(pos[2]) & ~0xF) == (static_cast<s32>(cItem.position[2]) & ~0xF))
-					{
-						replaceFound = true;
-						if(cItem.destination != nullptr)
-						{
-							// Item found, load destination
-							item::ItemCheck* newItem = cItem.destination;
+			itemCheck = &item::checks[index];
 
-							u16 j;
-							for(j = 0; j < numItems; j++)
-							{
-								if(&item::checks[j] == newItem)
-									break;
-							}
+		} while(itemCheck->destination || itemCheck->sourceLayer > destLayer);
+		// If itemCheck already has a destination OR the layer is outside the replacement's target
 
-							sprintf(sysConsolePtr->consoleLine[5].line, "item: {%u}%u -> {%u}%u", i, item, j, newItem->itemID);
+		return itemCheck;
+	}
 
-							item = newItem->itemID;
-							break;
-						}
-						else
-						{
-							sprintf(sysConsolePtr->consoleLine[5].line, "[%d] nullptr exception", i);
-							break;
-						}
-					}
-				}
-			}
-		}
-		strcpy(sysConsolePtr->consoleLine[6].line, "Condition:");
-		sprintf(sysConsolePtr->consoleLine[7].line, BYTE_TO_BINARY_PATTERN BYTE_TO_BINARY_PATTERN, BYTE_TO_BINARY(cItem.condition >> 7), BYTE_TO_BINARY(cItem.condition));
-		if(!replaceFound)
+	bool ChestRandomizer::validate(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
+	{
+		if(sourceCheck->destination || destCheck->source)
 		{
-			strcpy(sysConsolePtr->consoleLine[5].line, "No item replacement found.");
+			return false;
 		}
+		else
+		{			
+			return checkCondition(sourceCheck);
+		}
+	}
 
+	bool ChestRandomizer::checkCondition(item::ItemCheck* sourceCheck)
+	{
+		if((sourceCheck->condition & currentPlayerConditions) == sourceCheck->condition)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	u8 ChestRandomizer::getItemReplacement(const float pos[3], s32 item)
+	{
+		// TODO: Find item replacement
 		return item;
 	}
 }

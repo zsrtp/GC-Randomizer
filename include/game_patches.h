@@ -4,7 +4,8 @@
 
 /**
  * Contains functions that fix certain cutscenes
- * those functions run only when the cs is skipped
+ * those functions should only run when the CS
+ * is currently playing and tried to be skipped by the user
  */
 namespace mod::cutscene_skip
 {
@@ -14,8 +15,31 @@ namespace mod::cutscene_skip
 	s32 onMasterSwordSkip(void* unk, s32 unk2);
 }
 
+/**
+ * Contains patch functions that take no parameters
+ * and immediately perfom the described action
+ */
 namespace mod::game_patch
 {
+	/**
+	 * Enables the debug screen without
+	 * active debug mode; It triggers
+	 * automatically when crashing
+	 */
+	void assemblyOverwrites();
+
+	/**
+	 * Removes the movementspeed limit
+	 * when wearing IB
+	 */
+	void removeIBLimit();
+
+	/**
+	 * Changes the max rupee amounts for each
+	 * of the wallets
+	 */
+	void increaseWalletSize();
+
 	/**
 	 * Skips sewers immediately
 	 * triggers the load to Ordon Spring

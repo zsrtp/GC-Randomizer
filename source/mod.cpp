@@ -10,7 +10,11 @@
 #include "stage.h"
 #include "game_patches.h"
 #include "chestRando.h"
+#include "itemChecks.h"
+#include "HUDConsole.h"
 
+#include <tp/f_op_scene_req.h>
+#include <tp/m_Do_controller_pad.h>
 #include <tp/d_map_path_dmap.h>
 #include <tp/evt_control.h>
 #include <tp/f_op_scene_req.h>
@@ -18,6 +22,7 @@
 #include <tp/f_ap_game.h>
 #include <tp/f_op_actor_mng.h>
 #include <tp/d_a_alink.h>
+#include <tp/d_save.h>
 #include <tp/JFWSystem.h>
 #include <cstdio>
 #include <cstring>
@@ -27,6 +32,7 @@ namespace mod
 	Mod* global::modPtr = nullptr;
 	ChestRandomizer* global::chestRandoPtr = nullptr;
 	event::EventListener* global::eventListenerPtr = nullptr;
+	mod::HUDConsole* global::hudConsolePtr = nullptr;
 
 	void main()
 	{
@@ -38,29 +44,76 @@ namespace mod
 	{
 		eventListener = new event::EventListener();
 		chestRandomizer = new ChestRandomizer();
+		hudConsole = new HUDConsole("Settings", 0x80);
 		global::modPtr = this;
 		global::chestRandoPtr = this->chestRandomizer;
 		global::eventListenerPtr = this->eventListener;
+		global::hudConsolePtr = this->hudConsole;
 	}
 
 	void Mod::init()
 	{
 		// Perform any necessary assembly overwrites
-		assemblyOverwrites();
+		game_patch::assemblyOverwrites();
+		game_patch::increaseWalletSize();
+		game_patch::removeIBLimit();
 
-		// Init rando seed
+		// Init rando
 		tools::randomSeed = 0x9e3779b97f4a7c15;
+		randoEnabled = 1;
+		truePause = 1;
 
-		// Set the initial console color
-		system_console::setBackgroundColor(0x00A0A0A0);
-		system_console::setState(true, 21);
+		// Print controls
+		strcpy(sysConsolePtr->consoleLine[20].line, "D-Pad    :   Up/Down  L/R");
+		strcpy(sysConsolePtr->consoleLine[21].line, "+/- Value:   A/B/X/Y  Trigger Generation: Start");
+		strcpy(sysConsolePtr->consoleLine[22].line, "Console  :   Left/Right + Z  (auto on new file)");
+		strcpy(sysConsolePtr->consoleLine[23].line, "Bring up the console to use commands");
+		strcpy(sysConsolePtr->consoleLine[24].line, "https://rando.tpspeed.run | Twitter: @theAECX");
 
-		sprintf(sysConsolePtr->consoleLine[0].line, "AECX' TP Randomizer %s", VERSION);
-		strcpy(sysConsolePtr->consoleLine[1].line, "Controls:");
-		strcpy(sysConsolePtr->consoleLine[2].line, "  [R + Z] Toggle console");
-		strcpy(sysConsolePtr->consoleLine[3].line, "  [L + Z + B] Force New Rando");
-		strcpy(sysConsolePtr->consoleLine[4].line, "Auto rando upon new game!");
+		u8 page = 0;
 
+		// General settings
+		hudConsole->addOption(page, "Red:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[0], 0xFF);
+		hudConsole->addOption(page, "Green:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[1], 0xFF);
+		hudConsole->addOption(page, "Blue:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[2], 0xFF);
+		hudConsole->addOption(page, "Alpha:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[3], 0xFF);
+		hudConsole->addOption(page, "True Pause:", &truePause, 0x1);
+
+		// Seed settings
+		page = hudConsole->addPage("Seed");
+
+		hudConsole->addOption(page, "Rando enabled?", &randoEnabled, 0x1);
+		hudConsole->addOption(page, "Custom Seed?", &customSeed, 0x1);
+		hudConsole->addOption(page, "Seed 1:", &reinterpret_cast<u8*>(&tools::randomSeed)[0], 0xFF);
+		hudConsole->addOption(page, "Seed 2:", &reinterpret_cast<u8*>(&tools::randomSeed)[1], 0xFF);
+		hudConsole->addOption(page, "Seed 3:", &reinterpret_cast<u8*>(&tools::randomSeed)[2], 0xFF);
+		hudConsole->addOption(page, "Seed 4:", &reinterpret_cast<u8*>(&tools::randomSeed)[3], 0xFF);
+
+		hudConsole->addOption(page, "Seed 5:", &reinterpret_cast<u8*>(&tools::randomSeed)[4], 0xFF);
+		hudConsole->addOption(page, "Seed 6:", &reinterpret_cast<u8*>(&tools::randomSeed)[5], 0xFF);
+		hudConsole->addOption(page, "Seed 7:", &reinterpret_cast<u8*>(&tools::randomSeed)[6], 0xFF);
+		hudConsole->addOption(page, "Seed 8:", &reinterpret_cast<u8*>(&tools::randomSeed)[7], 0xFF);
+
+		hudConsole->addWatch(page, "Resulting Seed", &tools::randomSeed, 'x', WatchInterpretation::_u64);
+
+		// Debug
+		page = hudConsole->addPage("Debug Info");
+
+		hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "  Source:", &chestRandomizer->lastSourceInfo, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "    Dest:", &chestRandomizer->lastDestInfo, 's', WatchInterpretation::_str);
+
+		hudConsole->addWatch(page, "Total Checks:", &chestRandomizer->totalChecks, 'u', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Layer Checks:", &chestRandomizer->layerCheckCount, 'u', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Cond  Checks:", &chestRandomizer->conditionCheckCount, 'u', WatchInterpretation::_u16);
+
+		hudConsole->addWatch(page, "Active Seed:", &chestRandomizer->currentSeed, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "   Checksum:", &chestRandomizer->checkSum, 'x', WatchInterpretation::_u32);
+
+
+		// Print
+		hudConsole->draw();
+		system_console::setState(true, 0);
 
 		//   =================
 		//  | Custom events   |
@@ -79,7 +132,7 @@ namespace mod
 		//   =================
 		//  | Function Hooks  |
 		//   =================
-		
+
 		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
 			[]()
 			{
@@ -96,10 +149,54 @@ namespace mod
 			}
 		);
 
-		createItemForTrBox_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
-			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
+		createItemForPresentDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForPresentDemo,
+			[](const float pos[3], s32 item, u8 unk1, s32 unk2, s32 unk3, const float unk4[3], const float unk5[3])
 			{
-				return global::modPtr->procCreateItemForTrBoxDemo(pos, item, unk3, unk4, unk5, unk6);
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForPresentDemo");
+
+				return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk1, unk2, unk3, unk4, unk5);
+			}
+		);
+			
+
+		createItemForTrBoxDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
+			[](const float pos[3], s32 item, s32 unk1, s32 unk2, const float unk3[3], const float unk4[3])
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForTrBoxDemo");
+
+				return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, unk1, unk2, unk3, unk4);
+			}
+		);
+
+		createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
+			[](const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5, s32 unk6)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForBoss");
+
+				return global::modPtr->createItemForBoss_trampoline(pos, item, unk1, unk2, unk3, unk4, unk5, unk6);
+			}
+		);
+
+		createItemForMidBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForMidBoss,
+			[](const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5, s32 unk6)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForMidBoss");
+
+				return global::modPtr->createItemForMidBoss_trampoline(pos, item, unk1, unk2, unk3, unk4, unk5, unk6);
+			}
+		);
+
+		createItemForDirectGet_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForDirectGet,
+			[](const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForDirectGet");
+
+				return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk1, unk2 ,unk3, unk4, unk5);
 			}
 		);
 
@@ -114,53 +211,95 @@ namespace mod
 	void Mod::procNewFrame()
 	{
 		// Increment seed
-		tools::getRandom(0);
-
-		// Print dbg
-	/*
-		sprintf(sysConsolePtr->consoleLine[10].line, "respawnCs: %p", &gameInfo.respawnCutscene);
-		sprintf(sysConsolePtr->consoleLine[11].line, "respawnAn: %p", &gameInfo.respawnAnimation);
-		sprintf(sysConsolePtr->consoleLine[12].line, "immediateC: %p", &gameInfo.eventSystem.immediateControl);
-		sprintf(sysConsolePtr->consoleLine[13].line, "cEvId: %p   nEvId: %p", &gameInfo.eventSystem.currentEventID, &gameInfo.eventSystem.nextEventID);
-		sprintf(sysConsolePtr->consoleLine[14].line, "cstage: %p  nstage: %p", &gameInfo.currentStage, &gameInfo.nextStageVars.nextStage);
-	*/
-
-
+		if(!customSeed)
+		{
+			tools::getRandom(0);
+		}
+		
 		// If loading has started check for LoadEvents
 		if(isLoading)
 		{
 			eventListener->checkLoadEvents();
 		}
 
-		// Runs once each frame
-		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
+		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_DPad_Right | controller::PadInputs::Button_Z)) || controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_DPad_Left | controller::PadInputs::Button_Z)))
 		{
-			// Toggle console
+			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
-		}
+			tp::f_op_scene_req::freezeActors = sysConsolePtr->consoleEnabled;
 
-		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_L | controller::PadInputs::Button_Z | controller::PadInputs::Button_B)))
+			if(truePause)
+			{
+				// Inputs handled, don't pass onto the game
+				tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
+				tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
+			}
+		}
+		if(sysConsolePtr->consoleEnabled)
 		{
-			chestRandomizer->generate();
+			if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_Start)))
+			{
+				chestRandomizer->generate();
+			}
+
+			// Parse inputs of this frame
+			switch(tp::m_do_controller_pad::cpadInfo.buttonInputTrg)
+			{
+				case controller::PadInputs::Button_A:
+					hudConsole->performAction(ConsoleActions::Option_Increase);
+				break;
+
+				case controller::PadInputs::Button_X:
+					hudConsole->performAction(ConsoleActions::Option_Increase, 10);
+				break;
+
+				case controller::PadInputs::Button_B:
+					hudConsole->performAction(ConsoleActions::Option_Decrease);
+				break;
+
+				case controller::PadInputs::Button_Y:
+					hudConsole->performAction(ConsoleActions::Option_Decrease, 10);
+				break;
+
+				case controller::PadInputs::Button_DPad_Up:
+					hudConsole->performAction(ConsoleActions::Move_Up);
+				break;
+
+				case controller::PadInputs::Button_DPad_Down:
+					hudConsole->performAction(ConsoleActions::Move_Down);
+				break;
+
+				case controller::PadInputs::Button_L:
+					hudConsole->performAction(ConsoleActions::Move_Left);
+				break;
+
+				case controller::PadInputs::Button_R:
+					hudConsole->performAction(ConsoleActions::Move_Right);
+				break;
+			}
+			hudConsole->draw();
+
+			if(truePause)
+			{
+				// Inputs handled, don't pass onto the game
+				tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
+				tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
+			}
 		}
 
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
 
-	s32 Mod::procCreateItemForTrBoxDemo(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
+	s32 Mod::procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32])
 	{
+		strcpy(lastItemFunc, funcIdentifier);
 		// Runs once when Link picks up an item with text and is holding it towards the camera
-
-		item = chestRandomizer->getItemReplacement(pos, item);
-
-		// Call original function
-		return createItemForTrBox_trampoline(pos, item, unk3, unk4, unk5, unk6);
+		return 0x44;
 	}
 	
 	s32 Mod::procEvtSkipper(void* evtPtr)
 	{
-		// TODO: Make this a dynamic function that can be manipulated outside (struct csTrigger[])
 		// Runs when the user tries to skip a Cutscene		
 		if(0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Sacred_Grove]))
 		{
@@ -169,30 +308,10 @@ namespace mod
 			{
 				// Master Sword cutscene
 				//game_patch::masterSwordCutscene();
-				tools::setCutscene(true, true, cutscene_skip::onMasterSwordSkip);
+				tools::setCutscene(true, false, cutscene_skip::onMasterSwordSkip);
 			}
 		}
 		// Call original function
 		return evt_control_Skipper_trampoline(evtPtr);
-	}
-
-	void Mod::assemblyOverwrites()
-	{
-		// Get the addresses to overwrite
-		#ifdef TP_US
-		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
-		#elif defined TP_EU
-		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B878);
-		#elif defined TP_JP
-		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
-		#endif
-
-		// Perform the overwrites
-
-		/* If the address is loaded into the cache before the overwrite is made, 
-		then the cache will need to be cleared after the overwrite */
-
-		// Enable the crash screen
-		*enableCrashScreen = 0x48000014; // b 0x14
 	}
 }

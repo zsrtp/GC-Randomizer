@@ -57,18 +57,30 @@ namespace mod::tools
 		}
 	}
 
-	u16 fletcher16(u8 *data, size_t count)
+	
+	u32 fletcher32(u32* data, size_t len)
 	{
-		u16 sum1 = 0;
-		u16 sum2 = 0;
-		size_t index;
+			u32 c0, c1;
+			size_t i;
 
-		for (index = 0; index < count; ++index)
-		{
-			sum1 = (sum1 + data[index]) % 255;
-			sum2 = (sum2 + sum1) % 255;
-		}
+			for (c0 = c1 = 0; len >= 360; len -= 360)
+			{
+				for (i = 0; i < 360; i++)
+				{
+						c0 = c0 + *data++;
+						c1 = c1 + c0;
+				}
+				c0 = c0 % 65535;
+				c1 = c1 % 65535;
+			}
 
-		return (sum2 << 8) | sum1;
+			for (i = 0; i < len; i++)
+			{
+					c0 = c0 + *data++;
+					c1 = c1 + c0;
+			}
+			c0 = c0 % 65535;
+			c1 = c1 % 65535;
+			return (c1 << 16 | c0);
 	}
 }

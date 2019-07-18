@@ -3,6 +3,9 @@
 #include "stage.h"
 #include "tools.h"
 
+#include <tp/d_menu_collect.h>
+#include <tp/d_a_alink.h>
+#include <tp/d_save.h>
 #include <tp/JFWSystem.h>
 #include <tp/d_com_inf_game.h>
 #include <tp/evt_control.h>
@@ -31,6 +34,72 @@ namespace mod::cutscene_skip
 
 namespace mod::game_patch
 {
+	void assemblyOverwrites()
+	{
+		// Default to US/JP
+		u32* enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
+
+		// Get the addresses to overwrite
+		#ifdef TP_US
+		enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
+		#elif defined TP_EU
+		enableCrashScreen = reinterpret_cast<u32*>(0x8000B878);
+		#elif defined TP_JP
+		enableCrashScreen = reinterpret_cast<u32*>(0x8000B8A4);
+		#endif
+
+		// Perform the overwrites
+
+		/* If the address is loaded into the cache before the overwrite is made, 
+		then the cache will need to be cleared after the overwrite */
+
+		// Enable the crash screen
+		*enableCrashScreen = 0x48000014; // b 0x14
+	}
+
+	void removeIBLimit()
+	{
+		// li 0
+		u32 li = 0x38600000;
+		// b +4C
+		u32 b  = 0x4800004C;
+
+		// CheckHeavyState overwrite
+		u32 checkHeavyStateOnAddress = reinterpret_cast<u32>(&tp::d_a_alink::checkHeavyStateOn);
+		*reinterpret_cast<u32*>(checkHeavyStateOnAddress + 0x84) = li;
+
+		u32 setStickDataAddress = reinterpret_cast<u32>(&tp::d_a_alink::setStickData);
+		*reinterpret_cast<u32*>(setStickDataAddress + 0x5FC) = b;
+	}
+
+	void increaseWalletSize()
+	{
+		// li
+		u32 li = 0x38600000;
+		u32 cmpwi = 0x2c000000;
+
+		u32 getRupeeMaxAddress = reinterpret_cast<u32>(&tp::d_save::getRupeeMax);
+		u32 setWalletMaxNumAddress = reinterpret_cast<u32>(&tp::d_menu_collect::setWalletMaxNum);
+
+		// 300 -> 1000
+		*reinterpret_cast<u32*>(getRupeeMaxAddress + 0x30) = li | 0x000003E8;
+		
+		// 600 -> 5000
+		*reinterpret_cast<u32*>(getRupeeMaxAddress + 0x38) = li | 0x00001388;
+
+		// 1000 -> 9999 (> 4 digit not good)
+		*reinterpret_cast<u32*>(getRupeeMaxAddress + 0x40) = li | 0x0000270F;
+
+		// 600 -> 5000
+		*reinterpret_cast<u32*>(setWalletMaxNumAddress + 0x18) = cmpwi | 0x00001388;
+
+		// 300 -> 1000
+		*reinterpret_cast<u32*>(setWalletMaxNumAddress + 0x24) = cmpwi | 0x000003E8;
+
+		// 1000 -> 9999
+		*reinterpret_cast<u32*>(setWalletMaxNumAddress + 0x30) = cmpwi | 0x0000270F;
+	}
+
 	void skipSewers()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Sewers");
