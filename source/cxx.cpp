@@ -9,15 +9,13 @@ void* operator new(size_t size)
 {
 	void* ArchiveHeapPtr = tp::m_Do_ext::archiveHeap;
 	void* NewPtr = tp::jkr_exp_heap::do_alloc_JKRExpHeap(ArchiveHeapPtr, size, 0x20);
-	memset(NewPtr, 0, size);
-	return NewPtr;
+	return memset(NewPtr, 0, size);
 }
 void* operator new[](size_t size)
 {
 	void* ArchiveHeapPtr = tp::m_Do_ext::archiveHeap;
 	void* NewPtr = tp::jkr_exp_heap::do_alloc_JKRExpHeap(ArchiveHeapPtr, size, 0x20);
-	memset(NewPtr, 0, size);
-	return NewPtr;
+	return memset(NewPtr, 0, size);
 }
 void operator delete(void* ptr)
 {
