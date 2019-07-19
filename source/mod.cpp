@@ -64,9 +64,9 @@ namespace mod
 		truePause = 1;
 
 		// Print controls
-		strcpy(sysConsolePtr->consoleLine[20].line, "D-Pad    :   Up/Down  L/R");
-		strcpy(sysConsolePtr->consoleLine[21].line, "+/- Value:   A/B/X/Y  Trigger Generation: Start");
-		strcpy(sysConsolePtr->consoleLine[22].line, "Console  :   Left/Right + Z  (auto on new file)");
+		strcpy(sysConsolePtr->consoleLine[20].line, "D-Pad    : Up/Down  L/R");
+		strcpy(sysConsolePtr->consoleLine[21].line, "+/- Value: A/B/X/Y  Console  :  L + Z");
+		strcpy(sysConsolePtr->consoleLine[22].line, " Generate: Left/Right + Start (auto on new file)");
 		strcpy(sysConsolePtr->consoleLine[23].line, "Bring up the console to use commands");
 		strcpy(sysConsolePtr->consoleLine[24].line, "https://rando.tpspeed.run | Twitter: @theAECX");
 
@@ -105,10 +105,10 @@ namespace mod
 
 		hudConsole->addWatch(page, "Total Checks:", &chestRandomizer->totalChecks, 'u', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "Layer Checks:", &chestRandomizer->layerCheckCount, 'u', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "Cond  Checks:", &chestRandomizer->conditionCheckCount, 'u', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Empty:", &chestRandomizer->empty, 'u', WatchInterpretation::_u16);
 
 		hudConsole->addWatch(page, "Active Seed:", &chestRandomizer->currentSeed, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "   Checksum:", &chestRandomizer->checkSum, 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "   Checksum:", &chestRandomizer->checkSum, 'x', WatchInterpretation::_u16);
 
 
 		// Print
@@ -181,12 +181,12 @@ namespace mod
 		);
 
 		createItemForMidBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForMidBoss,
-			[](const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5, s32 unk6)
+			[](const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], s32 unk4, s32 unk5)
 			{
 				// Call replacement function
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForMidBoss");
 
-				return global::modPtr->createItemForMidBoss_trampoline(pos, item, unk1, unk2, unk3, unk4, unk5, unk6);
+				return global::modPtr->createItemForMidBoss_trampoline(pos, item, unk1, unk2, unk3, unk4, unk5);
 			}
 		);
 
@@ -222,22 +222,14 @@ namespace mod
 			eventListener->checkLoadEvents();
 		}
 
-		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_DPad_Right | controller::PadInputs::Button_Z)) || controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_DPad_Left | controller::PadInputs::Button_Z)))
+		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_L | controller::PadInputs::Button_Z)))
 		{
 			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
-			tp::f_op_scene_req::freezeActors = sysConsolePtr->consoleEnabled;
-
-			if(truePause)
-			{
-				// Inputs handled, don't pass onto the game
-				tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
-				tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
-			}
 		}
 		if(sysConsolePtr->consoleEnabled)
 		{
-			if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_Start)))
+			if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_Start | controller::PadInputs::Button_DPad_Left)) || controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_Start | controller::PadInputs::Button_DPad_Right)))
 			{
 				chestRandomizer->generate();
 			}
@@ -278,13 +270,18 @@ namespace mod
 				break;
 			}
 			hudConsole->draw();
+		}
 
-			if(truePause)
-			{
-				// Inputs handled, don't pass onto the game
-				tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
-				tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
-			}
+		if(truePause && sysConsolePtr->consoleEnabled)
+		{
+			// Inputs handled, don't pass onto the game
+			tp::f_op_scene_req::freezeActors = 1;
+			tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
+			tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
+		}
+		else
+		{
+			tp::f_op_scene_req::freezeActors = 0;
 		}
 
 		// Call original function
@@ -295,7 +292,12 @@ namespace mod
 	{
 		strcpy(lastItemFunc, funcIdentifier);
 		// Runs once when Link picks up an item with text and is holding it towards the camera
-		return 0x44;
+		if(randoEnabled)
+		{
+			item = chestRandomizer->getItemReplacement(pos, item);
+		}
+
+		return item;
 	}
 	
 	s32 Mod::procEvtSkipper(void* evtPtr)

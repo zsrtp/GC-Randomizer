@@ -10,55 +10,55 @@ namespace mod::item
 		switch(item)
 		{
 			case items::Item::Lantern:
-				flags |= item::Condition::Lantern;
+				flags = item::Condition::Lantern;
 			break;
 
 			case items::Item::Iron_Boots:
-				flags |= item::Condition::Iron_Boots;
+				flags = item::Condition::Iron_Boots;
 			break;
 
 			case items::Item::Boomerang:
-				flags |= item::Condition::Boomerang;
+				flags = item::Condition::Boomerang;
 			break;
 
 			case items::Item::Slingshot:
-				flags |= item::Condition::Slingshot;
+				flags = item::Condition::Slingshot;
 			break;
 
 			case items::Item::Heros_Bow:
-				flags |= item::Condition::Bow;
+				flags = item::Condition::Bow;
 			break;
 
 			case items::Item::Empty_Bomb_Bag:
-				flags |= item::Condition::Bombs;
+				flags = item::Condition::Bombs;
 			break;
 
 			case items::Item::Bomb_Bag_Water_Bombs:
-				flags |= item::Condition::Water_Bombs;
+				flags = item::Condition::Water_Bombs;
 			break;
 
 			case items::Item::Ball_and_Chain:
-				flags |= item::Condition::Ball_And_Chain;
+				flags = item::Condition::Ball_And_Chain;
 			break;
 
 			case items::Item::Clawshot:
-				flags |= item::Condition::Clawshot;
+				flags = item::Condition::Clawshot;
 			break;
 
 			case items::Item::Clawshots:
-				flags |= item::Condition::Double_Clawshot;
+				flags = item::Condition::Double_Clawshot;
 			break;
 
 			case items::Item::Spinner:
-				flags |= item::Condition::Spinner;
+				flags = item::Condition::Spinner;
 			break;
 
 			case items::Item::Dominion_Rod:
-				flags |= item::Condition::Dominion_Rod;
+				flags = item::Condition::Dominion_Rod;
 			break;
 
 			case items::Item::Zora_Armor:
-				flags |= item::Condition::Zora_Armor;
+				flags = item::Condition::Zora_Armor;
 			break;
 		}
 

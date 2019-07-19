@@ -62,7 +62,7 @@ namespace mod
 			s32 (*createItemForPresentDemo_trampoline)(const float pos[3], s32 item, u8 unk1, s32 unk2, s32 unk3, const float unk4[3], const float unk5[3]) = nullptr;
 			s32 (*createItemForTrBoxDemo_trampoline)(const float pos[3], s32 item, s32 unk1, s32 unk2, const float unk3[3], const float unk4[3]) = nullptr;
 			s32 (*createItemForBoss_trampoline)(const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5, s32 unk6) = nullptr;
-			s32 (*createItemForMidBoss_trampoline)(const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5, s32 unk6) = nullptr;
+			s32 (*createItemForMidBoss_trampoline)(const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], s32 unk4, s32 unk5) = nullptr;
 			s32 (*createItemForDirectGet_trampoline)(const float pos[3], s32 item, s32 unk1, const float unk2[3], const float unk3[3], float unk4, float unk5) = nullptr;
 	};
 }

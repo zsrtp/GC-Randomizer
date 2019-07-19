@@ -19,7 +19,7 @@ namespace tp::jfw_system
 		u8 unk_64[0x4];
 		bool consoleEnabled;
 		u8 unk_69[3];
-		ConsoleLine consoleLine[20]; // Should figure out the total amount of lines at some point
+		ConsoleLine consoleLine[25]; // Should figure out the total amount of lines at some point
 	} __attribute__((__packed__));
 
 	static_assert(sizeof(ConsoleLine) == 0x3E);

@@ -6,6 +6,7 @@
 #include "tools.h"
 #include "array.h"
 
+#include <tp/d_com_inf_game.h>
 #include <tp/JFWSystem.h>
 #include <cstdio>
 #include <cstring>
@@ -19,34 +20,33 @@ namespace mod
 
 		totalChecks = sizeof(item::checks)/sizeof(item::ItemCheck);
 
+		// Reset metadata
 		layerCheckCount = 0;
-		conditionCheckCount = 0;
+		empty = 0;
 
-		// Set metadata
+		itemOrderIndex = 0;
+
 		for(u16 i = 0; i < totalChecks; i++)
 		{
+			// We also wanna reset the last rando
+			item::checks[i].destination = nullptr;
+			item::checks[i].source = nullptr;
+
 			// Check if this item has to be in a specific layer
 			if(item::checks[i].destLayer != 0xFF)
 			{
 				layerCheckCount++;
 			}
-			else if(item::checks[i].condition)
-			{
-				// Else if because layerChecks will be already placed when we process conditionChecks
-				// This source chest requires additional items to be reached
-				conditionCheckCount++;
-			}
 		}
 
 		// Set up arrays
 		u16* layerCheckIndex = new u16[layerCheckCount];
-		u16* conditionCheckIndex = new u16[conditionCheckCount];
+		itemOrder = new u8[totalChecks];
 
 		item::ItemCheck* sourceCheck;
 		item::ItemCheck* destCheck;
 
 		u16 l = 0; // layer index
-		u16 c = 0; // condition index
 
 		// Extract indexes
 		for(u16 i = 0; i < totalChecks; i++)
@@ -57,57 +57,87 @@ namespace mod
 				layerCheckIndex[l] = i;
 				l++;
 			}
-			else if(item::checks[i].condition)
+		}
+
+		// Lock special items in place first
+		for(u16 i = 0; i < totalChecks; i++)
+		{
+			// Interpret this as source
+			sourceCheck = &item::checks[i];
+
+			// Just in case, should always be true here
+			if(!sourceCheck->destination)
 			{
-				conditionCheckIndex[c] = i;
-				c++;
+				if(sourceCheck->type == item::ItemType::Key || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Iron_Boots)
+				{
+					// It should be locked before placing any other items
+					placeCheck(sourceCheck, sourceCheck);
+				}
 			}
 		}
 
 		// Place layer items
-		for(u16 i = layerCheckCount; i > 0; i--)
+		for(u16 i = 0; i < layerCheckCount; i++)
 		{
 			// Get the next layer check
 			destCheck = &item::checks[layerCheckIndex[i]];
 
-			do
+			// Just in case a fixed item was marked as layer item aswell
+			if(!destCheck->source)
 			{
-				sourceCheck = findSource(destCheck->destLayer);
-			} while(!validate(sourceCheck, destCheck));
+				do
+				{
+					sourceCheck = findSource(destCheck->destLayer);
+				} while(!validate(sourceCheck, destCheck));
 
-			placeCheck(sourceCheck, destCheck);
+				placeCheck(sourceCheck, destCheck);
+			}
 		}
+		
+		// All progression items have been placed, ignore conditions from now on
+		currentPlayerConditions = 0xFFFF;
 
-		// Now Fill up sources with conditions before they're all filled up
-		for(u16 i = conditionCheckCount; i > 0; i--)
-		{
-			// Get next condition check
-			destCheck = &item::checks[conditionCheckIndex[i]];
-
-			do
-			{
-				sourceCheck = findSource(destCheck->destLayer);
-			} while(!validate(sourceCheck, destCheck));
-		}
-
-		// Fill the rest
+		// Select empty destinations
 		for(u16 i = 0; i < totalChecks; i++)
 		{
 			destCheck = &item::checks[i];
-			sourceCheck = findSource(destCheck->destLayer);
 
-			if(validate(sourceCheck, destCheck))
+			if(!destCheck->source)
 			{
+				// Find new source
+				sourceCheck = findSource(0xFF);
+
 				placeCheck(sourceCheck, destCheck);
 			}
 		}
 
+		// Count empty sources
+		for(u16 i = 0; i < totalChecks; i++)
+		{
+			sourceCheck = &item::checks[i];
+			if(!sourceCheck->destination)
+			{
+				empty++;
+			}
+		}
+
 		// Done
-		checkSum = tools::fletcher32(reinterpret_cast<u16*>(item::checks), sizeof(item::checks));
+		checkSum = tools::fletcher16(itemOrder, sizeof(itemOrder));
+
+		delete[] itemOrder;
+		itemOrder = nullptr;
+		delete[] layerCheckIndex;
+
+		// Reset seed if the player wanted to lock it (otherwise it advances anyways)
+		tools::randomSeed = currentSeed;
 	}
 
 	void ChestRandomizer::placeCheck(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
 	{
+		// Add source item to the itemOrder array
+		itemOrder[itemOrderIndex] = sourceCheck->itemID;
+		itemOrderIndex++;
+
 		// Place without asking
 		sourceCheck->destination = destCheck;
 		destCheck->source = sourceCheck;
@@ -118,17 +148,15 @@ namespace mod
 
 	item::ItemCheck* ChestRandomizer::findSource(u8 destLayer)
 	{
-		item::ItemCheck* itemCheck;
+		item::ItemCheck* sourceCheck;
 		do
 		{
 			u16 index = tools::getRandom(totalChecks);
-
-			itemCheck = &item::checks[index];
-
-		} while(itemCheck->destination || itemCheck->sourceLayer > destLayer);
+			sourceCheck = &item::checks[index];
+		} while(sourceCheck->destination || sourceCheck->sourceLayer > destLayer);
 		// If itemCheck already has a destination OR the layer is outside the replacement's target
 
-		return itemCheck;
+		return sourceCheck;
 	}
 
 	bool ChestRandomizer::validate(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
@@ -145,19 +173,56 @@ namespace mod
 
 	bool ChestRandomizer::checkCondition(item::ItemCheck* sourceCheck)
 	{
-		if((sourceCheck->condition & currentPlayerConditions) == sourceCheck->condition)
+		if((sourceCheck->condition & item::Condition::AND) == item::Condition::AND)
 		{
-			return true;
+			if((sourceCheck->condition & currentPlayerConditions) == sourceCheck->condition)
+			{
+				return true;
+			}
 		}
 		else
 		{
-			return false;
+			if((sourceCheck->condition & currentPlayerConditions) != 0)
+			{
+				return true;
+			}
 		}
+		return false;
 	}
 
-	u8 ChestRandomizer::getItemReplacement(const float pos[3], s32 item)
+	s32 ChestRandomizer::getItemReplacement(const float pos[3], s32 item)
 	{
-		// TODO: Find item replacement
+		item::ItemCheck* sourceCheck;
+		snprintf(lastSourceInfo, 50, "%s %4.0f %4.0f %4.0f", gameInfo.currentStage, pos[0], pos[1], pos[2]);
+		lastDestInfo[0] = '\0';
+
+		for(u16 i = 0; i < totalChecks; i++)
+		{
+			sourceCheck = &item::checks[i];
+
+			if(static_cast<u32>(sourceCheck->position[0]) == static_cast<u32>(pos[0]))
+			{
+				if(static_cast<u32>(sourceCheck->position[1]) == static_cast<u32>(pos[1]))
+				{
+					if(static_cast<u32>(sourceCheck->position[2]) == static_cast<u32>(pos[2]))
+					{
+						if(sourceCheck->itemID == item)
+						{
+							snprintf(lastSourceInfo, 50, "%s->%d->0x%x", sourceCheck->stage, sourceCheck->room, sourceCheck->itemID);
+							if(sourceCheck->destination)
+							{
+								snprintf(lastDestInfo, 50, "%s->%d->0x%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
+								return sourceCheck->destination->itemID;
+							}
+							else
+							{
+								snprintf(lastDestInfo, 50, "No Replacement set for this source");
+							}
+						}
+					}
+				}
+			}
+		}
 		return item;
 	}
 }

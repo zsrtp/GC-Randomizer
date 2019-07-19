@@ -45,11 +45,11 @@ namespace mod::tools
 		void setCutscene(bool skippable, bool fade = true, tp::evt_control::csFunc onSkip = tp::evt_control::defaultSkipStb);
 
 		/**
-		 * Generates a simple u16 checksum
+		 * Generates a simple u32 checksum
 		 * 
 		 * @param data The data you need a checksum for
 		 * @param count The number of bytes
 		 */
-		u32 fletcher32(u16* data, size_t count);
+		u16 fletcher16(u8* data, s32 count);
 	}
 }
