@@ -42,6 +42,8 @@
 800B271C:setStickData
 800BB4B8:checkHeavyStateOn
 8011A6FC:checkTreasureRupeeReturn
+// data
+8038EB8C:ladderVars
 
 // d_menu_collect.o
 801B3340:setWalletMaxNum

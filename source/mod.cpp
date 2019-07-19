@@ -56,6 +56,7 @@ namespace mod
 		// Perform any necessary assembly overwrites
 		game_patch::assemblyOverwrites();
 		game_patch::increaseWalletSize();
+		game_patch::increaseClimbSpeed();
 		game_patch::removeIBLimit();
 
 		// Init rando

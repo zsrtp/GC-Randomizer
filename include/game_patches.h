@@ -29,6 +29,11 @@ namespace mod::game_patch
 	void assemblyOverwrites();
 
 	/**
+	 * Increasees Links climbing speed
+	 */
+	void increaseClimbSpeed();
+
+	/**
 	 * Removes the movementspeed limit
 	 * when wearing IB
 	 */

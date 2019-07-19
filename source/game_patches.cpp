@@ -57,6 +57,19 @@ namespace mod::game_patch
 		*enableCrashScreen = 0x48000014; // b 0x14
 	}
 
+	void increaseClimbSpeed()
+	{
+		// Adjust Link's climbing speeds
+		tp::d_a_alink::LadderVars* LadderVars = &tp::d_a_alink::ladderVars;
+		LadderVars->ladderClimbInitSpeed 			= 1.8;
+		LadderVars->ladderReachTopClimbUpSpeed 		= 1.8;
+		LadderVars->ladderTopStartClimbDownSpeed 	= 1.8;
+		LadderVars->ladderBottomGetOffSpeed 		= 1.8;
+		LadderVars->ladderClimbSpeed 				= 2.0;
+		LadderVars->wallClimbHorizontalSpeed 		= 1.8;
+		LadderVars->wallClimbVerticalSpeed 			= 2.0;
+	}
+
 	void removeIBLimit()
 	{
 		// li 0
