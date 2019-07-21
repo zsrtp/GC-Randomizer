@@ -57,6 +57,17 @@ namespace mod::tools
 		}
 	}
 
+	float fCompare(const float f1, const float f2)
+	{
+		if(f1 > f2)
+		{
+			return (f1 - f2);
+		}
+		else
+		{
+			return (f2 - f1);
+		}
+	}
 	
 	u16 fletcher16(u8* data, s32 count)
 	{

@@ -45,6 +45,11 @@ namespace mod::tools
 		void setCutscene(bool skippable, bool fade = true, tp::evt_control::csFunc onSkip = tp::evt_control::defaultSkipStb);
 
 		/**
+		 * Compares two floats and returns their difference
+		 */
+		float fCompare(const float f1, const float f2);
+
+		/**
 		 * Generates a simple u32 checksum
 		 * 
 		 * @param data The data you need a checksum for

@@ -16,7 +16,7 @@ namespace mod
 			u16 currentPlayerConditions;
 
 			// Layer 0 conditions, basically
-			u16 startConditions = 0b1110100000000001; // AND, Lantern, IB, slingshot, small key (<-locked anyway) (although IB are not in layer 0 we add them since they will be statically in Bo chest for layer1)
+			u16 startConditions = 0b1010000000000001; // AND, IB, slingshot, small key (<-locked anyway)
 
 			// Debug values
 			char lastSourceInfo[50];
@@ -47,9 +47,9 @@ namespace mod
 
 		private:
 			/**
-			 * Finds a random source within a specified layer
+			 * Finds a random source within a specified layer range
 			 */
-			item::ItemCheck* findSource(u8 destLayer);
+			item::ItemCheck* findSource(u8 maxLayer, u8 minLayer = 0, item::ItemCheck* destCheck = nullptr);
 
 			/**
 			 * Places dest into source and sets the flags necessary
@@ -57,13 +57,13 @@ namespace mod
 			void placeCheck(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck);
 
 			/**
-			 * Validates two checks, if true they can be placed
-			 */
-			bool validate(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck);
-
-			/**
 			 * Checks if the player with their current conditions can access the chest
 			 */
-			bool checkCondition(item::ItemCheck* sourceCheck);
+			bool checkCondition(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck);
+
+			/**
+			 * Checks if the item should be locked in place
+			 */
+			bool isLocked(item::ItemCheck* check);
 	};
 }

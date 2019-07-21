@@ -29,6 +29,11 @@ namespace mod::game_patch
 	void assemblyOverwrites();
 
 	/**
+	 * Sets some quest log flags to open areas
+	 */
+	void questLogInit();
+
+	/**
 	 * Increasees Links climbing speed
 	 */
 	void increaseClimbSpeed();

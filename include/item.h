@@ -50,7 +50,7 @@ namespace mod::item
 	};
 
 	/**
-	 * Contains an item that proc createItemForTrBoxDemo
+	 * Contains item check info
 	 */
 	struct ItemCheck
 	{

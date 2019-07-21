@@ -57,17 +57,23 @@ namespace mod::game_patch
 		*enableCrashScreen = 0x48000014; // b 0x14
 	}
 
+	void questLogInit()
+	{
+		// Kill Skulltula at Link's house
+		gameInfo.unk_958[0xA] |= 0x1;
+	}
+
 	void increaseClimbSpeed()
 	{
 		// Adjust Link's climbing speeds
 		tp::d_a_alink::LadderVars* LadderVars = &tp::d_a_alink::ladderVars;
 		LadderVars->ladderClimbInitSpeed 			= 1.8;
-		LadderVars->ladderReachTopClimbUpSpeed 		= 1.8;
+		LadderVars->ladderReachTopClimbUpSpeed 		= 1.765;
 		LadderVars->ladderTopStartClimbDownSpeed 	= 1.8;
 		LadderVars->ladderBottomGetOffSpeed 		= 1.8;
-		LadderVars->ladderClimbSpeed 				= 2.0;
-		LadderVars->wallClimbHorizontalSpeed 		= 1.8;
-		LadderVars->wallClimbVerticalSpeed 			= 2.0;
+		LadderVars->ladderClimbSpeed 				= 1.575;
+		LadderVars->wallClimbHorizontalSpeed 		= 2.0;
+		LadderVars->wallClimbVerticalSpeed 			= 1.875;
 	}
 
 	void removeIBLimit()

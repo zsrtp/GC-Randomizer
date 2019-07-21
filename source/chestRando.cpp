@@ -15,107 +15,89 @@ namespace mod
 {
 	void ChestRandomizer::generate()
 	{
+		// Reset
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
 
 		totalChecks = sizeof(item::checks)/sizeof(item::ItemCheck);
-
-		// Reset metadata
-		layerCheckCount = 0;
 		empty = 0;
+		layerCheckCount = 0;
 
 		itemOrderIndex = 0;
 
-		for(u16 i = 0; i < totalChecks; i++)
-		{
-			// We also wanna reset the last rando
-			item::checks[i].destination = nullptr;
-			item::checks[i].source = nullptr;
-
-			// Check if this item has to be in a specific layer
-			if(item::checks[i].destLayer != 0xFF)
-			{
-				layerCheckCount++;
-			}
-		}
-
 		// Set up arrays
-		u16* layerCheckIndex = new u16[layerCheckCount];
 		itemOrder = new u8[totalChecks];
 
 		item::ItemCheck* sourceCheck;
 		item::ItemCheck* destCheck;
 
-		u16 l = 0; // layer index
-
-		// Extract indexes
+		// Reset randomization
 		for(u16 i = 0; i < totalChecks; i++)
 		{
-			// Check if this item has to be in a specific layer
-			if(item::checks[i].destLayer != 0xFF)
-			{
-				layerCheckIndex[l] = i;
-				l++;
-			}
+			item::checks[i].destination = nullptr;
+			item::checks[i].source = nullptr;
 		}
 
-		// Lock special items in place first
+		// Lock some checks
 		for(u16 i = 0; i < totalChecks; i++)
 		{
-			// Interpret this as source
-			sourceCheck = &item::checks[i];
-
-			// Just in case, should always be true here
-			if(!sourceCheck->destination)
+			if(isLocked(&item::checks[i]))
 			{
-				if(sourceCheck->type == item::ItemType::Key || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Iron_Boots)
-				{
-					// It should be locked before placing any other items
-					placeCheck(sourceCheck, sourceCheck);
-				}
+				placeCheck(&item::checks[i], &item::checks[i]);
 			}
 		}
 
-		// Place layer items
-		for(u16 i = 0; i < layerCheckCount; i++)
-		{
-			// Get the next layer check
-			destCheck = &item::checks[layerCheckIndex[i]];
-
-			// Just in case a fixed item was marked as layer item aswell
-			if(!destCheck->source)
-			{
-				do
-				{
-					sourceCheck = findSource(destCheck->destLayer);
-				} while(!validate(sourceCheck, destCheck));
-
-				placeCheck(sourceCheck, destCheck);
-			}
-		}
-		
-		// All progression items have been placed, ignore conditions from now on
-		currentPlayerConditions = 0xFFFF;
-
-		// Select empty destinations
+		// Place layer checks
 		for(u16 i = 0; i < totalChecks; i++)
 		{
 			destCheck = &item::checks[i];
 
 			if(!destCheck->source)
 			{
-				// Find new source
-				sourceCheck = findSource(0xFF);
+				// Free slot
+				if(destCheck->destLayer != 0xFF)
+				{
+					// Layer check
+					sourceCheck = findSource(destCheck->destLayer, (destCheck->destLayer - 1), destCheck);
+					placeCheck(sourceCheck, destCheck);
+					layerCheckCount++;
+				}
+			}
+		}
 
+		// Place items that unlock other locations before caring about remaining items
+		for(u16 i = 0; i < totalChecks; i++)
+		{
+			destCheck = &item::checks[i];
+
+			if(!destCheck->source)
+			{
+				// Free slot
+				if(item::getFlags(destCheck->itemID, 0) != 0)
+				{
+					// This would unlock new checks, so place it
+					sourceCheck = findSource(0xFF, 0, destCheck);
+					placeCheck(sourceCheck, destCheck);
+				}
+			}
+		}
+
+		// Place remaining
+		for(u16 i = 0; i < totalChecks; i++)
+		{
+			destCheck = &item::checks[i];
+
+			if(!destCheck->source)
+			{
+				sourceCheck = findSource(0xFF, 0, destCheck);
 				placeCheck(sourceCheck, destCheck);
 			}
 		}
 
-		// Count empty sources
+		// Count empty
 		for(u16 i = 0; i < totalChecks; i++)
 		{
-			sourceCheck = &item::checks[i];
-			if(!sourceCheck->destination)
+			if(!item::checks[i].destination)
 			{
 				empty++;
 			}
@@ -125,8 +107,6 @@ namespace mod
 		checkSum = tools::fletcher16(itemOrder, sizeof(itemOrder));
 
 		delete[] itemOrder;
-		itemOrder = nullptr;
-		delete[] layerCheckIndex;
 
 		// Reset seed if the player wanted to lock it (otherwise it advances anyways)
 		tools::randomSeed = currentSeed;
@@ -143,35 +123,27 @@ namespace mod
 		destCheck->source = sourceCheck;
 
 		// Update player conditions!
-		currentPlayerConditions |= item::getFlags(destCheck->itemID, currentPlayerConditions);
+		currentPlayerConditions = item::getFlags(destCheck->itemID, currentPlayerConditions);
 	}
 
-	item::ItemCheck* ChestRandomizer::findSource(u8 destLayer)
+	item::ItemCheck* ChestRandomizer::findSource(u8 maxLayer, u8 minLayer, item::ItemCheck* destCheck)
 	{
+		if(minLayer == 0xFF)
+		{
+			minLayer = 0x0;
+		}
+
 		item::ItemCheck* sourceCheck;
 		do
 		{
 			u16 index = tools::getRandom(totalChecks);
 			sourceCheck = &item::checks[index];
-		} while(sourceCheck->destination || sourceCheck->sourceLayer > destLayer);
-		// If itemCheck already has a destination OR the layer is outside the replacement's target
+		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer);
 
 		return sourceCheck;
 	}
 
-	bool ChestRandomizer::validate(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
-	{
-		if(sourceCheck->destination || destCheck->source)
-		{
-			return false;
-		}
-		else
-		{			
-			return checkCondition(sourceCheck);
-		}
-	}
-
-	bool ChestRandomizer::checkCondition(item::ItemCheck* sourceCheck)
+	bool ChestRandomizer::checkCondition(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
 	{
 		if((sourceCheck->condition & item::Condition::AND) == item::Condition::AND)
 		{
@@ -187,36 +159,81 @@ namespace mod
 				return true;
 			}
 		}
-		return false;
+
+		// If the destination item (which you'll receive) isn't required for this souce it can be placed though
+		if((item::getFlags(destCheck->itemID, 0) & sourceCheck->condition) == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	bool ChestRandomizer::isLocked(item::ItemCheck* check)
+	{
+		bool result = false;
+
+		switch(check->type)
+		{
+			case item::ItemType::Key:
+				// Small + Big Keys
+				result = true;
+			break;
+
+			case item::ItemType::Dungeon:
+				// Map, compass
+				result = true;
+			break;
+
+			case item::ItemType::Story:
+				// Ilia quest
+				result = true;
+			break;
+		}
+
+		switch(check->itemID)
+		{
+			case items::Item::Iron_Boots:
+				result = true;
+			break;
+
+			case items::Item::Fishing_Rod:
+				result = true;
+			break;
+		}
+
+		return result;
 	}
 
 	s32 ChestRandomizer::getItemReplacement(const float pos[3], s32 item)
 	{
 		item::ItemCheck* sourceCheck;
 		snprintf(lastSourceInfo, 50, "%s %4.0f %4.0f %4.0f", gameInfo.currentStage, pos[0], pos[1], pos[2]);
-		lastDestInfo[0] = '\0';
+		snprintf(lastDestInfo, 50, "No Replacement found for this source");
 
 		for(u16 i = 0; i < totalChecks; i++)
 		{
 			sourceCheck = &item::checks[i];
 
-			if(static_cast<u32>(sourceCheck->position[0]) == static_cast<u32>(pos[0]))
+			if(tools::fCompare(sourceCheck->position[0], pos[0]) < 100.0)
 			{
-				if(static_cast<u32>(sourceCheck->position[1]) == static_cast<u32>(pos[1]))
+				if(tools::fCompare(sourceCheck->position[1], pos[1]) < 100.0)
 				{
-					if(static_cast<u32>(sourceCheck->position[2]) == static_cast<u32>(pos[2]))
+					if(tools::fCompare(sourceCheck->position[2], pos[2]) < 100.0)
 					{
 						if(sourceCheck->itemID == item)
 						{
-							snprintf(lastSourceInfo, 50, "%s->%d->0x%x", sourceCheck->stage, sourceCheck->room, sourceCheck->itemID);
+							snprintf(lastSourceInfo, 50, "%s->%d->%x", sourceCheck->stage, sourceCheck->room, sourceCheck->itemID);
 							if(sourceCheck->destination)
 							{
-								snprintf(lastDestInfo, 50, "%s->%d->0x%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
+								snprintf(lastDestInfo, 50, "%s->%d->%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
 								return sourceCheck->destination->itemID;
 							}
 							else
 							{
-								snprintf(lastDestInfo, 50, "No Replacement set for this source");
+								snprintf(lastDestInfo, 50, "Replacement is empty??");
 							}
 						}
 					}
