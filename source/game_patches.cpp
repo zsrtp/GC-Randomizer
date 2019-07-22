@@ -57,7 +57,7 @@ namespace mod::game_patch
 		*enableCrashScreen = 0x48000014; // b 0x14
 	}
 
-	void questLogInit()
+	void killLinkHouseSpider()
 	{
 		// Kill Skulltula at Link's house
 		gameInfo.unk_958[0xA] |= 0x1;

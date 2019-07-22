@@ -145,6 +145,8 @@ namespace mod
 		// Fix BiTE
 		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x0, 0x17, 0xFF, 0xFF, game_patch::giveEpona, event::LoadEventAccuracy::Stage_Room_Spawn);
 
+		// Kill spider at Link's house
+		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0xFF, 0xFF, 0xFF, game_patch::killLinkHouseSpider, event::LoadEventAccuracy::Stage_Room);
 
 		//   =================
 		//  | Function Hooks  |
@@ -225,9 +227,6 @@ namespace mod
 
 	void Mod::procNewFrame()
 	{
-		// Make sure flags that need to be set are set
-		game_patch::questLogInit();
-
 		// Increment seed
 		if(!customSeed)
 		{

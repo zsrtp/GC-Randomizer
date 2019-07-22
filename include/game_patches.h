@@ -29,9 +29,9 @@ namespace mod::game_patch
 	void assemblyOverwrites();
 
 	/**
-	 * Sets some quest log flags to open areas
+	 * Kills spider at links house
 	 */
-	void questLogInit();
+	void killLinkHouseSpider();
 
 	/**
 	 * Increasees Links climbing speed
