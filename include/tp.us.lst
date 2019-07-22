@@ -4,6 +4,8 @@
 // m_Do_ext.o
 // text
 8000EDF4:getArchiveHeapPtr
+// data
+80450C34:archiveHeap
 
 // d_save.o
 80032AA8:getRupeeMax
@@ -12,13 +14,10 @@
 
 // d_event.o
 80042778:defaultSkipStb
-800429d4:skipper
+800429D4:skipper
 
+// f_op_scene_req.o
 // data
-80450C34:archiveHeap
-
-// data
-// f_op_scene_req.o 
 80450614:freezeActors
 80450CE0:isUsingOfOverlap
 
@@ -28,7 +27,7 @@
 // f_op_actor_mng.o
 8001BBE8:createItemForPresentDemo
 8001BC74:createItemForTrBoxDemo
-8001C0d4:createItemForBoss
+8001C0D4:createItemForBoss
 8001C174:createItemForMidBoss
 8001C1B8:createItemForDirectGet
 
