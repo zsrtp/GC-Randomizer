@@ -32,7 +32,7 @@ typedef	signed char 		s8;
 
 // Mnemonics
 #define AUTHOR				"AECX"
-#define VERSION				"v0.5b"
+#define VERSION				"v0.5.1b"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos

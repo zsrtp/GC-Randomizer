@@ -372,7 +372,6 @@ namespace mod
 			if(0x2 == gameInfo.eventSystem.currentEventID)
 			{
 				// Master Sword cutscene
-				//game_patch::masterSwordCutscene();
 				tools::setCutscene(true, false, cutscene_skip::onMasterSwordSkip);
 			}
 		}

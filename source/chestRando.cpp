@@ -217,23 +217,31 @@ namespace mod
 		{
 			sourceCheck = &item::checks[i];
 
-			if(tools::fCompare(sourceCheck->position[0], pos[0]) < 100.0)
+			if(0 == strcmp(gameInfo.currentStage, sourceCheck->stage))
 			{
-				if(tools::fCompare(sourceCheck->position[1], pos[1]) < 100.0)
+				// Correct stage
+				if(tools::fCompare(sourceCheck->position[0], pos[0]) < 400.0f)
 				{
-					if(tools::fCompare(sourceCheck->position[2], pos[2]) < 100.0)
+					if(tools::fCompare(sourceCheck->position[1], pos[1]) < 200.0f)
 					{
-						if(sourceCheck->itemID == item)
+						if(tools::fCompare(sourceCheck->position[2], pos[2]) < 400.0f)
 						{
-							snprintf(lastSourceInfo, 50, "%s->%d->%x", sourceCheck->stage, sourceCheck->room, sourceCheck->itemID);
-							if(sourceCheck->destination)
+							if(sourceCheck->itemID == item)
 							{
-								snprintf(lastDestInfo, 50, "%s->%d->%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
-								return sourceCheck->destination->itemID;
-							}
-							else
-							{
-								snprintf(lastDestInfo, 50, "Replacement is empty??");
+								snprintf(lastSourceInfo, 50, "%s->%d->%x", sourceCheck->stage, sourceCheck->room, sourceCheck->itemID);
+								if(sourceCheck->destination)
+								{
+									snprintf(lastDestInfo, 50, "%s->%d->%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
+									item = sourceCheck->destination->itemID;
+									// Unset this check
+									sourceCheck->destination = nullptr;
+									return item;
+								}
+								else
+								{
+									snprintf(lastDestInfo, 50, "No replacement here.");
+									return item;
+								}
 							}
 						}
 					}
