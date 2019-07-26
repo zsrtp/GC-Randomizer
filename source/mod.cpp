@@ -349,7 +349,7 @@ namespace mod
 		strcpy(lastItemFunc, funcIdentifier);
 		snprintf(lastItemData, 50, "0x%02x %f %f %f", item, pos[0], pos[1], pos[2]);
 		// Runs once when Link picks up an item with text and is holding it towards the camera
-		if(randoEnabled && strcmp(funcIdentifier, "createItemForBoss") != 0 && strcmp(funcIdentifier, "createItemForMidBoss") != 0)
+		if(randoEnabled && strcmp(funcIdentifier, "createItemForDirectGet") != 0 && strcmp(funcIdentifier, "createItemForBoss") != 0 && strcmp(funcIdentifier, "createItemForMidBoss") != 0)
 		{
 			item = chestRandomizer->getItemReplacement(pos, item);
 		}
