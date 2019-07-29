@@ -4,21 +4,20 @@
 // m_Do_ext.o
 // text
 8000EDF4:getArchiveHeapPtr
+// data
+8044AD74:archiveHeap
 
 // d_save.o
 80032AA8:getRupeeMax
-800350bC:getSave
+800350BC:getSave
 800350F0:putSave
 
 // d_event.o
 80042778:defaultSkipStb
-800429d4:skipper
+800429D4:skipper
 
+// f_op_scene_req.o
 // data
-8044AD74:archiveHeap
-
-// data
-// f_op_scene_req.o 
 8044A754:freezeActors
 8044AE20:isUsingOfOverlap
 
@@ -40,7 +39,7 @@
 
 // d_a_alink.h
 800B2754:setStickData
-800bb4f0:checkHeavyStateOn
+800BB4F0:checkHeavyStateOn
 8011A734:checkTreasureRupeeReturn
 // data
 80388C0C:ladderVars
@@ -120,7 +119,7 @@
 80368A58:snprintf
 
 // string.o
-8036ae30:strcmp
+8036AE30:strcmp
 8036AFC8:strcpy
 
 // m_Do_controller_pad.o
