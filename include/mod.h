@@ -42,7 +42,14 @@ namespace mod
 
 			// Debug info
 			char lastItemFunc[32]; // Last called item create function
-			char lastItemData[50];
+			char lastItemDataID[5];
+			char lastItemDataX[30];
+			char lastItemDataY[30];
+			char lastItemDataZ[30];
+			
+			char currentPosX[30];
+			char currentPosY[30];
+			char currentPosZ[30];
 
 			// Replacment handler
 			s32 procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32]);

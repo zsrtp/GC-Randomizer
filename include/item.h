@@ -10,30 +10,35 @@ namespace mod::item
 	 * @param item Internal item ID
 	 * @param currentPlayerConditions Current conditions of the player
 	 */
-	u16 getFlags(u8 item, u16 currentPlayerConditions);
+	u32 getFlags(u8 item, u32 currentPlayerConditions);
 
 	/**
 	 * Bitwise conditions for ItemCheck
 	 */
-	enum Condition : u16
+	enum Condition : u32
 	{
-		OR 				= 0b0000000000000000,
-		AND 			= 0b1000000000000000,
-		Lantern 		= 0b0100000000000000,
-		Iron_Boots 		= 0b0010000000000000,
-		Boomerang 		= 0b0001000000000000,
-		Slingshot 		= 0b0000100000000000, // Currently not randomized! so should be always true!
-		Bow 			= 0b0000010000000000,
-		Bombs 			= 0b0000001000000000,
-		Water_Bombs 	= 0b0000000100000000,
-		Bomb_Arrows 	= 0b0000000010000000,
-		Ball_And_Chain 	= 0b0000000001000000,
-		Clawshot 		= 0b0000000000100000,
-		Double_Clawshot = 0b0000000000010000,
-		Spinner 		= 0b0000000000001000,
-		Dominion_Rod 	= 0b0000000000000100,
-		Zora_Armor 		= 0b0000000000000010,
-		Small_Key		= 0b0000000000000001
+		OR 				= 0b000000000000000000000,
+		AND 			= 0b100000000000000000000,
+		Lantern 		= 0b010000000000000000000,//0x48
+		Iron_Boots 		= 0b001000000000000000000,//0x45
+		Boomerang 		= 0b000100000000000000000,//0x40
+		Slingshot 		= 0b000010000000000000000,//0x4B
+		Bow 			= 0b000001000000000000000,//0x43
+		Bombs 			= 0b000000100000000000000,//0x70 0x51
+		Water_Bombs 	= 0b000000010000000000000,//0x70 0x51
+		Bomb_Arrows 	= 0b000000001000000000000,//0x43 0x70 0x51
+		Ball_And_Chain 	= 0b000000000100000000000,//0x42
+		Clawshot 		= 0b000000000010000000000,//0x44
+		Double_Clawshot = 0b000000000001000000000,//0x47
+		Spinner 		= 0b000000000000100000000,//0x41
+		Dominion_Rod 	= 0b000000000000010000000,//0x46
+		Zora_Armor 		= 0b000000000000001000000,//0x31
+		Small_Key		= 0b000000000000000100000,//locked
+		Coral_Earring	= 0b000000000000000010000,//0x3D
+		Wooden_Sword	= 0b000000000000000001000,//0x3F
+		Ordon_Sword		= 0b000000000000000000100,//0x28
+		Master_Sword	= 0b000000000000000000010,//0x29 locked not randomized yet (implies transformation too)
+		Shield			= 0b000000000000000000001,//0x2C
 	};
 
 	enum ItemType : u8
@@ -46,7 +51,11 @@ namespace mod::item
 		Ammo = 5,
 		Misc = 6,
 		Rupee = 7,
-		Key = 8
+		Key = 8,
+		Bottle = 9,
+		Bug = 10,
+		PoeSoul = 11,
+		Shop = 12
 	};
 
 	/**
@@ -60,7 +69,7 @@ namespace mod::item
 		u8 room;
 		u8 sourceLayer;
 		u8 destLayer;
-		u16 condition;
+		u32 condition;
 		float position[3];
 		ItemCheck* source;
 		ItemCheck* destination;

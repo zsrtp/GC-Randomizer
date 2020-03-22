@@ -4,9 +4,9 @@
 
 namespace mod::item
 {
-	u16 getFlags(u8 item, u16 currentPlayerConditions)
+	u32 getFlags(u8 item, u32 currentPlayerConditions)
 	{
-		u16 flags = currentPlayerConditions;
+		u32 flags = currentPlayerConditions;
 		switch(item)
 		{
 			case items::Item::Lantern:
@@ -29,17 +29,12 @@ namespace mod::item
 				flags |= item::Condition::Bow;
 			break;
 
-			case items::Item::Empty_Bomb_Bag:
+			case items::Item::Goron_Bomb_Bag:
 				flags |= item::Condition::Bombs;
 				flags |= item::Condition::Water_Bombs;
 			break;
 
 			case items::Item::Bomb_Bag_Regular_Bombs:
-				flags |= item::Condition::Bombs;
-				flags |= item::Condition::Water_Bombs;
-			break;
-
-			case items::Item::Bomb_Bag_Water_Bombs:
 				flags |= item::Condition::Bombs;
 				flags |= item::Condition::Water_Bombs;
 			break;
@@ -67,6 +62,35 @@ namespace mod::item
 			case items::Item::Zora_Armor:
 				flags |= item::Condition::Zora_Armor;
 			break;
+			
+			case items::Item::Coral_Earring:
+				flags |= item::Condition::Coral_Earring;
+			break;
+			
+			case items::Item::Wooden_Sword:
+				flags |= item::Condition::Wooden_Sword;
+			break;
+			
+			case items::Item::Ordon_Sword:
+				flags |= item::Condition::Ordon_Sword;
+			break;
+						
+			case items::Item::Master_Sword:
+				flags |= item::Condition::Master_Sword;
+			break;
+						
+			case items::Item::Ordon_Shield:
+				flags |= item::Condition::Shield;
+			break;
+						
+			case items::Item::Wooden_Shield:
+				flags |= item::Condition::Shield;
+			break;
+						
+			case items::Item::Hylian_Shield:
+				flags |= item::Condition::Shield;
+			break;
+			
 		}
 
 		if ((flags & item::Condition::Bow) && ((flags & item::Condition::Bombs) || (flags & item::Condition::Water_Bombs)))

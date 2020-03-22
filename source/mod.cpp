@@ -104,7 +104,13 @@ namespace mod
 
 		// Debug
 		page = hudConsole->addPage("Debug Info");
-
+		
+		hudConsole->addOption(page, "Progressive Items?", &chestRandomizer->isProgressiveEnabled, 0x1);	
+		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);	
+		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);	
+		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
+		
+		
 		hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "  Source:", &chestRandomizer->lastSourceInfo, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "    Dest:", &chestRandomizer->lastDestInfo, 's', WatchInterpretation::_str);
@@ -117,7 +123,7 @@ namespace mod
 		hudConsole->addWatch(page, "   Checksum:", &chestRandomizer->checkSum, 'x', WatchInterpretation::_u16);
 
 
-		/*/ Item search
+		// Item search
 		page = hudConsole->addPage("Item Search");
 
 		hudConsole->addOption(page, "Search ID:", &itemSearchID, 0xFF);
@@ -126,7 +132,29 @@ namespace mod
 		hudConsole->addWatch(page, "1. Result:", &itemSearchResults, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "1. Reverse:", &itemReverseSearchResults, 's', WatchInterpretation::_str);
 
-		hudConsole->addWatch(page, "Metadata:", &lastItemData, 's', WatchInterpretation::_str);*/
+		hudConsole->addWatch(page, "MetadataID:", &lastItemDataID, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "MetadataX:", &lastItemDataX, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "MetadataY:", &lastItemDataY, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "MetadataZ:", &lastItemDataZ, 's', WatchInterpretation::_str);
+		
+		// Game info
+		page = hudConsole->addPage("Game Info");
+		
+		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF);
+		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF);	*/	
+		
+		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
+		
+		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);		
+				
+		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextState:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
 
 		// Print
 		hudConsole->draw();
@@ -186,7 +214,8 @@ namespace mod
 				return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, unk3, unk4, unk5, unk6);
 			}
 		);
-
+		//this function is called when the heart spawns, not when link gets it		
+		//createItemForTrBoxDemo is called when heart container is gotten
 		createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
 			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7, s32 unk8)
 			{
@@ -227,6 +256,12 @@ namespace mod
 
 	void Mod::procNewFrame()
 	{
+		float linkPos[3];
+		getPlayerPos(linkPos);
+
+		snprintf(currentPosX, 30, "%f", linkPos[0]);
+		snprintf(currentPosY, 30, "%f", linkPos[1]);
+		snprintf(currentPosZ, 30, "%f", linkPos[2]);
 		// Increment seed
 		if(!customSeed)
 		{
@@ -311,10 +346,13 @@ namespace mod
 			for(u16 i = 0; i < chestRandomizer->totalChecks; i++)
 			{
 				item::ItemCheck* check = &item::checks[i];
-				if(check->destination->itemID == itemSearchID)
+				if (check->destination)
 				{
-					// Found the source
-					snprintf(itemSearchResults, 30, "Stage: %s Room: %d", check->stage, check->room);
+					if(check->destination->itemID == itemSearchID)
+					{
+						// Found the source
+						snprintf(itemSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
+					}
 				}
 			}
 		}
@@ -327,10 +365,13 @@ namespace mod
 			for(u16 i = 0; i < chestRandomizer->totalChecks; i++)
 			{
 				item::ItemCheck* check = &item::checks[i];
-				if(check->source->itemID == itemReverseSearchID)
+				if (check->source)
 				{
-					// Found the source
-					snprintf(itemReverseSearchResults, 30, "Stage: %s Room: %d", check->stage, check->room);
+					if(check->source->itemID == itemReverseSearchID)
+					{
+						// Found the source
+						snprintf(itemReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
+					}
 				}
 			}
 		}
@@ -347,7 +388,10 @@ namespace mod
 	s32 Mod::procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32])
 	{
 		strcpy(lastItemFunc, funcIdentifier);
-		snprintf(lastItemData, 50, "0x%02x %f %f %f", item, pos[0], pos[1], pos[2]);
+		snprintf(lastItemDataID, 5, "0x%02x", item);
+		snprintf(lastItemDataX, 30, "%f", pos[0]);
+		snprintf(lastItemDataY, 30, "%f", pos[1]);
+		snprintf(lastItemDataZ, 30, "%f", pos[2]);
 		// Runs once when Link picks up an item with text and is holding it towards the camera
 		if(randoEnabled && strcmp(funcIdentifier, "createItemForDirectGet") != 0 && strcmp(funcIdentifier, "createItemForBoss") != 0 && strcmp(funcIdentifier, "createItemForMidBoss") != 0)
 		{
