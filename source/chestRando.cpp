@@ -612,6 +612,57 @@ namespace mod
 										bombBagState = 4;
 									}
 								}
+								else if(item == items::Item::Key_Shard_1)
+								{
+									if (keyShardState == 1)
+									{
+										item = items::Item::Key_Shard_2;
+										bombBagState = 2;
+									}
+									else if (keyShardState == 2)
+									{
+										item = items::Item::Big_Key_Goron_Mines;
+										bombBagState = 3;
+									}									
+									else 
+									{
+										bombBagState = 1;
+									}
+								}
+								else if(item == items::Item::Key_Shard_2)
+								{
+									if (keyShardState == 0)
+									{
+										item = items::Item::Key_Shard_1;
+										bombBagState = 1;
+									}
+									else if (keyShardState == 2)
+									{
+										item = items::Item::Big_Key_Goron_Mines;
+										bombBagState = 3;
+									}									
+									else 
+									{
+										bombBagState = 2;
+									}
+								}
+								else if(item == items::Item::Big_Key_Goron_Mines)
+								{
+									if (keyShardState == 0)
+									{
+										item = items::Item::Key_Shard_1;
+										bombBagState = 1;
+									}
+									else if (keyShardState == 1)
+									{
+										item = items::Item::Key_Shard_2;
+										bombBagState = 2;
+									}									
+									else 
+									{
+										bombBagState = 3;
+									}
+								}
 							}
 							return item;
 						}

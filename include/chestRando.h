@@ -38,6 +38,7 @@ namespace mod
 			u8 walletState = 0;
 			u8 bookState = 0;
 			u8 bombBagState = 0;
+			u8 keyShardState = 0;
 			
 			u8 isProgressiveEnabled = 1;
 			
