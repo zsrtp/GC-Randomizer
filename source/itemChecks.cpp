@@ -484,19 +484,31 @@ namespace mod::item
 //shop items
 //Ordon
 {0x64, 12, stage::allStages[65], 1, 0x5, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
-{0x66, 12, stage::allStages[65], 1, 0x5, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
+{0x66, 12, stage::allStages[65], 1, 0x2, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
 {0x9e, 12, stage::allStages[65], 1, 0x5, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
+//Coro
+/*auto gotten*///{0x66, 12, stage::allStages[45], 4, 0x1, 0xFF, 0b000000000000000000000, -13659.433594, -0.454284, -14367.083008, nullptr, nullptr},
 //Malo Kakariko
 /*auto gotten*///{0x0e, 12, stage::allStages[68], 3, 0x5, 0xFF, 0b001000000000000000000, -500.0000000, 320.0000000, -695.0000000, nullptr, nullptr},
 {0x61, 12, stage::allStages[68], 3, 0x5, 0xFF, 0b001000000000000000000, -500.0000000, 320.0000000, -695.0000000, nullptr, nullptr},
 //Goron Shop Death Mountain
 /*auto gotten*///{0x0e, 12, stage::allStages[47], 3, 0x5, 0xFF, 0b001000000000000000000, -6545.0000000, -125.0000000, -2275.0000000, nullptr, nullptr},
-{0x66, 12, stage::allStages[47], 3, 0x5, 0xFF, 0b001000000000000000000, -6545.0000000, -125.0000000, -2275.0000000, nullptr, nullptr},
+{0x66, 12, stage::allStages[47], 3, 0x3, 0xFF, 0b001000000000000000000, -6545.0000000, -125.0000000, -2275.0000000, nullptr, nullptr},
 {0x64, 12, stage::allStages[47], 3, 0x5, 0xFF, 0b001000000000000000000, -6545.0000000, -125.0000000, -2275.0000000, nullptr, nullptr},
+//Barnes
+/*auto gotten*///{0x0b, 12, stage::allStages[68], 1, 0x4, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x0c, 12, stage::allStages[68], 1, 0x4, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x0d, 12, stage::allStages[68], 1, 0x4, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x16, 12, stage::allStages[68], 1, 0x5, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x17, 12, stage::allStages[68], 1, 0x5, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x18, 12, stage::allStages[68], 1, 0x5, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x1d, 12, stage::allStages[68], 1, 0x7, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x1a, 12, stage::allStages[68], 1, 0x7, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
+/*auto gotten*///{0x1b, 12, stage::allStages[68], 1, 0x7, 0xFF, 0b000000000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr},
 //Goron Night Kakariko
 {0x63, 12, stage::allStages[46], 0, 0x5, 0xFF, 0b001000000000000000000, -1350.000000, 0.000000, -3070.000000, nullptr, nullptr},
 {0x61, 12, stage::allStages[46], 0, 0x5, 0xFF, 0b001000000000000000000, -1350.000000, 0.000000, -3070.000000, nullptr, nullptr},
-{0x66, 12, stage::allStages[46], 0, 0x5, 0xFF, 0b001000000000000000000, -1350.000000, 0.000000, -3070.000000, nullptr, nullptr},
+{0x66, 12, stage::allStages[46], 0, 0x4, 0xFF, 0b001000000000000000000, -1350.000000, 0.000000, -3070.000000, nullptr, nullptr},
 //Goron Merchants Castle Town
 {0x61, 12, stage::allStages[73], 4, 0x5, 0xFF, 0b111111100000000000000, -685.106323, 100.000000, 3819.986572, nullptr, nullptr},
 {0x66, 12, stage::allStages[73], 4, 0x5, 0xFF, 0b111111100000000000000, -801.576233, 1000.000000, 4318.003906, nullptr, nullptr},
@@ -516,6 +528,18 @@ namespace mod::item
 {0x61, 12, stage::allStages[12], 16, 0x13, 0xFF, 0b111111100000000000000, -187.485748, 140.000000, -327.944885, nullptr, nullptr},
 {0x63, 12, stage::allStages[12], 16, 0x13, 0xFF, 0b111111100000000000000, -187.485748, 140.000000, -327.944885, nullptr, nullptr},
 //Fairy Tear Cave Of Ordeals (includes spring warps)
-{0x73, 12, stage::allStages[31], 49, 0x14, 0xFF, 0b100000000101110000010, -7.837189, -61250.000000, -3557.497070, nullptr, nullptr},
+{0x73, 12, stage::allStages[31], 49, 0x14, 0xFF, 0b100000000101110000010, -7.837189, -61250.000000, -3557.497070, nullptr, nullptr}//,
+//Scoopables
+//Nasty Soup
+//{0x6a, 12, stage::allStages[45], 4, 0x5, 0xFF, 0b010000000000000000000, -13961.199219, 0.000000, -14341.190430, nullptr, nullptr},
+//Trill
+//{0x69, 12, stage::allStages[45], 6, 0x5, 0xFF, 0b000000000000000000000, -37251.628906, 350.000000, -19399.669922, nullptr, nullptr},
+//{0x68, 12, stage::allStages[45], 6, 0x1, 0xFF, 0b000000000000000000000, -37285.023438, 350.000000, -19244.654297, nullptr, nullptr},
+//Oil pots
+//{0x68, 12, stage::allStages[24], 0, 0x8, 0xFF, 0b000000000000000000000, 852.599731, 1.000000, 5601.884766, nullptr, nullptr},
+//{0x68, 12, stage::allStages[20], 9, 0xFF, 0xFF, 0b000000000000000000000, 4335.721191, 152.000000, -11863.983398, nullptr, nullptr},
+//{0x68, 12, stage::allStages[20], 2, 0xFF, 0xFF, 0b000000000000000000000, -1334.620239, 1250.000000, -3007.779053, nullptr, nullptr},
+//Yeto soup
+//{0x7f, 12, stage::allStages[27], 2, 0x10, 0xFF, 0b000000000000000000000, 3154.522705, 144.729996, 340.811127, nullptr, nullptr},
 	};
 }

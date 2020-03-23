@@ -35,7 +35,7 @@ namespace mod::items
 		Bomblings_5	=	0x1A,
 		Bomblings_10	=	0x1B,
 		/*unused*/Bomblings_3	=	0x1C,
-		/*unused*/Bombling_X	=	0x1D,
+		/*unused*/Bombling_1	=	0x1D,
 		Fairy	=	0x1E,
 		Recovery_Heart_x3	=	0x1F,
 		Small_Key	=	0x20,
