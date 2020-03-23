@@ -45,6 +45,7 @@ namespace mod
 			u8 isBugsanityEnabled = 1;
 			u8 isPoesanityEnabled = 1;
 			u8 isShopsanityEnabled = 1;
+			u8 areDungeonItemsRandomized = 1;
 			
 			u8 itemThatReplacesHalfMilk = 0;
 			u8 itemThatReplacesSlingShot = 0;

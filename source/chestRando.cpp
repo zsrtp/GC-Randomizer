@@ -47,8 +47,6 @@ namespace mod
 				placeCheck(&item::checks[i], &item::checks[i]);
 			}
 		}
-		
-		
 
 		// Place layer checks
 		for(u16 i = 0; i < totalChecks; i++)
@@ -200,7 +198,8 @@ namespace mod
 		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer ||
 		 (isStageADungeon(sourceCheck->stage) && destCheck->itemID == items::Item::Heart_Container) || //no heart containers in dungeons
 		 (destCheck->itemID == items::Item::Ancient_Sky_Book_partly_filled && (0 == strcmp("D_MN06", sourceCheck->stage) || 0 == strcmp("D_MN06A", sourceCheck->stage))) || //no sky letters in ToT
-		 (destCheck->type == item::ItemType::Bug && 0 == strcmp("R_SP160", sourceCheck->stage) &&  sourceCheck->room == 3));//agitha can't give bugs
+		 (destCheck->type == item::ItemType::Bug && 0 == strcmp("R_SP160", sourceCheck->stage) &&  sourceCheck->room == 3) || //agitha can't give bugs
+		 (destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)));//dungeon items only in their own dungeon
 
 		return sourceCheck;
 	}
@@ -244,8 +243,11 @@ namespace mod
 			break;
 
 			case item::ItemType::Dungeon:
-				// Map, compass
-				result = true;
+				// Map, compass, big key
+				if (areDungeonItemsRandomized == 0)
+				{
+					result = true;
+				}
 			break;
 
 			case item::ItemType::Story:
