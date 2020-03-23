@@ -41,7 +41,7 @@ This means these items are not randomized in this version:
 	3. page 5 "Game Info", the lines "CurrentStage:", "NextStage:" and "NextRoom:"
 	4. top right, the randomizer versions
 5. After this, feel free to mention it in the [Discord](https://discord.tpspeed.run), where we will look into this item check
-6. You can also look into the [newer releases](https://github.com/vbn598/GC-Randomizer/releases) to see if that problem was already taken care of
+6. You can also look into the [newer releases](https://github.com/zsrtp/GC-Randomizer/releases) to see if that problem was already taken care of
 
 ### Build Requirements
 * [DevkitPPC](https://devkitpro.org/)
