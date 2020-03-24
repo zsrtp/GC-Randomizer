@@ -191,18 +191,17 @@ namespace mod
 		}
 
 		item::ItemCheck* sourceCheck;
+		u16 index;
 		do
 		{
-			u16 index = tools::getRandom(totalChecks);
-			if (destCheck->type != item::ItemType::Dungeon || index != 115) //to prevent boss key from being at clawshot goron mines check
-			{
-				sourceCheck = &item::checks[index];
-			}
+			index = tools::getRandom(totalChecks);
+			sourceCheck = &item::checks[index];
 		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer ||
 		 (isStageADungeon(sourceCheck->stage) && destCheck->itemID == items::Item::Heart_Container) || //no heart containers in dungeons
 		 (destCheck->itemID == items::Item::Ancient_Sky_Book_partly_filled && (0 == strcmp("D_MN06", sourceCheck->stage) || 0 == strcmp("D_MN06A", sourceCheck->stage))) || //no sky letters in ToT
 		 (destCheck->type == item::ItemType::Bug && 0 == strcmp("R_SP160", sourceCheck->stage) &&  sourceCheck->room == 3) || //agitha can't give bugs
-		 (destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)));//dungeon items only in their own dungeon
+		 (destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)) || //dungeon items only in their own dungeon
+		 (destCheck->type == item::ItemType::Dungeon && index == 115)); //dont place dungeon items at clawshot goron mines check
 
 		return sourceCheck;
 	}
