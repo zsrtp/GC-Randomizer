@@ -17,6 +17,13 @@ namespace mod
 	void ChestRandomizer::generate()
 	{
 		// Reset
+		swordState = 0;
+		bowState = 0;
+		clawshotState = 0;
+		walletState = 0;
+		bookState = 0;
+		bombBagState = 0;
+		keyShardState = 0;
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
 
