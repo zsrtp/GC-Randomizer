@@ -492,7 +492,7 @@ namespace mod::item
 //shop items
 //Ordon
 {0x64, 12, stage::allStages[65], 1, 0x5, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
-{0x66, 12, stage::allStages[65], 1, 0x2, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
+{0x66, 12, stage::allStages[65], 1, 0x1, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
 {0x9e, 12, stage::allStages[65], 1, 0x5, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr},
 //Coro
 /*auto gotten*///{0x66, 12, stage::allStages[45], 4, 0x1, 0xFF, 0b000000000000000000000, -13659.433594, -0.454284, -14367.083008, nullptr, nullptr},
