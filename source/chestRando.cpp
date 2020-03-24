@@ -71,6 +71,10 @@ namespace mod
 					{
 						sourceCheck = findSource(destCheck->destLayer, 0x12, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
 					}
+					else if (destCheck->itemID == items::Item::Zora_Armor || destCheck->itemID == items::Item::Magic_Armor)
+					{
+						sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
+					}
 					else if (isProgressiveEnabled == 0)
 					{
 						if(destCheck->itemID == items::Item::Clawshots)

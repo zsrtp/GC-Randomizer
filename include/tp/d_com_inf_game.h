@@ -61,12 +61,34 @@ namespace tp::d_com_inf_game
 		u8 unk_0[0x4D0];
 		float pos[3];
 	} __attribute__((__packed__));
-
+	
+	struct DungeonFlags
+	{
+		u8 mapGotten : 1,
+		 compassGotten : 1,
+		 bigKeyGotten : 1,
+		 bitFour : 1,
+		 containerGotten : 1,
+		 bitSix : 1,
+		 bitSeven : 1,
+		 oocooGotten : 1;
+	} __attribute__((__packed__));
+	
+	// Should try to fill in the missing variables at some point
+	struct AreaNodes
+	{
+		u8 unk_0[0x1C];
+		u8 nbKeys;
+		DungeonFlags dungeon;
+		u8 unk_1E[0x2];
+	} __attribute__((__packed__));
+	
 	// Should try to fill in the missing variables at some point
 	struct GameInfo
 	{
 		ScratchPad scratchPad; // 0 - 957
-		u8 unk_958[0x470]; // 958 - DC7
+		AreaNodes localAreaNodes; // 958 - 977 holds flags about the current area
+        u8 unk_978[0x450]; // 978 - DC7
 		u8 respawnCutscene; // DC8 - DC8
 		u8 unkdc9[0xA]; // dc9 - dd2
 		u8 respawnAnimation; // dd3 - dd3
@@ -84,6 +106,7 @@ namespace tp::d_com_inf_game
 
 	static_assert(sizeof(ScratchPad) == 0x958);
 	static_assert(sizeof(GameInfo) == 0x1DE10);
+	static_assert(sizeof(DungeonFlags) == 0x1);
 
 	extern "C"
 	{

@@ -60,7 +60,7 @@ namespace mod::game_patch
 	void killLinkHouseSpider()
 	{
 		// Kill Skulltula at Link's house
-		gameInfo.unk_958[0xA] |= 0x1;
+		gameInfo.localAreaNodes.unk_0[0xA] |= 0x1;
 	}
 
 	void increaseClimbSpeed()
