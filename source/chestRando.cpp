@@ -194,7 +194,10 @@ namespace mod
 		do
 		{
 			u16 index = tools::getRandom(totalChecks);
-			sourceCheck = &item::checks[index];
+			if (destCheck->type != item::ItemType::Dungeon || index != 115) //to prevent boss key from being at clawshot goron mines check
+			{
+				sourceCheck = &item::checks[index];
+			}
 		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer ||
 		 (isStageADungeon(sourceCheck->stage) && destCheck->itemID == items::Item::Heart_Container) || //no heart containers in dungeons
 		 (destCheck->itemID == items::Item::Ancient_Sky_Book_partly_filled && (0 == strcmp("D_MN06", sourceCheck->stage) || 0 == strcmp("D_MN06A", sourceCheck->stage))) || //no sky letters in ToT
@@ -394,9 +397,9 @@ namespace mod
 						{
 							snprintf(lastDestInfo, 50, "%s->%d->%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
 							item = sourceCheck->destination->itemID;
-							if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Shop)
+							if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Shop || sourceCheck->itemID == items::Item::Heart_Container)
 							{
-								sourceCheck->destination = &item::checks[263];
+								sourceCheck->destination = &item::checks[263];//green rupee
 							}
 							else if (sourceCheck->itemID != items::Item::Big_Quiver && sourceCheck->itemID != items::Item::Giant_Quiver && sourceCheck->itemID != items::Item::Zora_Armor) // quiver checks and zora armor check called twice somehow
 							{
