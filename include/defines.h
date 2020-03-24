@@ -28,11 +28,11 @@ typedef	signed char 		s8;
 
 // Array modification
 #define MAX_LOAD_EVENTS 10 // eventListener
-#define MAX_HUDCONSOLE_PAGES 6 // HUDConsole
+#define MAX_HUDCONSOLE_PAGES 10 // HUDConsole
 
 // Mnemonics
 #define AUTHOR				"AECX"
-#define VERSION				"v0.8b"
+#define VERSION				"v0.9b"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos
