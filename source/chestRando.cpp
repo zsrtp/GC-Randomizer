@@ -373,13 +373,6 @@ namespace mod
 					//dungeon items are unique in their dungeon
 						isOk = true;
 					}
-					else if (sourceCheck->itemID == items::Item::Piece_of_Heart && ((0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 6) || 
-						(0 == strcmp("F_SP109", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 3) ||
-						(0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP127", sourceCheck->stage) && sourceCheck->room == 0)  ||
-						(0 == strcmp("F_SP128", sourceCheck->stage) && sourceCheck->room == 0)))
-					{//freestanding PoH
-						isOk = true;
-					}
 					else 
 					{	
 						if (sourceCheck->type == item::ItemType::PoeSoul)
@@ -388,6 +381,17 @@ namespace mod
 							rangeX = 2800.0f;
 							rangeY = 1400.0f;
 							rangeZ = 2800.0f;
+						}
+						else if (sourceCheck->itemID == items::Item::Piece_of_Heart && ((0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 6) || 
+						(0 == strcmp("F_SP109", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 3) ||
+						(0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP127", sourceCheck->stage) && sourceCheck->room == 0)  ||
+						(0 == strcmp("F_SP128", sourceCheck->stage) && sourceCheck->room == 0)))
+						{//freestanding PoH
+						// they can be moved by boomerang and clawshot, so give them more range
+						// clawshot and boomrang targetting range ~2000
+							rangeX = 3000.0f;
+							rangeY = 3000.0f;
+							rangeZ = 3000.0f;
 						}
 						if(tools::fCompare(sourceCheck->position[0], pos[0]) < rangeX)
 						{
