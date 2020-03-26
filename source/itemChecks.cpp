@@ -368,7 +368,7 @@ namespace mod::item
 //goron mines key shards
 {0xf9, 2, stage::allStages[3], 14, 0x3, 0x3, 0b000000000000000000000, -15375.557617, -636.630005, 1595.673462, nullptr, nullptr},
 {0xfa, 2, stage::allStages[3], 17, 0x3, 0x3, 0b000000000000000000000, 13007.017578, 2924.530029, -17705.732422, nullptr, nullptr},
-{0xfb, 2, stage::allStages[3], 16, 0x4, 0x3, 0b000000000000000000000, 13055.647461, 2400.500000, -1660.316895, nullptr, nullptr},
+{0xfd, 2, stage::allStages[3], 16, 0x4, 0x3, 0b000000000000000000000, 13055.647461, 2400.500000, -1660.316895, nullptr, nullptr},
 //bugs
 {0xc0, 10, stage::allStages[56], 6, 0x2, 0xFF, 0b000000000000000000000, -50212.730469, -8840.560547, 86352.757812, nullptr, nullptr},
 {0xc1, 10, stage::allStages[56], 6, 0x2, 0xFF, 0b000100000010000000000, -38651.949219, -9189.901367, 73707.671875, nullptr, nullptr},

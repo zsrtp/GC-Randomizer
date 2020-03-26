@@ -67,11 +67,11 @@ namespace tp::d_com_inf_game
 		u8 mapGotten : 1,
 		 compassGotten : 1,
 		 bigKeyGotten : 1,
-		 bitFour : 1,
+		 bossBeaten : 1,
 		 containerGotten : 1,
 		 bitSix : 1,
-		 bitSeven : 1,
-		 oocooGotten : 1;
+		 ooccooGotten : 1,
+		 miniBossBeaten : 1;
 	} __attribute__((__packed__));
 	
 	// Should try to fill in the missing variables at some point
