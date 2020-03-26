@@ -364,8 +364,10 @@ namespace mod
 				(item == items::Item::Red_Rupee && sourceCheck->itemID == items::Item::Giant_Bomb_Bag) || 
 				(item == items::Item::Lantern_Refill_Shop && sourceCheck->itemID == items::Item::Lantern_Oil_Shop) || 
 				(item == items::Item::Lantern_Refill_Scooped && sourceCheck->itemID == items::Item::Lantern_Oil_Scooped) || 
-				(sourceCheck->itemID == items::Item::Superb_Soup && (item == items::Item::Simple_Soup || item == items::Item::Good_Soup)))
+				(sourceCheck->itemID == items::Item::Superb_Soup && (item == items::Item::Simple_Soup || item == items::Item::Good_Soup)) ||
+				(item == items::Item::Big_Key_Goron_Mines && (sourceCheck->itemID == items::Item::Key_Shard_1 || sourceCheck->itemID == items::Item::Key_Shard_2 || sourceCheck->itemID == items::Item::Key_Shard_3)))
 				{
+					item = sourceCheck->itemID;
 					bool isOk = false;
 					
 					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon)
@@ -640,7 +642,7 @@ namespace mod
 									}
 									else if (keyShardState == 2)
 									{
-										item = items::Item::Big_Key_Goron_Mines;
+										item = items::Item::Key_Shard_3;
 										bombBagState = 3;
 									}									
 									else 
@@ -657,7 +659,7 @@ namespace mod
 									}
 									else if (keyShardState == 2)
 									{
-										item = items::Item::Big_Key_Goron_Mines;
+										item = items::Item::Key_Shard_3;
 										bombBagState = 3;
 									}									
 									else 
@@ -665,7 +667,7 @@ namespace mod
 										bombBagState = 2;
 									}
 								}
-								else if(item == items::Item::Big_Key_Goron_Mines)
+								else if(item == items::Item::Key_Shard_3)
 								{
 									if (keyShardState == 0)
 									{
