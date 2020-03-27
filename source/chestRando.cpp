@@ -427,7 +427,8 @@ namespace mod
 							{
 								sourceCheck->destination = &item::checks[263];//green rupee
 							}
-							else if (sourceCheck->itemID != items::Item::Big_Quiver && sourceCheck->itemID != items::Item::Giant_Quiver && sourceCheck->itemID != items::Item::Zora_Armor) // quiver checks and zora armor check called twice somehow
+							else if (sourceCheck->itemID != items::Item::Big_Quiver && sourceCheck->itemID != items::Item::Giant_Quiver && // quiver checks called twice somehow
+							sourceCheck->type != item::ItemType::Dungeon && sourceCheck->type != item::ItemType::Gear && sourceCheck->type != item::ItemType::Equip) // some checks are called twice i don't wanna list them all, but dungeon items, gear, and equipable items only have one check each intheir stage
 							{
 								// Unset this check
 								sourceCheck->destination = nullptr;
