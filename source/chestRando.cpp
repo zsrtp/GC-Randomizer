@@ -360,7 +360,7 @@ namespace mod
 			if (item == items::Item::Dominion_Rod_Uncharged)
 			{
 				item = items::Item::Dominion_Rod_Charged;
-				gameInfo.scratchPad.eventBits[0x25] != 0x80;
+				gameInfo.scratchPad.eventBits[0x25] |= 0x80;
 			}
 			return item;
 		}*/
