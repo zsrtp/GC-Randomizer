@@ -55,7 +55,7 @@ namespace mod::item
 				flags |= item::Condition::Spinner;
 			break;
 
-			case items::Item::Dominion_Rod:
+			case items::Item::Dominion_Rod_Uncharged:
 				flags |= item::Condition::Dominion_Rod;
 			break;
 

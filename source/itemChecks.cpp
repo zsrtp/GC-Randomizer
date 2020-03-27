@@ -389,7 +389,7 @@ namespace mod::item
 {0xc4, 10, stage::allStages[56], 10, 0x5, 0xFF, 0b000000000000000000000, -62781.214844, -1350.003052, -33241.687500, nullptr, nullptr},
 {0xc5, 10, stage::allStages[56], 10, 0x5, 0xFF, 0b000000000000000000000, -48976.765625, -677.295044, -50834.683594, nullptr, nullptr},
 {0xd2, 10, stage::allStages[50], 1, 0x5, 0xFF, 0b000000000000000000000, 3540.047363, -5150.441895, 15789.274414, nullptr, nullptr},
-{0xd3, 10, stage::allStages[49], 1, 0x5, 0xFF, 0b000000000000000000000, 6013.379395, 445.474884, -224.899765, nullptr, nullptr},
+{0xd3, 10, stage::allStages[61], 1, 0x5, 0xFF, 0b000000000000000000000, 6013.379395, 445.474884, -224.899765, nullptr, nullptr},
 {0xd6, 10, stage::allStages[59], 00, 0x7, 0xFF, 0b000000000000000000000, 28767.958984, 524.933899, 58604.546875, nullptr, nullptr},
 {0xd7, 10, stage::allStages[59], 00, 0x7, 0xFF, 0b000000000000000000000, 11790.147461, 340.034332, 55725.250000, nullptr, nullptr},
 {0xd0, 10, stage::allStages[54], 1, 0x11, 0xFF, 0b000000000000000000000, 1304.371826, 1005.000000, 7306.179688, nullptr, nullptr},
@@ -482,7 +482,7 @@ namespace mod::item
 /*#60*/{0xe0, 11, stage::allStages[50], 0, 0x7, 0xFF, 0b000000000000000000010, 297.160065, -4608.964844, 7384.047852, nullptr, nullptr},
 /*60 poe reward*/{0x07, 7, stage::allStages[73], 5, 0x14, 0xFF, 0b000000000000000000000, 4250.363281, 134.492020, 1813.639648, nullptr, nullptr},
 //sky book quest
-/*empty*/{0xe9, 0, stage::allStages[72], 0, 0x12, 0x11, 0b000000000000010000000, -532.266479, 1.500000, -343.810791, nullptr, nullptr},
+/*empty*/{0xe9, 0, stage::allStages[72], 0, 0x12, 0x12, 0b000000000000010000000, -532.266479, 1.500000, -343.810791, nullptr, nullptr},
 /*faron*/{0xea, 0, stage::allStages[45], 8, 0x12, 0x12, 0b000000000000010000000, -17500.000000, -310.000000, -20950.000000, nullptr, nullptr},
 /*eldin gorge*/{0xea, 0, stage::allStages[56], 3, 0x12, 0x12, 0b000000000000010000000, -10195.000000, -4760.000000, 39363.000000, nullptr, nullptr},
 /*edin bridge*/{0xea, 0, stage::allStages[56], 0, 0x12, 0x12, 0b000000000000010000000, 33650.000000, -80.000000, -35970.000000, nullptr, nullptr},

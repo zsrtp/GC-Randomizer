@@ -15,7 +15,7 @@ namespace mod::items
 		Orange_Rupee	=	0x06,
 		Silver_Rupee	=	0x07,
 		/*Borrow_Bomb_Bag?	=	0x08,*/
-		/*Borrow_Bomb_Bag?	=	0x09,*/
+		/*Bomb_Bag_And_Bombs?	=	0x09,*/
 		Bombs_5	=	0x0A,
 		Bombs_10	=	0x0B,
 		Bombs_20	=	0x0C,
@@ -43,7 +43,7 @@ namespace mod::items
 		Heart_Container	=	0x22,
 		Dungeon_Map	=	0x23,
 		Compass	=	0x24,
-		Ooccoo	=	0x25,
+		Ooccoo_FT	=	0x25,
 		Big_Key	=	0x26,
 		Ooccoo_Jr	=	0x27,
 		Ordon_Sword	=	0x28,
@@ -51,7 +51,7 @@ namespace mod::items
 		Ordon_Shield	=	0x2A,
 		Wooden_Shield	=	0x2B,
 		Hylian_Shield	=	0x2C,
-		Asheis_Sketch_Ooccoos_Note	=	0x2D,
+		Ooccoos_Note	=	0x2D,
 		Ordon_Clothing	=	0x2E,
 		Heros_Clothes	=	0x2F,
 		Magic_Armor	=	0x30,
@@ -76,13 +76,13 @@ namespace mod::items
 		Heros_Bow	=	0x43,
 		Clawshot	=	0x44,
 		Iron_Boots	=	0x45,
-		Dominion_Rod	=	0x46,
+		Dominion_Rod_Uncharged	=	0x46,
 		Clawshots	=	0x47,
 		Lantern	=	0x48,
 		Master_Sword_Light	=	0x49,
 		Fishing_Rod	=	0x4A,
 		Slingshot	=	0x4B,
-		Dominion_Rod_2	=	0x4C,
+		Dominion_Rod_Charged	=	0x4C,
 		/*?	=	0x4D,*/
 		/*?	=	0x4E,*/
 		Giant_Bomb_Bag	=	0x4F,
@@ -242,7 +242,7 @@ namespace mod::items
 		Ancient_Sky_Book_empty	=	0xE9,
 		Ancient_Sky_Book_partly_filled	=	0xEA,
 		Ancient_Sky_Book_completed	=	0xEB,
-		/*unused*/Ooccoo_Beta/*CitS?*/	=	0xEC,
+		Ooccoo_CitS	=	0xEC,
 		Purple_Rupee_Links_house	=	0xED,
 		Small_Key_N_Faron_Gate	=	0xEE,
 		/*Blue_Fire?	=	0xEF,*/

@@ -74,10 +74,6 @@ namespace mod
 					{
 						sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
 					}
-					else if (destCheck->itemID == items::Item::Ancient_Sky_Book_partly_filled)
-					{
-						sourceCheck = findSource(destCheck->destLayer, 0x12, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
-					}
 					else if (destCheck->itemID == items::Item::Zora_Armor || destCheck->itemID == items::Item::Magic_Armor)
 					{
 						sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
@@ -209,7 +205,6 @@ namespace mod
 			sourceCheck = &item::checks[index];
 		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer ||
 		 (isStageADungeon(sourceCheck->stage) && destCheck->itemID == items::Item::Heart_Container) || //no heart containers in dungeons
-		 (destCheck->itemID == items::Item::Ancient_Sky_Book_partly_filled && (0 == strcmp("D_MN06", sourceCheck->stage) || 0 == strcmp("D_MN06A", sourceCheck->stage))) || //no sky letters in ToT
 		 (destCheck->type == item::ItemType::Bug && 0 == strcmp("R_SP160", sourceCheck->stage) &&  sourceCheck->room == 3) || //agitha can't give bugs
 		 (destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)) || //dungeon items only in their own dungeon
 		 (destCheck->type == item::ItemType::Dungeon && index == 115)); //dont place dungeon items at clawshot goron mines check
@@ -352,11 +347,21 @@ namespace mod
 		/*if (item == items::Item::Sera_Bottle)
 		{			//for testing only
 			item = itemThatReplacesHalfMilk;
+			if (item == items::Item::Dominion_Rod_Uncharged)
+			{
+				item = items::Item::Dominion_Rod_Charged;
+				gameInfo.scratchPad.eventBits[0x25] |= 0x80;
+			}
 			return item;
 		}
 		else if (item == items::Item::Slingshot)
 		{			//for testing only
 			item = itemThatReplacesSlingShot;
+			if (item == items::Item::Dominion_Rod_Uncharged)
+			{
+				item = items::Item::Dominion_Rod_Charged;
+				gameInfo.scratchPad.eventBits[0x25] != 0x80;
+			}
 			return item;
 		}*/
 		
@@ -432,7 +437,7 @@ namespace mod
 							{
 								// Unset this check
 								sourceCheck->destination = nullptr;
-							}
+							}							
 							//progressive checks (doesn't work if you already have items when generating seed)
 							if (isProgressiveEnabled == 1)
 							{
@@ -695,6 +700,11 @@ namespace mod
 										bombBagState = 3;
 									}
 								}
+							}
+							if (item == items::Item::Dominion_Rod_Uncharged)
+							{
+								item = items::Item::Dominion_Rod_Charged;
+								gameInfo.scratchPad.eventBits[0x25] != 0x80;
 							}
 							return item;
 						}
