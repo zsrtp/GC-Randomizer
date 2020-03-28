@@ -365,6 +365,23 @@ namespace mod
 			return item;
 		}*/
 		
+		if(item == items::Item::Key_Shard_1)
+		{
+			return 0xFF;
+		}
+		else if(item == items::Item::Key_Shard_2)
+		{
+			return 0xFF;
+		}
+		else if(item == items::Item::Key_Shard_3)
+		{
+			return 0xFF;
+		}
+		else if(item == items::Item::Big_Key_Goron_Mines)
+		{
+			return 0xFF;
+		}
+		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
 			sourceCheck = &item::checks[i];
@@ -649,7 +666,7 @@ namespace mod
 										bombBagState = 4;
 									}
 								}
-								else if(item == items::Item::Key_Shard_1)
+								/*else if(item == items::Item::Key_Shard_1)
 								{
 									if (keyShardState == 1)
 									{
@@ -699,7 +716,7 @@ namespace mod
 									{
 										bombBagState = 3;
 									}
-								}
+								}*/
 							}
 							if (item == items::Item::Dominion_Rod_Uncharged)
 							{
