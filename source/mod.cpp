@@ -24,6 +24,7 @@
 #include <tp/d_a_alink.h>
 #include <tp/d_save.h>
 #include <tp/JFWSystem.h>
+#include <tp/d_kankyo.h>
 #include <cstdio>
 #include <cstring>
 
@@ -145,6 +146,7 @@ namespace mod
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF);*/
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 's', WatchInterpretation::_str);
 		
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
@@ -154,8 +156,8 @@ namespace mod
 		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "NextState:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
+		//hudConsole->addWatch(page, "NextState:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
+		//hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);*/
 		
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");		
