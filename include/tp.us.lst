@@ -38,6 +38,7 @@
 80097EE0:checkItemGet
 
 // d_a_alink.h
+8009DA60:checkStageName
 800B271C:setStickData
 800BB4B8:checkHeavyStateOn
 8011A6FC:checkTreasureRupeeReturn
