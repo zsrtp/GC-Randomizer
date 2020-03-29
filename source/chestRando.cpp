@@ -89,7 +89,7 @@ namespace mod
 		//do dungeon items
 		for(u16 i = 0; i <= totalChecks; i++)
 		{
-			destCheck = &item::checks[item::checkPriorityOrder[i]];
+			destCheck = &item::checks[i];
 			if(!destCheck->source && destCheck->type == item::ItemType::Dungeon)
 			{
 				sourceCheck = findSource(destCheck->destLayer, 0x0, destCheck);
