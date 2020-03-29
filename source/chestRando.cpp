@@ -54,6 +54,49 @@ namespace mod
 				placeCheck(&item::checks[i], &item::checks[i]);
 			}
 		}
+		
+		//do needed items in order
+		for(u16 i = 0; i < sizeof(item::checkPriorityOrder)/sizeof(u16); i++)
+		{
+			destCheck = &item::checks[item::checkPriorityOrder[i]];
+			if(!destCheck->source)
+			{
+				if(destCheck->itemID == items::Item::Ordon_Sword)
+				{
+					sourceCheck = findSource(destCheck->destLayer, 0x1, destCheck);//to prevent woodensword from being overwritten before losing it			
+				}
+				else if (destCheck->itemID == items::Item::Ordon_Shield || destCheck->itemID == items::Item::Wooden_Shield || destCheck->itemID == items::Item::Hylian_Shield)
+				{
+					sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
+				}
+				else if (destCheck->itemID == items::Item::Zora_Armor || destCheck->itemID == items::Item::Magic_Armor)
+				{
+					sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
+				}
+				else if (isProgressiveEnabled == 0 && destCheck->itemID == items::Item::Clawshots)
+				{
+					sourceCheck = findSource(destCheck->destLayer, 0x7, destCheck);//to prevent Clawshots from being overwritten by Clawshot
+				}
+				else
+				{
+					sourceCheck = findSource(destCheck->destLayer, 0x0, destCheck);
+				}
+				placeCheck(sourceCheck, destCheck);
+				//layerCheckCount++;
+			}
+		}
+		
+		//do dungeon items
+		for(u16 i = 0; i <= totalChecks; i++)
+		{
+			destCheck = &item::checks[item::checkPriorityOrder[i]];
+			if(!destCheck->source && destCheck->type == item::ItemType::Dungeon)
+			{
+				sourceCheck = findSource(destCheck->destLayer, 0x0, destCheck);
+				placeCheck(sourceCheck, destCheck);
+				//layerCheckCount++;
+			}
+		}
 
 		// Place layer checks
 		for(u16 i = 0; i < totalChecks; i++)
@@ -116,7 +159,8 @@ namespace mod
 		}
 
 		// Place items that unlock other locations before caring about remaining items
-		for(u16 i = 0; i < totalChecks; i++)
+		//useless
+		/*for(u16 i = 0; i < totalChecks; i++)
 		{
 			destCheck = &item::checks[i];
 
@@ -137,7 +181,7 @@ namespace mod
 					placeCheck(sourceCheck, destCheck);
 				}
 			}
-		}
+		}*/
 
 		// Place remaining
 		for(u16 i = 0; i < totalChecks; i++)
@@ -364,23 +408,6 @@ namespace mod
 			}
 			return item;
 		}*/
-		
-		if(item == items::Item::Key_Shard_1)
-		{
-			return 0xFF;
-		}
-		else if(item == items::Item::Key_Shard_2)
-		{
-			return 0xFF;
-		}
-		else if(item == items::Item::Key_Shard_3)
-		{
-			return 0xFF;
-		}
-		else if(item == items::Item::Big_Key_Goron_Mines)
-		{
-			return 0xFF;
-		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
