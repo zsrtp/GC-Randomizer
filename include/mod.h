@@ -54,6 +54,9 @@ namespace mod
 
 			// Replacment handler
 			s32 procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32]);
+			
+			u8 enableNormalTime = 1;			
+			u8 setDay = 1;
 
 		// Functions
 		private:

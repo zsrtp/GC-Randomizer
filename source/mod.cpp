@@ -148,21 +148,24 @@ namespace mod
 		
 		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only*/
+		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
+		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
 		
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);		
+		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
+		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.wQuestLogData[0x34], 'd', WatchInterpretation::_u32);	
 				
-		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
+		/*hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);*/
 		
 		//local area
-		page = hudConsole->addPage("Local Area 1");		
+		/*page = hudConsole->addPage("Local Area 1");		
 		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[1], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[2], 'x', WatchInterpretation::_u8);
@@ -197,7 +200,7 @@ namespace mod
 		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 4");
 		hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
 
 		// Print
 		hudConsole->draw();
@@ -326,6 +329,21 @@ namespace mod
 		snprintf(currentPosX, 30, "%f", linkPos[0]);
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
+		
+		if (enableNormalTime == 0 && setDay == 0)
+		{//set night
+			gameInfo.scratchPad.wQuestLogData[0x34] = 0b01000010;
+			gameInfo.scratchPad.wQuestLogData[0x35] = 0b00101001;
+			gameInfo.scratchPad.wQuestLogData[0x36] = 0b01000001;
+			gameInfo.scratchPad.wQuestLogData[0x37] = 0b10000000;
+		}
+		else if (enableNormalTime == 0 && setDay == 1)
+		{//set day
+			gameInfo.scratchPad.wQuestLogData[0x34] = 0b01000010;
+			gameInfo.scratchPad.wQuestLogData[0x35] = 0b11000001;
+			gameInfo.scratchPad.wQuestLogData[0x36] = 0b11011000;
+			gameInfo.scratchPad.wQuestLogData[0x37] = 0b00000000;
+		}
 		// Increment seed
 		if(!customSeed)
 		{
@@ -489,7 +507,7 @@ namespace mod
 
 	bool Mod::proc_query022(void* unk1, void* unk2, s32 unk3)
 	{
-		// Check to see if currently in one of the Ordan interiors
+		// Check to see if currently in one of the Ordon interiors
 		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Ordon_Interiors]))
 		{
 			// Check to see if ckecking for the Iron Boots
