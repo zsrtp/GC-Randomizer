@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <tp/d_com_inf_game.h>
+#include <tp/DynamicLink.h>
 #include "eventListener.h"
 #include "chestRando.h"
 #include "HUDConsole.h"
@@ -59,7 +60,7 @@ namespace mod
 			/**
 			 * Runs once each frame
 			 */
-			void procNewFrame();		
+			void procNewFrame();
 			
 			/**
 			 * Runs when checking if the treasure chest content
@@ -68,6 +69,10 @@ namespace mod
 			bool procCheckTreasureRupeeReturn(void* unk1, s32 item);
 
 			s32 procEvtSkipper(void* evtPtr);
+
+			bool proc_query022(void* unk1, void* unk2, s32 unk3);
+
+			bool procDoLink(tp::dynamic_link::DynamicModuleControl* dmc);
 
 		// Private members
 		//private:
@@ -78,6 +83,10 @@ namespace mod
 			void (*fapGm_Execute_trampoline)() = nullptr;
 			
 			s32 (*evt_control_Skipper_trampoline)(void* eventPtr) = nullptr;
+
+			bool (*query022_trampoline)(void* unk1, void* unk2, s32 unk3) = nullptr;
+
+			bool (*do_link_trampoline)(tp::dynamic_link::DynamicModuleControl* dmc) = nullptr;
 
 			bool (*checkTreasureRupeeReturn_trampoline)(void* unk1, s32 item) = nullptr;
 

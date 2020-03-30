@@ -48,6 +48,12 @@
 // d_menu_collect.o
 801B3598:setWalletMaxNum
 
+// d_msg_flow.o
+8024BF88:query022
+
+// DynamicLink.o
+80263A5C:do_link
+
 // JKRExpHeap.o
 802CFF28:do_alloc_JKRExpHeap
 802D05AC:do_free_JKRExpHeap
