@@ -318,73 +318,6 @@ namespace mod
 		);
 	}
 
-	bool Mod::proc_query022(void* unk1, void* unk2, s32 unk3)
-	{
-		// Check to see if currently in one of the Ordan interiors
-		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Ordon_Interiors]))
-		{
-			// Check to see if ckecking for the Iron Boots
-			u16 item = *reinterpret_cast<u16*>(reinterpret_cast<u32>(unk2) + 0x4);
-
-			if (item == items::Item::Iron_Boots)
-			{
-				// Return false so that the door in Bo's house can be opened without having the Iron Boots
-				return false;
-			}
-		}
-
-		// Call original function
-		return query022_trampoline(unk1, unk2, unk3);
-	}
-	
-	bool Mod::procDoLink(tp::dynamic_link::DynamicModuleControl* dmc)
-	{
-		// Call the original function immediately, as the REL file needs to be linked before applying patches
-		const bool result = do_link_trampoline(dmc);
-
-		// Get the pointer to the current REL file
-		gc::OSModule::OSModuleInfo* moduleInfo = dmc->moduleInfo;
-
-		// Make sure a REL file is actually loaded, as do_link will clear the pointer if something goes wrong
-		if (!moduleInfo)
-		{
-			return result;
-		}
-
-		// Get the REL pointer as a raw u32, to use for overwrites
-		u32 relPtrRaw = reinterpret_cast<u32>(moduleInfo);
-
-		// Modify the current REL file
-		switch (moduleInfo->id) // May want to set up enums or defines for the module ids
-		{
-			case 0x121: // d_a_npc_bouS.rel - Inside Bo's house
-			{
-				// Prevent Bo from talking after the chest has been opened
-				*reinterpret_cast<u32*>(relPtrRaw + 0x1A44) = 0x48000028; // b 0x28
-				break;
-			}
-			default:
-			{
-				break;
-			}
-		}
-
-		return result;
-	}
-
-	void Mod::procItem_func_UTUWA_HEART()
-	{
-		/* Call the original function immediately, as the heart container flag 
-			for the current area needs to be set before making any adjustments */
-		item_func_UTUWA_HEART_trampoline();
-		
-		// Clear the heart container flag if not currently in a boss room
-		if (!chestRandomizer->isStageBoss())
-		{
-			gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
-		}
-	}
-
 	void Mod::procNewFrame()
 	{
 		float linkPos[3];
@@ -552,5 +485,72 @@ namespace mod
 		}
 		// Call original function
 		return evt_control_Skipper_trampoline(evtPtr);
+	}
+
+	bool Mod::proc_query022(void* unk1, void* unk2, s32 unk3)
+	{
+		// Check to see if currently in one of the Ordan interiors
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Ordon_Interiors]))
+		{
+			// Check to see if ckecking for the Iron Boots
+			u16 item = *reinterpret_cast<u16*>(reinterpret_cast<u32>(unk2) + 0x4);
+
+			if (item == items::Item::Iron_Boots)
+			{
+				// Return false so that the door in Bo's house can be opened without having the Iron Boots
+				return false;
+			}
+		}
+
+		// Call original function
+		return query022_trampoline(unk1, unk2, unk3);
+	}
+	
+	bool Mod::procDoLink(tp::dynamic_link::DynamicModuleControl* dmc)
+	{
+		// Call the original function immediately, as the REL file needs to be linked before applying patches
+		const bool result = do_link_trampoline(dmc);
+
+		// Get the pointer to the current REL file
+		gc::OSModule::OSModuleInfo* moduleInfo = dmc->moduleInfo;
+
+		// Make sure a REL file is actually loaded, as do_link will clear the pointer if something goes wrong
+		if (!moduleInfo)
+		{
+			return result;
+		}
+
+		// Get the REL pointer as a raw u32, to use for overwrites
+		u32 relPtrRaw = reinterpret_cast<u32>(moduleInfo);
+
+		// Modify the current REL file
+		switch (moduleInfo->id) // May want to set up enums or defines for the module ids
+		{
+			case 0x121: // d_a_npc_bouS.rel - Inside Bo's house
+			{
+				// Prevent Bo from talking after the chest has been opened
+				*reinterpret_cast<u32*>(relPtrRaw + 0x1A44) = 0x48000028; // b 0x28
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	void Mod::procItem_func_UTUWA_HEART()
+	{
+		/* Call the original function immediately, as the heart container flag 
+			for the current area needs to be set before making any adjustments */
+		item_func_UTUWA_HEART_trampoline();
+		
+		// Clear the heart container flag if not currently in a boss room
+		if (!chestRandomizer->isStageBoss())
+		{
+			gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
+		}
 	}
 }
