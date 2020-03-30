@@ -64,14 +64,14 @@ namespace tp::d_com_inf_game
 	
 	struct DungeonFlags
 	{
-		u8 mapGotten : 1,
-		 compassGotten : 1,
-		 bigKeyGotten : 1,
-		 bossBeaten : 1,
-		 containerGotten : 1,
-		 bitSix : 1,
+		u8 miniBossBeaten : 1,
 		 ooccooGotten : 1,
-		 miniBossBeaten : 1;
+		 bitSix : 1,
+		 containerGotten : 1,
+		 bossBeaten : 1,
+		 bigKeyGotten : 1,
+		 compassGotten : 1,
+		 mapGotten : 1;
 	} __attribute__((__packed__));
 	
 	// Should try to fill in the missing variables at some point
