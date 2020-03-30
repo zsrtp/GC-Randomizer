@@ -36,6 +36,7 @@
 
 // d_item.o
 80097F20:checkItemGet
+800982F4:item_func_UTUWA_HEART
 
 // d_a_alink.h
 8009DA98:checkStageName

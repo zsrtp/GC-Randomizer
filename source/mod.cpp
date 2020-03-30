@@ -28,6 +28,7 @@
 #include <tp/d_kankyo.h>
 #include <tp/d_msg_flow.h>
 #include <tp/DynamicLink.h>
+#include <tp/d_item.h>
 #include <cstdio>
 #include <cstring>
 
@@ -308,6 +309,13 @@ namespace mod
 				return global::modPtr->procDoLink(dmc);
 			}
 		);
+
+		item_func_UTUWA_HEART_trampoline = patch::hookFunction(tp::d_item::item_func_UTUWA_HEART,
+			[]()
+			{
+				return global::modPtr->procItem_func_UTUWA_HEART();
+			}
+		);
 	}
 
 	bool Mod::proc_query022(void* unk1, void* unk2, s32 unk3)
@@ -362,6 +370,19 @@ namespace mod
 		}
 
 		return result;
+	}
+
+	void Mod::procItem_func_UTUWA_HEART()
+	{
+		/* Call the original function immediately, as the heart container flag 
+			for the current area needs to be set before making any adjustments */
+		item_func_UTUWA_HEART_trampoline();
+		
+		// Clear the heart container flag if not currently in a boss room
+		if (!chestRandomizer->isStageBoss())
+		{
+			gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
+		}
 	}
 
 	void Mod::procNewFrame()

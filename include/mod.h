@@ -74,6 +74,8 @@ namespace mod
 
 			bool procDoLink(tp::dynamic_link::DynamicModuleControl* dmc);
 
+			void procItem_func_UTUWA_HEART();
+
 		// Private members
 		//private:
 			
@@ -89,6 +91,8 @@ namespace mod
 			bool (*do_link_trampoline)(tp::dynamic_link::DynamicModuleControl* dmc) = nullptr;
 
 			bool (*checkTreasureRupeeReturn_trampoline)(void* unk1, s32 item) = nullptr;
+
+			void (*item_func_UTUWA_HEART_trampoline)() = nullptr;
 
 			// Item functions
 			s32 (*createItemForPresentDemo_trampoline)(const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3]) = nullptr;
