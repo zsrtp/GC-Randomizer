@@ -758,7 +758,7 @@ namespace mod
 									{
 										keyShardState = 3;
 									}
-								}*/
+								}
 							}
 							if (item == items::Item::Dominion_Rod_Uncharged)
 							{
