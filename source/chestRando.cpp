@@ -384,6 +384,10 @@ namespace mod
 				item = items::Item::Dominion_Rod_Charged;
 				gameInfo.scratchPad.eventBits[0x25] |= 0x80;
 			}
+			else if (item == items::Item::Poe_Soul)
+			{//increase poe counter
+				gameInfo.scratchPad.wQuestLogData[0x10C]++;
+			}
 			return item;
 		}
 		else if (item == items::Item::Slingshot)
@@ -393,6 +397,10 @@ namespace mod
 			{
 				item = items::Item::Dominion_Rod_Charged;
 				gameInfo.scratchPad.eventBits[0x25] |= 0x80;
+			}
+			else if (item == items::Item::Poe_Soul)
+			{//increase poe counter
+				gameInfo.scratchPad.wQuestLogData[0x10C]++;
 			}
 			return item;
 		}*/

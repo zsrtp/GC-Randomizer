@@ -147,9 +147,9 @@ namespace mod
 		page = hudConsole->addPage("Game Info");
 		
 		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
-		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only*/
+		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
-		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only
+		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
@@ -157,7 +157,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
-		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.wQuestLogData[0x34], 'd', WatchInterpretation::_u32);	
+		//hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.wQuestLogData[0x34], 'd', WatchInterpretation::_u32);
 				
 		/*hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
@@ -201,6 +201,77 @@ namespace mod
 		page = hudConsole->addPage("Local Area 4");
 		hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
+
+		//item slots
+		/*page = hudConsole->addPage("Item slots 1");		
+		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.wQuestLogData[0x9C], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Lantern:", &gameInfo.scratchPad.wQuestLogData[0x9D], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Spinner:", &gameInfo.scratchPad.wQuestLogData[0x9E], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Iron Boots:", &gameInfo.scratchPad.wQuestLogData[0x9F], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Hero's Bow:", &gameInfo.scratchPad.wQuestLogData[0xA0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Hawkeye:", &gameInfo.scratchPad.wQuestLogData[0xA1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Ball and Chain:", &gameInfo.scratchPad.wQuestLogData[0xA2], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Item Slot:", &gameInfo.scratchPad.wQuestLogData[0xA3], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Dominion Rod:", &gameInfo.scratchPad.wQuestLogData[0xA4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Clawshot:", &gameInfo.scratchPad.wQuestLogData[0xA5], 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Item slots 2");		
+		hudConsole->addWatch(page, "DoubleClawshot:", &gameInfo.scratchPad.wQuestLogData[0xA6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bottle #1:", &gameInfo.scratchPad.wQuestLogData[0xA7], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bottle #2:", &gameInfo.scratchPad.wQuestLogData[0xA8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bottle #3:", &gameInfo.scratchPad.wQuestLogData[0xA9], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bottle #4:", &gameInfo.scratchPad.wQuestLogData[0xAA], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bomb Bag #1:", &gameInfo.scratchPad.wQuestLogData[0xAB], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bomb Bag #2:", &gameInfo.scratchPad.wQuestLogData[0xAC], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Bomb Bag #3:", &gameInfo.scratchPad.wQuestLogData[0xAD], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Ooccoo:", &gameInfo.scratchPad.wQuestLogData[0xAE], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Auru/AsheiNote:", &gameInfo.scratchPad.wQuestLogData[0xAF], 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Item slots 3");		
+		hudConsole->addWatch(page, "Fishing Rod:", &gameInfo.scratchPad.wQuestLogData[0xB0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Horse Call:", &gameInfo.scratchPad.wQuestLogData[0xB1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Sky Book:", &gameInfo.scratchPad.wQuestLogData[0xB2], 'x', WatchInterpretation::_u8);		
+		hudConsole->addWatch(page, "Slingshot:", &gameInfo.scratchPad.wQuestLogData[0xB3], 'x', WatchInterpretation::_u8);	
+		hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.wQuestLogData[0xB4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 2:", &gameInfo.scratchPad.wQuestLogData[0xB5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 3:", &gameInfo.scratchPad.wQuestLogData[0xB6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 4:", &gameInfo.scratchPad.wQuestLogData[0xB7], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 5:", &gameInfo.scratchPad.wQuestLogData[0xB8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 6:", &gameInfo.scratchPad.wQuestLogData[0xB9], 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Item slots 4");	
+		hudConsole->addWatch(page, "Slot 7:", &gameInfo.scratchPad.wQuestLogData[0xBA], 'x', WatchInterpretation::_u8);	
+		hudConsole->addWatch(page, "Slot 8:", &gameInfo.scratchPad.wQuestLogData[0xBB], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 9:", &gameInfo.scratchPad.wQuestLogData[0xBC], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 10:", &gameInfo.scratchPad.wQuestLogData[0xBD], 'x', WatchInterpretation::_u8);		
+		hudConsole->addWatch(page, "Slot 11:", &gameInfo.scratchPad.wQuestLogData[0xBE], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 12:", &gameInfo.scratchPad.wQuestLogData[0xBF], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 13:", &gameInfo.scratchPad.wQuestLogData[0xC0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 14:", &gameInfo.scratchPad.wQuestLogData[0xC1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 15:", &gameInfo.scratchPad.wQuestLogData[0xC2], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 16:", &gameInfo.scratchPad.wQuestLogData[0xC3], 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Item slots 5");
+		hudConsole->addWatch(page, "Slot 17:", &gameInfo.scratchPad.wQuestLogData[0xC4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 18:", &gameInfo.scratchPad.wQuestLogData[0xC5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 19:", &gameInfo.scratchPad.wQuestLogData[0xC6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 20:", &gameInfo.scratchPad.wQuestLogData[0xC7], 'x', WatchInterpretation::_u8);		
+		hudConsole->addWatch(page, "Slot 21:", &gameInfo.scratchPad.wQuestLogData[0xC8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 22:", &gameInfo.scratchPad.wQuestLogData[0xC9], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 23:", &gameInfo.scratchPad.wQuestLogData[0xCA], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 24:", &gameInfo.scratchPad.wQuestLogData[0xCB], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "??? 1:", &gameInfo.scratchPad.wQuestLogData[0xCC], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "??? 2:", &gameInfo.scratchPad.wQuestLogData[0xCD], 'x', WatchInterpretation::_u8);
+		
+		
+		page = hudConsole->addPage("Equipment");
+		hudConsole->addWatch(page, "??? 3:", &gameInfo.scratchPad.wQuestLogData[0xCE], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "??? 4:", &gameInfo.scratchPad.wQuestLogData[0xCF], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Wooden Sword:", &gameInfo.scratchPad.wQuestLogData[0xD0], 'x', WatchInterpretation::_u8);
+		//bit 1 = wooden sword 
+		hudConsole->addWatch(page, "Z/M armor:", &gameInfo.scratchPad.wQuestLogData[0xD1], 'x', WatchInterpretation::_u8);//zora/magic armor
+		hudConsole->addWatch(page, "Swor/Shie/Clot:", &gameInfo.scratchPad.wQuestLogData[0xD2], 'x', WatchInterpretation::_u8);//Swords/Shields/Hero's Clothes
+		hudConsole->addWatch(page, "??? 5:", &gameInfo.scratchPad.wQuestLogData[0xD3], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "??? 6:", &gameInfo.scratchPad.wQuestLogData[0xD4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "??? 7:", &gameInfo.scratchPad.wQuestLogData[0xD5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Light Sword:", &gameInfo.scratchPad.wQuestLogData[0xD6], 'x', WatchInterpretation::_u8);*/
+
 
 		// Print
 		hudConsole->draw();
