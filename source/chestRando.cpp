@@ -249,7 +249,6 @@ namespace mod
 			index = tools::getRandom(totalChecks);
 			sourceCheck = &item::checks[index];
 		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer ||
-		 (isStageADungeon(sourceCheck->stage) && destCheck->itemID == items::Item::Heart_Container) || //no heart containers in dungeons
 		 (destCheck->type == item::ItemType::Bug && 0 == strcmp("R_SP160", sourceCheck->stage) &&  sourceCheck->room == 3) || //agitha can't give bugs
 		 (destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)) || //dungeon items only in their own dungeon
 		 (destCheck->type == item::ItemType::Dungeon && index == 115)); //dont place dungeon items at clawshot goron mines check
@@ -415,6 +414,10 @@ namespace mod
 		{
 			strcpy(sysConsolePtr->consoleLine[20].line, "flag set");
 			gameInfo.localAreaNodes.dungeon.containerGotten = 0b1;
+		}
+		else if (item == items::Item::Iron_Boots)
+		{//set flag for having talked to Bo
+			gameInfo.scratchPad.eventBits[0x1C] |= 0x20;
 		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
@@ -757,7 +760,7 @@ namespace mod
 							if (item == items::Item::Dominion_Rod_Uncharged)
 							{
 								item = items::Item::Dominion_Rod_Charged;
-								gameInfo.scratchPad.eventBits[0x25] |= 0x80;
+								gameInfo.scratchPad.eventBits[0x25] |= 0x80;//set flag to charge dominion rod
 							}
 							return item;
 						}
