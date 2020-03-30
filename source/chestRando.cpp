@@ -406,6 +406,10 @@ namespace mod
 		{//set flag for having talked to Bo
 			gameInfo.scratchPad.eventBits[0x1C] |= 0x20;
 		}
+		else if (item == items::Item::Poe_Soul)
+		{//decrease poe counter
+			gameInfo.scratchPad.wQuestLogData[0x10C]--;
+		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
@@ -752,6 +756,10 @@ namespace mod
 							{
 								item = items::Item::Dominion_Rod_Charged;
 								gameInfo.scratchPad.eventBits[0x25] |= 0x80;//set flag to charge dominion rod
+							}
+							else if (item == items::Item::Poe_Soul)
+							{//increase poe counter
+								gameInfo.scratchPad.wQuestLogData[0x10C]++;
 							}
 							return item;
 						}
