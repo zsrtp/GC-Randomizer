@@ -409,6 +409,13 @@ namespace mod
 			return item;
 		}*/
 		
+		
+		if (item == items::Item::Heart_Container && isStageBoss())
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "flag set");
+			gameInfo.localAreaNodes.dungeon.containerGotten = 0b1;
+		}
+		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
 			sourceCheck = &item::checks[i];
@@ -429,9 +436,10 @@ namespace mod
 				{
 					bool isOk = false;
 					
-					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon)
+					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Heart_Container )
 					{//bugs have unique itemids so position doesn't matter
 					//dungeon items are unique in their dungeon
+					//there can only be one heart container per stage in vanilla, so position doesn't matter (also each one can be at 2 locations: if gotten after boss or if coming back)
 						isOk = true;
 					}
 					else 
@@ -794,6 +802,21 @@ namespace mod
 			return true;
 		}
 		else
+		{
+			return false;
+		}
+	}
+	
+	bool ChestRandomizer::isStageBoss()
+	{
+		if(0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Morpheel]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Fyrus]) ||
+		0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Diababa]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Armogohma]) ||
+		0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Argorok]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Zant_Main]) || 
+		0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Stallord]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Blizzeta]))
+		{
+			return true;
+		}
+		else 
 		{
 			return false;
 		}

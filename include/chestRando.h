@@ -4,7 +4,7 @@
 #include "item.h"
 
 namespace mod
-{
+{	
 	class ChestRandomizer
 	{
 		private:
@@ -65,6 +65,15 @@ namespace mod
 			 * @param item Internal Item ID of the item
 			 */
 			s32 getItemReplacement(const float pos[3], s32 item);
+			
+			
+			/**
+			 * Checks if the stage given is a boss room 
+			 * to know if we can spawn a HC
+			 * 
+			 * excludes hyrule castle since boss doesn't spawn heart container
+			 */
+			bool isStageBoss();			
 
 		private:
 			/**
