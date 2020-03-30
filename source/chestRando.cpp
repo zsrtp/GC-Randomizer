@@ -362,18 +362,6 @@ namespace mod
 				{
 					result = true;
 				}
-			break;	
-			
-			case items::Item::Key_Shard_1:
-				result = true;
-			break;
-			
-			case items::Item::Key_Shard_2:
-				result = true;
-			break;
-			
-			case items::Item::Big_Key_Goron_Mines:
-				result = true;
 			break;
 			
 			
