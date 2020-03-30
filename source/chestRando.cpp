@@ -8,6 +8,7 @@
 #include "stage.h"
 
 #include <tp/d_com_inf_game.h>
+#include <tp/d_a_alink.h>
 #include <tp/JFWSystem.h>
 #include <cstdio>
 #include <cstring>
@@ -420,7 +421,7 @@ namespace mod
 		{
 			sourceCheck = &item::checks[i];
 
-			if(0 == strcmp(gameInfo.currentStage, sourceCheck->stage) || (0 == strcmp(gameInfo.currentStage, "F_SP128") && 0 == strcmp(sourceCheck->stage, "R_SP128")))
+			if(tp::d_a_alink::checkStageName(sourceCheck->stage) || (tp::d_a_alink::checkStageName("F_SP128") && 0 == strcmp(sourceCheck->stage, "R_SP128")))
 			{
 
 				if (isProgressiveEnabled == 1 && item == items::Item::Ancient_Sky_Book_completed)
@@ -809,10 +810,10 @@ namespace mod
 	
 	bool ChestRandomizer::isStageBoss()
 	{
-		if(0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Morpheel]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Fyrus]) ||
-		0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Diababa]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Armogohma]) ||
-		0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Argorok]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Zant_Main]) || 
-		0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Stallord]) || 0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Blizzeta]))
+		if(tp::d_a_alink::checkStageName(stage::allStages[Stage_Morpheel]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Fyrus]) ||
+		tp::d_a_alink::checkStageName(stage::allStages[Stage_Diababa]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Armogohma]) ||
+		tp::d_a_alink::checkStageName(stage::allStages[Stage_Argorok]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Zant_Main]) || 
+		tp::d_a_alink::checkStageName(stage::allStages[Stage_Stallord]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Blizzeta]))
 		{
 			return true;
 		}

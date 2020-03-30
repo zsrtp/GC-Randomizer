@@ -142,8 +142,8 @@ namespace mod
 		// Game info
 		page = hudConsole->addPage("Game Info");
 		
-		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF);
-		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF);*/
+		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
+		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only*/
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
@@ -156,11 +156,9 @@ namespace mod
 		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
-		//hudConsole->addWatch(page, "NextState:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
-		//hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);*/
 		
 		//local area
-		/*page = hudConsole->addPage("Local Area 1");		
+		page = hudConsole->addPage("Local Area 1");		
 		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[1], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[2], 'x', WatchInterpretation::_u8);
@@ -195,7 +193,7 @@ namespace mod
 		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 4");
 		hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
+		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);
 
 		// Print
 		hudConsole->draw();
@@ -451,7 +449,7 @@ namespace mod
 	s32 Mod::procEvtSkipper(void* evtPtr)
 	{
 		// Runs when the user tries to skip a Cutscene		
-		if(0 == strcmp(gameInfo.currentStage, stage::allStages[Stage_Sacred_Grove]))
+		if(tp::d_a_alink::checkStageName(stage::allStages[Stage_Sacred_Grove]))
 		{
 			// We're at sacred grove
 			if(0x2 == gameInfo.eventSystem.currentEventID)
