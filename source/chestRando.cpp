@@ -411,8 +411,7 @@ namespace mod
 		
 		
 		if (item == items::Item::Heart_Container && isStageBoss())
-		{
-			strcpy(sysConsolePtr->consoleLine[20].line, "flag set");
+		{//set flag for HC gotten
 			gameInfo.localAreaNodes.dungeon.containerGotten = 0b1;
 		}
 		else if (item == items::Item::Iron_Boots)
@@ -433,11 +432,15 @@ namespace mod
 				}
 				// Correct stage
 				if(sourceCheck->itemID == item || (isItemBombs(item) && isItemBombs(sourceCheck->itemID)) ||
-				(item == items::Item::Red_Rupee && sourceCheck->itemID == items::Item::Giant_Bomb_Bag) || 
+				(item == items::Item::Red_Rupee && sourceCheck->itemID == items::Item::Giant_Bomb_Bag) ||
+				(item == items::Item::Key_Shard_3 && (sourceCheck->itemID == items::Item::Key_Shard_1 || sourceCheck->itemID == items::Item::Key_Shard_2 || sourceCheck->itemID == items::Item::Big_Key_Goron_Mines)) ||
+				(item == items::Item::Key_Shard_2 && (sourceCheck->itemID == items::Item::Key_Shard_1 || sourceCheck->itemID == items::Item::Big_Key_Goron_Mines)) ||
+				(item == items::Item::Key_Shard_1 && (sourceCheck->itemID == items::Item::Key_Shard_2 || sourceCheck->itemID == items::Item::Big_Key_Goron_Mines)) || 
 				(item == items::Item::Lantern_Refill_Shop && sourceCheck->itemID == items::Item::Lantern_Oil_Shop) || 
 				(item == items::Item::Lantern_Refill_Scooped && sourceCheck->itemID == items::Item::Lantern_Oil_Scooped) || 
 				(sourceCheck->itemID == items::Item::Superb_Soup && (item == items::Item::Simple_Soup || item == items::Item::Good_Soup)))
 				{
+					item = sourceCheck->itemID;
 					bool isOk = false;
 					
 					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Heart_Container )
@@ -705,21 +708,21 @@ namespace mod
 										bombBagState = 4;
 									}
 								}
-								/*else if(item == items::Item::Key_Shard_1)
+								else if(item == items::Item::Key_Shard_1)
 								{
 									if (keyShardState == 1)
 									{
 										item = items::Item::Key_Shard_2;
-										bombBagState = 2;
+										keyShardState = 2;
 									}
 									else if (keyShardState == 2)
 									{
 										item = items::Item::Big_Key_Goron_Mines;
-										bombBagState = 3;
+										keyShardState = 3;
 									}									
 									else 
 									{
-										bombBagState = 1;
+										keyShardState = 1;
 									}
 								}
 								else if(item == items::Item::Key_Shard_2)
@@ -727,16 +730,16 @@ namespace mod
 									if (keyShardState == 0)
 									{
 										item = items::Item::Key_Shard_1;
-										bombBagState = 1;
+										keyShardState = 1;
 									}
 									else if (keyShardState == 2)
 									{
 										item = items::Item::Big_Key_Goron_Mines;
-										bombBagState = 3;
+										keyShardState = 3;
 									}									
 									else 
 									{
-										bombBagState = 2;
+										keyShardState = 2;
 									}
 								}
 								else if(item == items::Item::Big_Key_Goron_Mines)
@@ -744,16 +747,16 @@ namespace mod
 									if (keyShardState == 0)
 									{
 										item = items::Item::Key_Shard_1;
-										bombBagState = 1;
+										keyShardState = 1;
 									}
 									else if (keyShardState == 1)
 									{
 										item = items::Item::Key_Shard_2;
-										bombBagState = 2;
+										keyShardState = 2;
 									}									
 									else 
 									{
-										bombBagState = 3;
+										keyShardState = 3;
 									}
 								}*/
 							}

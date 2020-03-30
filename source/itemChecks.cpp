@@ -6,7 +6,7 @@
 
 namespace mod::item
 {
-	ItemCheck checks[487] = {
+	ItemCheck checks[490] = {
 /* 0 */{0x3F, 1, stage::allStages[65], 4, 0x0, 0x0, 0b000000000000000000000, -1.6259740, 0.0000000, -207.4881290, nullptr, nullptr},
 /* 1 */{0x03, 7, stage::allStages[40], 0, 0x1, 0xFF, 0b110000000000000000100, -3550.8691410, 4450.0000000, -694.8996580, nullptr, nullptr},
 /* 2 */{0xEE, 8, stage::allStages[45], 14, 0x1, 0xFF, 0b000000000000000000100, 1221.9044190, 50.0000000, -7.9423170, nullptr, nullptr},
@@ -365,9 +365,9 @@ namespace mod::item
 {0xf3, 8, stage::allStages[58], 13, 0x5, 0xFF, 0b000000000000000000000, -93334.218750, -5725.979980, 44504.023438, nullptr, nullptr},
 {0x20, 8, stage::allStages[55], 1, 0x8, 0xFF, 0b000000000000000000000, 4543.199219, 261.860168, -3035.944092, nullptr, nullptr},
 //goron mines key shards
-/*{0xf9, 2, stage::allStages[3], 14, 0x3, 0x3, 0b000000000000000000000, -15375.557617, -636.630005, 1595.673462, nullptr, nullptr},
+{0xf9, 2, stage::allStages[3], 14, 0x3, 0x3, 0b000000000000000000000, -15375.557617, -636.630005, 1595.673462, nullptr, nullptr},
 {0xfa, 2, stage::allStages[3], 17, 0x3, 0x3, 0b000000000000000000000, 13007.017578, 2924.530029, -17705.732422, nullptr, nullptr},
-{0xfd, 2, stage::allStages[3], 16, 0x4, 0x3, 0b000000000000000000000, 13055.647461, 2400.500000, -1660.316895, nullptr, nullptr},*/
+{0xfd, 2, stage::allStages[3], 16, 0x4, 0x3, 0b000000000000000000000, 13055.647461, 2400.500000, -1660.316895, nullptr, nullptr},
 //bugs
 {0xc0, 10, stage::allStages[56], 6, 0x2, 0xFF, 0b000000000000000000000, -50212.730469, -8840.560547, 86352.757812, nullptr, nullptr},
 {0xc1, 10, stage::allStages[56], 6, 0x2, 0xFF, 0b000100000010000000000, -38651.949219, -9189.901367, 73707.671875, nullptr, nullptr},
