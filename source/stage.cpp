@@ -83,4 +83,37 @@ namespace mod::stage
 		"R_SP161",
 		"R_SP209"
 	};
+
+	const char* dungeonStages[17]
+	{
+		allStages[Stage_Lakebed_Temple],
+		allStages[Stage_Deku_Toad],
+		allStages[Stage_Goron_Mines],
+		allStages[Stage_Dangoro],
+		allStages[Stage_Forest_Temple],
+		allStages[Stage_Ook],
+		allStages[Stage_Temple_of_Time],
+		allStages[Stage_Darknut],
+		allStages[Stage_City_in_the_Sky],
+		allStages[Stage_Aeralfos],
+		allStages[Stage_Palace_of_Twilight],
+		allStages[Stage_Phantom_Zant_1],
+		allStages[Stage_Phantom_Zant_2],
+		allStages[Stage_Arbiters_Grounds],
+		allStages[Stage_Death_Sword],
+		allStages[Stage_Snowpeak_Ruins],
+		allStages[Stage_Darkhammer],
+	};
+
+	const char* bossStages[8]
+	{
+		allStages[Stage_Morpheel],
+		allStages[Stage_Fyrus],
+		allStages[Stage_Diababa],
+		allStages[Stage_Armogohma],
+		allStages[Stage_Argorok],
+		allStages[Stage_Zant_Main],
+		allStages[Stage_Stallord],
+		allStages[Stage_Blizzeta]
+	};
 }

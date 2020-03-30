@@ -776,22 +776,15 @@ namespace mod
 	
 	bool ChestRandomizer::isStageADungeon(char* stage)
 	{
-		if(0 == strcmp(stage, stage::allStages[Stage_Lakebed_Temple]) || 0 == strcmp(stage, stage::allStages[Stage_Deku_Toad]) ||
-		0 == strcmp(stage, stage::allStages[Stage_Goron_Mines]) || 0 == strcmp(stage, stage::allStages[Stage_Dangoro]) ||
-		0 == strcmp(stage, stage::allStages[Stage_Forest_Temple]) || 0 == strcmp(stage, stage::allStages[Stage_Ook]) || 
-		0 == strcmp(stage, stage::allStages[Stage_Temple_of_Time]) || 0 == strcmp(stage, stage::allStages[Stage_Darknut]) ||
-		0 == strcmp(stage, stage::allStages[Stage_City_in_the_Sky]) || 0 == strcmp(stage, stage::allStages[Stage_Aeralfos]) || 
-		0 == strcmp(stage, stage::allStages[Stage_Palace_of_Twilight]) || 0 == strcmp(stage, stage::allStages[Stage_Phantom_Zant_1]) ||
-		0 == strcmp(stage, stage::allStages[Stage_Phantom_Zant_2]) || 0 == strcmp(stage, stage::allStages[Stage_Arbiters_Grounds]) || 
-		0 == strcmp(stage, stage::allStages[Stage_Death_Sword]) || 0 == strcmp(stage, stage::allStages[Stage_Snowpeak_Ruins]) ||
-		0 == strcmp(stage, stage::allStages[Stage_Darkhammer]))
+		u32 totalDungeonStages = sizeof(stage::dungeonStages) / sizeof(stage::dungeonStages[0]);
+		for (u32 i = 0; i < totalDungeonStages; i++)
 		{
-			return true;
+			if (0 == strcmp(stage, stage::dungeonStages[i]))
+			{
+				return true;
+			}
 		}
-		else 
-		{
-			return false;
-		}
+		return false;
 	}
 	
 	bool ChestRandomizer::isItemBombs(u8 itemID)
@@ -810,16 +803,14 @@ namespace mod
 	
 	bool ChestRandomizer::isStageBoss()
 	{
-		if(tp::d_a_alink::checkStageName(stage::allStages[Stage_Morpheel]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Fyrus]) ||
-		tp::d_a_alink::checkStageName(stage::allStages[Stage_Diababa]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Armogohma]) ||
-		tp::d_a_alink::checkStageName(stage::allStages[Stage_Argorok]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Zant_Main]) || 
-		tp::d_a_alink::checkStageName(stage::allStages[Stage_Stallord]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Blizzeta]))
+		u32 totalBossStages = sizeof(stage::bossStages) / sizeof(stage::bossStages[0]);
+		for (u32 i = 0; i < totalBossStages; i++)
 		{
-			return true;
+			if (tp::d_a_alink::checkStageName(stage::bossStages[i]))
+			{
+				return true;
+			}
 		}
-		else 
-		{
-			return false;
-		}
+		return false;
 	}
 }
