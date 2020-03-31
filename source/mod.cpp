@@ -343,12 +343,17 @@ namespace mod
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
 		
 		if (gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee == 0b0)
-		{//remove the item get animations for rupees (except silver)
+		{//remove the item get animations for floor pickups (except silver rupee)
 			gameInfo.scratchPad.itemFlags.itemFlags1.Blue_Rupee = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Yellow_Rupee = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Red_Rupee = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Purple_Rupee = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Seeds_50 = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_30 = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_20 = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_10 = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_1 = 0b1;
 		}		
 		
 		if (enableNormalTime == 0 && setDay == 0)
