@@ -179,7 +179,7 @@ namespace mod::game_patch
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Give MasterSword");
 
 		// Set Master sword inventory flag
-		gameInfo.scratchPad.itemFlags1.Master_Sword = 0b1;
+		gameInfo.scratchPad.itemFlags.itemFlags1.Master_Sword = 0b1;
 
 		// Equip Master sword (0x49 / 73)
 		gameInfo.scratchPad.wQuestLogData_1[0x014] = 0x49;

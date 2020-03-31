@@ -207,10 +207,10 @@ namespace mod
 		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWeel.Boomerang, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.itemSlots[0x1], 'x', WatchInterpretation::_u8);
 		
-		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags1, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags2, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags3, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags4, 'x', WatchInterpretation::_u64);*/
+		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
 		
 		
 		// Print

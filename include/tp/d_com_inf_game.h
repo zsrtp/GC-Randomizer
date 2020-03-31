@@ -336,16 +336,23 @@ namespace tp::d_com_inf_game
 		 
 	} __attribute__((__packed__));
 	
+	struct ItemFlags
+	{
+		ItemFlags1 itemFlags1;
+		ItemFlags2 itemFlags2;
+		ItemFlags3 itemFlags3;
+		ItemFlags4 itemFlags4;	
+		
+	} __attribute__((__packed__));
+	
+	
 	// Should try to fill in the variables at some point
 	struct ScratchPad
 	{
 		u8 wQuestLogData_1[0x9C];
 		ItemSlots itemWeel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];
-		ItemFlags1 itemFlags1;
-		ItemFlags2 itemFlags2;
-		ItemFlags3 itemFlags3;
-		ItemFlags4 itemFlags4;
+		ItemFlags itemFlags;
 		u8 wQuestLogData_2[0x704];//offset 0xEC
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
 		u8 miniGameBits[0x18]; // Bitfield
