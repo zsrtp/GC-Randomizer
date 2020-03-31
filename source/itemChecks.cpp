@@ -6,7 +6,7 @@
 
 namespace mod::item
 {
-	ItemCheck checks[490] = {
+	ItemCheck checks[491] = {
 /* 0 */{0x3F, 1, stage::allStages[65], 4, 0x0, 0x0, 0b000000000000000000000, -1.6259740, 0.0000000, -207.4881290, nullptr, nullptr},
 /* 1 */{0x03, 7, stage::allStages[40], 0, 0x1, 0xFF, 0b110000000000000000100, -3550.8691410, 4450.0000000, -694.8996580, nullptr, nullptr},
 /* 2 */{0xEE, 8, stage::allStages[45], 14, 0x1, 0xFF, 0b000000000000000000100, 1221.9044190, 50.0000000, -7.9423170, nullptr, nullptr},
@@ -351,6 +351,8 @@ namespace mod::item
 /* 340 */{0x21, 3, stage::allStages[51], 1, 0x11, 0xFF, 0b000000000000000000000, -71795.539062, -54450.000000, 56396.738281, nullptr, nullptr},
 /* 341 */{0x21, 3, stage::allStages[63], 0, 0x12, 0xFF, 0b000000000000000000010, 2200.000000, 104.574730, -1200.000000, nullptr, nullptr},
 /* 342 */{0x20, 8, stage::allStages[20], 13, 0xFF, 0xFF, 0b000000000000000000000, -7625.000000, 52.000000, -5525.000000, nullptr, nullptr},
+/* 343 */{0x20, 8, stage::allStages[6], 7, 0x1, 0xFF, 0b000000000000000000100, -5703.254883, 4372.640137, 11664.798828, nullptr, nullptr},
+
 
 //Ooccoo
 {0x25, 2, stage::allStages[6], 1, 0x1, 0x1, 0b000000000000000000100, 3775.943604, 3167.790039, 5428.488281, nullptr, nullptr},
