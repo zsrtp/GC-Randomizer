@@ -560,82 +560,82 @@ namespace mod
 								}
 								else if(item == items::Item::Ancient_Sky_Book_empty)
 								{
-									if (itemFlags->itemFlags1.Ancient_Sky_Book_empty == 0b0)
+									if (itemFlags->itemFlags4.Ancient_Sky_Book_empty == 0b0)
 									{
 										item = items::Item::Ancient_Sky_Book_empty;
 									}
-									else if (itemFlags->itemFlags1.Null_DF == 0b0)
+									else if (itemFlags->itemFlags4.Null_DF == 0b0)
 									{//letter 1
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DF = 0b1;
+										itemFlags->itemFlags4.Null_DF = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DE == 0b0)
+									else if (itemFlags->itemFlags4.Null_DE == 0b0)
 									{//letter 2
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DE = 0b1;
+										itemFlags->itemFlags4.Null_DE = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DD == 0b0)
+									else if (itemFlags->itemFlags4.Null_DD == 0b0)
 									{//letter 3
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DD = 0b1;
+										itemFlags->itemFlags4.Null_DD = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DC == 0b0)
+									else if (itemFlags->itemFlags4.Null_DC == 0b0)
 									{//letter 4
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DC = 0b1;
+										itemFlags->itemFlags4.Null_DC = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DB == 0b0)
+									else if (itemFlags->itemFlags4.Null_DB == 0b0)
 									{//letter 5
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DB = 0b1;
+										itemFlags->itemFlags4.Null_DB = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DA == 0b0)
+									else if (itemFlags->itemFlags4.Null_DA == 0b0)
 									{//letter 6
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DA = 0b1;
+										itemFlags->itemFlags4.Null_DA = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DA == 0b1)
+									else if (itemFlags->itemFlags4.Null_DA == 0b1)
 									{
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
 								}
 								else if(item == items::Item::Ancient_Sky_Book_partly_filled)
 								{
-									if (itemFlags->itemFlags1.Ancient_Sky_Book_empty == 0b0)
+									if (itemFlags->itemFlags4.Ancient_Sky_Book_empty == 0b0)
 									{
 										item = items::Item::Ancient_Sky_Book_empty;
 									}
-									else if (itemFlags->itemFlags1.Null_DF == 0b0)
+									else if (itemFlags->itemFlags4.Null_DF == 0b0)
 									{//letter 1
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DF = 0b1;
+										itemFlags->itemFlags4.Null_DF = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DE == 0b0)
+									else if (itemFlags->itemFlags4.Null_DE == 0b0)
 									{//letter 2
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DE = 0b1;
+										itemFlags->itemFlags4.Null_DE = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DD == 0b0)
+									else if (itemFlags->itemFlags4.Null_DD == 0b0)
 									{//letter 3
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DD = 0b1;
+										itemFlags->itemFlags4.Null_DD = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DC == 0b0)
+									else if (itemFlags->itemFlags4.Null_DC == 0b0)
 									{//letter 4
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DC = 0b1;
+										itemFlags->itemFlags4.Null_DC = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DB == 0b0)
+									else if (itemFlags->itemFlags4.Null_DB == 0b0)
 									{//letter 5
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DB = 0b1;
+										itemFlags->itemFlags4.Null_DB = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DA == 0b0)
+									else if (itemFlags->itemFlags4.Null_DA == 0b0)
 									{//letter 6
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags1.Null_DA = 0b1;
+										itemFlags->itemFlags4.Null_DA = 0b1;
 									}
-									else if (itemFlags->itemFlags1.Null_DA == 0b1)
+									else if (itemFlags->itemFlags4.Null_DA == 0b1)
 									{
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
