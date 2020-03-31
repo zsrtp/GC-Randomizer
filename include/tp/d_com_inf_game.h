@@ -84,22 +84,22 @@ namespace tp::d_com_inf_game
 		 Null_37 : 1,
 		 Giant_Wallet : 1,
 		 Big_Wallet : 1,
-		 Small_Wallet : 1,
+		 Small_Wallet : 1,//never set in normal game
 		 Ooccoo_Dungeon : 1,
-		 Shadow_Crystal : 1,
+		 Shadow_Crystal : 1,//never set in normal game
 		 Zora_Armor : 1,
 		 Magic_Armor : 1,
 		 
 		 Heros_Clothes : 1,
-		 Ordon_Clothing : 1,
-		 Ooccoos_Note : 1,
+		 Ordon_Clothing : 1,//never set in normal game
+		 Ooccoos_Note : 1,//never set in normal game
 		 Hylian_Shield : 1,
 		 Wooden_Shield : 1,
 		 Ordon_Shield : 1,
 		 Master_Sword : 1,
 		 Ordon_Sword : 1,
 		 
-		 Ooccoo_Jr : 1,
+		 Ooccoo_Jr : 1,//never set in normal game
 		 Big_Key : 1,
 		 Ooccoo_FT : 1,
 		 Compass : 1,
@@ -123,16 +123,16 @@ namespace tp::d_com_inf_game
 		 Null_57 : 1,
 		 Giant_Quiver : 1,
 		 Big_Quiver : 1,
-		 Small_Quiver : 1,
+		 Small_Quiver : 1,//never set in normal game
 		 Null_53 : 1,
 		 Null_52 : 1,
 		 Goron_Bomb_Bag : 1,
-		 Empty_Bomb_Bag : 1,
+		 Empty_Bomb_Bag : 1,//never set in normal game
 		 
 		 Giant_Bomb_Bag : 1,
 		 Null_4E : 1,
 		 Null_4D : 1,
-		 Dominion_Rod_Charged : 1,
+		 Dominion_Rod_Charged : 1,//never set in normal game
 		 Slingshot : 1,
 		 Fishing_Rod : 1,
 		 Master_Sword_Light : 1,
@@ -252,11 +252,11 @@ namespace tp::d_com_inf_game
 		 Null_A7 : 1,
 		 Null_A6 : 1,
 		 Null_A5 : 1,
-		 Vessel_Of_Light_Full : 1,
+		 Vessel_Of_Light_Full : 1,//never set in normal game
 		 Vessel_Of_Light_Lanayru : 1,
 		 Vessel_Of_Light_Eldin : 1,
 		 Vessel_Of_Light_Faron : 1,
-		 Tear_Of_Light : 1;
+		 Tear_Of_Light : 1;//never set in normal game
 	}__attribute__((__packed__));
 	
 	struct ItemFlags4
@@ -323,7 +323,7 @@ namespace tp::d_com_inf_game
 		 Null_E3 : 1,
 		 Null_E2 : 1,
 		 Null_E1 : 1,
-		 Poe_Soul : 1,
+		 Poe_Soul : 1,//never set in normal game
 		 
 		 Null_DF : 1,
 		 Null_DE : 1,
