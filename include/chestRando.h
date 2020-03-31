@@ -33,8 +33,6 @@ namespace mod
 			float rangeY = 200.0f;
 			float rangeZ = 400.0f;
 			
-			u8 bookState = 0;
-			
 			u8 isProgressiveEnabled = 1;
 			
 			u8 isBugsanityEnabled = 1;
