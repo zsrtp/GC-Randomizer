@@ -18,13 +18,11 @@ namespace mod
 	void ChestRandomizer::generate()
 	{
 		// Reset
-		swordState = 0;
-		bowState = 0;
-		clawshotState = 0;
-		walletState = 0;
 		bookState = 0;
-		bombBagState = 0;
-		keyShardState = 0;
+		
+		itemFlags = &gameInfo.scratchPad.itemFlags;
+		itemWeel = &gameInfo.scratchPad.itemWeel;
+		
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
 
@@ -500,128 +498,62 @@ namespace mod
 							//progressive checks (doesn't work if you already have items when generating seed)
 							if (isProgressiveEnabled == 1)
 							{
-								if(item == items::Item::Wooden_Sword)
+								if(item == items::Item::Wooden_Sword && itemFlags->itemFlags1.Wooden_Sword == 0b1)
 								{
-									if (swordState == 1)
-									{
-										item = items::Item::Ordon_Sword;
-										swordState = 2;
-									}	
-									else 
-									{
-										swordState = 1;
-									}
+									item = items::Item::Ordon_Sword;
 								}
-								else if(item == items::Item::Ordon_Sword)
+								else if(item == items::Item::Ordon_Sword && itemFlags->itemFlags1.Wooden_Sword == 0b0)
 								{
-									if (swordState == 0)
-									{
-										item = items::Item::Wooden_Sword;
-										swordState = 1;
-									}	
-									else 
-									{
-										swordState = 2;
-									}		
+									item = items::Item::Wooden_Sword;
 								}
-								else if(item == items::Item::Clawshot)
+								else if(item == items::Item::Clawshot && itemFlags->itemFlags2.Clawshot == 0b1)
 								{
-									if (clawshotState == 1)
-									{
-										item = items::Item::Clawshots;
-										clawshotState = 2;
-									}		
-									else 
-									{
-										clawshotState = 1;
-									}	
+									item = items::Item::Clawshots;
 								}
-								else if(item == items::Item::Clawshots)
+								else if(item == items::Item::Clawshots && itemFlags->itemFlags2.Clawshot == 0b0)
 								{
-									if (clawshotState == 0)
-									{
-										item = items::Item::Clawshot;
-										clawshotState = 1;
-									}			
-									else 
-									{
-										clawshotState = 2;
-									}					
+									item = items::Item::Clawshot;				
 								}
 								else if(item == items::Item::Heros_Bow)
 								{
-									if (bowState == 1)
+									if (itemFlags->itemFlags2.Heros_Bow == 0b1 && itemFlags->itemFlags2.Big_Quiver == 0b0)
 									{
 										item = items::Item::Big_Quiver;
-										bowState = 2;
 									}
-									else if (bowState == 2)
+									else if (itemFlags->itemFlags2.Heros_Bow == 0b1 && itemFlags->itemFlags2.Big_Quiver == 0b1)
 									{
 										item = items::Item::Giant_Quiver;
-										bowState = 3;
-									}									
-									else 
-									{
-										bowState = 1;
 									}						
 								}
 								else if(item == items::Item::Big_Quiver)
 								{
-									if (bowState == 0)
+									if (itemFlags->itemFlags2.Heros_Bow == 0b0)
 									{
 										item = items::Item::Heros_Bow;
-										bowState = 1;
 									}
-									else if (bowState == 2)
+									else if (itemFlags->itemFlags2.Heros_Bow == 0b1 && itemFlags->itemFlags2.Big_Quiver == 0b1)
 									{
 										item = items::Item::Giant_Quiver;
-										bowState = 3;
-									}									
-									else 
-									{
-										bowState = 2;
 									}
 								}
 								else if(item == items::Item::Giant_Quiver)
 								{
-									if (bowState == 0)
+									if (itemFlags->itemFlags2.Heros_Bow == 0b0)
 									{
 										item = items::Item::Heros_Bow;
-										bowState = 1;
 									}
-									else if (bowState == 1)
+									else if (itemFlags->itemFlags2.Heros_Bow == 0b1 && itemFlags->itemFlags2.Big_Quiver == 0b0)
 									{
 										item = items::Item::Big_Quiver;
-										bowState = 2;
-									}									
-									else 
-									{
-										bowState = 3;
 									}
 								}
-								else if(item == items::Item::Big_Wallet)
+								else if(item == items::Item::Big_Wallet && itemFlags->itemFlags1.Big_Wallet == 0b1)
 								{
-									if (walletState == 1)
-									{
-										item = items::Item::Giant_Wallet;
-										walletState = 2;
-									}			
-									else 
-									{
-										walletState = 1;
-									}
+									item = items::Item::Giant_Wallet;
 								}
-								else if(item == items::Item::Giant_Wallet)
+								else if(item == items::Item::Giant_Wallet && itemFlags->itemFlags1.Big_Wallet == 0b0)
 								{
-									if (walletState == 0)
-									{
-										item = items::Item::Big_Wallet;
-										walletState = 1;
-									}			
-									else 
-									{
-										walletState = 2;
-									}
+									item = items::Item::Big_Wallet;
 								}
 								else if(item == items::Item::Ancient_Sky_Book_empty)
 								{
@@ -659,104 +591,104 @@ namespace mod
 								}
 								else if(item == items::Item::Bomb_Bag_Regular_Bombs)
 								{
-									if (bombBagState == 1 || bombBagState == 2)
+									if (itemWeel->Bomb_Bag_1 == 0xFF)
+									{
+										item = items::Item::Bomb_Bag_Regular_Bombs;
+									}
+									if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
-										bombBagState++;
-									}	
-									else if (bombBagState == 3)
+									}
+									else if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 != 0xFF && itemWeel->Bomb_Bag_3 == 0xFF)
+									{
+										item = items::Item::Goron_Bomb_Bag;
+									}
+									else if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 != 0xFF && itemWeel->Bomb_Bag_3 != 0xFF && itemFlags->itemFlags2.Giant_Bomb_Bag == 0b0)
 									{
 										item = items::Item::Giant_Bomb_Bag;
-										bombBagState = 4;
-									} 									
-									else 
+									}
+									else
 									{
-										bombBagState = 1;
+										item = items::Item::Bombs_30;
 									}
 								}
 								else if(item == items::Item::Goron_Bomb_Bag)
 								{
-									if (bombBagState == 0)
+									if (itemWeel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
-										bombBagState = 1;
 									}
-									else if (bombBagState == 3)
+									if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 == 0xFF)
+									{
+										item = items::Item::Goron_Bomb_Bag;
+									}
+									else if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 != 0xFF && itemWeel->Bomb_Bag_3 == 0xFF)
+									{
+										item = items::Item::Goron_Bomb_Bag;
+									}
+									else if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 != 0xFF && itemWeel->Bomb_Bag_3 != 0xFF && itemFlags->itemFlags2.Giant_Bomb_Bag == 0b0)
 									{
 										item = items::Item::Giant_Bomb_Bag;
-										bombBagState = 4;
-									} 									
-									else 
+									}
+									else
 									{
-										bombBagState++;
+										item = items::Item::Bombs_30;
 									}
 								}
 								else if(item == items::Item::Giant_Bomb_Bag)
 								{
-									if (bombBagState == 0)
+									if (itemWeel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
-										bombBagState = 1;
 									}
-									else if (bombBagState == 1 || bombBagState == 2)
+									if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
-										bombBagState++;
-									}									
-									else 
+									}
+									else if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 != 0xFF && itemWeel->Bomb_Bag_3 == 0xFF)
 									{
-										bombBagState = 4;
+										item = items::Item::Goron_Bomb_Bag;
+									}
+									else if (itemWeel->Bomb_Bag_1 != 0xFF && itemWeel->Bomb_Bag_2 != 0xFF && itemWeel->Bomb_Bag_3 != 0xFF && itemFlags->itemFlags2.Giant_Bomb_Bag == 0b0)
+									{
+										item = items::Item::Giant_Bomb_Bag;
+									}
+									else
+									{
+										item = items::Item::Bombs_30;
 									}
 								}
 								else if(item == items::Item::Key_Shard_1)
 								{
-									if (keyShardState == 1)
+									if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b0)
 									{
 										item = items::Item::Key_Shard_2;
-										keyShardState = 2;
 									}
-									else if (keyShardState == 2)
+									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
 									{
 										item = items::Item::Big_Key_Goron_Mines;
-										keyShardState = 3;
-									}									
-									else 
-									{
-										keyShardState = 1;
 									}
 								}
 								else if(item == items::Item::Key_Shard_2)
 								{
-									if (keyShardState == 0)
+									if (itemFlags->itemFlags4.Key_Shard_1 == 0b0)
 									{
 										item = items::Item::Key_Shard_1;
-										keyShardState = 1;
 									}
-									else if (keyShardState == 2)
+									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
 									{
 										item = items::Item::Big_Key_Goron_Mines;
-										keyShardState = 3;
-									}									
-									else 
-									{
-										keyShardState = 2;
 									}
 								}
 								else if(item == items::Item::Big_Key_Goron_Mines)
 								{
-									if (keyShardState == 0)
+									if (itemFlags->itemFlags4.Key_Shard_1 == 0b0)
 									{
 										item = items::Item::Key_Shard_1;
-										keyShardState = 1;
 									}
-									else if (keyShardState == 1)
+									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
 									{
 										item = items::Item::Key_Shard_2;
-										keyShardState = 2;
-									}									
-									else 
-									{
-										keyShardState = 3;
 									}
 								}
 							}

@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include "item.h"
+#include <tp/d_com_inf_game.h>
 
 namespace mod
 {	
@@ -32,13 +33,7 @@ namespace mod
 			float rangeY = 200.0f;
 			float rangeZ = 400.0f;
 			
-			u8 swordState = 0;
-			u8 bowState = 0;
-			u8 clawshotState = 0;
-			u8 walletState = 0;
 			u8 bookState = 0;
-			u8 bombBagState = 0;
-			u8 keyShardState = 0;
 			
 			u8 isProgressiveEnabled = 1;
 			
@@ -49,6 +44,9 @@ namespace mod
 			
 			u8 itemThatReplacesHalfMilk = 0;
 			u8 itemThatReplacesSlingShot = 0;
+			
+			tp::d_com_inf_game::ItemFlags* itemFlags;
+			tp::d_com_inf_game::ItemSlots* itemWeel;
 
 		public:
 			/**
