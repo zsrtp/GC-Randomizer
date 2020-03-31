@@ -141,21 +141,21 @@ namespace mod::game_patch
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set first time wolf");
 
-		gameInfo.scratchPad.wQuestLogData[0x030] |= 1;
+		gameInfo.scratchPad.wQuestLogData_1[0x030] |= 1;
 	}
 
 	void setHuman()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set human");
 
-		gameInfo.scratchPad.wQuestLogData[0x01E] = 0;
+		gameInfo.scratchPad.wQuestLogData_1[0x01E] = 0;
 	}
 
 	void setWolf()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
 
-		gameInfo.scratchPad.wQuestLogData[0x01E] = 1;
+		gameInfo.scratchPad.wQuestLogData_1[0x01E] = 1;
 	}
 
 	void giveSense()
@@ -179,10 +179,10 @@ namespace mod::game_patch
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Give MasterSword");
 
 		// Set Master sword inventory flag
-		gameInfo.scratchPad.wQuestLogData[0x0D2] |= 0x2;
+		gameInfo.scratchPad.itemFlags1.Master_Sword = 0b1;
 
 		// Equip Master sword (0x49 / 73)
-		gameInfo.scratchPad.wQuestLogData[0x014] = 0x49;
+		gameInfo.scratchPad.wQuestLogData_1[0x014] = 0x49;
 	}
 
 	void giveMidna()

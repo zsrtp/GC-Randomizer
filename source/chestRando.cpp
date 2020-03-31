@@ -386,7 +386,7 @@ namespace mod
 			}
 			else if (item == items::Item::Poe_Soul)
 			{//increase poe counter
-				gameInfo.scratchPad.wQuestLogData[0x10C]++;
+				gameInfo.scratchPad.wQuestLogData_2[0x20]++;
 			}
 			return item;
 		}
@@ -400,7 +400,7 @@ namespace mod
 			}
 			else if (item == items::Item::Poe_Soul)
 			{//increase poe counter
-				gameInfo.scratchPad.wQuestLogData[0x10C]++;
+				gameInfo.scratchPad.wQuestLogData_2[0x20]++;
 			}
 			return item;
 		}*/
@@ -416,7 +416,7 @@ namespace mod
 		}
 		else if (item == items::Item::Poe_Soul)
 		{//decrease poe counter
-			gameInfo.scratchPad.wQuestLogData[0x10C]--;
+			gameInfo.scratchPad.wQuestLogData_2[0x20]--;
 		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
@@ -767,7 +767,7 @@ namespace mod
 							}
 							else if (item == items::Item::Poe_Soul)
 							{//increase poe counter
-								gameInfo.scratchPad.wQuestLogData[0x10C]++;
+								gameInfo.scratchPad.wQuestLogData_2[0x20]++;
 							}
 							return item;
 						}
