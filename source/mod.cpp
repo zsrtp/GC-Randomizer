@@ -342,6 +342,15 @@ namespace mod
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
 		
+		if (gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee == 0b0)
+		{//remove the item get animations for rupees (except silver)
+			gameInfo.scratchPad.itemFlags.itemFlags1.Blue_Rupee = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Yellow_Rupee = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Red_Rupee = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Purple_Rupee = 0b1;
+			gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee = 0b1;
+		}		
+		
 		if (enableNormalTime == 0 && setDay == 0)
 		{//set night
 			gameInfo.scratchPad.wQuestLogData_1[0x34] = 0b01000010;
