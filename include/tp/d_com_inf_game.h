@@ -262,7 +262,16 @@ namespace tp::d_com_inf_game
 	struct ItemFlags4
 	{
 		 
-		u64 Female_Dayfly : 1,
+		u64 Null_DF : 1,
+		 Null_DE : 1,
+		 Null_DD : 1,
+		 Null_DC : 1,
+		 Null_DB : 1,
+		 Null_DA : 1,
+		 Null_D9 : 1,
+		 Null_D8 : 1,
+		 
+		 Female_Dayfly : 1,
 		 Male_Dayfly : 1,
 		 Female_Ant : 1,
 		 Male_Ant : 1,
@@ -323,16 +332,7 @@ namespace tp::d_com_inf_game
 		 Null_E3 : 1,
 		 Null_E2 : 1,
 		 Null_E1 : 1,
-		 Poe_Soul : 1,//never set in normal game
-		 
-		 Null_DF : 1,
-		 Null_DE : 1,
-		 Null_DD : 1,
-		 Null_DC : 1,
-		 Null_DB : 1,
-		 Null_DA : 1,
-		 Null_D9 : 1,
-		 Null_D8 : 1;
+		 Poe_Soul : 1;
 		 
 	} __attribute__((__packed__));
 	
