@@ -733,6 +733,7 @@ namespace mod
 									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
 									{
 										item = items::Item::Big_Key_Goron_Mines;
+										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
 									}
 								}
 								else if(item == items::Item::Key_Shard_2)
@@ -744,6 +745,7 @@ namespace mod
 									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
 									{
 										item = items::Item::Big_Key_Goron_Mines;
+										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
 									}
 								}
 								else if(item == items::Item::Big_Key_Goron_Mines)
@@ -752,9 +754,13 @@ namespace mod
 									{
 										item = items::Item::Key_Shard_1;
 									}
-									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
+									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b0)
 									{
 										item = items::Item::Key_Shard_2;
+									}
+									else
+									{
+										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
 									}
 								}
 								else if(item == items::Item::Master_Sword && itemFlags->itemFlags1.Master_Sword == 0b1)
