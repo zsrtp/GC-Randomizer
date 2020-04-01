@@ -20,7 +20,7 @@ namespace mod
 		// Reset
 		
 		itemFlags = &gameInfo.scratchPad.itemFlags;
-		itemWeel = &gameInfo.scratchPad.itemWeel;
+		itemWeel = &gameInfo.scratchPad.itemWeel;		
 		
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
@@ -419,6 +419,21 @@ namespace mod
 		{//decrease poe counter
 			gameInfo.scratchPad.wQuestLogData_2[0x20]--;
 		}
+		else if (item == items::Item::Vessel_Of_Light_Faron)
+		{//set tear counter to 16
+			gameInfo.scratchPad.wQuestLogData_2[0x28] = 16;
+			return item;
+		}
+		else if (item == items::Item::Vessel_Of_Light_Eldin)
+		{//set tear counter to 16
+			gameInfo.scratchPad.wQuestLogData_2[0x29] = 16;
+			return item;
+		}
+		else if (item == items::Item::Vessel_Of_Light_Lanayru)
+		{//set tear counter to 16
+			gameInfo.scratchPad.wQuestLogData_2[0x2A] = 16;
+			return item;
+		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
@@ -434,14 +449,10 @@ namespace mod
 				// Correct stage
 				if(sourceCheck->itemID == item || (isItemBombs(item) && isItemBombs(sourceCheck->itemID)) ||
 				(item == items::Item::Red_Rupee && sourceCheck->itemID == items::Item::Giant_Bomb_Bag) ||
-				(item == items::Item::Key_Shard_3 && (sourceCheck->itemID == items::Item::Key_Shard_1 || sourceCheck->itemID == items::Item::Key_Shard_2 || sourceCheck->itemID == items::Item::Big_Key_Goron_Mines)) ||
-				(item == items::Item::Key_Shard_2 && (sourceCheck->itemID == items::Item::Key_Shard_1 || sourceCheck->itemID == items::Item::Big_Key_Goron_Mines)) ||
-				(item == items::Item::Key_Shard_1 && (sourceCheck->itemID == items::Item::Key_Shard_2 || sourceCheck->itemID == items::Item::Big_Key_Goron_Mines)) || 
 				(item == items::Item::Lantern_Refill_Shop && sourceCheck->itemID == items::Item::Lantern_Oil_Shop) || 
 				(item == items::Item::Lantern_Refill_Scooped && sourceCheck->itemID == items::Item::Lantern_Oil_Scooped) || 
 				(sourceCheck->itemID == items::Item::Superb_Soup && (item == items::Item::Simple_Soup || item == items::Item::Good_Soup)))
 				{
-					item = sourceCheck->itemID;
 					bool isOk = false;
 					
 					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Heart_Container )
