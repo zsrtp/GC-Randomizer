@@ -214,6 +214,15 @@ namespace mod
 		
 		/*page = hudConsole->addPage("Warps 1");
 		hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.wQuestLogData_2[0x252], 0xFF);
+		hudConsole->addOption(page, "Gerudo Mesa:", &gameInfo.scratchPad.wQuestLogData_2[0x24D], 0xFF);
+		hudConsole->addOption(page, "Snowpeak Top:", &gameInfo.scratchPad.wQuestLogData_2[0x20D], 0xFF);
+		hudConsole->addOption(page, "Sacred Grove:", &gameInfo.scratchPad.wQuestLogData_2[0x21B], 0xFF);
+		hudConsole->addOption(page, "Eldin Bridge:", &gameInfo.scratchPad.wQuestLogData_2[0x1DB], 0xFF);
+		hudConsole->addOption(page, "Castle Town:", &gameInfo.scratchPad.wQuestLogData_2[0x1CF], 0xFF);
+		hudConsole->addOption(page, "Kakariko Gorge:", &gameInfo.scratchPad.wQuestLogData_2[0x1CD], 0xFF);
+		hudConsole->addOption(page, "Zoras Domain:", &gameInfo.scratchPad.wQuestLogData_2[0x18F], 0xFF);
+		hudConsole->addOption(page, "Lake Hylia:", &gameInfo.scratchPad.wQuestLogData_2[0x18E], 0xFF);
+		hudConsole->addOption(page, "Zora River:", &gameInfo.scratchPad.wQuestLogData_2[0x18D], 0xFF);
 		
 		hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.wQuestLogData_2[0x252], 'x', WatchInterpretation::_u8);//1
 		hudConsole->addWatch(page, "Gerudo Mesa:", &gameInfo.scratchPad.wQuestLogData_2[0x24D], 'x', WatchInterpretation::_u8);//32
@@ -226,6 +235,12 @@ namespace mod
 		hudConsole->addWatch(page, "Lake Hylia:", &gameInfo.scratchPad.wQuestLogData_2[0x18E], 'x', WatchInterpretation::_u8);//4
 		hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.wQuestLogData_2[0x18D], 'x', WatchInterpretation::_u8);//32
 		page = hudConsole->addPage("Warps 2");
+		hudConsole->addOption(page, "Death Mountain:", &gameInfo.scratchPad.wQuestLogData_2[0x16D], 0xFF);
+		hudConsole->addOption(page, "Kakariko:", &gameInfo.scratchPad.wQuestLogData_2[0x16C], 0xFF);
+		hudConsole->addOption(page, "South Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x157], 0xFF);
+		hudConsole->addOption(page, "North Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x14F], 0xFF);
+		hudConsole->addOption(page, "Ordon Spring:", &gameInfo.scratchPad.wQuestLogData_2[0x111], 0xFF);
+		
 		hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.wQuestLogData_2[0x16D], 'x', WatchInterpretation::_u8);//32
 		hudConsole->addWatch(page, "Kakariko:", &gameInfo.scratchPad.wQuestLogData_2[0x16C], 'x', WatchInterpretation::_u8);//128
 		hudConsole->addWatch(page, "South Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x157], 'x', WatchInterpretation::_u8);//128
@@ -374,6 +389,19 @@ namespace mod
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_10 = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_1 = 0b1;
 		}		
+		
+		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x14F] & 0x4) == 0)){
+			gameInfo.scratchPad.wQuestLogData_2[0x14F] |= 0x4;//give N faron warp
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x16D] & 0x20) == 0)){
+			gameInfo.scratchPad.wQuestLogData_2[0x16D] |= 0x20;//give death mountain warp
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x18E] & 0x4) == 0)){
+			gameInfo.scratchPad.wQuestLogData_2[0x18E] |= 0x4;//give lake hylia warp
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x1CF] & 0x8) == 0)){
+			gameInfo.scratchPad.wQuestLogData_2[0x1CF] |= 0x8;//give castle town warp
+		}
 		
 		if (enableNormalTime == 0 && setDay == 0)
 		{//set night
