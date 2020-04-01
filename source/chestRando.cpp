@@ -422,16 +422,20 @@ namespace mod
 		else if (item == items::Item::Vessel_Of_Light_Faron)
 		{//set tear counter to 16
 			gameInfo.scratchPad.wQuestLogData_2[0x28] = 16;
+			gameInfo.scratchPad.wQuestLogData_2[0x14F] |= 0x4;//give N faron warp
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Eldin)
 		{//set tear counter to 16
 			gameInfo.scratchPad.wQuestLogData_2[0x29] = 16;
+			gameInfo.scratchPad.wQuestLogData_2[0x16D] |= 0x20;//give death mountain warp
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Lanayru)
 		{//set tear counter to 16
 			gameInfo.scratchPad.wQuestLogData_2[0x2A] = 16;
+			gameInfo.scratchPad.wQuestLogData_2[0x18E] |= 0x4;//give lake hylia warp
+			gameInfo.scratchPad.wQuestLogData_2[0x1CF] |= 0x8;//give castle town warp
 			return item;
 		}
 		

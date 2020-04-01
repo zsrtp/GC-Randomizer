@@ -210,8 +210,27 @@ namespace mod
 		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "letters:", &gameInfo.scratchPad.wQuestLogData_2[0x32], 'x', WatchInterpretation::_u8);*/
+		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
+		
+		/*page = hudConsole->addPage("Warps 1");
+		hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.wQuestLogData_2[0x252], 0xFF);
+		
+		hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.wQuestLogData_2[0x252], 'x', WatchInterpretation::_u8);//1
+		hudConsole->addWatch(page, "Gerudo Mesa:", &gameInfo.scratchPad.wQuestLogData_2[0x24D], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Snowpeak Top:", &gameInfo.scratchPad.wQuestLogData_2[0x20D], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Sacred Grove:", &gameInfo.scratchPad.wQuestLogData_2[0x21B], 'x', WatchInterpretation::_u8);//16
+		hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.wQuestLogData_2[0x1DB], 'x', WatchInterpretation::_u8);//8
+		hudConsole->addWatch(page, "Castle Town:", &gameInfo.scratchPad.wQuestLogData_2[0x1CF], 'x', WatchInterpretation::_u8);//8
+		hudConsole->addWatch(page, "Kakariko Gorge:", &gameInfo.scratchPad.wQuestLogData_2[0x1CD], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.wQuestLogData_2[0x18F], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Lake Hylia:", &gameInfo.scratchPad.wQuestLogData_2[0x18E], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.wQuestLogData_2[0x18D], 'x', WatchInterpretation::_u8);//32
+		page = hudConsole->addPage("Warps 2");
+		hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.wQuestLogData_2[0x16D], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Kakariko:", &gameInfo.scratchPad.wQuestLogData_2[0x16C], 'x', WatchInterpretation::_u8);//128
+		hudConsole->addWatch(page, "South Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x157], 'x', WatchInterpretation::_u8);//128
+		hudConsole->addWatch(page, "North Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x14F], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Ordon Spring:", &gameInfo.scratchPad.wQuestLogData_2[0x111], 'x', WatchInterpretation::_u8);//16*/
 		
 		
 		// Print
