@@ -423,6 +423,7 @@ namespace mod
 		{//set tear counter to 16
 			gameInfo.scratchPad.wQuestLogData_2[0x28] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x14F] |= 0x4;//give N faron warp(somehow doesn't work here?)
+			gameInfo.scratchPad.localAreaNodes.unk_0[0x8] = 0xFF;//give midna jumps in mist area
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Eldin)
