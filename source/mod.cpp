@@ -149,7 +149,7 @@ namespace mod
 		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
-		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
+		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/		
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
@@ -158,11 +158,16 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.wQuestLogData_1[0x34], 'd', WatchInterpretation::_u32);
+		
+		//event info
+		page = hudConsole->addPage("Event Info");
 				
-		/*hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);*/
+		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
 		
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");		
@@ -248,6 +253,16 @@ namespace mod
 		hudConsole->addWatch(page, "Ordon Spring:", &gameInfo.scratchPad.wQuestLogData_2[0x111], 'x', WatchInterpretation::_u8);//16*/
 		
 		
+		// save load
+		/*page = hudConsole->addPage("Save load");
+		
+		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
+		hudConsole->addOption(page, "room:", &room, 60); //for testing only
+		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
+		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
+		
+		
 		// Print
 		hudConsole->draw();
 		system_console::setState(true, 0);
@@ -267,6 +282,10 @@ namespace mod
 
 		// Kill spider at Link's house
 		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0xFF, 0xFF, 0xFF, game_patch::killLinkHouseSpider, event::LoadEventAccuracy::Stage_Room);
+
+		// Skip MDH when the load happens
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xa, 0x0, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
+
 
 		//   =================
 		//  | Function Hooks  |
@@ -375,6 +394,11 @@ namespace mod
 		snprintf(currentPosX, 30, "%f", linkPos[0]);
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
+		
+		if (trigerLoadSave == 1){
+			trigerLoadSave = 0;
+			tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
+		}
 		
 		if (gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee == 0b0)
 		{//remove the item get animations for floor pickups (except silver rupee)

@@ -136,6 +136,14 @@ namespace mod::game_patch
 		// Load back to Ordon Spring
 		tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Spring], 0x1, 0x3, 0x4);
 	}
+	
+	void skipMDH()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
+
+		// Load back to Ordon Spring
+		tools::triggerSaveLoad(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x3, 0x0, 0xFF);
+	}
 
 	void setFirstTimeWolf()
 	{

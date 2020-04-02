@@ -56,6 +56,12 @@ namespace mod::game_patch
 	 * and sets the flags accordingly
 	 */
 	void skipSewers();
+	
+	/**
+	 * Skips Midna's Desperate Hour
+	 * triggers the load to zelda's tower
+	 */
+	void skipMDH();
 
 	/**
 	 * Sets the flag after Ilia CS
