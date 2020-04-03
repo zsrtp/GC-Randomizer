@@ -62,6 +62,12 @@ namespace mod::game_patch
 	 * triggers the load to zelda's tower
 	 */
 	void skipMDH();
+	
+	/**
+	 * Removes midna from preventing you from leaving faron
+	 * changes the state of faron from 0 to 2
+	 */
+	void allowFaronEscape();
 
 	/**
 	 * Sets the flag after Ilia CS

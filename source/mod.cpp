@@ -254,13 +254,13 @@ namespace mod
 		
 		
 		// save load
-		/*page = hudConsole->addPage("Save load");
+		page = hudConsole->addPage("Save load");
 		
 		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
 		hudConsole->addOption(page, "room:", &room, 60); //for testing only
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only
 		
 		
 		// Print
@@ -285,6 +285,9 @@ namespace mod
 
 		// Skip MDH when the load happens
 		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xa, 0x0, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		// Allow Faron Escape
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0x0, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage_Room_Spawn_State);
 
 
 		//   =================

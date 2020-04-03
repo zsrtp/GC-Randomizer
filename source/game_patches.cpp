@@ -144,6 +144,15 @@ namespace mod::game_patch
 		// Load back to Ordon Spring
 		tools::triggerSaveLoad(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x3, 0x0, 0xFF);
 	}
+	
+	void allowFaronEscape()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+
+		// reload faron woods as state 2
+		gameInfo.nextStageVars.nextState = 0x2;		
+		gameInfo.nextStageVars.triggerLoad = true;
+	}
 
 	void setFirstTimeWolf()
 	{
