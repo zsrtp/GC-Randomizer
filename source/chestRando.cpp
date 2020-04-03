@@ -424,7 +424,8 @@ namespace mod
 			gameInfo.scratchPad.wQuestLogData_2[0x28] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x14F] |= 0x4;//give N faron warp(somehow doesn't work here?)
 			gameInfo.localAreaNodes.unk_0[0x8] = 0xFF;//give midna jumps in mist area
-			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x4;//give ending blow			
+			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+            *tempAddress |= 0x400;//give ending blow		
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -434,7 +435,8 @@ namespace mod
 			gameInfo.scratchPad.wQuestLogData_2[0x29] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x16D] |= 0x20;//give death mountain warp(somehow doesn't work here?)
 			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary
-			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x8;//give shield attack		
+			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+            *tempAddress |= 0x800;//give shield attack		
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -444,7 +446,8 @@ namespace mod
 			gameInfo.scratchPad.wQuestLogData_2[0x2A] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x18E] |= 0x4;//give lake hylia warp(somehow doesn't work here?)
 			gameInfo.scratchPad.wQuestLogData_2[0x1CF] |= 0x8;//give castle town warp(somehow doesn't work here?)
-			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x2;//give Backslice
+			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+            *tempAddress |= 0x200;//give Backslice
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -464,7 +467,6 @@ namespace mod
 				// Correct stage
 				if(sourceCheck->itemID == item || (isItemBombs(item) && isItemBombs(sourceCheck->itemID)) ||
 				(item == items::Item::Red_Rupee && sourceCheck->itemID == items::Item::Giant_Bomb_Bag) ||
-				(item == items::Item::Ooccoo_Dungeon && sourceCheck->itemID == items::Item::Ooccoo_FT) ||
 				(item == items::Item::Ooccoo_FT && sourceCheck->itemID == items::Item::Ooccoo_Dungeon) ||
 				(item == items::Item::Lantern_Refill_Shop && sourceCheck->itemID == items::Item::Lantern_Oil_Shop) || 
 				(item == items::Item::Lantern_Refill_Scooped && sourceCheck->itemID == items::Item::Lantern_Oil_Scooped) || 
