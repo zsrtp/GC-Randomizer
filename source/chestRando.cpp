@@ -445,7 +445,7 @@ namespace mod
 			gameInfo.scratchPad.wQuestLogData_2[0x18E] |= 0x4;//give lake hylia warp(somehow doesn't work here?)
 			gameInfo.scratchPad.wQuestLogData_2[0x1CF] |= 0x8;//give castle town warp(somehow doesn't work here?)
 			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x2;//give Backslice
-			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin = 0b1;//set flag for vessel since we'll skip it by reloading
+			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
 		}
