@@ -424,6 +424,7 @@ namespace mod
 			gameInfo.scratchPad.wQuestLogData_2[0x28] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x14F] |= 0x4;//give N faron warp(somehow doesn't work here?)
 			gameInfo.localAreaNodes.unk_0[0x8] = 0xFF;//give midna jumps in mist area
+			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x4;//give ending blow			
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -432,6 +433,8 @@ namespace mod
 		{//set tear counter to 16
 			gameInfo.scratchPad.wQuestLogData_2[0x29] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x16D] |= 0x20;//give death mountain warp(somehow doesn't work here?)
+			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary
+			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x8;//give shield attack		
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -441,6 +444,7 @@ namespace mod
 			gameInfo.scratchPad.wQuestLogData_2[0x2A] = 16;
 			gameInfo.scratchPad.wQuestLogData_2[0x18E] |= 0x4;//give lake hylia warp(somehow doesn't work here?)
 			gameInfo.scratchPad.wQuestLogData_2[0x1CF] |= 0x8;//give castle town warp(somehow doesn't work here?)
+			gameInfo.scratchPad.wQuestLogData_2[0x12D] |= 0x2;//give Backslice
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
