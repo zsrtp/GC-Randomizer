@@ -157,7 +157,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
-		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.wQuestLogData_1[0x34], 'd', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.unk_0[0x34], 'd', WatchInterpretation::_u32);
 		
 		//event info
 		page = hudConsole->addPage("Event Info");
@@ -218,49 +218,49 @@ namespace mod
 		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
 		
 		/*page = hudConsole->addPage("Warps 1");
-		hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.wQuestLogData_2[0x252], 0xFF);
-		hudConsole->addOption(page, "Gerudo Mesa:", &gameInfo.scratchPad.wQuestLogData_2[0x24D], 0xFF);
-		hudConsole->addOption(page, "Snowpeak Top:", &gameInfo.scratchPad.wQuestLogData_2[0x20D], 0xFF);
-		hudConsole->addOption(page, "Sacred Grove:", &gameInfo.scratchPad.wQuestLogData_2[0x21B], 0xFF);
-		hudConsole->addOption(page, "Eldin Bridge:", &gameInfo.scratchPad.wQuestLogData_2[0x1DB], 0xFF);
-		hudConsole->addOption(page, "Castle Town:", &gameInfo.scratchPad.wQuestLogData_2[0x1CF], 0xFF);
-		hudConsole->addOption(page, "Kakariko Gorge:", &gameInfo.scratchPad.wQuestLogData_2[0x1CD], 0xFF);
-		hudConsole->addOption(page, "Zoras Domain:", &gameInfo.scratchPad.wQuestLogData_2[0x18F], 0xFF);
-		hudConsole->addOption(page, "Lake Hylia:", &gameInfo.scratchPad.wQuestLogData_2[0x18E], 0xFF);
-		hudConsole->addOption(page, "Zora River:", &gameInfo.scratchPad.wQuestLogData_2[0x18D], 0xFF);
+		hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 0xFF);
+		hudConsole->addOption(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 0xFF);
+		hudConsole->addOption(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 0xFF);
+		hudConsole->addOption(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 0xFF);
+		hudConsole->addOption(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 0xFF);
+		hudConsole->addOption(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 0xFF);
+		hudConsole->addOption(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 0xFF);
 		
-		hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.wQuestLogData_2[0x252], 'x', WatchInterpretation::_u8);//1
-		hudConsole->addWatch(page, "Gerudo Mesa:", &gameInfo.scratchPad.wQuestLogData_2[0x24D], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Snowpeak Top:", &gameInfo.scratchPad.wQuestLogData_2[0x20D], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Sacred Grove:", &gameInfo.scratchPad.wQuestLogData_2[0x21B], 'x', WatchInterpretation::_u8);//16
-		hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.wQuestLogData_2[0x1DB], 'x', WatchInterpretation::_u8);//8
-		hudConsole->addWatch(page, "Castle Town:", &gameInfo.scratchPad.wQuestLogData_2[0x1CF], 'x', WatchInterpretation::_u8);//8
-		hudConsole->addWatch(page, "Kakariko Gorge:", &gameInfo.scratchPad.wQuestLogData_2[0x1CD], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.wQuestLogData_2[0x18F], 'x', WatchInterpretation::_u8);//4
-		hudConsole->addWatch(page, "Lake Hylia:", &gameInfo.scratchPad.wQuestLogData_2[0x18E], 'x', WatchInterpretation::_u8);//4
-		hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.wQuestLogData_2[0x18D], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 'x', WatchInterpretation::_u8);//1
+		hudConsole->addWatch(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 'x', WatchInterpretation::_u8);//16
+		hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 'x', WatchInterpretation::_u8);//8
+		hudConsole->addWatch(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 'x', WatchInterpretation::_u8);//8
+		hudConsole->addWatch(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
 		page = hudConsole->addPage("Warps 2");
-		hudConsole->addOption(page, "Death Mountain:", &gameInfo.scratchPad.wQuestLogData_2[0x16D], 0xFF);
-		hudConsole->addOption(page, "Kakariko:", &gameInfo.scratchPad.wQuestLogData_2[0x16C], 0xFF);
-		hudConsole->addOption(page, "South Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x157], 0xFF);
-		hudConsole->addOption(page, "North Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x14F], 0xFF);
-		hudConsole->addOption(page, "Ordon Spring:", &gameInfo.scratchPad.wQuestLogData_2[0x111], 0xFF);
+		hudConsole->addOption(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Kakariko:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 0xFF);
+		hudConsole->addOption(page, "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 0xFF);
+		hudConsole->addOption(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 0xFF);
+		hudConsole->addOption(page, "Ordon Spring:", &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 0xFF);
 		
-		hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.wQuestLogData_2[0x16D], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Kakariko:", &gameInfo.scratchPad.wQuestLogData_2[0x16C], 'x', WatchInterpretation::_u8);//128
-		hudConsole->addWatch(page, "South Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x157], 'x', WatchInterpretation::_u8);//128
-		hudConsole->addWatch(page, "North Faron:", &gameInfo.scratchPad.wQuestLogData_2[0x14F], 'x', WatchInterpretation::_u8);//4
-		hudConsole->addWatch(page, "Ordon Spring:", &gameInfo.scratchPad.wQuestLogData_2[0x111], 'x', WatchInterpretation::_u8);//16*/
+		hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Kakariko:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 'x', WatchInterpretation::_u8);//128
+		hudConsole->addWatch(page, "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 'x', WatchInterpretation::_u8);//128
+		hudConsole->addWatch(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Ordon Spring:", &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 'x', WatchInterpretation::_u8);//16*/
 		
 		
 		// save load
-		page = hudConsole->addPage("Save load");
+		/*page = hudConsole->addPage("Save load");
 		
 		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
 		hudConsole->addOption(page, "room:", &room, 60); //for testing only
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
 		
 		
 		// Print
@@ -415,34 +415,21 @@ namespace mod
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_20 = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_10 = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_1 = 0b1;
-		}		
-		
-		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x14F] & 0x4) == 0)){
-			gameInfo.scratchPad.wQuestLogData_2[0x14F] |= 0x4;//give N faron warp
-		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x16D] & 0x20) == 0)){
-			gameInfo.scratchPad.wQuestLogData_2[0x16D] |= 0x20;//give death mountain warp
-		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x18E] & 0x4) == 0)){
-			gameInfo.scratchPad.wQuestLogData_2[0x18E] |= 0x4;//give lake hylia warp
-		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru == 0b1 && ((gameInfo.scratchPad.wQuestLogData_2[0x1CF] & 0x8) == 0)){
-			gameInfo.scratchPad.wQuestLogData_2[0x1CF] |= 0x8;//give castle town warp
 		}
 		
 		if (enableNormalTime == 0 && setDay == 0)
 		{//set night
-			gameInfo.scratchPad.wQuestLogData_1[0x34] = 0b01000010;
-			gameInfo.scratchPad.wQuestLogData_1[0x35] = 0b00101001;
-			gameInfo.scratchPad.wQuestLogData_1[0x36] = 0b01000001;
-			gameInfo.scratchPad.wQuestLogData_1[0x37] = 0b10000000;
+			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
+			gameInfo.scratchPad.unk_0[0x35] = 0b00101001;
+			gameInfo.scratchPad.unk_0[0x36] = 0b01000001;
+			gameInfo.scratchPad.unk_0[0x37] = 0b10000000;
 		}
 		else if (enableNormalTime == 0 && setDay == 1)
 		{//set day
-			gameInfo.scratchPad.wQuestLogData_1[0x34] = 0b01000010;
-			gameInfo.scratchPad.wQuestLogData_1[0x35] = 0b11000001;
-			gameInfo.scratchPad.wQuestLogData_1[0x36] = 0b11011000;
-			gameInfo.scratchPad.wQuestLogData_1[0x37] = 0b00000000;
+			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
+			gameInfo.scratchPad.unk_0[0x35] = 0b11000001;
+			gameInfo.scratchPad.unk_0[0x36] = 0b11011000;
+			gameInfo.scratchPad.unk_0[0x37] = 0b00000000;
 		}
 		// Increment seed
 		if(!customSeed)

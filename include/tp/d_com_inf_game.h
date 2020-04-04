@@ -262,12 +262,12 @@ namespace tp::d_com_inf_game
 	struct ItemFlags4
 	{
 		 
-		u64 Null_DF : 1,
-		 Null_DE : 1,
-		 Null_DD : 1,
-		 Null_DC : 1,
-		 Null_DB : 1,
-		 Null_DA : 1,
+		u64 Null_DF : 1,//now used for sky letter 1
+		 Null_DE : 1,//now used for sky letter 2
+		 Null_DD : 1,//now used for sky letter 3
+		 Null_DC : 1,//now used for sky letter 4
+		 Null_DB : 1,//now used for sky letter 5
+		 Null_DA : 1,//now used for sky letter 6
 		 Null_D9 : 1,
 		 Null_D8 : 1,
 		 
@@ -344,16 +344,75 @@ namespace tp::d_com_inf_game
 		ItemFlags4 itemFlags4;	
 		
 	} __attribute__((__packed__));
+		
+	struct DungeonFlags
+	{
+		u8 miniBossBeaten : 1,
+		 ooccooGotten : 1,
+		 bitSix : 1,
+		 containerGotten : 1,
+		 bossBeaten : 1,
+		 bigKeyGotten : 1,
+		 compassGotten : 1,
+		 mapGotten : 1;
+	} __attribute__((__packed__));
 	
+	// Should try to fill in the missing variables at some point
+	struct AreaNodes
+	{
+		u8 unk_0[0x1C];
+		u8 nbKeys;
+		DungeonFlags dungeon;
+		u8 unk_1E[0x2];
+	} __attribute__((__packed__));
+	
+	// Should try to fill in the missing variables at some point
+	struct AllAreaNodes
+	{
+		AreaNodes Ordon;//0
+		AreaNodes Sewers;//2
+		AreaNodes Faron;//4
+		AreaNodes Eldin;//6
+		AreaNodes Lanyru;//8
+		AreaNodes Null_5;//A
+		AreaNodes Hyrule_Field;//C
+		AreaNodes Sacred_Grove;//E
+		AreaNodes Snowpeak;//10
+		AreaNodes Castle_Town;//12
+		AreaNodes Gerudo_Desert;//14
+		AreaNodes Fishing_Pond;//16
+		AreaNodes Null_C;
+		AreaNodes Null_D;
+		AreaNodes Null_E;
+		AreaNodes Null_F;
+		AreaNodes Forest_Temple;
+		AreaNodes Goron_Mines;
+		AreaNodes Lakebed_Temple;
+		AreaNodes Arbiters_Grounds;
+		AreaNodes Snowpeak_Ruins;
+		AreaNodes Temple_of_Time;
+		AreaNodes City_in_the_Sky;
+		AreaNodes Palace_of_Twilight;
+		AreaNodes Hyrule_Castle;
+		AreaNodes Cave_of_Ordeals;//includes Gorge Cave and Ice Block Cave
+		AreaNodes Lake_Hylia_Cave;//includes Goron Stockcave
+		AreaNodes Grottos;
+		AreaNodes Null_1C;
+		AreaNodes Null_1D;
+		AreaNodes Null_1E;
+		AreaNodes Null_1F;
+	} __attribute__((__packed__));
 	
 	// Should try to fill in the variables at some point
 	struct ScratchPad
 	{
-		u8 wQuestLogData_1[0x9C];
+		u8 unk_0[0x9C];
 		ItemSlots itemWeel;//length:0x17 offset 0x9C
-		u8 itemSlots[0x19];
-		ItemFlags itemFlags;
-		u8 wQuestLogData_2[0x704];//offset 0xEC
+		u8 itemSlots[0x19];//offset 0xB3
+		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
+		u8 unk_EC[0x104];//offset 0xEC
+		AllAreaNodes allAreaNodes;//offset 0x1F0
+		u8 wQuestLogData[0x200];//offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
 		u8 miniGameBits[0x18]; // Bitfield
 	} __attribute__((__packed__));
@@ -404,28 +463,7 @@ namespace tp::d_com_inf_game
 	{
 		u8 unk_0[0x4D0];
 		float pos[3];
-	} __attribute__((__packed__));
-	
-	struct DungeonFlags
-	{
-		u8 miniBossBeaten : 1,
-		 ooccooGotten : 1,
-		 bitSix : 1,
-		 containerGotten : 1,
-		 bossBeaten : 1,
-		 bigKeyGotten : 1,
-		 compassGotten : 1,
-		 mapGotten : 1;
-	} __attribute__((__packed__));
-	
-	// Should try to fill in the missing variables at some point
-	struct AreaNodes
-	{
-		u8 unk_0[0x1C];
-		u8 nbKeys;
-		DungeonFlags dungeon;
-		u8 unk_1E[0x2];
-	} __attribute__((__packed__));
+	} __attribute__((__packed__));	
 	
 	// Should try to fill in the missing variables at some point
 	struct GameInfo
@@ -439,7 +477,7 @@ namespace tp::d_com_inf_game
 		u8 unkdd4[0x402C]; // dd4 - 4DFF
 		char currentStage[8];  // 4E00 - 4E07
 		u8 unk_4e08[6];  // 4E08 - 4E0D
-		NextStageVars nextStageVars; // 4E0E - 4E1b
+		NextStageVars nextStageVars; // 4E0E - 4E1D
 		u8 unk_4e1c[0xAA]; // 4E19 - 4EC7
 		EventSystem eventSystem; // 4EC8 - 4FDE
 		u8 unk_4fdd[0xDD0]; // 4FDD - 5DBF
@@ -447,9 +485,12 @@ namespace tp::d_com_inf_game
 		u8 unk_5dac[0x18060];
 	} __attribute__((__packed__));
 
+	static_assert(sizeof(AreaNodes) == 0x20);
 	static_assert(sizeof(ScratchPad) == 0x958);
 	static_assert(sizeof(GameInfo) == 0x1DE10);
 	static_assert(sizeof(DungeonFlags) == 0x1);
+	
+	
 	
 	
 

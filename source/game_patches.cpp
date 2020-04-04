@@ -147,32 +147,34 @@ namespace mod::game_patch
 	
 	void allowFaronEscape()
 	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+		if (gameInfo.nextStageVars.nextRoom != 5)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
 
-		// reload faron woods as state 2
-		gameInfo.nextStageVars.nextState = 0x2;		
-		gameInfo.nextStageVars.triggerLoad = true;
+			// reload faron woods as state 2
+			tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, 0x2);
+		}
 	}
 
 	void setFirstTimeWolf()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set first time wolf");
 
-		gameInfo.scratchPad.wQuestLogData_1[0x030] |= 1;
+		gameInfo.scratchPad.unk_0[0x030] |= 1;
 	}
 
 	void setHuman()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set human");
 
-		gameInfo.scratchPad.wQuestLogData_1[0x01E] = 0;
+		gameInfo.scratchPad.unk_0[0x01E] = 0;
 	}
 
 	void setWolf()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
 
-		gameInfo.scratchPad.wQuestLogData_1[0x01E] = 1;
+		gameInfo.scratchPad.unk_0[0x01E] = 1;
 	}
 
 	void giveSense()
@@ -199,7 +201,7 @@ namespace mod::game_patch
 		gameInfo.scratchPad.itemFlags.itemFlags1.Master_Sword = 0b1;
 
 		// Equip Master sword (0x49 / 73)
-		gameInfo.scratchPad.wQuestLogData_1[0x014] = 0x49;
+		gameInfo.scratchPad.unk_0[0x014] = 0x49;
 	}
 
 	void giveMidna()
