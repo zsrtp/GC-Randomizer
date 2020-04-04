@@ -407,7 +407,7 @@ namespace tp::d_com_inf_game
 	struct ScratchPad
 	{
 		u8 unk_0[0x9C];
-		ItemSlots itemWeel;//length:0x17 offset 0x9C
+		ItemSlots itemWheel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
 		u8 unk_EC[0x104];//offset 0xEC
