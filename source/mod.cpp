@@ -209,7 +209,7 @@ namespace mod
 
 		//item slots
 		/*page = hudConsole->addPage("Item slots 1");		
-		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWeel.Boomerang, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWheel.Boomerang, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.itemSlots[0x1], 'x', WatchInterpretation::_u8);
 		
 		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
@@ -287,7 +287,7 @@ namespace mod
 		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xa, 0x0, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
 		
 		// Allow Faron Escape
-		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0x0, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage_Room_Spawn_State);
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage);
 
 
 		//   =================

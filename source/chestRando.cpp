@@ -20,7 +20,7 @@ namespace mod
 		// Reset
 		
 		itemFlags = &gameInfo.scratchPad.itemFlags;
-		itemWeel = &gameInfo.scratchPad.itemWeel;		
+		itemWheel = &gameInfo.scratchPad.itemWheel;		
 		
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
@@ -672,15 +672,15 @@ namespace mod
 								}
 								else if(item == items::Item::Bomb_Bag_Regular_Bombs)
 								{
-									if (itemWeel->Bomb_Bag_1 == 0xFF)
+									if (itemWheel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
 									}
-									else if (itemWeel->Bomb_Bag_2 == 0xFF)
+									else if (itemWheel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemWeel->Bomb_Bag_3 == 0xFF)
+									else if (itemWheel->Bomb_Bag_3 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
@@ -695,15 +695,15 @@ namespace mod
 								}
 								else if(item == items::Item::Goron_Bomb_Bag)
 								{
-									if (itemWeel->Bomb_Bag_1 == 0xFF)
+									if (itemWheel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
 									}
-									else if (itemWeel->Bomb_Bag_2 == 0xFF)
+									else if (itemWheel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemWeel->Bomb_Bag_3 == 0xFF)
+									else if (itemWheel->Bomb_Bag_3 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
@@ -718,15 +718,15 @@ namespace mod
 								}
 								else if(item == items::Item::Giant_Bomb_Bag)
 								{
-									if (itemWeel->Bomb_Bag_1 == 0xFF)
+									if (itemWheel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
 									}
-									else if (itemWeel->Bomb_Bag_2 == 0xFF)
+									else if (itemWheel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemWeel->Bomb_Bag_3 == 0xFF)
+									else if (itemWheel->Bomb_Bag_3 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}

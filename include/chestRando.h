@@ -44,7 +44,7 @@ namespace mod
 			u8 itemThatReplacesSlingShot = 0;
 			
 			tp::d_com_inf_game::ItemFlags* itemFlags;
-			tp::d_com_inf_game::ItemSlots* itemWeel;
+			tp::d_com_inf_game::ItemSlots* itemWheel;
 
 		public:
 			/**
