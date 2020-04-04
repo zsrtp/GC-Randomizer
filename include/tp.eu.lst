@@ -130,6 +130,9 @@
 803697C4:strcmp
 8036995C:strcpy
 
+//currentState
+803A8393:current_state
+
 // m_Do_controller_pad.o
 // data
 803DF288:cpadInfo
