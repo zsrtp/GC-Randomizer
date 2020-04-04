@@ -57,7 +57,13 @@ namespace mod
 			
 			u8 enableNormalTime = 1;			
 			u8 setDay = 1;
-
+			
+			u8 stage = 0;
+			u8 room = 0;
+			u8 spawn = 0;
+			u8 state = 0;
+			u8 trigerLoadSave = 0;
+			
 		// Functions
 		private:
 			/**
