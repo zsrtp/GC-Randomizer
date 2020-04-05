@@ -147,15 +147,14 @@ namespace mod::game_patch
 	
 	void allowFaronEscape()
 	{
-		char sentence[40];
-		snprintf(sentence, 40, "state was not 0, it was %x", tp::d_com_inf_game::current_state);
-		strcpy(sysConsolePtr->consoleLine[20].line, sentence);
-		if (gameInfo.nextStageVars.nextRoom != 5 && tp::d_com_inf_game::current_state == '0')
+		if (gameInfo.nextStageVars.nextRoom != 5 && gameInfo.nextStageVars.nextRoom != 6 && gameInfo.nextStageVars.nextRoom != 11 &&
+		gameInfo.nextStageVars.nextRoom != 14 && tp::d_com_inf_game::current_state == '0')
 		{
+			char a = 2;
 			strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
 
 			// reload faron woods as state 2
-			tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, '2');
+			tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a);
 		}
 	}
 

@@ -171,42 +171,73 @@ namespace mod
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
 		
 		//local area
-		/*page = hudConsole->addPage("Local Area 1");		
-		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[1], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[2], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[3], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[4], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[5], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[6], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[7], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[8], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[9], 'x', WatchInterpretation::_u8);
+		/*page = hudConsole->addPage("Local Area 1");
+		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[0x3], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[0x4], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[0x5], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[0x6], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[0x7], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[0x8], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[0x9], 0xFF); //for testing only		
+		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[0x3], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[0x4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[0x5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[0x6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[0x7], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[0x8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[0x9], 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 2");
-		hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[10], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[11], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[12], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[13], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[14], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[15], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[16], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[17], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[18], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[19], 'x', WatchInterpretation::_u8);
+		hudConsole->addOption(page, "AreaNodesA:", &gameInfo.localAreaNodes.unk_0[0xA], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodesB:", &gameInfo.localAreaNodes.unk_0[0xB], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodesC:", &gameInfo.localAreaNodes.unk_0[0xC], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodesD:", &gameInfo.localAreaNodes.unk_0[0xD], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodesE:", &gameInfo.localAreaNodes.unk_0[0xE], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodesF:", &gameInfo.localAreaNodes.unk_0[0xF], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[0x10], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[0x11], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[0x12], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[0x13], 0xFF); //for testing only	
+		hudConsole->addWatch(page, "AreaNodesA:", &gameInfo.localAreaNodes.unk_0[0xA], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodesB:", &gameInfo.localAreaNodes.unk_0[0xB], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodesC:", &gameInfo.localAreaNodes.unk_0[0xC], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodesD:", &gameInfo.localAreaNodes.unk_0[0XD], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodesE:", &gameInfo.localAreaNodes.unk_0[0xE], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodesF:", &gameInfo.localAreaNodes.unk_0[0xF], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[0x10], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[0x11], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[0x12], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[0x13], 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 3");
-		hudConsole->addWatch(page, "AreaNodes20:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes21:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes22:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes23:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes24:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes25:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes26:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes27:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
+		hudConsole->addOption(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[0x14], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[0x15], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[0x16], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[0x17], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[0x18], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[0x19], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes1A:", &gameInfo.localAreaNodes.unk_0[0x1A], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes1B:", &gameInfo.localAreaNodes.unk_0[0x1B], 0xFF); //for testing only
+		hudConsole->addOption(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 0xFF); //for testing only
+		hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1A:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1B:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 4");
-		hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
+		hudConsole->addOption(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 0xFF); //for testing only
+		hudConsole->addOption(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 0xFF); //for testing only
+		hudConsole->addWatch(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);*/
 
 		//item slots
 		/*page = hudConsole->addPage("Item slots 1");		
