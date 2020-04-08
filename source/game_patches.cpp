@@ -157,6 +157,11 @@ namespace mod::game_patch
 			tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a);
 		}
 	}
+	
+	void unlockHFGates()
+	{
+		gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+	}
 
 	void setFirstTimeWolf()
 	{

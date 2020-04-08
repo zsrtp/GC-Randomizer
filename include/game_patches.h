@@ -68,6 +68,12 @@ namespace mod::game_patch
 	 * changes the state of faron from 0 to 2
 	 */
 	void allowFaronEscape();
+	
+	/**
+	 * Removes the locks from the 2 bulblin gates in HF
+	 * change doesn't get saved so set it evry time you load into HF
+	 */
+	void unlockHFGates();
 
 	/**
 	 * Sets the flag after Ilia CS
