@@ -74,6 +74,11 @@ namespace mod::game_patch
 	 * change doesn't get saved so set it evry time you load into HF
 	 */
 	void unlockHFGates();
+	
+	/**
+	 * when spawning in goats 2, will warp you to Illia taking Epona CS
+	 */
+	void skipGoats2();
 
 	/**
 	 * Sets the flag after Ilia CS

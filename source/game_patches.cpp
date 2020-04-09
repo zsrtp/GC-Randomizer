@@ -147,20 +147,53 @@ namespace mod::game_patch
 	
 	void allowFaronEscape()
 	{
-		if (gameInfo.nextStageVars.nextRoom != 5 && gameInfo.nextStageVars.nextRoom != 6 && gameInfo.nextStageVars.nextRoom != 11 &&
-		gameInfo.nextStageVars.nextRoom != 14 && tp::d_com_inf_game::current_state == '0')
+		strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
+		if (gameInfo.nextStageVars.nextRoom != 5 && tp::d_com_inf_game::current_state == '0')
 		{
 			char a = 2;
+			
 			strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
-
 			// reload faron woods as state 2
-			tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a);
+			if (gameInfo.nextStageVars.nextRoom == 0x0B) {
+				return;
+			}
+			else if (tp::d_com_inf_game::current_state == '2')
+			{
+				return;
+			}
+			else {
+				if (gameInfo.nextStageVars.nextSpawnPoint == 0xfc) {
+					if (gameInfo.nextStageVars.nextRoom == 0)
+					{
+						tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, 0x0, a);
+					}
+					else
+					{
+						tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, 0x2, a);
+					}
+				}
+				else
+				{
+					tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a);
+				}
+			}
 		}
 	}
 	
 	void unlockHFGates()
 	{
 		gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+	}
+	
+	void skipGoats2()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Goats 2");
+		
+		gameInfo.localAreaNodes.unk_0[0xE] |= 0x2;//set flag for Fado text before goats
+		gameInfo.localAreaNodes.unk_0[0x9] |= 0x60;//set flag for day 3 intro cs and goats 2 done		
+
+		// Load back to Ordon Spring
+		tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Village], 0x0, 0x19, 0x8);
 	}
 
 	void setFirstTimeWolf()
