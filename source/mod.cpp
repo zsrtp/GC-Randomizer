@@ -172,7 +172,7 @@ namespace mod
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
 		
 		//local area
-		page = hudConsole->addPage("Local Area 1");
+		/*page = hudConsole->addPage("Local Area 1");
 		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
@@ -238,7 +238,7 @@ namespace mod
 		hudConsole->addOption(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 0xFF); //for testing only
 		hudConsole->addWatch(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);*/
 
 		//item slots
 		/*page = hudConsole->addPage("Item slots 1");		
@@ -287,13 +287,13 @@ namespace mod
 		
 		
 		// save load
-		page = hudConsole->addPage("Save load");
+		/*page = hudConsole->addPage("Save load");
 		
 		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
 		hudConsole->addOption(page, "room:", &room, 60); //for testing only
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
 		
 		
 		// Print
