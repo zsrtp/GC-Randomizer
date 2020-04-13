@@ -407,8 +407,8 @@ namespace mod
 		{//set flag for HC gotten
 			gameInfo.localAreaNodes.dungeon.containerGotten = 0b1;
 			if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Fyrus]))
-			{//setting Dangoro flag, since gron mines can be beaten early and Dangoro won't spawn if you go in his room, but the battle will still start
-				gameInfo.localAreaNodes.dungeon.miniBossBeaten = 0b1;			
+			{
+				gameInfo.localAreaNodes.unk_0[0xA] |= 0x40;	//open doors to mini boss to prevent softlocks		
 			}
 		}
 		else if (item == items::Item::Iron_Boots)
