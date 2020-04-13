@@ -130,9 +130,6 @@
 80368994:strcmp
 80368B2C:strcpy
 
-//currentState
-803A66B3:current_state
-
 // m_Do_controller_pad.o
 // data
 803DD2E8:cpadInfo
@@ -148,3 +145,9 @@
 // JFWSystem.o
 // data
 804511B8:systemConsole
+
+//currentState
+803A66B3:current_state
+
+//nextState
+8040AFD9:next_state

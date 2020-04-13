@@ -45,21 +45,21 @@ namespace mod::event
 					e.Trigger();
 				}
 
-				if(room == e.Room)
+				if(room == e.Room || e.Room == 0xFF)
 				{
 					if(e.Accuracy == LoadEventAccuracy::Stage_Room)
 					{
 						e.Trigger();
 					}
 
-					if(spawn == e.Spawn)
+					if(spawn == e.Spawn || e.Spawn == 0xFF)
 					{
 						if(e.Accuracy == LoadEventAccuracy::Stage_Room_Spawn)
 						{
 							e.Trigger();
 						}
 
-						if(state == e.State)
+						if(state == e.State || e.State == 0xFF)
 						{
 							if(e.Accuracy == LoadEventAccuracy::Stage_Room_Spawn_State)
 							{

@@ -369,18 +369,18 @@ namespace tp::d_com_inf_game
 	// Should try to fill in the missing variables at some point
 	struct AllAreaNodes
 	{
-		AreaNodes Ordon;//00
-		AreaNodes Sewers;//20
-		AreaNodes Faron;//40
-		AreaNodes Eldin;//60
-		AreaNodes Lanyru;//80
-		AreaNodes Null_5;//A0
-		AreaNodes Hyrule_Field;//C0
-		AreaNodes Sacred_Grove;//E0
-		AreaNodes Snowpeak;//100
-		AreaNodes Castle_Town;//120
-		AreaNodes Gerudo_Desert;//140
-		AreaNodes Fishing_Pond;//160
+		AreaNodes Ordon;//0
+		AreaNodes Sewers;//2
+		AreaNodes Faron;//4
+		AreaNodes Eldin;//6
+		AreaNodes Lanyru;//8
+		AreaNodes Null_5;//A
+		AreaNodes Hyrule_Field;//C
+		AreaNodes Sacred_Grove;//E
+		AreaNodes Snowpeak;//10
+		AreaNodes Castle_Town;//12
+		AreaNodes Gerudo_Desert;//14
+		AreaNodes Fishing_Pond;//16
 		AreaNodes Null_C;
 		AreaNodes Null_D;
 		AreaNodes Null_E;
@@ -407,7 +407,7 @@ namespace tp::d_com_inf_game
 	struct ScratchPad
 	{
 		u8 unk_0[0x9C];
-		ItemSlots itemWheel;//length:0x17 offset 0x9C
+		ItemSlots itemWeel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
 		u8 unk_EC[0x104];//offset 0xEC
@@ -489,10 +489,15 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(ScratchPad) == 0x958);
 	static_assert(sizeof(GameInfo) == 0x1DE10);
 	static_assert(sizeof(DungeonFlags) == 0x1);
+	
+	
+	
+	
 
 	extern "C"
 	{
 		extern GameInfo dComIfG_gameInfo;
 		extern u8 current_state;
+		extern u8 next_state;
 	}
 }

@@ -20,7 +20,7 @@ namespace mod
 		// Reset
 		
 		itemFlags = &gameInfo.scratchPad.itemFlags;
-		itemWheel = &gameInfo.scratchPad.itemWheel;		
+		itemWeel = &gameInfo.scratchPad.itemWeel;		
 		
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
@@ -407,8 +407,8 @@ namespace mod
 		{//set flag for HC gotten
 			gameInfo.localAreaNodes.dungeon.containerGotten = 0b1;
 			if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Fyrus]))
-			{
-				gameInfo.localAreaNodes.unk_0[0xA] |= 0x40;	//open doors to mini boss to prevent softlocks		
+			{//setting Dangoro flag, since gron mines can be beaten early and Dangoro won't spawn if you go in his room, but the battle will still start
+				gameInfo.localAreaNodes.dungeon.miniBossBeaten = 0b1;			
 			}
 		}
 		else if (item == items::Item::Iron_Boots)
@@ -423,11 +423,11 @@ namespace mod
 		{//set tear counter to 16
 			gameInfo.scratchPad.unk_EC[0x28] = 16;
 			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//give N faron warp
-			gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;//give midna jumps in mist area
+			gameInfo.localAreaNodes.unk_0[0x8] = 0xFF;//give midna jumps in mist area
+			gameInfo.localAreaNodes.unk_0[0xC] |= 0xD1;//set flag for midna to think you followed the monkey in the mist
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
             *tempAddress |= 0x400;//give ending blow		
-			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron = 0b1;//set flag for vessel since we'll skip it by reloading
-			gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
+			
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
 		}
@@ -435,9 +435,7 @@ namespace mod
 		{//set tear counter to 16
 			gameInfo.scratchPad.unk_EC[0x29] = 16;
 			gameInfo.localAreaNodes.unk_0[0x9] |= 0x20;//give death mountain warp
-			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary
-			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-            *tempAddress |= 0x800;//give shield attack		
+			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary		
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -447,8 +445,6 @@ namespace mod
 			gameInfo.scratchPad.unk_EC[0x2A] = 16;
 			gameInfo.localAreaNodes.unk_0[0xA] |= 0x4;//give lake hylia warp
 			gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB] |= 0x8;//give castle town warp
-			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-            *tempAddress |= 0x200;//give Backslice
 			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru = 0b1;//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -475,8 +471,7 @@ namespace mod
 				{
 					bool isOk = false;
 					
-					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Heart_Container ||
-					sourceCheck->itemID == items::Item::Ball_and_Chain)
+					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Heart_Container || sourceCheck->itemID == items::Item::Ball_and_Chain)
 					{//bugs have unique itemids so position doesn't matter
 					//dungeon items are unique in their dungeon
 					//there can only be one heart container per stage in vanilla, so position doesn't matter (also each one can be at 2 locations: if gotten after boss or if coming back)
@@ -673,17 +668,58 @@ namespace mod
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
 								}
+								else if (item == items::Item::Ancient_Sky_Book_completed)
+								{
+									if (itemFlags->itemFlags4.Ancient_Sky_Book_empty == 0b0)
+									{
+										item = items::Item::Ancient_Sky_Book_empty;
+									}
+									else if (itemFlags->itemFlags4.Null_DF == 0b0)
+									{//letter 1
+										item = items::Item::Ancient_Sky_Book_partly_filled;
+										itemFlags->itemFlags4.Null_DF = 0b1;
+									}
+									else if (itemFlags->itemFlags4.Null_DE == 0b0)
+									{//letter 2
+										item = items::Item::Ancient_Sky_Book_partly_filled;
+										itemFlags->itemFlags4.Null_DE = 0b1;
+									}
+									else if (itemFlags->itemFlags4.Null_DD == 0b0)
+									{//letter 3
+										item = items::Item::Ancient_Sky_Book_partly_filled;
+										itemFlags->itemFlags4.Null_DD = 0b1;
+									}
+									else if (itemFlags->itemFlags4.Null_DC == 0b0)
+									{//letter 4
+										item = items::Item::Ancient_Sky_Book_partly_filled;
+										itemFlags->itemFlags4.Null_DC = 0b1;
+									}
+									else if (itemFlags->itemFlags4.Null_DB == 0b0)
+									{//letter 5
+										item = items::Item::Ancient_Sky_Book_partly_filled;
+										itemFlags->itemFlags4.Null_DB = 0b1;
+									}
+									else if (itemFlags->itemFlags4.Null_DA == 0b0)
+									{//letter 6
+										item = items::Item::Ancient_Sky_Book_partly_filled;
+										itemFlags->itemFlags4.Null_DA = 0b1;
+									}
+									else if (itemFlags->itemFlags4.Null_DA == 0b1)
+									{
+										item = items::Item::Ancient_Sky_Book_completed;
+									}
+								}
 								else if(item == items::Item::Bomb_Bag_Regular_Bombs)
 								{
-									if (itemWheel->Bomb_Bag_1 == 0xFF)
+									if (itemWeel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
 									}
-									else if (itemWheel->Bomb_Bag_2 == 0xFF)
+									else if (itemWeel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemWheel->Bomb_Bag_3 == 0xFF)
+									else if (itemWeel->Bomb_Bag_3 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
@@ -698,15 +734,15 @@ namespace mod
 								}
 								else if(item == items::Item::Goron_Bomb_Bag)
 								{
-									if (itemWheel->Bomb_Bag_1 == 0xFF)
+									if (itemWeel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
 									}
-									else if (itemWheel->Bomb_Bag_2 == 0xFF)
+									else if (itemWeel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemWheel->Bomb_Bag_3 == 0xFF)
+									else if (itemWeel->Bomb_Bag_3 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
@@ -721,15 +757,15 @@ namespace mod
 								}
 								else if(item == items::Item::Giant_Bomb_Bag)
 								{
-									if (itemWheel->Bomb_Bag_1 == 0xFF)
+									if (itemWeel->Bomb_Bag_1 == 0xFF)
 									{
 										item = items::Item::Bomb_Bag_Regular_Bombs;
 									}
-									else if (itemWheel->Bomb_Bag_2 == 0xFF)
+									else if (itemWeel->Bomb_Bag_2 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemWheel->Bomb_Bag_3 == 0xFF)
+									else if (itemWeel->Bomb_Bag_3 == 0xFF)
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
@@ -778,6 +814,7 @@ namespace mod
 									}
 									else
 									{
+										item = items::Item::Big_Key_Goron_Mines;
 										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
 									}
 								}

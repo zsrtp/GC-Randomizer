@@ -32,12 +32,16 @@
 #include <cstdio>
 #include <cstring>
 
+
+
 namespace mod
 {
 	Mod* global::modPtr = nullptr;
 	ChestRandomizer* global::chestRandoPtr = nullptr;
 	event::EventListener* global::eventListenerPtr = nullptr;
 	mod::HUDConsole* global::hudConsolePtr = nullptr;
+	int num_frames = 120;
+	int frame_counter = 0;
 
 	void main()
 	{
@@ -149,12 +153,10 @@ namespace mod
 		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
-		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
-		
+		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/		
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "CurrentState:", &tp::d_com_inf_game::current_state, 'x', WatchInterpretation::_u8);
 		
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
@@ -172,77 +174,46 @@ namespace mod
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
 		
 		//local area
-		/*page = hudConsole->addPage("Local Area 1");
-		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[0x3], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[0x4], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[0x5], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[0x6], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[0x7], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[0x8], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[0x9], 0xFF); //for testing only		
-		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[0x3], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[0x4], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[0x5], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[0x6], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[0x7], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[0x8], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[0x9], 'x', WatchInterpretation::_u8);
+		/*page = hudConsole->addPage("Local Area 1");		
+		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[2], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[3], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[7], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[9], 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 2");
-		hudConsole->addOption(page, "AreaNodesA:", &gameInfo.localAreaNodes.unk_0[0xA], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodesB:", &gameInfo.localAreaNodes.unk_0[0xB], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodesC:", &gameInfo.localAreaNodes.unk_0[0xC], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodesD:", &gameInfo.localAreaNodes.unk_0[0xD], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodesE:", &gameInfo.localAreaNodes.unk_0[0xE], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodesF:", &gameInfo.localAreaNodes.unk_0[0xF], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[0x10], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[0x11], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[0x12], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[0x13], 0xFF); //for testing only	
-		hudConsole->addWatch(page, "AreaNodesA:", &gameInfo.localAreaNodes.unk_0[0xA], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodesB:", &gameInfo.localAreaNodes.unk_0[0xB], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodesC:", &gameInfo.localAreaNodes.unk_0[0xC], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodesD:", &gameInfo.localAreaNodes.unk_0[0XD], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodesE:", &gameInfo.localAreaNodes.unk_0[0xE], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodesF:", &gameInfo.localAreaNodes.unk_0[0xF], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[0x10], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[0x11], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[0x12], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[0x13], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[10], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[11], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[12], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[13], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[14], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[15], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[16], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[17], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[18], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[19], 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 3");
-		hudConsole->addOption(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[0x14], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[0x15], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[0x16], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[0x17], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[0x18], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[0x19], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes1A:", &gameInfo.localAreaNodes.unk_0[0x1A], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes1B:", &gameInfo.localAreaNodes.unk_0[0x1B], 0xFF); //for testing only
-		hudConsole->addOption(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 0xFF); //for testing only
-		hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1A:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1B:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes20:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes21:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes22:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes23:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes24:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes25:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes26:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes27:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
 		page = hudConsole->addPage("Local Area 4");
-		hudConsole->addOption(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 0xFF); //for testing only
-		hudConsole->addOption(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 0xFF); //for testing only
-		hudConsole->addWatch(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);*/
+		hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
 
 		//item slots
 		/*page = hudConsole->addPage("Item slots 1");		
-		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWheel.Boomerang, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWeel.Boomerang, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.itemSlots[0x1], 'x', WatchInterpretation::_u8);
 		
 		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
@@ -317,18 +288,19 @@ namespace mod
 		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0xFF, 0xFF, 0xFF, game_patch::killLinkHouseSpider, event::LoadEventAccuracy::Stage_Room);
 
 		// Skip MDH when the load happens
-		eventListener->addLoadEvent(stage::allStages[Stage_Castle_Town_Interiors], 0x6, 0xC, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xa, 0x0, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
 		
 		// Allow Faron Escape
-		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage);
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0x0, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//Set Bublin Camp State
+		eventListener->addLoadEvent(stage::allStages[Stage_Bublin_Camp], 0xFF, 0xFF, 0x1, 0xFF, game_patch::setBublinState, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		// Unlock Snowpeak Lving Room Doors
+		eventListener->addLoadEvent(stage::allStages[Stage_Snowpeak_Ruins], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::openSnowpeakDoors, event::LoadEventAccuracy::Stage_Room_Spawn);
 		
 		//unlock HF gates
-		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::unlockHFGates, event::LoadEventAccuracy::Stage);	
-
-		//skip goats 2
-		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x2, 0xFF, 0xFF, game_patch::skipGoats2, event::LoadEventAccuracy::Stage_Room_Spawn);	
-
-
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::unlockHFGates, event::LoadEventAccuracy::Stage);
 
 		//   =================
 		//  | Function Hooks  |
@@ -437,12 +409,12 @@ namespace mod
 		snprintf(currentPosX, 30, "%f", linkPos[0]);
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
-		
-		if (trigerLoadSave == 1){
+
+		if (trigerLoadSave == 1) {
 			trigerLoadSave = 0;
 			tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
 		}
-		
+
 		if (gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee == 0b0)
 		{//remove the item get animations for floor pickups (except silver rupee)
 			gameInfo.scratchPad.itemFlags.itemFlags1.Blue_Rupee = 0b1;
@@ -456,7 +428,7 @@ namespace mod
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_10 = 0b1;
 			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_1 = 0b1;
 		}
-		
+
 		if (enableNormalTime == 0 && setDay == 0)
 		{//set night
 			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
@@ -472,69 +444,69 @@ namespace mod
 			gameInfo.scratchPad.unk_0[0x37] = 0b00000000;
 		}
 		// Increment seed
-		if(!customSeed)
+		if (!customSeed)
 		{
 			tools::getRandom(0);
 		}
-		
+
 		// If loading has started check for LoadEvents
-		if(isLoading)
+		if (isLoading)
 		{
 			eventListener->checkLoadEvents();
 		}
 
-		if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
+		if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
 		{
 			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
 		}
 
-		if(sysConsolePtr->consoleEnabled)
+		if (sysConsolePtr->consoleEnabled)
 		{
-			if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Start)))
+			if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Start)))
 			{
 				chestRandomizer->generate();
 			}
 
 			// Parse inputs of this frame
-			switch(tp::m_do_controller_pad::cpadInfo.buttonInputTrg)
+			switch (tp::m_do_controller_pad::cpadInfo.buttonInputTrg)
 			{
-				case controller::PadInputs::Button_A:
-					hudConsole->performAction(ConsoleActions::Option_Increase);
+			case controller::PadInputs::Button_A:
+				hudConsole->performAction(ConsoleActions::Option_Increase);
 				break;
 
-				case controller::PadInputs::Button_X:
-					hudConsole->performAction(ConsoleActions::Option_Increase, 10);
+			case controller::PadInputs::Button_X:
+				hudConsole->performAction(ConsoleActions::Option_Increase, 10);
 				break;
 
-				case controller::PadInputs::Button_B:
-					hudConsole->performAction(ConsoleActions::Option_Decrease);
+			case controller::PadInputs::Button_B:
+				hudConsole->performAction(ConsoleActions::Option_Decrease);
 				break;
 
-				case controller::PadInputs::Button_Y:
-					hudConsole->performAction(ConsoleActions::Option_Decrease, 10);
+			case controller::PadInputs::Button_Y:
+				hudConsole->performAction(ConsoleActions::Option_Decrease, 10);
 				break;
 
-				case controller::PadInputs::Button_DPad_Up:
-					hudConsole->performAction(ConsoleActions::Move_Up);
+			case controller::PadInputs::Button_DPad_Up:
+				hudConsole->performAction(ConsoleActions::Move_Up);
 				break;
 
-				case controller::PadInputs::Button_DPad_Down:
-					hudConsole->performAction(ConsoleActions::Move_Down);
+			case controller::PadInputs::Button_DPad_Down:
+				hudConsole->performAction(ConsoleActions::Move_Down);
 				break;
 
-				case controller::PadInputs::Button_DPad_Left:
-					hudConsole->performAction(ConsoleActions::Move_Left);
+			case controller::PadInputs::Button_DPad_Left:
+				hudConsole->performAction(ConsoleActions::Move_Left);
 				break;
 
-				case controller::PadInputs::Button_DPad_Right:
-					hudConsole->performAction(ConsoleActions::Move_Right);
+			case controller::PadInputs::Button_DPad_Right:
+				hudConsole->performAction(ConsoleActions::Move_Right);
 				break;
 			}
 			hudConsole->draw();
 		}
 
-		if(truePause && sysConsolePtr->consoleEnabled)
+		if (truePause && sysConsolePtr->consoleEnabled)
 		{
 			// Inputs handled, don't pass onto the game
 			tp::f_op_scene_req::freezeActors = 1;
@@ -546,18 +518,18 @@ namespace mod
 			tp::f_op_scene_req::freezeActors = 0;
 		}
 
-		if(itemSearchID != lastItemSearchID)
+		if (itemSearchID != lastItemSearchID)
 		{
 			lastItemSearchID = itemSearchID;
 
 			strcpy(itemSearchResults, "404");
 
-			for(u16 i = 0; i < chestRandomizer->totalChecks; i++)
+			for (u16 i = 0; i < chestRandomizer->totalChecks; i++)
 			{
 				item::ItemCheck* check = &item::checks[i];
 				if (check->destination)
 				{
-					if(check->destination->itemID == itemSearchID)
+					if (check->destination->itemID == itemSearchID)
 					{
 						// Found the source
 						snprintf(itemSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
@@ -565,18 +537,18 @@ namespace mod
 				}
 			}
 		}
-		else if(itemReverseSearchID != lastItemReverseSearchID)
+		else if (itemReverseSearchID != lastItemReverseSearchID)
 		{
 			lastItemReverseSearchID = itemReverseSearchID;
 
 			strcpy(itemReverseSearchResults, "404");
 
-			for(u16 i = 0; i < chestRandomizer->totalChecks; i++)
+			for (u16 i = 0; i < chestRandomizer->totalChecks; i++)
 			{
 				item::ItemCheck* check = &item::checks[i];
 				if (check->source)
 				{
-					if(check->source->itemID == itemReverseSearchID)
+					if (check->source->itemID == itemReverseSearchID)
 					{
 						// Found the source
 						snprintf(itemReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
@@ -584,6 +556,28 @@ namespace mod
 				}
 			}
 		}
+
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Faron_Woods]))
+		{
+			if (0xB == gameInfo.eventSystem.currentEventID)
+			{
+				tools::setCutscene(false, false);
+				if (frame_counter == num_frames)
+				{
+					gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron = 0b1;//set flag for vessel since we'll skip it by reloading
+					tools::setCutscene(true, false);
+				}
+				else
+				{
+					frame_counter++;
+				}
+			}
+			else
+			{
+				frame_counter = 0;
+			}
+		}
+
 
 		if(inputBuffering)
 		{
@@ -628,6 +622,8 @@ namespace mod
 				tools::setCutscene(true, false, cutscene_skip::onMasterSwordSkip);
 			}
 		}
+
+		
 		// Call original function
 		return evt_control_Skipper_trampoline(evtPtr);
 	}

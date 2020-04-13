@@ -68,17 +68,17 @@ namespace mod::game_patch
 	 * changes the state of faron from 0 to 2
 	 */
 	void allowFaronEscape();
-	
+
 	/**
-	 * Removes the locks from the 2 bulblin gates in HF
-	 * change doesn't get saved so set it evry time you load into HF
-	 */
-	void unlockHFGates();
-	
+	* Adds the chests that disappear after KB3
+	* changes the state of faron from 1 to 3
+	*/
+	void setBublinState();
+
 	/**
-	 * when spawning in goats 2, will warp you to Illia taking Epona CS
-	 */
-	void skipGoats2();
+	* Opens the Snowpeak Ruins Doors
+	*/
+	void openSnowpeakDoors();
 
 	/**
 	 * Sets the flag after Ilia CS
@@ -124,4 +124,10 @@ namespace mod::game_patch
 	 * Gives Midna Text that allows transformation
 	 */
 	void giveMidnaTransform();
+
+	/**
+	 * Removes the locks from the 2 bulblin gates in HF
+	 * change doesn't get saved so set it evry time you load into HF
+	 */
+	void unlockHFGates();
 }

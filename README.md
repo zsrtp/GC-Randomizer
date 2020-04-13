@@ -14,7 +14,6 @@ This means these items are not randomized in this version:
 * Shadow Crystal
 * Horse Call
 * Master Sword infused with light
-* Recharged Dominion Rod (sadly)
 * Shop ammo that doesn't trigger a cutscene
 * Floor rupees/arrows/seeds
 * Scoopable bottle contents (might be possible in an update from the [official version](https://github.com/zsrtp/Randomizer) )
