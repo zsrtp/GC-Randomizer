@@ -476,11 +476,12 @@ namespace mod
 					bool isOk = false;
 					
 					if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Dungeon || sourceCheck->itemID == items::Item::Heart_Container ||
-					sourceCheck->itemID == items::Item::Ball_and_Chain)
+					sourceCheck->itemID == items::Item::Ball_and_Chain || sourceCheck->itemID == items::Item::Ancient_Sky_Book_empty)
 					{//bugs have unique itemids so position doesn't matter
 					//dungeon items are unique in their dungeon
 					//there can only be one heart container per stage in vanilla, so position doesn't matter (also each one can be at 2 locations: if gotten after boss or if coming back)
-					//BaC can be anywhere in the room so don't check the position	
+					//BaC can be anywhere in the room so don't check the position
+					//empty sky book can be outside the house or inside the house so don't check coords
 						isOk = true;
 					}
 					else 
