@@ -504,7 +504,7 @@ namespace mod
 				break;
 
 				case controller::PadInputs::Button_X:
-					hudConsole->performAction(ConsoleActions::Option_Increase, 10);
+					hudConsole->performAction(ConsoleActions::Option_Increase, 0x10);
 				break;
 
 				case controller::PadInputs::Button_B:
@@ -512,7 +512,7 @@ namespace mod
 				break;
 
 				case controller::PadInputs::Button_Y:
-					hudConsole->performAction(ConsoleActions::Option_Decrease, 10);
+					hudConsole->performAction(ConsoleActions::Option_Decrease, 0x10);
 				break;
 
 				case controller::PadInputs::Button_DPad_Up:
