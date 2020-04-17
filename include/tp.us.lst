@@ -129,6 +129,7 @@
 // string.o
 80368994:strcmp
 80368B2C:strcpy
+80368AE8:strncpy
 
 //currentState
 803A66B3:current_state

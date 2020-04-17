@@ -142,43 +142,31 @@ namespace mod::game_patch
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
 
 		// Load back to Ordon Spring
-		tools::triggerSaveLoad(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x3, 0x0, 0xFF);
+		strncpy(gameInfo.nextStageVars.nextStage,stage::allStages[Stage_Hyrule_Castle_Sewers],sizeof(gameInfo.nextStageVars.nextStage) - 1);
+		gameInfo.nextStageVars.nextRoom = 0x3;
+		gameInfo.nextStageVars.nextSpawnPoint = 0x0;
 	}
 	
 	void allowFaronEscape()
-	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
-		if (gameInfo.nextStageVars.nextRoom != 5 && tp::d_com_inf_game::current_state == '0')
-		{
-			char a = 2;
-			
-			strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
-			// reload faron woods as state 2
-			if (gameInfo.nextStageVars.nextRoom == 0x0B) {
-				return;
-			}
-			else if (tp::d_com_inf_game::current_state == '2')
-			{
-				return;
-			}
-			else {
-				if (gameInfo.nextStageVars.nextSpawnPoint == 0xfc) {
-					if (gameInfo.nextStageVars.nextRoom == 0)
-					{
-						tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, 0x0, a);
-					}
-					else
-					{
-						tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, 0x2, a);
-					}
-				}
-				else
-				{
-					tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a);
-				}
-			}
-		}
-	}
+    {
+        strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
+        if (gameInfo.nextStageVars.nextRoom != 5)
+        {        
+            if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
+                gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0 || 
+				(tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+            {
+                return;
+            }
+            else
+            {
+                strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+                // reload faron woods as state 2
+                //tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
+                gameInfo.nextStageVars.nextState = 0x2;
+            }
+        }
+    }
 	
 	void unlockHFGates()
 	{
