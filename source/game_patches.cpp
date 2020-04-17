@@ -2,7 +2,6 @@
 #include "defines.h"
 #include "stage.h"
 #include "tools.h"
-#include "mod.h"
 
 #include <tp/d_menu_collect.h>
 #include <tp/d_a_alink.h>

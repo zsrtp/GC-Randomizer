@@ -155,6 +155,10 @@ namespace mod
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
 		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
+		hudConsole->addOption(page, "MDH skip?", &game_patch::isMDHSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Faron Escape?", &game_patch::isForestEscapeEnabled, 0x1);
+		hudConsole->addOption(page, "open HF gates?", &game_patch::isGateUnlockEnabled, 0x1);
+		hudConsole->addOption(page, "skip goats2?", &game_patch::isGoatSkipEnabled, 0x1);
 		
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
