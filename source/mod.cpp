@@ -66,6 +66,11 @@ namespace mod
 		 * Causes issues right now (argarok cannot be beaten)
 		 * game_patch::removeIBLimit();
 		 */
+		 
+		game_patch::isMDHSkipEnabled = 1;
+		game_patch::isForestEscapeEnabled = 1;
+		game_patch::isGateUnlockEnabled = 1;
+		game_patch::isGoatSkipEnabled = 1;
 
 		// Init rando
 		tools::randomSeed = 0x9e3779b97f4a7c15;

@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "stage.h"
 #include "tools.h"
+#include "mod.h"
 
 #include <tp/d_menu_collect.h>
 #include <tp/d_a_alink.h>
@@ -139,49 +140,61 @@ namespace mod::game_patch
 	
 	void skipMDH()
 	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
+		if (isMDHSkipEnabled)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
 
-		// Load back to Ordon Spring
-		strncpy(gameInfo.nextStageVars.nextStage,stage::allStages[Stage_Hyrule_Castle_Sewers],sizeof(gameInfo.nextStageVars.nextStage) - 1);
-		gameInfo.nextStageVars.nextRoom = 0x3;
-		gameInfo.nextStageVars.nextSpawnPoint = 0x0;
+			// Load back to Ordon Spring
+			strncpy(gameInfo.nextStageVars.nextStage,stage::allStages[Stage_Hyrule_Castle_Sewers],sizeof(gameInfo.nextStageVars.nextStage) - 1);
+			gameInfo.nextStageVars.nextRoom = 0x3;
+			gameInfo.nextStageVars.nextSpawnPoint = 0x0;
+		}
 	}
 	
 	void allowFaronEscape()
     {
-        strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
-        if (gameInfo.nextStageVars.nextRoom != 5)
-        {        
-            if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
-                gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0 || 
-				(tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
-            {
-                return;
-            }
-            else
-            {
-                strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
-                // reload faron woods as state 2
-                //tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
-                gameInfo.nextStageVars.nextState = 0x2;
-            }
-        }
+		if (isForestEscapeEnabled)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
+			if (gameInfo.nextStageVars.nextRoom != 5)
+			{        
+				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
+					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0 || 
+					(tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+				{
+					return;
+				}
+				else
+				{
+					strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+					// reload faron woods as state 2
+					//tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
+					gameInfo.nextStageVars.nextState = 0x2;
+				}
+			}
+		}
     }
 	
 	void unlockHFGates()
 	{
-		gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+		if (isGateUnlockEnabled)
+		{
+			gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+		}
 	}
 	
 	void skipGoats2()
 	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Goats 2");
-		
-		gameInfo.localAreaNodes.unk_0[0xE] |= 0x2;//set flag for Fado text before goats
-		gameInfo.localAreaNodes.unk_0[0x9] |= 0x60;//set flag for day 3 intro cs and goats 2 done		
+		if (isGoatSkipEnabled)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Goats 2");
+			
+			gameInfo.localAreaNodes.unk_0[0xE] |= 0x2;//set flag for Fado text before goats
+			gameInfo.localAreaNodes.unk_0[0x9] |= 0x60;//set flag for day 3 intro cs and goats 2 done		
 
-		// Load back to Ordon Spring
-		tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Village], 0x0, 0x19, 0x8);
+			// Load back to Ordon Spring
+			tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Village], 0x0, 0x19, 0x8);
+		}
 	}
 
 	void setFirstTimeWolf()
