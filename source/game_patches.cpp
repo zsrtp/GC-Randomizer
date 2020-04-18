@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "stage.h"
 #include "tools.h"
+#include "singleton.h"
 
 #include <tp/d_menu_collect.h>
 #include <tp/d_a_alink.h>
@@ -33,7 +34,8 @@ namespace mod::cutscene_skip
 }
 
 namespace mod::game_patch
-{
+{	
+	
 	void assemblyOverwrites()
 	{
 		// Default to US/JP
@@ -139,7 +141,7 @@ namespace mod::game_patch
 	
 	void skipMDH()
 	{
-		if (isMDHSkipEnabled)
+		if (Singleton::getInstance()->isMDHSkipEnabled == 1)
 		{
 			strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
 
@@ -152,7 +154,7 @@ namespace mod::game_patch
 	
 	void allowFaronEscape()
     {
-		if (isForestEscapeEnabled)
+		if (Singleton::getInstance()->isForestEscapeEnabled == 1)
 		{
 			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
 			if (gameInfo.nextStageVars.nextRoom != 5)
@@ -176,7 +178,7 @@ namespace mod::game_patch
 	
 	void unlockHFGates()
 	{
-		if (isGateUnlockEnabled)
+		if (Singleton::getInstance()->isGateUnlockEnabled == 1)
 		{
 			gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
 		}
@@ -184,7 +186,7 @@ namespace mod::game_patch
 	
 	void skipGoats2()
 	{
-		if (isGoatSkipEnabled)
+		if (Singleton::getInstance()->isGoatSkipEnabled == 1)
 		{
 			strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Goats 2");
 			

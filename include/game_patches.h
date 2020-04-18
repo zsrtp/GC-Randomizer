@@ -20,12 +20,7 @@ namespace mod::cutscene_skip
  * and immediately perfom the described action
  */
 namespace mod::game_patch
-{
-	
-	static u8 isMDHSkipEnabled = 1;
-	static u8 isForestEscapeEnabled = 1;
-	static u8 isGateUnlockEnabled = 1;
-	static u8 isGoatSkipEnabled = 1;
+{	
 	
 	/**
 	 * Enables the debug screen without
