@@ -147,15 +147,11 @@ namespace mod
 		// Game info
 		page = hudConsole->addPage("Game Info");
 		
-		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
-		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
-		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
-		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
 		hudConsole->addOption(page, "MDH skip?", &Singleton::getInstance()->isMDHSkipEnabled, 0x1);
 		hudConsole->addOption(page, "Faron Escape?", &Singleton::getInstance()->isForestEscapeEnabled, 0x1);
 		hudConsole->addOption(page, "open HF gates?", &Singleton::getInstance()->isGateUnlockEnabled, 0x1);
 		hudConsole->addOption(page, "skip goats2?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
-		
+		hudConsole->addOption(page, "skip MS puzzle?", &Singleton::getInstance()->isMSPuzzleSkipEnabled, 0x1);
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
@@ -168,6 +164,11 @@ namespace mod
 		
 		//event info
 		page = hudConsole->addPage("Event Info");
+		
+		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
+		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
+		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
+		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
@@ -333,6 +334,8 @@ namespace mod
 		//skip goats 2
 		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x2, 0xFF, 0xFF, game_patch::skipGoats2, event::LoadEventAccuracy::Stage_Room_Spawn);	
 
+		//skip MS Puzzle
+		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::skipGrovePuzzle, event::LoadEventAccuracy::Stage);
 
 
 		//   =================

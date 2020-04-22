@@ -18,6 +18,7 @@ namespace mod
 		u8 isForestEscapeEnabled;
 		u8 isGateUnlockEnabled;
 		u8 isGoatSkipEnabled;
+		u8 isMSPuzzleSkipEnabled;
 		
 		private:
 		

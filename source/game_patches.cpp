@@ -194,9 +194,22 @@ namespace mod::game_patch
 			gameInfo.localAreaNodes.unk_0[0x9] |= 0x60;//set flag for day 3 intro cs and goats 2 done		
 
 			// Load back to Ordon Spring
-			tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Village], 0x0, 0x19, 0x8);
+			//tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Village], 0x0, 0x19, 0x8);
+			strncpy(gameInfo.nextStageVars.nextStage,stage::allStages[Stage_Ordon_Village],sizeof(gameInfo.nextStageVars.nextStage) - 1);
+			gameInfo.nextStageVars.nextRoom = 0x0;
+			gameInfo.nextStageVars.nextSpawnPoint = 0x19;
+			gameInfo.nextStageVars.nextState = 0x8;
 		}
 	}
+	
+	void skipGrovePuzzle()
+    {		
+		if (Singleton::getInstance()->isMSPuzzleSkipEnabled == 1 && (gameInfo.localAreaNodes.unk_0[0xB] & 0x4) == 0)
+		{			
+			strcpy(sysConsolePtr->consoleLine[20].line, "Skipping MS Puzzle");
+			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//skip Sacred Grove Puzzle
+		}
+    }
 
 	void setFirstTimeWolf()
 	{

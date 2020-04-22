@@ -80,6 +80,11 @@ namespace mod::game_patch
 	 * when spawning in goats 2, will warp you to Illia taking Epona CS
 	 */
 	void skipGoats2();
+	
+	/**
+	 * when entering Sacred grove, sets the flag for MS puzzle
+	 */
+	void skipGrovePuzzle();
 
 	/**
 	 * Sets the flag after Ilia CS

@@ -22,6 +22,7 @@ namespace mod
 		isForestEscapeEnabled = 1;
 		isGateUnlockEnabled = 1;
 		isGoatSkipEnabled = 1;
+		isMSPuzzleSkipEnabled = 1;
 	}
 
 }
