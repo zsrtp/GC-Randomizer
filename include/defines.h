@@ -27,7 +27,7 @@ typedef	signed char 		s8;
   (byte & 0b00000001 ? '1' : '0')
 
 // Array modification
-#define MAX_LOAD_EVENTS 10 // eventListener
+#define MAX_LOAD_EVENTS 20 // eventListener
 #define MAX_HUDCONSOLE_PAGES 12 // HUDConsole
 
 // Mnemonics

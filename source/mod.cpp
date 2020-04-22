@@ -150,7 +150,7 @@ namespace mod
 		hudConsole->addOption(page, "MDH skip?", &Singleton::getInstance()->isMDHSkipEnabled, 0x1);
 		hudConsole->addOption(page, "Faron Escape?", &Singleton::getInstance()->isForestEscapeEnabled, 0x1);
 		hudConsole->addOption(page, "open HF gates?", &Singleton::getInstance()->isGateUnlockEnabled, 0x1);
-		hudConsole->addOption(page, "skip goats2?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
+		hudConsole->addOption(page, "skip goats1&2?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
 		hudConsole->addOption(page, "skip MS puzzle?", &Singleton::getInstance()->isMSPuzzleSkipEnabled, 0x1);
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
@@ -247,49 +247,12 @@ namespace mod
 		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);*/
 
 		//item slots
-		/*page = hudConsole->addPage("Item slots 1");		
-		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWheel.Boomerang, 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.itemSlots[0x1], 'x', WatchInterpretation::_u8);
+		/*page = hudConsole->addPage("Item slots 1");
 		
 		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
-		
-		/*page = hudConsole->addPage("Warps 1");
-		hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 0xFF);
-		hudConsole->addOption(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 0xFF);
-		hudConsole->addOption(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 0xFF);
-		hudConsole->addOption(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 0xFF);
-		hudConsole->addOption(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 0xFF);
-		hudConsole->addOption(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 0xFF);
-		hudConsole->addOption(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 0xFF);
-		hudConsole->addOption(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 0xFF);
-		hudConsole->addOption(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 0xFF);
-		hudConsole->addOption(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 0xFF);
-		
-		hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 'x', WatchInterpretation::_u8);//1
-		hudConsole->addWatch(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 'x', WatchInterpretation::_u8);//16
-		hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 'x', WatchInterpretation::_u8);//8
-		hudConsole->addWatch(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 'x', WatchInterpretation::_u8);//8
-		hudConsole->addWatch(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 'x', WatchInterpretation::_u8);//4
-		hudConsole->addWatch(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 'x', WatchInterpretation::_u8);//4
-		hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-		page = hudConsole->addPage("Warps 2");
-		hudConsole->addOption(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 0xFF);
-		hudConsole->addOption(page, "Kakariko:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 0xFF);
-		hudConsole->addOption(page, "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 0xFF);
-		hudConsole->addOption(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 0xFF);
-		hudConsole->addOption(page, "Ordon Spring:", &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 0xFF);
-		
-		hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-		hudConsole->addWatch(page, "Kakariko:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 'x', WatchInterpretation::_u8);//128
-		hudConsole->addWatch(page, "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 'x', WatchInterpretation::_u8);//128
-		hudConsole->addWatch(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 'x', WatchInterpretation::_u8);//4
-		hudConsole->addWatch(page, "Ordon Spring:", &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 'x', WatchInterpretation::_u8);//16*/
 		
 		
 		// save load
@@ -300,7 +263,6 @@ namespace mod
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
 		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
-		
 		
 		// Print
 		hudConsole->draw();
@@ -331,8 +293,8 @@ namespace mod
 		//unlock HF gates
 		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::unlockHFGates, event::LoadEventAccuracy::Stage);	
 
-		//skip goats 2
-		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x2, 0xFF, 0xFF, game_patch::skipGoats2, event::LoadEventAccuracy::Stage_Room_Spawn);	
+		//skip goats 1 & 2
+		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x3, 0xFF, 0xFF, game_patch::skipGoats, event::LoadEventAccuracy::Stage_Room_Spawn);	
 
 		//skip MS Puzzle
 		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::skipGrovePuzzle, event::LoadEventAccuracy::Stage);
