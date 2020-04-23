@@ -344,7 +344,35 @@ namespace tp::d_com_inf_game
 		ItemFlags4 itemFlags4;	
 		
 	} __attribute__((__packed__));
+	
+	struct NumberOfFish
+	{
+		u16 Hyrule_Bass;
+		u16 Hylian_Loach;
+		u16 Hylian_Pike;
+		u16 Ordon_Catfish;
+		u16 Reekfish;
+		u16 Greengill;
+	} __attribute__((__packed__));
+	
+	struct LargestFishes
+	{
+		u8 Hyrule_Bass;
+		u8 Hylian_Loach;
+		u8 Hylian_Pike;
+		u8 Ordon_Catfish;
+		u8 Reekfish;
+		u8 Greengill;
+	} __attribute__((__packed__));
+	
+	struct FishingJournal
+	{
+		NumberOfFish numbers;//size 0xC
+		u8 unk_E[0x14];//offset 0xC
+		LargestFishes largest;//size 0x6 offset 0x20
 		
+	} __attribute__((__packed__));
+	
 	struct DungeonFlags
 	{
 		u8 miniBossBeaten : 1,
@@ -410,7 +438,9 @@ namespace tp::d_com_inf_game
 		ItemSlots itemWheel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
-		u8 unk_EC[0x104];//offset 0xEC
+		u8 unk_EC[0x80];//offset 0xEC
+		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
+		u8 unk_192[0x5E];//offset 0x192
 		AllAreaNodes allAreaNodes;//offset 0x1F0
 		u8 wQuestLogData[0x200];//offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
@@ -489,6 +519,7 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(ScratchPad) == 0x958);
 	static_assert(sizeof(GameInfo) == 0x1DE10);
 	static_assert(sizeof(DungeonFlags) == 0x1);
+	static_assert(sizeof(FishingJournal) == 0x26);
 
 	extern "C"
 	{
