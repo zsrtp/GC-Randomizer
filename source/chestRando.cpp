@@ -664,12 +664,7 @@ namespace mod
 										item = items::Item::Ancient_Sky_Book_partly_filled;
 										itemFlags->itemFlags4.Null_DB = 0b1;
 									}
-									else if (itemFlags->itemFlags4.Null_DA == 0b0)
-									{//letter 6
-										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DA = 0b1;
-									}
-									else if (itemFlags->itemFlags4.Null_DA == 0b1)
+									else if (itemFlags->itemFlags4.Null_DB == 0b1)
 									{
 										item = items::Item::Ancient_Sky_Book_completed;
 									}

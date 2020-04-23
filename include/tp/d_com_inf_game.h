@@ -267,7 +267,7 @@ namespace tp::d_com_inf_game
 		 Null_DD : 1,//now used for sky letter 3
 		 Null_DC : 1,//now used for sky letter 4
 		 Null_DB : 1,//now used for sky letter 5
-		 Null_DA : 1,//now used for sky letter 6
+		 Null_DA : 1,
 		 Null_D9 : 1,
 		 Null_D8 : 1,
 		 
