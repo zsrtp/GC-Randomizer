@@ -345,6 +345,49 @@ namespace tp::d_com_inf_game
 		
 	} __attribute__((__packed__));
 	
+	struct RecivedLetters
+	{
+		u16 From_Wife_of_Yeto : 1,
+		 Update : 1,
+		 Now_open_for_business : 1,
+		 Agithas_Dream : 1,
+		 Hey_kid : 1,
+		 Challenge_for_you : 1,
+		 They_came_so_quickly : 1,
+		 Heroes_come_together : 1,
+		 URGENT_Bomb_arrows : 1,
+		 Rare_item_in_stock : 1,
+		 Good_stuff_inside : 1,
+		 URGENT_NOTICE : 1,
+		 Post_office_notice : 1,
+		 Dear_Adventurer_1 : 1,
+		 Dear_Adventurer_2 : 1,
+		 About_Ilias_memory : 1;
+		 
+	} __attribute__((__packed__));
+	
+	struct ReadLetters
+	{
+		u16 From_Wife_of_Yeto : 1,
+		 Update : 1,
+		 Now_open_for_business : 1,
+		 Agithas_Dream : 1,
+		 Hey_kid : 1,
+		 Challenge_for_you : 1,
+		 They_came_so_quickly : 1,
+		 Heroes_come_together : 1,
+		 URGENT_Bomb_arrows : 1,
+		 Rare_item_in_stock : 1,
+		 Good_stuff_inside : 1,
+		 URGENT_NOTICE : 1,
+		 Post_office_notice : 1,
+		 Dear_Adventurer_1 : 1,
+		 Dear_Adventurer_2 : 1,
+		 About_Ilias_memory : 1;
+		 
+	} __attribute__((__packed__));
+	
+	
 	struct NumberOfFish
 	{
 		u16 Hyrule_Bass;
@@ -438,7 +481,10 @@ namespace tp::d_com_inf_game
 		ItemSlots itemWheel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
-		u8 unk_EC[0x80];//offset 0xEC
+		u8 unk_EC[0x32];//offset 0xEC
+		RecivedLetters recivedLetters;//size: 0x2 offset: 0x11E
+		ReadLetters readLetters;//size: 0x2 offset: 0x120
+		u8 unk_122[0x4A];//offset 0x122
 		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
 		u8 unk_192[0x5E];//offset 0x192
 		AllAreaNodes allAreaNodes;//offset 0x1F0
