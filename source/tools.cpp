@@ -35,9 +35,9 @@ namespace mod::tools
 		gameInfo.nextStageVars.nextState = state;
 
 		gameInfo.eventSystem.nextEventID = event;
-		gameInfo.respawnAnimation = 0;
+		gameInfo.respawnValues.respawnAnimation = 0;
 		gameInfo.nextStageVars.isVoidorWarp = 0;
-		gameInfo.respawnCutscene = 0;
+		gameInfo.respawnValues.respawnCutscene = 0;
 		gameInfo.eventSystem.immediateControl = 0xFFFF;
 		gameInfo.nextStageVars.fadeType = 0x13;
 

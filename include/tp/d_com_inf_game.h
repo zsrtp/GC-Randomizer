@@ -797,6 +797,25 @@ namespace tp::d_com_inf_game
 		u8 miniGameBits[0x18]; // Bitfield
 	} __attribute__((__packed__));
 	
+	struct RespawnValues
+	{
+		u8 room;//0xDB4
+		u8 unk_DB5[0x5];//0xDB5
+		u8 spawnPoint;//0xDB9
+		u16 angle;//0xDBA
+		float position_X;//0xDBC
+		float position_Y;//0xDC0
+		float position_Z;//0xDC4
+		u8 respawnCutscene; //0xDC8
+		u8 unk_DC9[0x7];//0xDC9
+		u8 lastItem;//0xDD0
+		u8 voidedAsWolf;//0xDD1
+		u8 unk_DD2;//0xDD2
+		u8 respawnAnimation;//0xDD3
+		
+	} __attribute__((__packed__));
+	
+	
 	// Should try to fill in the missing variables at some point
 	// Need to also get the exact size of this struct
 	struct CurrentStageVars
@@ -849,11 +868,9 @@ namespace tp::d_com_inf_game
 	struct GameInfo
 	{
 		ScratchPad scratchPad; // 0 - 957
-		AreaNodes localAreaNodes; // 958 - 977 holds flags about the current area
-        u8 unk_978[0x450]; // 978 - DC7
-		u8 respawnCutscene; // DC8 - DC8
-		u8 unkdc9[0xA]; // dc9 - dd2
-		u8 respawnAnimation; // dd3 - dd3
+		AreaNodes localAreaNodes; // 958 - 978 holds flags about the current area
+		u8 unk_979[0x43B]; // 979 - DB3
+		RespawnValues respawnValues;// DB4 - DD3
 		u8 unkdd4[0x402C]; // dd4 - 4DFF
 		char currentStage[8];  // 4E00 - 4E07
 		u8 unk_4e08;  // 4E08
@@ -878,7 +895,7 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(Ooccoo) == 0x19);
 	static_assert(sizeof(MovingActors) == 0x59);
 	static_assert(sizeof(Ammo) == 0x10);
-	static_assert(sizeof(DungeonRewards) == 0x2);
+	static_assert(sizeof(RespawnValues) == 0x21);
 	
 	extern "C"
 	{

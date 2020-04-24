@@ -180,7 +180,7 @@ namespace mod::game_patch
 	{
 		if (Singleton::getInstance()->isGateUnlockEnabled == 1)
 		{
-			gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+			gameInfo.unk_979[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
 		}
 	}
 	
