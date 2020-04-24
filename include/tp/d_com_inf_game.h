@@ -474,6 +474,151 @@ namespace tp::d_com_inf_game
 		AreaNodes Null_1F;
 	} __attribute__((__packed__));
 	
+	struct StageRooms
+	{
+		u64 room_31 : 1,
+		 room_30 : 1,
+		 room_29 : 1,
+		 room_28 : 1,
+		 room_27 : 1,
+		 room_26 : 1,
+		 room_25 : 1,
+		 room_24 : 1,
+		 
+		 room_23 : 1,
+		 room_22 : 1,
+		 room_21 : 1,
+		 room_20 : 1,
+		 room_19 : 1,
+		 room_18 : 1,
+		 room_17 : 1,
+		 room_16 : 1,
+		 
+		 room_15 : 1,
+		 room_14 : 1,
+		 room_13 : 1,
+		 room_12 : 1,
+		 room_11 : 1,
+		 room_10 : 1,
+		 room_09 : 1,
+		 room_08 : 1,
+		 
+		 room_07 : 1,
+		 room_06 : 1,
+		 room_05 : 1,
+		 room_04 : 1,
+		 room_03 : 1,
+		 room_02 : 1,
+		 room_01 : 1,
+		 room_00 : 1,
+		 
+		 room_63 : 1,
+		 room_62 : 1,
+		 room_61 : 1,
+		 room_60 : 1,
+		 room_59 : 1,
+		 room_58 : 1,
+		 room_57 : 1,
+		 room_56 : 1,
+		 
+		 room_55 : 1,
+		 room_54 : 1,
+		 room_53 : 1,
+		 room_52 : 1,
+		 room_51 : 1,
+		 room_50 : 1,
+		 room_49 : 1,
+		 room_48 : 1,
+		 
+		 room_47 : 1,
+		 room_46 : 1,
+		 room_45 : 1,
+		 room_44 : 1,
+		 room_43 : 1,
+		 room_42 : 1,
+		 room_41 : 1,
+		 room_40 : 1,
+		 
+		 room_39 : 1,
+		 room_38 : 1,
+		 room_37 : 1,
+		 room_36 : 1,
+		 room_35 : 1,
+		 room_34 : 1,
+		 room_33 : 1,
+		 room_32 : 1;
+		 
+	} __attribute__((__packed__));
+	
+	struct ExploredStagesMap
+	{
+		StageRooms F_SP00;
+		StageRooms F_SP103;
+		StageRooms F_SP104;
+		StageRooms R_SP01;
+		StageRooms unk_4;
+		StageRooms R_SP107;
+		StageRooms F_SP108;
+		StageRooms R_SP108;
+		StageRooms F_SP117;
+		StageRooms F_SP109;
+		StageRooms F_SP110;
+		StageRooms F_SP111;
+		StageRooms R_SP109_R_SP209;
+		StageRooms F_SP112_F_SP126;
+		StageRooms F_SP113;
+		StageRooms F_SP114;
+		StageRooms F_SP115;
+		StageRooms F_SP116;
+		StageRooms F_SP118_F_SP124_F_SP125;
+		StageRooms unk_19;
+		StageRooms unk_20;
+		StageRooms F_SP121_F_SP122;
+		StageRooms D_MN05;
+		StageRooms D_MN04;
+		StageRooms D_MN01;
+		StageRooms D_MN10;
+		StageRooms D_MN11;
+		StageRooms D_MN06;
+		StageRooms D_MN07;
+		StageRooms D_MN08;
+		StageRooms D_MN09;
+		StageRooms R_SP110;
+		StageRooms R_SP116_R_SP161;
+		StageRooms F_SP127;
+		StageRooms F_SP128;
+		StageRooms R_SP128;
+		StageRooms R_SP300;
+		StageRooms R_SP301;
+		StageRooms F_SP200;
+		StageRooms R_SP127;
+		StageRooms D_SB00;
+		StageRooms D_SB01;
+		StageRooms D_SB02;
+		StageRooms D_SB03;
+		StageRooms D_SB04;
+		StageRooms D_SB05_6_7_8_9;
+		StageRooms unk_46;
+		StageRooms unk_47;
+		StageRooms unk_48;
+		StageRooms unk_49;
+		StageRooms D_SB10;
+		StageRooms unk_51;
+		StageRooms unk_52;
+		StageRooms unk_53;
+		StageRooms unk_54;
+		StageRooms unk_55;
+		StageRooms unk_56;
+		StageRooms unk_57;
+		StageRooms unk_58;
+		StageRooms unk_59;
+		StageRooms unk_60;
+		StageRooms unk_61;
+		StageRooms unk_62;
+		StageRooms unk_63;
+		 
+	} __attribute__((__packed__));
+	
 	// Should try to fill in the variables at some point
 	struct ScratchPad
 	{
@@ -489,7 +634,7 @@ namespace tp::d_com_inf_game
 		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
 		u8 unk_192[0x5E];//offset 0x192
 		AllAreaNodes allAreaNodes;//offset 0x1F0
-		u8 wQuestLogData[0x200];//offset 0x5F0
+		ExploredStagesMap exploredMap;//size: 200 offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
 		u8 miniGameBits[0x18]; // Bitfield
 	} __attribute__((__packed__));
@@ -567,6 +712,8 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(GameInfo) == 0x1DE10);
 	static_assert(sizeof(DungeonFlags) == 0x1);
 	static_assert(sizeof(FishingJournal) == 0x26);
+	static_assert(sizeof(ExploredStagesMap) == 0x200);
+
 
 	extern "C"
 	{
