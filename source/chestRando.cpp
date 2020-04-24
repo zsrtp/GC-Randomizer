@@ -791,7 +791,7 @@ namespace mod
 								item = items::Item::Dominion_Rod_Charged;
 								gameInfo.scratchPad.eventBits[0x25] |= 0x80;//set flag to charge dominion rod
 							}
-							else if (item == items::Item::Poe_Soul)
+							else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount < 60)
 							{//increase poe counter
 								gameInfo.scratchPad.poeCount++;
 							}
