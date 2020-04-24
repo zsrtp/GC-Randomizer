@@ -161,6 +161,9 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 'd', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "Link:", &gameInfo.scratchPad.linkName, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Epona:", &gameInfo.scratchPad.eponaName, 's', WatchInterpretation::_str);
+		
 		
 		//event info
 		page = hudConsole->addPage("Event Info");

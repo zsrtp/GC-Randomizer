@@ -786,13 +786,13 @@ namespace tp::d_com_inf_game
 		ReadLetters lettersRead;//size: 0x2 offset: 0x126
 		u8 unk_128[0x44];//offset 0x128
 		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
-		u8 unk_192[0x24];//offset 0x192
-		char linkName[16];//offset 0x1B6
-		u8 unk_1C6;
-		char eponaName[16];//offset 0x1C7
-		u8 unk_1D7[0x19];//offset 0x1D7
+		u8 unk_192[0x22];//offset 0x192
+		char linkName[16];//offset 0x1B4
+		u8 unk_1C4;
+		char eponaName[16];//offset 0x1C5
+		u8 unk_1D7[0x1B];//offset 0x1D5
 		AllAreaNodes allAreaNodes;//offset 0x1F0
-		ExploredStagesMap exploredMap;//size: 200 offset 0x5F0
+		ExploredStagesMap exploredMap;//size: 0x200 offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
 		u8 miniGameBits[0x18]; // Bitfield
 	} __attribute__((__packed__));
