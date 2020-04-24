@@ -58,11 +58,23 @@ namespace mod
 			u8 enableNormalTime = 1;			
 			u8 setDay = 1;
 			
+			u32 skyAngle;
+			
 			u8 stage = 0;
 			u8 room = 0;
 			u8 spawn = 0;
 			u8 state = 0;
 			u8 trigerLoadSave = 0;
+			
+			u8 dungeonFlagsView1;
+			u8 dungeonFlagsView2;
+			u8 dungeonFlagsView3;
+			u8 dungeonFlagsView4;
+			u8 dungeonFlagsView5;
+			u8 dungeonFlagsView6;
+			u8 dungeonFlagsView7;
+			u8 dungeonFlagsView8;
+			u8 dungeonFlagsViewEdit;
 			
 		// Functions
 		private:

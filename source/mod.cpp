@@ -160,7 +160,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
-		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.unk_0[0x34], 'd', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 'd', WatchInterpretation::_u32);
 		
 		//event info
 		page = hudConsole->addPage("Event Info");
@@ -178,7 +178,7 @@ namespace mod
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
 		
 		//local area
-		/*page = hudConsole->addPage("Local Area 1");
+		page = hudConsole->addPage("Local Area 1");
 		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
@@ -244,7 +244,25 @@ namespace mod
 		hudConsole->addOption(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 0xFF); //for testing only
 		hudConsole->addWatch(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);*/
+		hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);
+
+		page = hudConsole->addPage("dungeon flags");
+
+		hudConsole->addOption(page, "Dungeon flag8:", &dungeonFlagsView1, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag7:", &dungeonFlagsView2, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag6:", &dungeonFlagsView3, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag5:", &dungeonFlagsView4, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag4:", &dungeonFlagsView5, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag3:", &dungeonFlagsView6, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag2:", &dungeonFlagsView7, 0x1); //for testing only
+		hudConsole->addOption(page, "Dungeon flag1:", &dungeonFlagsView8, 0x1); //for testing only
+		
+		hudConsole->addOption(page, "edit flags:", &dungeonFlagsViewEdit, 0x1); //for testing only
+		
+		
+		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
+
+
 
 		//item slots
 		/*page = hudConsole->addPage("Item slots 1");
@@ -256,13 +274,13 @@ namespace mod
 		
 		
 		// save load
-		/*page = hudConsole->addPage("Save load");
+		page = hudConsole->addPage("Save load");
 		
 		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
 		hudConsole->addOption(page, "room:", &room, 60); //for testing only
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only
 		
 		// Print
 		hudConsole->draw();
@@ -408,6 +426,8 @@ namespace mod
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
 		
+		skyAngle = (u32)gameInfo.scratchPad.skyAngle;
+		
 		if (trigerLoadSave == 1){
 			trigerLoadSave = 0;
 			tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
@@ -429,17 +449,20 @@ namespace mod
 		
 		if (enableNormalTime == 0 && setDay == 0)
 		{//set night
-			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
+			gameInfo.scratchPad.skyAngle = 1110000000;
+			/*gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
 			gameInfo.scratchPad.unk_0[0x35] = 0b00101001;
 			gameInfo.scratchPad.unk_0[0x36] = 0b01000001;
-			gameInfo.scratchPad.unk_0[0x37] = 0b10000000;
+			gameInfo.scratchPad.unk_0[0x37] = 0b10000000;*/
 		}
 		else if (enableNormalTime == 0 && setDay == 1)
 		{//set day
-			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
+			gameInfo.scratchPad.skyAngle = 1120000000;
+
+			/*gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
 			gameInfo.scratchPad.unk_0[0x35] = 0b11000001;
 			gameInfo.scratchPad.unk_0[0x36] = 0b11011000;
-			gameInfo.scratchPad.unk_0[0x37] = 0b00000000;
+			gameInfo.scratchPad.unk_0[0x37] = 0b00000000;*/
 		}
 		// Increment seed
 		if(!customSeed)
@@ -558,6 +581,141 @@ namespace mod
 		if(inputBuffering)
 		{
 			tp::m_do_controller_pad::cpadInfo.buttonInputTrg = tp::m_do_controller_pad::cpadInfo.buttonInput;
+		}
+		
+		if (dungeonFlagsViewEdit == 0)
+		{
+			if (gameInfo.localAreaNodes.dungeon.miniBossBeaten == 0b0)
+			{
+				dungeonFlagsView1 = 0;
+			}
+			else
+			{
+				dungeonFlagsView1 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.ooccooGotten == 0b0)
+			{
+				dungeonFlagsView2 = 0;
+			}
+			else
+			{
+				dungeonFlagsView2 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.bitSix == 0b0)
+			{
+				dungeonFlagsView3 = 0;
+			}
+			else
+			{
+				dungeonFlagsView3 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.containerGotten == 0b0)
+			{
+				dungeonFlagsView4 = 0;
+			}
+			else
+			{
+				dungeonFlagsView4 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.bossBeaten == 0b0)
+			{
+				dungeonFlagsView5 = 0;
+			}
+			else
+			{
+				dungeonFlagsView5 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.bigKeyGotten == 0b0)
+			{
+				dungeonFlagsView6 = 0;
+			}
+			else
+			{
+				dungeonFlagsView6 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.compassGotten == 0b0)
+			{
+				dungeonFlagsView7 = 0;
+			}
+			else
+			{
+				dungeonFlagsView7 = 1;
+			}
+			if (gameInfo.localAreaNodes.dungeon.mapGotten == 0b0)
+			{
+				dungeonFlagsView8 = 0;
+			}
+			else
+			{
+				dungeonFlagsView8 = 1;
+			}
+		}
+		else if (dungeonFlagsViewEdit == 1)
+		{
+			if (dungeonFlagsView1 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.miniBossBeaten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.miniBossBeaten = 0b1;
+			}
+			if (dungeonFlagsView2 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.ooccooGotten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.ooccooGotten = 0b1;
+			}
+			if (dungeonFlagsView3 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.bitSix = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.bitSix = 0b1;
+			}
+			if (dungeonFlagsView4 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.containerGotten = 0b1;
+			}
+			if (dungeonFlagsView5 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.bossBeaten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.bossBeaten = 0b1;
+			}
+			if (dungeonFlagsView6 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
+			}
+			if (dungeonFlagsView7 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.compassGotten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.compassGotten = 0b1;
+			}
+			if (dungeonFlagsView8 == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.mapGotten = 0b0;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.dungeon.mapGotten = 0b1;
+			}
 		}
 
 		// Call original function

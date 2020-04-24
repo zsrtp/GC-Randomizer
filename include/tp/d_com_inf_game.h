@@ -5,8 +5,98 @@
 #include <tp/evt_control.h>
 
 namespace tp::d_com_inf_game
-{		
-	// Should try to fill in the variables at some point
+{	
+	struct Counters
+	{
+		u16 max_health;
+		u16 health;
+		u16 rupees;
+		u16 max_lantern_oil;//constant
+		u16 lantern_oil;//divide by max to get %
+		
+	} __attribute__((__packed__));
+
+	struct EquipedItems
+	{
+		u8 unk;
+		u8 item_X;
+		u8 item_Y;
+		u8 item_unk3;
+		u8 item_unk4;
+		u8 item_combo_X;//bow goes here, bombs/hawkeye go in main slot
+		u8 item_combo_Y;//bow goes here, bombs/hawkeye go in main slot
+		u8 item_combo_unk3;//bow goes here, bombs/hawkeye go in main slot
+		u8 item_combo_unk4;//bow goes here, bombs/hawkeye go in main slot
+		u8 clothes;
+		u8 sword;
+		u8 shield;
+		u8 scent;
+		
+	} __attribute__((__packed__));
+	
+	struct Epona
+	{
+		float position_X;
+		float position_Y;
+		float position_Z;
+		u16 angle;
+		char stage[8];
+		u8 spawn;//unused
+		u8 room;
+	} __attribute__((__packed__));//size 0x18
+	
+	struct Link
+	{
+		char stage[8];
+		u8 spawn;
+		u8 room;
+		u8 unk_62;
+		u8 unk_63;
+		float previous_position_X;
+		float previous_position_Y;
+		float previous_position_Z;
+		u16 previous_angle;
+		char previous_stage[8];
+		
+	} __attribute__((__packed__));//size 0x22
+	
+	struct ExploredRegions
+	{
+		u8 unk_0 : 1,
+		 Snowpeak : 1,
+		 Desert : 1,
+		 Lanayru : 1,
+		 Eldin : 1,
+		 Faron : 1,
+		 Ordon : 1,
+		 unk_8 : 1;
+		
+	} __attribute__((__packed__));
+	
+	struct Ooccoo
+	{
+		float position_X;
+		float position_Y;
+		float position_Z;
+		u16 angle;
+		char stage[8];// 7th byte will be 37 by default, rest 00. No clue why
+		u8 spawn;//unused
+		u8 room;
+		u8 dungeon;
+		
+	} __attribute__((__packed__));//size 0x19
+	
+	struct MovingActors
+	{
+		Epona epona;
+		Link link;
+		u8 unk_7A[0x3];
+		ExploredRegions exploredRegions;
+		u8 unk_7E[0x2];
+		Ooccoo ooccoo;
+		
+	} __attribute__((__packed__));//size 0x59
+	
 	struct ItemSlots
 	{
 		u8 Boomerang;
@@ -622,7 +712,13 @@ namespace tp::d_com_inf_game
 	// Should try to fill in the variables at some point
 	struct ScratchPad
 	{
-		u8 unk_0[0x9C];
+		Counters counters;//size: 0xA offset: 0x0
+		EquipedItems equipedItems;//size: 0xD offset: 0xA
+		u8 unk_17[0x1D];//offset 0x17
+		float skyAngle;//offset: 0x34
+		u8 unk_38[0x8];//offset: 0x38
+		MovingActors movingActors;//size:0x59 offset: 0x40
+		u8 unk_99[0x3];//offset: 0x99
 		ItemSlots itemWheel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
@@ -713,8 +809,11 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(DungeonFlags) == 0x1);
 	static_assert(sizeof(FishingJournal) == 0x26);
 	static_assert(sizeof(ExploredStagesMap) == 0x200);
-
-
+	static_assert(sizeof(Epona) == 0x18);
+	static_assert(sizeof(Link) == 0x22);
+	static_assert(sizeof(Ooccoo) == 0x19);
+	static_assert(sizeof(MovingActors) == 0x59);
+	
 	extern "C"
 	{
 		extern GameInfo dComIfG_gameInfo;

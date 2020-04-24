@@ -231,21 +231,24 @@ namespace mod::game_patch
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set first time wolf");
 
-		gameInfo.scratchPad.unk_0[0x030] |= 1;
+		gameInfo.scratchPad.unk_17[0x19] |= 1;
+		//gameInfo.scratchPad.unk_0[0x030] |= 1;
 	}
 
 	void setHuman()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set human");
 
-		gameInfo.scratchPad.unk_0[0x01E] = 0;
+		gameInfo.scratchPad.unk_17[0x7] = 0;
+		//gameInfo.scratchPad.unk_0[0x01E] = 0;
 	}
 
 	void setWolf()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
 
-		gameInfo.scratchPad.unk_0[0x01E] = 1;
+		gameInfo.scratchPad.unk_17[0x7] = 1;
+		//gameInfo.scratchPad.unk_0[0x01E] = 1;
 	}
 
 	void giveSense()
@@ -272,7 +275,7 @@ namespace mod::game_patch
 		gameInfo.scratchPad.itemFlags.itemFlags1.Master_Sword = 0b1;
 
 		// Equip Master sword (0x49 / 73)
-		gameInfo.scratchPad.unk_0[0x014] = 0x49;
+		gameInfo.scratchPad.equipedItems.sword = 0x49;
 	}
 
 	void giveMidna()
