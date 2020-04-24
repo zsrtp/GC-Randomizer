@@ -770,9 +770,9 @@ namespace tp::d_com_inf_game
 		u8 unk_38[0x8];//offset: 0x38
 		MovingActors movingActors;//size:0x59 offset: 0x40
 		u8 unk_99[0x3];//offset: 0x99
-		ItemSlots itemWheel;//length:0x17 offset 0x9C
+		ItemSlots itemWheel;//size:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
-		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
+		ItemFlags itemFlags;//size:0x20 offset 0xCC
 		Ammo ammo;//size:0x10 offset: 0xEC
 		u8 unk_FC[0xC];//offset 0xFC
 		DungeonRewards dungeonRewards;//size: 0x2 offset: 0x108
@@ -791,7 +791,7 @@ namespace tp::d_com_inf_game
 		u8 unk_1C4;
 		char eponaName[16];//offset 0x1C5
 		u8 unk_1D7[0x1B];//offset 0x1D5
-		AllAreaNodes allAreaNodes;//offset 0x1F0
+		AllAreaNodes allAreaNodes;//size: 0x400 offset 0x1F0
 		ExploredStagesMap exploredMap;//size: 0x200 offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
 		u8 miniGameBits[0x18]; // Bitfield
@@ -856,7 +856,9 @@ namespace tp::d_com_inf_game
 		u8 respawnAnimation; // dd3 - dd3
 		u8 unkdd4[0x402C]; // dd4 - 4DFF
 		char currentStage[8];  // 4E00 - 4E07
-		u8 unk_4e08[6];  // 4E08 - 4E0D
+		u8 unk_4e08;  // 4E08
+		u8 currentSpawnID;// 4E09
+		u8 unk_4e0A[4];  // 4E0A - 4E0D
 		NextStageVars nextStageVars; // 4E0E - 4E1D
 		u8 unk_4e1c[0xAA]; // 4E19 - 4EC7
 		EventSystem eventSystem; // 4EC8 - 4FDE
