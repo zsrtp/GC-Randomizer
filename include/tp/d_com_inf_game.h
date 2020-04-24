@@ -435,6 +435,57 @@ namespace tp::d_com_inf_game
 		
 	} __attribute__((__packed__));
 	
+	struct Ammo
+	{
+		u8 arrows;
+		u8 bombs1;
+		u8 bombs2;
+		u8 bombs3;
+		u8 unk_F0;
+		u8 unk_F1;
+		u8 unk_F2;
+		u8 unk_F3;
+		u8 seeds;
+		u8 unk_F5;
+		u8 unk_F6;
+		u8 unk_F7;
+		u8 max_arrows;//30,60,100
+		u8 max_normal_bombs;//const
+		u8 max_water_bombs;//const
+		u8 max_bomblings;//const
+		
+	} __attribute__((__packed__));//size 0x10
+	
+	struct DungeonRewards
+	{
+		u16 unk_0 : 1,
+		 unk_1 : 1,
+		 unk_2 : 1,
+		 unk_3 : 1,
+		 Palace_of_Twilight : 1,
+		 Lakebed_Temple : 1,
+		 Goron_Mines : 1,
+		 Forest_Temple : 1,
+		 
+		 unk_8 : 1,
+		 unk_9 : 1,
+		 unk_10 : 1,
+		 unk_11 : 1,
+		 City_in_the_Sky : 1,
+		 Temple_of_Time : 1,
+		 Snowpeak_Ruins : 1,
+		 Arbiters_Grounds : 1;
+		
+	} __attribute__((__packed__));
+	
+	struct TearsOfLightCounters
+	{
+		u8 Faron;
+		u8 Eldin;
+		u8 Lanayru;
+	
+	} __attribute__((__packed__));
+	
 	struct RecivedLetters
 	{
 		u16 From_Wife_of_Yeto : 1,
@@ -722,7 +773,14 @@ namespace tp::d_com_inf_game
 		ItemSlots itemWheel;//length:0x17 offset 0x9C
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
-		u8 unk_EC[0x32];//offset 0xEC
+		Ammo ammo;//size:0x10 offset: 0xEC
+		u8 unk_FC[0xC];//offset 0xFC
+		DungeonRewards dungeonRewards;//size: 0x2 offset: 0x108
+		u8 unk_10A;
+		u8 poeCount;
+		u8 unk_10C[0x9];//offset 0x10C
+		TearsOfLightCounters tearCounters;//size 0x3 offset: 0x115
+		u8 unk_118[0x6];//offset: 118
 		RecivedLetters lettersRecived;//size: 0x2 offset: 0x11E
 		u8 unk_120[0x6];//offset: 0x120
 		ReadLetters lettersRead;//size: 0x2 offset: 0x126
@@ -813,6 +871,8 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(Link) == 0x22);
 	static_assert(sizeof(Ooccoo) == 0x19);
 	static_assert(sizeof(MovingActors) == 0x59);
+	static_assert(sizeof(Ammo) == 0x10);
+	static_assert(sizeof(DungeonRewards) == 0x2);
 	
 	extern "C"
 	{

@@ -383,7 +383,7 @@ namespace mod
 			}
 			else if (item == items::Item::Poe_Soul)
 			{//increase poe counter
-				gameInfo.scratchPad.unk_EC[0x20]++;
+				gameInfo.scratchPad.poeCount++;
 			}
 			return item;
 		}
@@ -397,7 +397,7 @@ namespace mod
 			}
 			else if (item == items::Item::Poe_Soul)
 			{//increase poe counter
-				gameInfo.scratchPad.unk_EC[0x20]++;
+				gameInfo.scratchPad.poeCount++;
 			}
 			return item;
 		}*/
@@ -417,11 +417,11 @@ namespace mod
 		}
 		else if (item == items::Item::Poe_Soul)
 		{//decrease poe counter
-			gameInfo.scratchPad.unk_EC[0x20]--;
+			gameInfo.scratchPad.poeCount--;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Faron)
 		{//set tear counter to 16
-			gameInfo.scratchPad.unk_EC[0x28] = 16;
+			gameInfo.scratchPad.tearCounters.Faron = 16;
 			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//give N faron warp
 			gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;//give midna jumps in mist area
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
@@ -433,7 +433,7 @@ namespace mod
 		}
 		else if (item == items::Item::Vessel_Of_Light_Eldin)
 		{//set tear counter to 16
-			gameInfo.scratchPad.unk_EC[0x29] = 16;
+			gameInfo.scratchPad.tearCounters.Eldin = 16;
 			gameInfo.localAreaNodes.unk_0[0x9] |= 0x20;//give death mountain warp
 			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
@@ -444,7 +444,7 @@ namespace mod
 		}
 		else if (item == items::Item::Vessel_Of_Light_Lanayru)
 		{//set tear counter to 16
-			gameInfo.scratchPad.unk_EC[0x2A] = 16;
+			gameInfo.scratchPad.tearCounters.Lanayru = 16;
 			gameInfo.localAreaNodes.unk_0[0xA] |= 0x4;//give lake hylia warp
 			gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB] |= 0x8;//give castle town warp
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
@@ -793,7 +793,7 @@ namespace mod
 							}
 							else if (item == items::Item::Poe_Soul)
 							{//increase poe counter
-								gameInfo.scratchPad.unk_EC[0x20]++;
+								gameInfo.scratchPad.poeCount++;
 							}
 							return item;
 						}
