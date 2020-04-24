@@ -482,9 +482,10 @@ namespace tp::d_com_inf_game
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//lenght:0x20 offset 0xCC
 		u8 unk_EC[0x32];//offset 0xEC
-		RecivedLetters recivedLetters;//size: 0x2 offset: 0x11E
-		ReadLetters readLetters;//size: 0x2 offset: 0x120
-		u8 unk_122[0x4A];//offset 0x122
+		RecivedLetters lettersRecived;//size: 0x2 offset: 0x11E
+		u8 unk_120[0x6];//offset: 0x120
+		ReadLetters lettersRead;//size: 0x2 offset: 0x126
+		u8 unk_128[0x44];//offset 0x128
 		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
 		u8 unk_192[0x5E];//offset 0x192
 		AllAreaNodes allAreaNodes;//offset 0x1F0
