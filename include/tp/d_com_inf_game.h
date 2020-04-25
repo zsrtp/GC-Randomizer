@@ -745,7 +745,7 @@ namespace tp::d_com_inf_game
 		Counters counters;//size: 0xA offset: 0x0
 		EquipedItems equipedItems;//size: 0xD offset: 0xA
 		u8 unk_17[0x1D];//offset 0x17
-		float skyAngle;//offset: 0x34
+		float skyAngle;//offset: 0x34 Impacts time of day poes and towns
 		u8 unk_38[0x8];//offset: 0x38
 		MovingActors movingActors;//size:0x59 offset: 0x40
 		u8 unk_99[0x3];//offset: 0x99
@@ -764,7 +764,7 @@ namespace tp::d_com_inf_game
 		u8 unk_120[0x6];//offset: 0x120
 		Letters readLetters;//size: 0x2 offset: 0x126
 		u8 unk_128[0x44];//offset 0x128
-		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
+		FishingJournal fishingJournal; //size: 0x26 offset: 0x16C
 		u8 unk_192[0x22];//offset 0x192
 		char linkName[16];//offset 0x1B4
 		u8 unk_1C4;

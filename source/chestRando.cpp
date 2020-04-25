@@ -300,8 +300,11 @@ namespace mod
 			break;
 
 			case item::ItemType::Story:
-				// Ilia quest
-				result = true;
+				if (check->itemID != items::Item::Aurus_Memo && check->itemID != items::Item::Asheis_Sketch)
+				{
+					// Ilia quest
+					result = true;
+				}
 			break;
 			
 			case item::ItemType::Bug:
