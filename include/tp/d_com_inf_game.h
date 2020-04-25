@@ -118,6 +118,7 @@ namespace tp::d_com_inf_game
 		u8 Bomb_Bag_2;
 		u8 Bomb_Bag_3;
 		u8 Ooccoo;
+		u8 Story;
 		u8 Fishing_Rod;
 		u8 Horse_Call;
 		u8 Sky_Book;
@@ -749,8 +750,8 @@ namespace tp::d_com_inf_game
 		u8 unk_38[0x8];//offset: 0x38
 		MovingActors movingActors;//size:0x59 offset: 0x40
 		u8 unk_99[0x3];//offset: 0x99
-		ItemSlots itemWheel;//size:0x17 offset 0x9C
-		u8 itemSlots[0x19];//offset 0xB3
+		ItemSlots itemWheel;//size:0x18 offset 0x9C
+		u8 itemSlots[0x18];//offset 0xB4
 		ItemFlags itemFlags;//size:0x20 offset 0xCC
 		Ammo ammo;//size:0x10 offset: 0xEC
 		u8 unk_FC[0xD];//offset 0xFC
