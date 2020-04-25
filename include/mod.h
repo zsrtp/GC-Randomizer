@@ -96,6 +96,11 @@ namespace mod
 			bool procDoLink(tp::dynamic_link::DynamicModuleControl* dmc);
 
 			void procItem_func_UTUWA_HEART();
+			
+			/**
+			 * gives the unlocked scent that can be seen in the current area (defaults to most advanced one obtained)
+			 */
+			void giveAllScents();
 
 		// Private members
 		//private:

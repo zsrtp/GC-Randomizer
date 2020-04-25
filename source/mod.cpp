@@ -435,6 +435,7 @@ namespace mod
 			trigerLoadSave = 0;
 			tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
 		}
+			
 		
 		if (gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee == 0b0)
 		{//remove the item get animations for floor pickups (except silver rupee)
@@ -711,7 +712,9 @@ namespace mod
 				gameInfo.localAreaNodes.dungeon.mapGotten = 0b1;
 			}
 		}
-
+		
+		giveAllScents();
+		
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
@@ -818,6 +821,86 @@ namespace mod
 		if (!chestRandomizer->isStageBoss())
 		{
 			gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
+		}
+	}
+	
+	void Mod::giveAllScents()
+	{
+		//code to have all scents at once you need to unlock them tho
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Youths_Scent == 0b1 && 
+			(tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 2))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1 && 
+			(tp::d_kankyo::env_light.currentRoom == 9 || tp::d_kankyo::env_light.currentRoom == 10))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Village]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Youths_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1 && tp::d_kankyo::env_light.currentRoom == 8)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Medicine_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Medicine_Scent;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Reekfish_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Reekfish_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Arbiters_Grounds]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Poe_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Poe_Scent;
+			}
+		}
+		else
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Medicine_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Medicine_Scent;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Reekfish_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Reekfish_Scent;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Poe_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Poe_Scent;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Youths_Scent == 0b1)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
+			}
 		}
 	}
 }
