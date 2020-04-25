@@ -450,9 +450,9 @@ namespace tp::d_com_inf_game
 		u8 unk_F6;
 		u8 unk_F7;
 		u8 max_arrows;//30,60,100
-		u8 max_normal_bombs;//const
-		u8 max_water_bombs;//const
-		u8 max_bomblings;//const
+		u8 max_normal_bombs;//const (giant bomb bag just does this value x2)
+		u8 max_water_bombs;//const (giant bomb bag just does this value x2)
+		u8 max_bomblings;//const (giant bomb bag just does this value x2)
 		
 	} __attribute__((__packed__));//size 0x10
 	
@@ -486,7 +486,7 @@ namespace tp::d_com_inf_game
 	
 	} __attribute__((__packed__));
 	
-	struct RecivedLetters
+	struct Letters
 	{
 		u16 From_Wife_of_Yeto : 1,
 		 Update : 1,
@@ -496,6 +496,7 @@ namespace tp::d_com_inf_game
 		 Challenge_for_you : 1,
 		 They_came_so_quickly : 1,
 		 Heroes_come_together : 1,
+		 
 		 URGENT_Bomb_arrows : 1,
 		 Rare_item_in_stock : 1,
 		 Good_stuff_inside : 1,
@@ -505,29 +506,7 @@ namespace tp::d_com_inf_game
 		 Dear_Adventurer_2 : 1,
 		 About_Ilias_memory : 1;
 		 
-	} __attribute__((__packed__));
-	
-	struct ReadLetters
-	{
-		u16 From_Wife_of_Yeto : 1,
-		 Update : 1,
-		 Now_open_for_business : 1,
-		 Agithas_Dream : 1,
-		 Hey_kid : 1,
-		 Challenge_for_you : 1,
-		 They_came_so_quickly : 1,
-		 Heroes_come_together : 1,
-		 URGENT_Bomb_arrows : 1,
-		 Rare_item_in_stock : 1,
-		 Good_stuff_inside : 1,
-		 URGENT_NOTICE : 1,
-		 Post_office_notice : 1,
-		 Dear_Adventurer_1 : 1,
-		 Dear_Adventurer_2 : 1,
-		 About_Ilias_memory : 1;
-		 
-	} __attribute__((__packed__));
-	
+	} __attribute__((__packed__));	
 	
 	struct NumberOfFish
 	{
@@ -774,16 +753,16 @@ namespace tp::d_com_inf_game
 		u8 itemSlots[0x19];//offset 0xB3
 		ItemFlags itemFlags;//size:0x20 offset 0xCC
 		Ammo ammo;//size:0x10 offset: 0xEC
-		u8 unk_FC[0xC];//offset 0xFC
-		DungeonRewards dungeonRewards;//size: 0x2 offset: 0x108
-		u8 unk_10A;
-		u8 poeCount;
-		u8 unk_10C[0x9];//offset 0x10C
-		TearsOfLightCounters tearCounters;//size 0x3 offset: 0x115
-		u8 unk_118[0x6];//offset: 118
-		RecivedLetters lettersRecived;//size: 0x2 offset: 0x11E
+		u8 unk_FC[0xD];//offset 0xFC
+		DungeonRewards dungeonRewards;//size: 0x2 offset: 0x109
+		u8 unk_10B;
+		u8 poeCount;//offset 0x10C
+		u8 unk_10D[0x7];//offset 0x10D
+		TearsOfLightCounters tearCounters;//size 0x3 offset: 0x114
+		u8 unk_115[0x7];//offset: 0x115
+		Letters recivedLetters;//size: 0x2 offset: 0x11E
 		u8 unk_120[0x6];//offset: 0x120
-		ReadLetters lettersRead;//size: 0x2 offset: 0x126
+		Letters readLetters;//size: 0x2 offset: 0x126
 		u8 unk_128[0x44];//offset 0x128
 		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
 		u8 unk_192[0x22];//offset 0x192
