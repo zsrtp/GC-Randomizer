@@ -973,6 +973,13 @@ namespace mod
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
 			}
 		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]) && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Wooden_Statue == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
+			}
+		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Shops]) && tp::d_kankyo::env_light.currentRoom == 2)
 		{
 			if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
