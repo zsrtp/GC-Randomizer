@@ -134,6 +134,8 @@ namespace mod::game_patch
 
 		// Set sewers flags (zelda cutscenes, unchained wolf link, bla)
 		gameInfo.scratchPad.eventBits[0x05] |= 0x7A;
+		
+		gameInfo.scratchPad.equipedItems.sword = 0x3F;
 
 		// Load back to Ordon Spring
 		tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Spring], 0x1, 0x3, 0x4);
