@@ -268,7 +268,7 @@ namespace mod
 
 
 		//item slots
-		page = hudConsole->addPage("Item slots 1");
+		/*page = hudConsole->addPage("Item slots 1");
 		
 		hudConsole->addWatch(page, "slot0:", &gameInfo.scratchPad.itemSlotsOrder[0x0], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "slot1:", &gameInfo.scratchPad.itemSlotsOrder[0x1], 'x', WatchInterpretation::_u8);
@@ -281,10 +281,10 @@ namespace mod
 		hudConsole->addWatch(page, "slot8:", &gameInfo.scratchPad.itemSlotsOrder[0x8], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "slot9:", &gameInfo.scratchPad.itemSlotsOrder[0x9], 'x', WatchInterpretation::_u8);
 		
-		/*hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
+		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);
 		page = hudConsole->addPage("Item slots 2");
 		
 		hudConsole->addWatch(page, "slotA:", &gameInfo.scratchPad.itemSlotsOrder[0xA], 'x', WatchInterpretation::_u8);
@@ -303,7 +303,7 @@ namespace mod
 		hudConsole->addWatch(page, "slot14:", &gameInfo.scratchPad.itemSlotsOrder[0x14], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "slot15:", &gameInfo.scratchPad.itemSlotsOrder[0x15], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "slot16:", &gameInfo.scratchPad.itemSlotsOrder[0x16], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot17:", &gameInfo.scratchPad.itemSlotsOrder[0x17], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot17:", &gameInfo.scratchPad.itemSlotsOrder[0x17], 'x', WatchInterpretation::_u8);*/
 		
 		
 		// save load
@@ -1174,6 +1174,11 @@ namespace mod
 		{
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x7;
 			currentSlot++;
+		}
+		
+		for(u16 i = currentSlot; i < sizeof(gameInfo.scratchPad.itemSlotsOrder)/sizeof(u8); i++)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xFF;
 		}
 	}
 }
