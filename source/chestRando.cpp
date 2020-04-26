@@ -379,9 +379,8 @@ namespace mod
 		/*if (item == items::Item::Sera_Bottle)
 		{			//for testing only
 			item = itemThatReplacesHalfMilk;
-			if (item == items::Item::Dominion_Rod_Uncharged)
+			if (item == items::Item::Dominion_Rod)
 			{
-				item = items::Item::Dominion_Rod_Charged;
 				gameInfo.scratchPad.eventBits[0x25] |= 0x80;
 			}
 			else if (item == items::Item::Poe_Soul)
@@ -393,9 +392,9 @@ namespace mod
 		else if (item == items::Item::Slingshot)
 		{			//for testing only
 			item = itemThatReplacesSlingShot;
-			if (item == items::Item::Dominion_Rod_Uncharged)
+			if (item == items::Item::Dominion_Rod)
 			{
-				item = items::Item::Dominion_Rod_Charged;
+				item = items::Item::Dominion_Rod;
 				gameInfo.scratchPad.eventBits[0x25] |= 0x80;
 			}
 			else if (item == items::Item::Poe_Soul)
@@ -789,9 +788,9 @@ namespace mod
 									item = items::Item::Master_Sword;
 								}
 							}
-							if (item == items::Item::Dominion_Rod_Uncharged)
+							if (item == items::Item::Dominion_Rod)
 							{
-								item = items::Item::Dominion_Rod_Charged;
+								item = items::Item::Dominion_Rod;
 								gameInfo.scratchPad.eventBits[0x25] |= 0x80;//set flag to charge dominion rod
 							}
 							else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount < 60)

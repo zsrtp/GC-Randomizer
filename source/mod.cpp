@@ -161,8 +161,8 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 'd', WatchInterpretation::_u32);
-		hudConsole->addWatch(page, "Link:", &gameInfo.scratchPad.linkName, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "Epona:", &gameInfo.scratchPad.eponaName, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "DungeonRewards:", &gameInfo.scratchPad.dungeonRewards , 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Arrows:", &gameInfo.scratchPad.ammo.arrows , 'd', WatchInterpretation::_u8);
 		
 		
 		//event info
@@ -268,12 +268,42 @@ namespace mod
 
 
 		//item slots
-		/*page = hudConsole->addPage("Item slots 1");
+		page = hudConsole->addPage("Item slots 1");
 		
-		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "slot0:", &gameInfo.scratchPad.itemSlotsOrder[0x0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot1:", &gameInfo.scratchPad.itemSlotsOrder[0x1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot2:", &gameInfo.scratchPad.itemSlotsOrder[0x2], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot3:", &gameInfo.scratchPad.itemSlotsOrder[0x3], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot4:", &gameInfo.scratchPad.itemSlotsOrder[0x4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot5:", &gameInfo.scratchPad.itemSlotsOrder[0x5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot6:", &gameInfo.scratchPad.itemSlotsOrder[0x6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot7:", &gameInfo.scratchPad.itemSlotsOrder[0x7], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot8:", &gameInfo.scratchPad.itemSlotsOrder[0x8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot9:", &gameInfo.scratchPad.itemSlotsOrder[0x9], 'x', WatchInterpretation::_u8);
+		
+		/*hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
 		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
+		page = hudConsole->addPage("Item slots 2");
+		
+		hudConsole->addWatch(page, "slotA:", &gameInfo.scratchPad.itemSlotsOrder[0xA], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slotB:", &gameInfo.scratchPad.itemSlotsOrder[0xB], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slotC:", &gameInfo.scratchPad.itemSlotsOrder[0xC], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slotD:", &gameInfo.scratchPad.itemSlotsOrder[0xD], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slotE:", &gameInfo.scratchPad.itemSlotsOrder[0xE], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slotF:", &gameInfo.scratchPad.itemSlotsOrder[0xF], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot10:", &gameInfo.scratchPad.itemSlotsOrder[0x10], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot11:", &gameInfo.scratchPad.itemSlotsOrder[0x11], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot12:", &gameInfo.scratchPad.itemSlotsOrder[0x12], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot13:", &gameInfo.scratchPad.itemSlotsOrder[0x13], 'x', WatchInterpretation::_u8);
+		
+		page = hudConsole->addPage("Item slots 2");
+		
+		hudConsole->addWatch(page, "slot14:", &gameInfo.scratchPad.itemSlotsOrder[0x14], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot15:", &gameInfo.scratchPad.itemSlotsOrder[0x15], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot16:", &gameInfo.scratchPad.itemSlotsOrder[0x16], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "slot17:", &gameInfo.scratchPad.itemSlotsOrder[0x17], 'x', WatchInterpretation::_u8);
 		
 		
 		// save load
@@ -715,6 +745,10 @@ namespace mod
 		
 		giveAllScents();
 		
+		giveAllStoryItems();
+		
+		reorderItemWheel();
+		
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
@@ -901,6 +935,245 @@ namespace mod
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
 			}
+			
+		}
+	}
+	
+	void Mod::giveAllStoryItems()
+	{
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Lake_Hylia]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Aurus_Memo == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Graveyard]) || 
+		tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Asheis_Sketch == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Interiors]) && tp::d_kankyo::env_light.currentRoom == 0)
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Charm == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Wooden_Statue == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Renardos_Letter == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Shops]) && tp::d_kankyo::env_light.currentRoom == 2)
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Interiors]) && tp::d_kankyo::env_light.currentRoom == 5)
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Renardos_Letter == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hidden_Village]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Impaz_House]))
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Charm == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
+			}
+		}
+		else
+		{
+			if (gameInfo.scratchPad.itemFlags.itemFlags3.Horse_Call == 0b1)
+			{//finished Ilia Quest
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Charm == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Wooden_Statue == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Renardos_Letter == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
+			}
+			
+			if (gameInfo.scratchPad.itemFlags.itemFlags1.Coral_Earring == 0b1)
+			{//given sketch
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Asheis_Sketch == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
+			}
+			
+			if (gameInfo.scratchPad.movingActors.exploredRegions.Desert == 0b1)
+			{//given memo
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Aurus_Memo == 0b1)
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
+			}
+			
+		}
+	}
+	
+	void Mod::reorderItemWheel()
+	{
+		u8 currentSlot = 0x0;
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Clawshots == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Double_Clawshot = items::Item::Clawshots;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xA;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Dominion_Rod == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Dominion_Rod = items::Item::Dominion_Rod;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x8;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Ball_and_Chain == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Ball_and_Chain = items::Item::Ball_and_Chain;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x6;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Spinner == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Spinner = items::Item::Spinner;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x2;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Clawshot == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Clawshot = items::Item::Clawshot;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x9;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Heros_Bow == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Bow = items::Item::Heros_Bow;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x4;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Iron_Boots == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Iron_Boots = items::Item::Iron_Boots;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x3;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Boomerang == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Boomerang = items::Item::Boomerang;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x0;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Lantern == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Lantern = items::Item::Lantern;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x1;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags2.Slingshot == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Slingshot = items::Item::Slingshot;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x17;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Fishing_Rod != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x14;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags1.Hawkeye == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Hawkeye = items::Item::Hawkeye;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x5;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bomb_Bag_1 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xF;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bomb_Bag_2 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x10;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bomb_Bag_3 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x11;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_1 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xB;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_2 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xC;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_3 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xD;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_4 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xE;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Story != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x13;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Ooccoo != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x12;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Sky_Book != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x16;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemFlags.itemFlags3.Horse_Call == 0b1)
+		{
+			gameInfo.scratchPad.itemWheel.Horse_Call = items::Item::Horse_Call;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x15;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Item_Slot != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x7;
+			currentSlot++;
 		}
 	}
 }

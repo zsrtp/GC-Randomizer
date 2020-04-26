@@ -101,6 +101,16 @@ namespace mod
 			 * gives the unlocked scent that can be seen in the current area (defaults to most advanced one obtained)
 			 */
 			void giveAllScents();
+			
+			/**
+			 * gives the unlocked scent that can be seen in the current area (defaults to most advanced one obtained)
+			 */
+			void giveAllStoryItems();
+			
+			/**
+			 * order the item wheel correctly
+			 */
+			void reorderItemWheel();
 
 		// Private members
 		//private:

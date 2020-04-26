@@ -223,14 +223,14 @@ namespace tp::d_com_inf_game
 		 Giant_Bomb_Bag : 1,
 		 Null_4E : 1,
 		 Null_4D : 1,
-		 Dominion_Rod_Charged : 1,//never set in normal game
+		 Dominion_Rod_Uncharged : 1,//never set in normal game
 		 Slingshot : 1,
 		 Fishing_Rod : 1,
 		 Master_Sword_Light : 1,
 		 Lantern : 1,
 		 
 		 Clawshots : 1,
-		 Dominion_Rod_Uncharged : 1,
+		 Dominion_Rod : 1,
 		 Iron_Boots : 1,
 		 Clawshot : 1,
 		 Heros_Bow : 1,
@@ -751,7 +751,7 @@ namespace tp::d_com_inf_game
 		MovingActors movingActors;//size:0x59 offset: 0x40
 		u8 unk_99[0x3];//offset: 0x99
 		ItemSlots itemWheel;//size:0x18 offset 0x9C
-		u8 itemSlots[0x18];//offset 0xB4
+		u8 itemSlotsOrder[0x18];//offset 0xB4
 		ItemFlags itemFlags;//size:0x20 offset 0xCC
 		Ammo ammo;//size:0x10 offset: 0xEC
 		u8 unk_FC[0xD];//offset 0xFC
