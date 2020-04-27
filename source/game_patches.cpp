@@ -186,7 +186,7 @@ namespace mod::game_patch
 
 	void skipGoats()
 	{
-		if (gameInfo.scratchPad.itemFlags.itemFlags1.Wooden_Sword == 0b0)
+		if (tp::d_com_inf_game::current_state == 0x63)
 		{//goats 1
 			if (Singleton::getInstance()->isGoatSkipEnabled == 1)
 			{
@@ -196,7 +196,7 @@ namespace mod::game_patch
 				tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x4, 0x7);
 			}
 		}
-		else if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0)
+		else if (tp::d_com_inf_game::current_state == 0x39)
 		{//goats 2
 			if (Singleton::getInstance()->isGoatSkipEnabled == 1)
 			{
