@@ -233,7 +233,7 @@ namespace mod::game_patch
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set first time wolf");
 
-		gameInfo.scratchPad.unk_17[0x19] |= 1;
+		gameInfo.scratchPad.unk_30[0x0] |= 1;
 		//gameInfo.scratchPad.unk_0[0x030] |= 1;
 	}
 
@@ -241,7 +241,7 @@ namespace mod::game_patch
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set human");
 
-		gameInfo.scratchPad.unk_17[0x7] = 0;
+		gameInfo.scratchPad.form = 0;
 		//gameInfo.scratchPad.unk_0[0x01E] = 0;
 	}
 
@@ -249,7 +249,7 @@ namespace mod::game_patch
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
 
-		gameInfo.scratchPad.unk_17[0x7] = 1;
+		gameInfo.scratchPad.form = 1;
 		//gameInfo.scratchPad.unk_0[0x01E] = 1;
 	}
 

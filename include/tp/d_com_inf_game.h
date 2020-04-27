@@ -34,6 +34,19 @@ namespace tp::d_com_inf_game
 		
 	} __attribute__((__packed__));
 	
+	struct ClearedTwilights
+	{
+		u8 unk_0 : 1,
+		 unk_1 : 1,
+		 unk_2 : 1,
+		 unk_3 : 1,
+		 unk_4 : 1,
+		 Lanayru : 1,
+		 Eldin : 1,
+		 Faron : 1;
+		
+	} __attribute__((__packed__));
+	
 	struct Epona
 	{
 		float position_X;
@@ -745,7 +758,13 @@ namespace tp::d_com_inf_game
 	{
 		Counters counters;//size: 0xA offset: 0x0
 		EquipedItems equipedItems;//size: 0xD offset: 0xA
-		u8 unk_17[0x1D];//offset 0x17
+		u8 unk_17[0x2];//offset: 0x17
+		u8 equippedWallet;//offset: 0x19 (0 = small, 1 = big, 2 = giant)
+		u8 unk_1A[0x4];//offset: 0x1A
+		u8 form;//offset: 0x1E (0 = human, 1 = wolf)
+		u8 unk_1F[0x10];//offset: 0x1F
+		ClearedTwilights clearedTwilights;//offset: 0x2F
+		u8 unk_30[0x4];//offset: 0x30
 		float skyAngle;//offset: 0x34 Impacts time of day poes and towns
 		u8 unk_38[0x8];//offset: 0x38
 		MovingActors movingActors;//size:0x59 offset: 0x40
