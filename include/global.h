@@ -4,6 +4,7 @@
 #include "chestRando.h"
 #include "eventListener.h"
 #include "HUDConsole.h"
+#include "game_patches.h"
 
 namespace mod::global
 {

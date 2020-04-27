@@ -1,6 +1,9 @@
 #pragma once
 
 #include "defines.h"
+#include <tp/d_com_inf_game.h>
+
+
 
 /**
  * Contains functions that fix certain cutscenes
@@ -130,4 +133,21 @@ namespace mod::game_patch
 	 * change doesn't get saved so set it evry time you load into HF
 	 */
 	void unlockHFGates();
+
+	/**
+	 * when spawning in goats 2, will warp you to Illia taking Epona CS
+	 */
+	void skipGoats();
+
+	/**
+	 * opens the door the the master sword in sacred grove
+	 */
+	void skipGrovePuzzle();
+
+	/**
+	 * when you spawn into the Cart Escort, game will spawn you in Kakariko Afterwards
+	 */
+	void skipCartEscort();
+
+	void setLanayruWolf();
 }

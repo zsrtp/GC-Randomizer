@@ -129,6 +129,7 @@
 // string.o
 80368994:strcmp
 80368B2C:strcpy
+80368ae8:strncpy
 
 // m_Do_controller_pad.o
 // data
@@ -149,5 +150,11 @@
 //currentState
 803A66B3:current_state
 
-//nextState
-8040AFD9:next_state
+//walletText
+80bbc749:wallet_text
+
+//walletdescription
+80BBD835:wallet_description
+
+//canwarp
+804069B6:can_warp

@@ -2,6 +2,7 @@
 #include "defines.h"
 #include "stage.h"
 #include "tools.h"
+#include "singleton.h"
 
 #include <tp/d_menu_collect.h>
 #include <tp/d_a_alink.h>
@@ -11,6 +12,7 @@
 #include <tp/evt_control.h>
 #include <cstring>
 #include <cstdio>
+
 
 namespace mod::cutscene_skip
 {
@@ -139,36 +141,76 @@ namespace mod::game_patch
 	
 	void skipMDH()
 	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
+		if (Singleton::getInstance()->isMDHSkipEnabled == 1)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping MDH");
 
-		// Load back to Ordon Spring
-		tools::triggerSaveLoad(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x3, 0x0, 0xFF);
+			// Load back to Ordon Spring
+			strncpy(gameInfo.nextStageVars.nextStage, stage::allStages[Stage_Hyrule_Castle_Sewers], sizeof(gameInfo.nextStageVars.nextStage) - 1);
+			gameInfo.nextStageVars.nextRoom = 0x3;
+			gameInfo.nextStageVars.nextSpawnPoint = 0x0;
+		}
 	}
 	
 
 	void allowFaronEscape()
 	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
-		if (gameInfo.nextStageVars.nextRoom != 5)
-		{		
-			if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
-				gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0 || (tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+		if (Singleton::getInstance()->isForestEscapeEnabled == 1)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
+			if (gameInfo.nextStageVars.nextRoom != 5)
 			{
-				return;
-			}
-			else
-			{
-				strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
-				// reload faron woods as state 2
-				//tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
-				tp::d_com_inf_game::next_state = 0x2;
+				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
+					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.tearCounters.Faron != 16 || (tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+				{
+					return;
+				}
+				else
+				{
+					strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+					// reload faron woods as state 2
+					//tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
+					gameInfo.nextStageVars.nextState = 0x2;
+				}
 			}
 		}
 	}
 
 	void unlockHFGates()
 	{
-		gameInfo.unk_978[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+		if (Singleton::getInstance()->isGateUnlockEnabled == 1)
+		{
+			gameInfo.unk_979[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
+		}
+	}
+
+	void skipGoats()
+	{
+		if (gameInfo.scratchPad.itemFlags.itemFlags1.Wooden_Sword == 0b0)
+		{//goats 1
+			if (Singleton::getInstance()->isGoatSkipEnabled == 1)
+			{
+				strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Goats 1");
+
+				// Load back to Ordon ranch after goats 1
+				tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x4, 0x7);
+			}
+		}
+		else if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0)
+		{//goats 2
+			if (Singleton::getInstance()->isGoatSkipEnabled == 1)
+			{
+				strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Goats 2");
+
+				gameInfo.localAreaNodes.unk_0[0xE] |= 0x2;//set flag for Fado text before goats
+				gameInfo.localAreaNodes.unk_0[0x9] |= 0x60;//set flag for day 3 intro cs and goats 2 done
+				//gameInfo.localAreaNodes.unk_0[0x9] |= 0x40;//set flag for day 3 intro cs and goats 2 done		
+
+
+				// Load back to Ordon village
+				tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Village], 0x0, 0x19, 0x8);
+			}
+		}
 	}
 
 	void openSnowpeakDoors()
@@ -186,7 +228,7 @@ namespace mod::game_patch
 				strcpy(sysConsolePtr->consoleLine[20].line, "-> Setting Bublin State");
 				// reload bublin camp as state 3
 				//tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a);
-				tp::d_com_inf_game::next_state = 0x3;
+				gameInfo.nextStageVars.nextState = 0x3;
 			}
 			else
 			{
@@ -195,25 +237,69 @@ namespace mod::game_patch
 		}
 	}
 
+	void skipGrovePuzzle()
+	{
+		if (Singleton::getInstance()->isMSPuzzleSkipEnabled == 1 && (gameInfo.localAreaNodes.unk_0[0xB] & 0x4) == 0)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "Skipping MS Puzzle");
+			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//skip Sacred Grove Puzzle
+		}
+	}
+
+	void skipCartEscort()
+	{
+		if (Singleton::getInstance()->isCartEscortSkipEnabled == 1)
+		{
+			tools::triggerSaveLoad(stage::allStages[Stage_Kakariko_Interiors], 0x2, 0x3, 0xD);
+		}
+	}
+
 	void setFirstTimeWolf()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set first time wolf");
 
-		gameInfo.scratchPad.unk_0[0x030] |= 1;
+		gameInfo.scratchPad.unk_17[0x19] |= 1;
+	}
+
+	void setLanayruWolf()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
+
+		if (gameInfo.scratchPad.unk_17[0x7] == 0 && gameInfo.scratchPad.itemFlags.itemFlags1.Master_Sword == 0b0 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru == 0b0)
+		{
+
+			strncpy(gameInfo.nextStageVars.nextStage, stage::allStages[Stage_Hyrule_Field], sizeof(gameInfo.nextStageVars.nextStage) - 1);
+			gameInfo.nextStageVars.nextRoom = 0x9;
+			gameInfo.nextStageVars.nextSpawnPoint = 0xA;
+		}
+		else
+		{
+			return;
+		}
+		if (tp::d_com_inf_game::can_warp > 0xD4)
+		{
+			return;
+		}
+		else
+		{
+			tp::d_com_inf_game::can_warp = 0xD4;
+		}
+
+
 	}
 
 	void setHuman()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set human");
 
-		gameInfo.scratchPad.unk_0[0x01E] = 0;
+		gameInfo.scratchPad.unk_17[0x7] = 0;
 	}
 
 	void setWolf()
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
 
-		gameInfo.scratchPad.unk_0[0x01E] = 1;
+		gameInfo.scratchPad.unk_17[0x7] = 1;
 	}
 
 	void giveSense()
@@ -240,7 +326,7 @@ namespace mod::game_patch
 		gameInfo.scratchPad.itemFlags.itemFlags1.Master_Sword = 0b1;
 
 		// Equip Master sword (0x49 / 73)
-		gameInfo.scratchPad.unk_0[0x014] = 0x49;
+		gameInfo.scratchPad.equipedItems.sword = 0x49;
 	}
 
 	void giveMidna()

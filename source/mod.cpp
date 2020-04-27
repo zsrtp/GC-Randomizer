@@ -13,6 +13,7 @@
 #include "itemChecks.h"
 #include "HUDConsole.h"
 #include "items.h"
+#include "singleton.h"
 
 #include <tp/f_op_scene_req.h>
 #include <tp/m_Do_controller_pad.h>
@@ -94,6 +95,7 @@ namespace mod
 		hudConsole->addOption(page, "True Pause:", &truePause, 0x1);
 		hudConsole->addOption(page, "Input Buffer:", &inputBuffering, 0x1);
 
+
 		// Seed settings
 		page = hudConsole->addPage("Seed");
 
@@ -118,7 +120,8 @@ namespace mod
 		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
 		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
 		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
-		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);	
+		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);
+		
 		
 		
 		hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
@@ -149,7 +152,15 @@ namespace mod
 		
 		// Game info
 		page = hudConsole->addPage("Game Info");
-		
+
+		hudConsole->addOption(page, "MDH Skip?", &Singleton::getInstance()->isMDHSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Faron Escape?", &Singleton::getInstance()->isForestEscapeEnabled, 0x1);
+		hudConsole->addOption(page, "Open HF gates?", &Singleton::getInstance()->isGateUnlockEnabled, 0x1);
+		hudConsole->addOption(page, "Skip Twilight?", &chestRandomizer->isTwilightSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Skip Goats?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Skip MS Puzzle?", &Singleton::getInstance()->isMSPuzzleSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Skip Escort?", &Singleton::getInstance()->isCartEscortSkipEnabled, 0x1);
+
 		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
@@ -161,7 +172,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
-		hudConsole->addWatch(page, "Time of day:", &gameInfo.scratchPad.unk_0[0x34], 'd', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 'd', WatchInterpretation::_u32);
 		
 		//event info
 		page = hudConsole->addPage("Event Info");
@@ -288,8 +299,8 @@ namespace mod
 		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0xFF, 0xFF, 0xFF, game_patch::killLinkHouseSpider, event::LoadEventAccuracy::Stage_Room);
 
 		// Skip MDH when the load happens
-		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xa, 0x0, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
-		
+		eventListener->addLoadEvent(stage::allStages[Stage_Castle_Town_Interiors], 0x6, 0xC, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
+
 		// Allow Faron Escape
 		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0x0, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage_Room_Spawn);
 
@@ -301,6 +312,19 @@ namespace mod
 		
 		//unlock HF gates
 		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::unlockHFGates, event::LoadEventAccuracy::Stage);
+
+		//skip goats 2
+		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x3, 0xFF, 0xFF, game_patch::skipGoats, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		//skip MS Puzzle
+		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::skipGrovePuzzle, event::LoadEventAccuracy::Stage);
+
+		//skip Cart Escort
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xC, 0x2, 0xFF, 0xFF, game_patch::skipCartEscort, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		//Fix Lanayru Softlock
+		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x0, 0x5, 0xE, 0xFF, game_patch::setLanayruWolf, event::LoadEventAccuracy::Stage_Room_Spawn);
+
 
 		//   =================
 		//  | Function Hooks  |
@@ -409,6 +433,7 @@ namespace mod
 		snprintf(currentPosX, 30, "%f", linkPos[0]);
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
+		skyAngle = (u32)gameInfo.scratchPad.skyAngle;
 
 		if (trigerLoadSave == 1) {
 			trigerLoadSave = 0;
@@ -431,17 +456,11 @@ namespace mod
 
 		if (enableNormalTime == 0 && setDay == 0)
 		{//set night
-			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
-			gameInfo.scratchPad.unk_0[0x35] = 0b00101001;
-			gameInfo.scratchPad.unk_0[0x36] = 0b01000001;
-			gameInfo.scratchPad.unk_0[0x37] = 0b10000000;
+			gameInfo.scratchPad.skyAngle = 0;
 		}
 		else if (enableNormalTime == 0 && setDay == 1)
 		{//set day
-			gameInfo.scratchPad.unk_0[0x34] = 0b01000010;
-			gameInfo.scratchPad.unk_0[0x35] = 0b11000001;
-			gameInfo.scratchPad.unk_0[0x36] = 0b11011000;
-			gameInfo.scratchPad.unk_0[0x37] = 0b00000000;
+			gameInfo.scratchPad.skyAngle = 180;
 		}
 		// Increment seed
 		if (!customSeed)
@@ -476,7 +495,7 @@ namespace mod
 				break;
 
 			case controller::PadInputs::Button_X:
-				hudConsole->performAction(ConsoleActions::Option_Increase, 10);
+				hudConsole->performAction(ConsoleActions::Option_Increase, 0x10);
 				break;
 
 			case controller::PadInputs::Button_B:
@@ -484,7 +503,7 @@ namespace mod
 				break;
 
 			case controller::PadInputs::Button_Y:
-				hudConsole->performAction(ConsoleActions::Option_Decrease, 10);
+				hudConsole->performAction(ConsoleActions::Option_Decrease, 0x10);
 				break;
 
 			case controller::PadInputs::Button_DPad_Up:
@@ -565,6 +584,11 @@ namespace mod
 				if (frame_counter == num_frames)
 				{
 					gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron = 0b1;//set flag for vessel since we'll skip it by reloading
+					if (Singleton::getInstance()->isForestEscapeEnabled == 1)
+					{
+						// Set Epona tamed
+						gameInfo.scratchPad.eventBits[0x6] |= 0x1;
+					}
 					tools::setCutscene(true, false);
 				}
 				else
@@ -577,6 +601,31 @@ namespace mod
 				frame_counter = 0;
 			}
 		}
+
+		/*if (gameInfo.scratchPad.unk_0[0x019] == 0)
+		{
+			const char* walletText = "Wallet";
+			strncpy(tp::d_com_inf_game::wallet_text, walletText, sizeof(tp::d_com_inf_game::wallet_text) - 1);
+
+			const char* walletDescription = "A wallet from your childhood. It holds up to 1,000 Rupees.";
+			strncpy(tp::d_com_inf_game::wallet_description, walletDescription, sizeof(tp::d_com_inf_game::wallet_description) - 1);
+		}
+		else if (gameInfo.scratchPad.unk_0[0x019] == 1)
+		{
+			const char* walletText = "Big Wallet";
+			strncpy(tp::d_com_inf_game::wallet_text, walletText, sizeof(tp::d_com_inf_game::wallet_text) - 1);
+
+			const char* walletDescription = "A wallet given to you by Agitha, princess of the insect kingdom. It can hold 5,000 Rupees.";
+			strncpy(tp::d_com_inf_game::wallet_description, walletDescription, sizeof(tp::d_com_inf_game::wallet_description) - 1);
+		}
+		else if (gameInfo.scratchPad.unk_0[0x019] == 2)
+		{
+			const char* walletText = "Giant Wallet";
+			strncpy(tp::d_com_inf_game::wallet_text, walletText, sizeof(tp::d_com_inf_game::wallet_text) - 1);
+
+			const char* walletDescription = "The wallet given by Agitha to benefactors of the insect kingdom. It can hold up to 9,999 Rupees.";
+			strncpy(tp::d_com_inf_game::wallet_description, walletDescription, sizeof(tp::d_com_inf_game::wallet_description) - 1);
+		}*/
 
 
 		if(inputBuffering)

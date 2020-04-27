@@ -327,7 +327,7 @@ namespace mod::item
 /* 317 */{0x3D, 0, stage::allStages[48], 0, 0x9, 0x9, 0b111111010010101000000, 21070.0000000, 500.0000000, 181.0000000, nullptr, nullptr}, //Coral Earring
 /* 318 */{0x3E, 12, stage::allStages[68], 3, 0x4, 0x11, 0b111111000000000000000, -500.0000000, 320.0000000, -695.0000000, nullptr, nullptr}, //Hawkeye
 /* 319 */{0x51, 0, stage::allStages[50], 0, 0x5, 0xFF, 0b111111010000000000000, 44.0000000, -3854.0000000, -2626.0000000, nullptr, nullptr}, //Goron Bomb Bag
-/* 320 */{0x70, 0, stage::allStages[68], 1, 0xFF, 0x4, 0b111111000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr}, //Barnes Bomb Bag
+/* 320 */{0x70, 0, stage::allStages[68], 1, 0xFF, 0xFF, 0b111111000000000000000, 800.0000000, 0.0000000, -300.0000000, nullptr, nullptr}, //Barnes Bomb Bag
 /* 321 */{0x51, 0, stage::allStages[52], 0, 0x5, 0xFF, 0b111111100000000000000, -77680.0000000, -18765.0000000, 40764.0000000, nullptr, nullptr},//Iza Bomb Bag
 /* 322 */{0x90, 4, stage::allStages[52], 0, 0x7, 0x7, 0b111111010010001000000, -116365.0000000, -13860.0000000, 58454.0000000, nullptr, nullptr},//Aurus Memo
 /* 323 */{0x91, 4, stage::allStages[51], 0, 0x9, 0x9, 0b000000000000000000000, 31662.0000000, -13330.0000000, -11934.0000000, nullptr, nullptr}, //Ashei Sketch

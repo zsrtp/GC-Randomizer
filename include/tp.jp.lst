@@ -129,6 +129,7 @@
 // string.o
 8036AE30:strcmp
 8036AFC8:strcpy
+8036af84:strncpy
 
 // m_Do_controller_pad.o
 // data
@@ -149,5 +150,5 @@
 //currentState
 803B8000:current_state
 
-//nextState
-8040CF79:next_state
+//canWarp
+80400AF6:can_warp
