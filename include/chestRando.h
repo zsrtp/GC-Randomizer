@@ -108,5 +108,11 @@ namespace mod
 			 * excludes bomb bag+bombs
 			 */
 			bool isItemBombs(u8 itemID);
+			
+			
+			/**
+			 * checks if item given is a bottle content without a bottle
+			 */
+			bool isItemBottleFill(u8 itemID);
 	};
 }

@@ -797,6 +797,14 @@ namespace mod
 							{//increase poe counter
 								gameInfo.scratchPad.poeCount++;
 							}
+							else if (gameInfo.scratchPad.itemWheel.Bomb_Bag_1 == 0xFF && isItemBombs(item))
+							{//increase poe counter
+								item = items::Item::Blue_Rupee;
+							}
+							else if (gameInfo.scratchPad.itemWheel.Bottle_1 == 0xFF && isItemBottleFill(item))
+							{//increase poe counter
+								item = items::Item::Blue_Rupee;
+							}
 							return item;
 						}
 						else
@@ -830,6 +838,24 @@ namespace mod
 		if (itemID == items::Item::Bombs_5 || itemID == items::Item::Bombs_10 || itemID == items::Item::Bombs_20 || itemID == items::Item::Bombs_30 ||
 		itemID == items::Item::Water_Bombs_5 || itemID == items::Item::Water_Bombs_10 || itemID == items::Item::Water_Bombs_15 ||
 		itemID == items::Item::Bomblings_5 || itemID == items::Item::Bomblings_10)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	bool ChestRandomizer::isItemBottleFill(u8 itemID)
+	{
+		if (itemID == items::Item::Red_Potion_Shop || itemID == items::Item::Green_Potion || itemID == items::Item::Blue_Potion || itemID == items::Item::Milk ||
+		itemID == items::Item::Lantern_Oil_Shop || itemID == items::Item::Water || itemID == items::Item::Lantern_Oil_Scooped || itemID == items::Item::Red_Potion_Scooped || 
+		itemID == items::Item::Nasty_soup || itemID == items::Item::Hot_spring_water_Scooped || itemID == items::Item::Fairy_Bottle || itemID == items::Item::Hot_Spring_Water_Shop ||
+		itemID == items::Item::Fairy_Tears || itemID == items::Item::Worm || itemID == items::Item::Bee_Larva_Scooped || itemID == items::Item::Rare_Chu_Jelly ||
+		itemID == items::Item::Red_Chu_Jelly || itemID == items::Item::Blue_Chu_Jelly || itemID == items::Item::Green_Chu_Jelly || itemID == items::Item::Yellow_Chu_Jelly || 
+		itemID == items::Item::Purple_Chu_Jelly || itemID == items::Item::Simple_Soup || itemID == items::Item::Good_Soup || itemID == items::Item::Superb_Soup || 
+		itemID == items::Item::Bee_Larva_Shop || itemID == items::Item::Black_Chu_Jelly)
 		{
 			return true;
 		}
