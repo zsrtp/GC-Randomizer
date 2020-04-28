@@ -797,6 +797,15 @@ namespace mod
 							{//increase poe counter
 								gameInfo.scratchPad.poeCount++;
 							}
+							else if (itemFlags->itemFlags2.Slingshot == 0b0 && (item == items::Item::Seeds_50))
+							{
+								item = items::Item::Blue_Rupee;
+							}
+							else if (itemFlags->itemFlags2.Heros_Bow == 0b0 && (item == items::Item::Arrows_10 || item == items::Item::Arrows_20 || 
+							item == items::Item::Arrows_30 || item == items::Item::Arrows_1))
+							{
+								item = items::Item::Blue_Rupee;
+							}
 							else if (gameInfo.scratchPad.itemWheel.Bomb_Bag_1 == 0xFF && isItemBombs(item))
 							{
 								item = items::Item::Blue_Rupee;
