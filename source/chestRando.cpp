@@ -798,11 +798,11 @@ namespace mod
 								gameInfo.scratchPad.poeCount++;
 							}
 							else if (gameInfo.scratchPad.itemWheel.Bomb_Bag_1 == 0xFF && isItemBombs(item))
-							{//increase poe counter
+							{
 								item = items::Item::Blue_Rupee;
 							}
 							else if (gameInfo.scratchPad.itemWheel.Bottle_1 == 0xFF && isItemBottleFill(item))
-							{//increase poe counter
+							{
 								item = items::Item::Blue_Rupee;
 							}
 							return item;
