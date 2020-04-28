@@ -161,7 +161,7 @@ namespace mod::game_patch
 			if (gameInfo.nextStageVars.nextRoom != 5)
 			{
 				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
-					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.tearCounters.Faron != 16 || (tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.tearCounters.Faron != 16 || (tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0) )
 				{
 					return;
 				}
@@ -284,8 +284,27 @@ namespace mod::game_patch
 		{
 			tp::d_com_inf_game::can_warp = 0xD4;
 		}
+	}
 
-
+	void fixLanayruFaron()
+	{
+		if (Singleton::getInstance()->isGateUnlockEnabled == 1)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
+			if (gameInfo.nextStageVars.nextRoom != 5)
+			{
+				if (gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.tearCounters.Faron != 16 || (tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+				{
+					return;
+				}
+				else if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1)
+				{
+					strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+					// reload faron woods as state 2
+					gameInfo.nextStageVars.nextState = 0x2;
+				}
+			}
+		}
 	}
 
 	void setHuman()

@@ -325,6 +325,8 @@ namespace mod
 		//Fix Lanayru Softlock
 		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x0, 0x5, 0xE, 0xFF, game_patch::setLanayruWolf, event::LoadEventAccuracy::Stage_Room_Spawn);
 
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0x0, 0xFF, game_patch::fixLanayruFaron, event::LoadEventAccuracy::Stage_Room_Spawn);
+
 
 		//   =================
 		//  | Function Hooks  |

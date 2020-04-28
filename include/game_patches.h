@@ -150,4 +150,6 @@ namespace mod::game_patch
 	void skipCartEscort();
 
 	void setLanayruWolf();
+
+	void fixLanayruFaron();
 }
