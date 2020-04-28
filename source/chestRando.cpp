@@ -812,7 +812,6 @@ namespace mod
 							}
 							else if (gameInfo.scratchPad.itemWheel.Bottle_1 == 0xFF && isItemBottleFill(item))
 							{
-								item = items::Item::Blue_Rupee;
 								if (itemFlags->itemFlags2.Lantern == 0b1)
 								{
 									if (item == items::Item::Lantern_Oil_Shop)
@@ -827,6 +826,14 @@ namespace mod
 									{
 										item = items::Item::Lantern_Yellow_Chu_Chu;
 									}
+									else
+									{
+										item = items::Item::Blue_Rupee;
+									}
+								}
+								else
+								{
+									item = items::Item::Blue_Rupee;
 								}
 							}
 							return item;
