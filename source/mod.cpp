@@ -161,8 +161,6 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "DungeonRewards:", &gameInfo.scratchPad.dungeonRewards , 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "Arrows:", &gameInfo.scratchPad.ammo.arrows , 'd', WatchInterpretation::_u8);
 		
 		
 		//event info
