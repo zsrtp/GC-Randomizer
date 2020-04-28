@@ -467,18 +467,13 @@ namespace mod
 		}
 			
 		
-		if (gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee == 0b0)
+		if (!tools::checkItemFlag(ItemFlags::Orange_Rupee))
 		{//remove the item get animations for floor pickups (except silver rupee)
-			gameInfo.scratchPad.itemFlags.itemFlags1.Blue_Rupee = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Yellow_Rupee = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Red_Rupee = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Purple_Rupee = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Orange_Rupee = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Seeds_50 = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_30 = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_20 = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_10 = 0b1;
-			gameInfo.scratchPad.itemFlags.itemFlags1.Arrows_1 = 0b1;
+			u32 loopAmount = sizeof(item::itemGetAnimationFlags) / sizeof(item::itemGetAnimationFlags[0]);
+			for (u32 i = 0; i < loopAmount; i++)
+			{
+				tools::setItemFlag(item::itemGetAnimationFlags[i]);
+			}
 		}
 		
 		if (enableNormalTime == 0 && setDay == 0)
@@ -863,12 +858,12 @@ namespace mod
 		//code to have all scents at once you need to unlock them tho
 		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Youths_Scent == 0b1 && 
+			if (tools::checkItemFlag(ItemFlags::Youths_Scent) && 
 			(tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 2))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1 && 
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Scent) && 
 			(tp::d_kankyo::env_light.currentRoom == 9 || tp::d_kankyo::env_light.currentRoom == 10))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
@@ -876,62 +871,62 @@ namespace mod
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Village]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Youths_Scent == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Youths_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1 && tp::d_kankyo::env_light.currentRoom == 8)
+			if (tools::checkItemFlag(ItemFlags::Ilias_Scent) == 0b1 && tp::d_kankyo::env_light.currentRoom == 8)
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Medicine_Scent == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Medicine_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Medicine_Scent;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Reekfish_Scent == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Reekfish_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Reekfish_Scent;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Arbiters_Grounds]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Poe_Scent == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Poe_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Poe_Scent;
 			}
 		}
 		else
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Medicine_Scent == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Medicine_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Medicine_Scent;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Reekfish_Scent == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Reekfish_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Reekfish_Scent;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Poe_Scent == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Poe_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Poe_Scent;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Scent == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Youths_Scent == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Youths_Scent))
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
 			}
@@ -943,7 +938,7 @@ namespace mod
 	{
 		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Lake_Hylia]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Aurus_Memo == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Aurus_Memo))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
 			}
@@ -951,86 +946,86 @@ namespace mod
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Graveyard]) || 
 		tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Asheis_Sketch == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Interiors]) && tp::d_kankyo::env_light.currentRoom == 0)
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Charm == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Wooden_Statue == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Renardos_Letter == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]) && tp::d_kankyo::env_light.currentRoom == 3)
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Wooden_Statue == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Shops]) && tp::d_kankyo::env_light.currentRoom == 2)
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Invoice))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Interiors]) && tp::d_kankyo::env_light.currentRoom == 5)
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Invoice))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Renardos_Letter == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hidden_Village]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Impaz_House]))
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Charm == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
 			}
 		}
 		else
 		{
-			if (gameInfo.scratchPad.itemFlags.itemFlags3.Horse_Call == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Horse_Call))
 			{//finished Ilia Quest
 				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Ilias_Charm == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Wooden_Statue == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Invoice == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Invoice))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Renardos_Letter == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
 			}
 			
-			if (gameInfo.scratchPad.itemFlags.itemFlags1.Coral_Earring == 0b1)
+			if (tools::checkItemFlag(ItemFlags::Coral_Earring))
 			{//given sketch
 				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Asheis_Sketch == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
 			}
@@ -1039,7 +1034,7 @@ namespace mod
 			{//given memo
 				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
 			}
-			else if (gameInfo.scratchPad.itemFlags.itemFlags3.Aurus_Memo == 0b1)
+			else if (tools::checkItemFlag(ItemFlags::Aurus_Memo))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
 			}
@@ -1050,61 +1045,61 @@ namespace mod
 	void Mod::reorderItemWheel()
 	{
 		u8 currentSlot = 0x0;
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Clawshots == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Clawshots))
 		{
 			gameInfo.scratchPad.itemWheel.Double_Clawshot = items::Item::Clawshots;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xA;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Dominion_Rod == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Dominion_Rod))
 		{
 			gameInfo.scratchPad.itemWheel.Dominion_Rod = items::Item::Dominion_Rod;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x8;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Ball_and_Chain == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Ball_and_Chain))
 		{
 			gameInfo.scratchPad.itemWheel.Ball_and_Chain = items::Item::Ball_and_Chain;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x6;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Spinner == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Spinner))
 		{
 			gameInfo.scratchPad.itemWheel.Spinner = items::Item::Spinner;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x2;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Clawshot == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Clawshot))
 		{
 			gameInfo.scratchPad.itemWheel.Clawshot = items::Item::Clawshot;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x9;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Heros_Bow == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Heros_Bow))
 		{
 			gameInfo.scratchPad.itemWheel.Bow = items::Item::Heros_Bow;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x4;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Iron_Boots == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Iron_Boots))
 		{
 			gameInfo.scratchPad.itemWheel.Iron_Boots = items::Item::Iron_Boots;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x3;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Boomerang == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Boomerang))
 		{
 			gameInfo.scratchPad.itemWheel.Boomerang = items::Item::Boomerang;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x0;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Lantern == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Lantern))
 		{
 			gameInfo.scratchPad.itemWheel.Lantern = items::Item::Lantern;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x1;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags2.Slingshot == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Slingshot))
 		{
 			gameInfo.scratchPad.itemWheel.Slingshot = items::Item::Slingshot;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x17;
@@ -1115,7 +1110,7 @@ namespace mod
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x14;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags1.Hawkeye == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Hawkeye))
 		{
 			gameInfo.scratchPad.itemWheel.Hawkeye = items::Item::Hawkeye;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x5;
@@ -1171,7 +1166,7 @@ namespace mod
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x16;
 			currentSlot++;
 		}
-		if (gameInfo.scratchPad.itemFlags.itemFlags3.Horse_Call == 0b1)
+		if (tools::checkItemFlag(ItemFlags::Horse_Call))
 		{
 			gameInfo.scratchPad.itemWheel.Horse_Call = items::Item::Horse_Call;
 			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x15;

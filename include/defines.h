@@ -38,6 +38,7 @@ typedef	signed char 		s8;
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos
 #define sysConsolePtr 		tp::jfw_system::systemConsole
 #define isLoading			tp::f_op_scene_req::isUsingOfOverlap
+#define ItemFlags			tp::d_com_inf_game::ItemFlagBits
 
 // Stage translations for mod::stage::allStages[]
 #define Stage_Lakebed_Temple 0

@@ -2,8 +2,24 @@
 #include "items.h"
 #include "defines.h"
 
+#include <tp/d_com_inf_game.h>
+
 namespace mod::item
 {
+	ItemFlags itemGetAnimationFlags[10] = 
+	{
+		ItemFlags::Blue_Rupee,
+		ItemFlags::Yellow_Rupee,
+		ItemFlags::Red_Rupee,
+		ItemFlags::Purple_Rupee,
+		ItemFlags::Orange_Rupee,
+		ItemFlags::Seeds_50,
+		ItemFlags::Arrows_30,
+		ItemFlags::Arrows_20,
+		ItemFlags::Arrows_10,
+		ItemFlags::Arrows_1,
+	};
+	
 	u32 getFlags(u8 item, u32 currentPlayerConditions)
 	{
 		u32 flags = currentPlayerConditions;

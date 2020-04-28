@@ -161,9 +161,12 @@ namespace mod::game_patch
 			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
 			if (gameInfo.nextStageVars.nextRoom != 5)
 			{        
-				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
-					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0 || 
-					(tp::d_com_inf_game::current_state == 0x65 && gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0))
+				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || 
+					gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 || 
+					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || 
+					!tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron) || 
+						(tp::d_com_inf_game::current_state == 0x65 && 
+						!tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron)))
 				{
 					return;
 				}
@@ -188,7 +191,7 @@ namespace mod::game_patch
 	
 	void skipGoats()
 	{
-		if (gameInfo.scratchPad.itemFlags.itemFlags1.Wooden_Sword == 0b0)
+		if (!tools::checkItemFlag(ItemFlags::Wooden_Sword))
 		{//goats 1
 			if (Singleton::getInstance()->isGoatSkipEnabled == 1)
 			{
@@ -198,7 +201,7 @@ namespace mod::game_patch
 				tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x4, 0x7);
 			}
 		}
-		else if (gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron == 0b0)
+		else if (!tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron))
 		{//goats 2
 			if (Singleton::getInstance()->isGoatSkipEnabled == 1)
 			{
@@ -274,7 +277,7 @@ namespace mod::game_patch
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Give MasterSword");
 
 		// Set Master sword inventory flag
-		gameInfo.scratchPad.itemFlags.itemFlags1.Master_Sword = 0b1;
+		tools::setItemFlag(ItemFlags::Master_Sword);
 
 		// Equip Master sword (0x49 / 73)
 		gameInfo.scratchPad.equipedItems.sword = 0x49;

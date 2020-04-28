@@ -19,8 +19,7 @@ namespace mod
 	{
 		// Reset
 		
-		itemFlags = &gameInfo.scratchPad.itemFlags;
-		itemWheel = &gameInfo.scratchPad.itemWheel;		
+		itemWheel = &gameInfo.scratchPad.itemWheel;
 		
 		currentPlayerConditions = startConditions;
 		currentSeed = tools::randomSeed;
@@ -428,7 +427,7 @@ namespace mod
 			gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;//give midna jumps in mist area
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
             *tempAddress |= 0x400;//give ending blow		
-			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Faron = 0b1;//set flag for vessel since we'll skip it by reloading
+			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);//set flag for vessel since we'll skip it by reloading
 			gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -440,7 +439,7 @@ namespace mod
 			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
             *tempAddress |= 0x800;//give shield attack		
-			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Eldin = 0b1;//set flag for vessel since we'll skip it by reloading
+			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Eldin);//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
 		}
@@ -451,7 +450,7 @@ namespace mod
 			gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB] |= 0x8;//give castle town warp
 			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
             *tempAddress |= 0x200;//give Backslice
-			gameInfo.scratchPad.itemFlags.itemFlags3.Vessel_Of_Light_Lanayru = 0b1;//set flag for vessel since we'll skip it by reloading
+			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
 		}
@@ -541,136 +540,140 @@ namespace mod
 							//progressive checks (doesn't work if you already have items when generating seed)
 							if (isProgressiveEnabled == 1)
 							{
-								if(item == items::Item::Wooden_Sword && itemFlags->itemFlags1.Wooden_Sword == 0b1)
+								if(item == items::Item::Wooden_Sword && tools::checkItemFlag(ItemFlags::Wooden_Sword))
 								{
 									item = items::Item::Ordon_Sword;
 								}
-								else if(item == items::Item::Ordon_Sword && itemFlags->itemFlags1.Wooden_Sword == 0b0)
+								else if(item == items::Item::Ordon_Sword && !tools::checkItemFlag(ItemFlags::Wooden_Sword))
 								{
 									item = items::Item::Wooden_Sword;
 								}
-								else if(item == items::Item::Clawshot && itemFlags->itemFlags2.Clawshot == 0b1)
+								else if(item == items::Item::Clawshot && tools::checkItemFlag(ItemFlags::Clawshot))
 								{
 									item = items::Item::Clawshots;
 								}
-								else if(item == items::Item::Clawshots && itemFlags->itemFlags2.Clawshot == 0b0)
+								else if(item == items::Item::Clawshots && !tools::checkItemFlag(ItemFlags::Clawshot))
 								{
-									item = items::Item::Clawshot;				
+									item = items::Item::Clawshot;
 								}
 								else if(item == items::Item::Heros_Bow)
 								{
-									if (itemFlags->itemFlags2.Heros_Bow == 0b1 && itemFlags->itemFlags2.Big_Quiver == 0b0)
+									if (tools::checkItemFlag(ItemFlags::Heros_Bow) && 
+										!tools::checkItemFlag(ItemFlags::Big_Quiver))
 									{
 										item = items::Item::Big_Quiver;
 									}
-									else if (itemFlags->itemFlags2.Heros_Bow == 0b1 && itemFlags->itemFlags2.Big_Quiver == 0b1)
+									else if (tools::checkItemFlag(ItemFlags::Heros_Bow) && 
+										tools::checkItemFlag(ItemFlags::Big_Quiver))
 									{
 										item = items::Item::Giant_Quiver;
-									}						
+									}
 								}
 								else if(item == items::Item::Big_Quiver)
 								{
-									if (itemFlags->itemFlags2.Heros_Bow == 0b0)
+									if (!tools::checkItemFlag(ItemFlags::Heros_Bow))
 									{
 										item = items::Item::Heros_Bow;
 									}
-									else if (itemFlags->itemFlags2.Big_Quiver == 0b1)
+									else if (tools::checkItemFlag(ItemFlags::Big_Quiver))
 									{
 										item = items::Item::Giant_Quiver;
 									}
 								}
 								else if(item == items::Item::Giant_Quiver)
 								{
-									if (itemFlags->itemFlags2.Heros_Bow == 0b0)
+									if (!tools::checkItemFlag(ItemFlags::Heros_Bow))
 									{
 										item = items::Item::Heros_Bow;
 									}
-									else if (itemFlags->itemFlags2.Big_Quiver == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Big_Quiver))
 									{
 										item = items::Item::Big_Quiver;
 									}
 								}
-								else if(item == items::Item::Big_Wallet && itemFlags->itemFlags1.Big_Wallet == 0b1)
+								else if(item == items::Item::Big_Wallet && 
+									tools::checkItemFlag(ItemFlags::Big_Wallet))
 								{
 									item = items::Item::Giant_Wallet;
 								}
-								else if(item == items::Item::Giant_Wallet && itemFlags->itemFlags1.Big_Wallet == 0b0)
+								else if(item == items::Item::Giant_Wallet && 
+									!tools::checkItemFlag(ItemFlags::Big_Wallet))
 								{
 									item = items::Item::Big_Wallet;
 								}
 								else if(item == items::Item::Ancient_Sky_Book_empty)
 								{
-									if (itemFlags->itemFlags4.Ancient_Sky_Book_empty == 0b0)
+									if (!tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty))
 									{
 										item = items::Item::Ancient_Sky_Book_empty;
 									}
-									else if (itemFlags->itemFlags4.Null_DF == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DF))
 									{//letter 1
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DF = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DF);
 									}
-									else if (itemFlags->itemFlags4.Null_DE == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DE))
 									{//letter 2
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DE = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DE);
 									}
-									else if (itemFlags->itemFlags4.Null_DD == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DD))
 									{//letter 3
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DD = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DD);
 									}
-									else if (itemFlags->itemFlags4.Null_DC == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DC))
 									{//letter 4
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DC = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DC);
 									}
-									else if (itemFlags->itemFlags4.Null_DB == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DB))
 									{//letter 5
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DB = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DB);
 									}
-									else if (itemFlags->itemFlags4.Null_DA == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DA))
 									{//letter 6
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DA = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DA);
 									}
-									else if (itemFlags->itemFlags4.Null_DA == 0b1)
+									else if (tools::checkItemFlag(ItemFlags::Null_DA))
 									{
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
 								}
 								else if(item == items::Item::Ancient_Sky_Book_partly_filled)
 								{
-									if (itemFlags->itemFlags4.Ancient_Sky_Book_empty == 0b0)
+									if (!tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty))
 									{
 										item = items::Item::Ancient_Sky_Book_empty;
 									}
-									else if (itemFlags->itemFlags4.Null_DF == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DF))
 									{//letter 1
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DF = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DF);
 									}
-									else if (itemFlags->itemFlags4.Null_DE == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DE))
 									{//letter 2
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DE = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DE);
 									}
-									else if (itemFlags->itemFlags4.Null_DD == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DD))
 									{//letter 3
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DD = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DD);
 									}
-									else if (itemFlags->itemFlags4.Null_DC == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DC))
 									{//letter 4
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DC = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DC);
 									}
-									else if (itemFlags->itemFlags4.Null_DB == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Null_DB))
 									{//letter 5
 										item = items::Item::Ancient_Sky_Book_partly_filled;
-										itemFlags->itemFlags4.Null_DB = 0b1;
+										tools::setItemFlag(ItemFlags::Null_DB);
 									}
-									else if (itemFlags->itemFlags4.Null_DB == 0b1)
+									else if (tools::checkItemFlag(ItemFlags::Null_DB))
 									{
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
@@ -689,7 +692,7 @@ namespace mod
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemFlags->itemFlags2.Giant_Bomb_Bag == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Giant_Bomb_Bag))
 									{
 										item = items::Item::Giant_Bomb_Bag;
 									}
@@ -712,7 +715,7 @@ namespace mod
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemFlags->itemFlags2.Giant_Bomb_Bag == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Giant_Bomb_Bag))
 									{
 										item = items::Item::Giant_Bomb_Bag;
 									}
@@ -735,7 +738,7 @@ namespace mod
 									{
 										item = items::Item::Goron_Bomb_Bag;
 									}
-									else if (itemFlags->itemFlags2.Giant_Bomb_Bag == 0b0)
+									else if (!tools::checkItemFlag(ItemFlags::Giant_Bomb_Bag))
 									{
 										item = items::Item::Giant_Bomb_Bag;
 									}
@@ -746,48 +749,52 @@ namespace mod
 								}
 								else if(item == items::Item::Key_Shard_1)
 								{
-									if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b0)
+									if (tools::checkItemFlag(ItemFlags::Key_Shard_1) && 
+										!tools::checkItemFlag(ItemFlags::Key_Shard_2))
 									{
 										item = items::Item::Key_Shard_2;
 									}
-									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
+									else if (tools::checkItemFlag(ItemFlags::Key_Shard_1) && 
+										tools::checkItemFlag(ItemFlags::Key_Shard_2))
 									{
 										item = items::Item::Big_Key_Goron_Mines;
-										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
+										tools::setItemFlag(ItemFlags::Key_Shard_3);//set this flag to show full key on the map
 									}
 								}
 								else if(item == items::Item::Key_Shard_2)
 								{
-									if (itemFlags->itemFlags4.Key_Shard_1 == 0b0)
+									if (!tools::checkItemFlag(ItemFlags::Key_Shard_1))
 									{
 										item = items::Item::Key_Shard_1;
 									}
-									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b1)
+									else if (tools::checkItemFlag(ItemFlags::Key_Shard_1) && 
+										tools::checkItemFlag(ItemFlags::Key_Shard_2))
 									{
 										item = items::Item::Big_Key_Goron_Mines;
-										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
+										tools::setItemFlag(ItemFlags::Key_Shard_3);//set this flag to show full key on the map
 									}
 								}
 								else if(item == items::Item::Big_Key_Goron_Mines)
 								{
-									if (itemFlags->itemFlags4.Key_Shard_1 == 0b0)
+									if (!tools::checkItemFlag(ItemFlags::Key_Shard_1))
 									{
 										item = items::Item::Key_Shard_1;
 									}
-									else if (itemFlags->itemFlags4.Key_Shard_1 == 0b1 && itemFlags->itemFlags4.Key_Shard_2 == 0b0)
+									else if (tools::checkItemFlag(ItemFlags::Key_Shard_1) && 
+										!tools::checkItemFlag(ItemFlags::Key_Shard_2))
 									{
 										item = items::Item::Key_Shard_2;
 									}
 									else
 									{
-										itemFlags->itemFlags4.Key_Shard_3 = 0b1;//set this flag to show full key on the map
+										tools::setItemFlag(ItemFlags::Key_Shard_3);//set this flag to show full key on the map
 									}
 								}
-								else if(item == items::Item::Master_Sword && itemFlags->itemFlags1.Master_Sword == 0b1)
+								else if(item == items::Item::Master_Sword && tools::checkItemFlag(ItemFlags::Master_Sword))
 								{//for when MS and light Ms are implemented
 									item = items::Item::Master_Sword_Light;
 								}
-								else if(item == items::Item::Master_Sword_Light && itemFlags->itemFlags1.Master_Sword == 0b0)
+								else if(item == items::Item::Master_Sword_Light && !tools::checkItemFlag(ItemFlags::Master_Sword))
 								{//for when MS and light Ms are implemented
 									item = items::Item::Master_Sword;
 								}
@@ -801,12 +808,16 @@ namespace mod
 							{//increase poe counter
 								gameInfo.scratchPad.poeCount++;
 							}
-							else if (itemFlags->itemFlags2.Slingshot == 0b0 && (item == items::Item::Seeds_50))
+							else if (!tools::checkItemFlag(ItemFlags::Slingshot) && 
+								(item == items::Item::Seeds_50))
 							{
 								item = items::Item::Blue_Rupee;
 							}
-							else if (itemFlags->itemFlags2.Heros_Bow == 0b0 && (item == items::Item::Arrows_10 || item == items::Item::Arrows_20 || 
-							item == items::Item::Arrows_30 || item == items::Item::Arrows_1))
+							else if (!tools::checkItemFlag(ItemFlags::Heros_Bow) && 
+								(item == items::Item::Arrows_10 || 
+								item == items::Item::Arrows_20 || 
+								item == items::Item::Arrows_30 || 
+								item == items::Item::Arrows_1))
 							{
 								item = items::Item::Blue_Rupee;
 							}
@@ -816,7 +827,7 @@ namespace mod
 							}
 							else if (gameInfo.scratchPad.itemWheel.Bottle_1 == 0xFF && isItemBottleFill(item))
 							{
-								if (itemFlags->itemFlags2.Lantern == 0b1)
+								if (tools::checkItemFlag(ItemFlags::Lantern))
 								{
 									if (item == items::Item::Lantern_Oil_Shop)
 									{

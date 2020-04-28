@@ -2,6 +2,8 @@
 
 #include "defines.h"
 
+#include <tp/d_com_inf_game.h>
+
 namespace mod::item
 {
 	/**
@@ -74,4 +76,9 @@ namespace mod::item
 		ItemCheck* source;
 		ItemCheck* destination;
 	};
+
+	/**
+	 * Contains the values for the flags to be set to skip the animations of first getting specific items
+	 */
+	extern ItemFlags itemGetAnimationFlags[10];
 }

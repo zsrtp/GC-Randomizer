@@ -43,7 +43,6 @@ namespace mod
 			u8 itemThatReplacesHalfMilk = 0;
 			u8 itemThatReplacesSlingShot = 0;
 			
-			tp::d_com_inf_game::ItemFlags* itemFlags;
 			tp::d_com_inf_game::ItemSlots* itemWheel;
 
 		public:
