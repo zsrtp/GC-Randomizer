@@ -160,7 +160,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
-		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 'd', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "DungeonRewards:", &gameInfo.scratchPad.dungeonRewards , 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "Arrows:", &gameInfo.scratchPad.ammo.arrows , 'd', WatchInterpretation::_u8);
 		
@@ -172,7 +172,8 @@ namespace mod
 		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
 		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only
-		hudConsole->addOption(page, "Unused Slot:", &gameInfo.scratchPad.itemWheel.Item_Slot, 0xFF); //for testing only*/
+		hudConsole->addOption(page, "Unused Slot:", &gameInfo.scratchPad.itemWheel.Item_Slot, 0xFF); //for testing only
+		hudConsole->addOption(page, "Form:", &gameInfo.scratchPad.form, 0x1); //for testing only*/
 		
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
@@ -460,8 +461,7 @@ namespace mod
 		snprintf(currentPosX, 30, "%f", linkPos[0]);
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
-		
-		skyAngle = (u32)gameInfo.scratchPad.skyAngle;
+		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
 		
 		if (trigerLoadSave == 1){
 			trigerLoadSave = 0;

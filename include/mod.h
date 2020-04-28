@@ -58,7 +58,7 @@ namespace mod
 			u8 enableNormalTime = 1;			
 			u8 setDay = 1;
 			
-			u32 skyAngle;
+			char skyAngle[30];
 			
 			u8 stage = 0;
 			u8 room = 0;
