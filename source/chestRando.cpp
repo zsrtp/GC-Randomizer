@@ -486,6 +486,11 @@ namespace mod
 					//empty sky book can be outside the house or inside the house so don't check coords
 						isOk = true;
 					}
+					else if (sourceCheck->itemID == items::Item::Piece_of_Heart && (0 == strcmp("F_SP127", sourceCheck->stage)))
+					{//fishing hole freestanding PoH
+					 //it's alone in the fishing hole so it can only be that one
+						isOk = true;
+					}
 					else 
 					{	
 						if (sourceCheck->type == item::ItemType::PoeSoul)
@@ -497,8 +502,7 @@ namespace mod
 						}
 						else if (sourceCheck->itemID == items::Item::Piece_of_Heart && ((0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 6) || 
 						(0 == strcmp("F_SP109", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 3) ||
-						(0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP127", sourceCheck->stage) && sourceCheck->room == 0)  ||
-						(0 == strcmp("F_SP128", sourceCheck->stage) && sourceCheck->room == 0)))
+						(0 == strcmp("F_SP121", sourceCheck->stage) && sourceCheck->room == 0) || (0 == strcmp("F_SP128", sourceCheck->stage) && sourceCheck->room == 0)))
 						{//freestanding PoH
 						// they can be moved by boomerang and clawshot, so give them more range
 						// clawshot and boomrang targetting range ~2000
