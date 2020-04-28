@@ -282,10 +282,6 @@ namespace mod
 		hudConsole->addWatch(page, "slot8:", &gameInfo.scratchPad.itemSlotsOrder[0x8], 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "slot9:", &gameInfo.scratchPad.itemSlotsOrder[0x9], 'x', WatchInterpretation::_u8);
 		
-		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
-		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);
 		page = hudConsole->addPage("Item slots 2");
 		
 		hudConsole->addWatch(page, "slotA:", &gameInfo.scratchPad.itemSlotsOrder[0xA], 'x', WatchInterpretation::_u8);
@@ -878,7 +874,7 @@ namespace mod
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]))
 		{
-			if (tools::checkItemFlag(ItemFlags::Ilias_Scent) == 0b1 && tp::d_kankyo::env_light.currentRoom == 8)
+			if (tools::checkItemFlag(ItemFlags::Ilias_Scent) && tp::d_kankyo::env_light.currentRoom == 8)
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
 			}

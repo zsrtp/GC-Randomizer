@@ -632,12 +632,7 @@ namespace mod
 										item = items::Item::Ancient_Sky_Book_partly_filled;
 										tools::setItemFlag(ItemFlags::Null_DB);
 									}
-									else if (!tools::checkItemFlag(ItemFlags::Null_DA))
-									{//letter 6
-										item = items::Item::Ancient_Sky_Book_partly_filled;
-										tools::setItemFlag(ItemFlags::Null_DA);
-									}
-									else if (tools::checkItemFlag(ItemFlags::Null_DA))
+									else if (tools::checkItemFlag(ItemFlags::Null_DB))
 									{
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
