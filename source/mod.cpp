@@ -161,6 +161,8 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "colorPointer:", &gameInfo.ColorPtr, 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "colorResult:", &colorResult, 'x', WatchInterpretation::_u16);
 		
 		
 		//event info
@@ -173,6 +175,7 @@ namespace mod
 		hudConsole->addOption(page, "Unused Slot:", &gameInfo.scratchPad.itemWheel.Item_Slot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Form:", &gameInfo.scratchPad.form, 0x1); //for testing only*/
 		
+		
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
@@ -180,6 +183,16 @@ namespace mod
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
+		
+		//color
+		page = hudConsole->addPage("Tunic Color1");
+		
+		hudConsole->addWatch(page, "red1:", &red1, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "green1:", &green1, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "blue1:", &blue1, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "red2:", &red2, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "green2:", &green2, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "blue2:", &blue2, 'x', WatchInterpretation::_u16);
 		
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");
@@ -456,6 +469,33 @@ namespace mod
 		snprintf(currentPosY, 30, "%f", linkPos[1]);
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
 		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
+		
+		
+		if (gameInfo.ColorPtr != nullptr)
+		{
+			red1 = gameInfo.ColorPtr->red1;
+			green1 = gameInfo.ColorPtr->green1;
+			blue1 = gameInfo.ColorPtr->blue1;
+			red2 = gameInfo.ColorPtr->red2;
+			green2 = gameInfo.ColorPtr->green2;
+			blue2 = gameInfo.ColorPtr->blue2;
+			/*u16 last14 = 0;
+			for(colorResult = 0x0; colorResult < 0x6000; colorResult++)
+			{
+				
+				if (gameInfo.ColorPtr->unk_0[colorResult] == 0x14)
+				{
+					if (colorResult - last14 == 8)
+					{
+						break;
+					}
+					else
+					{
+						last14 = colorResult;
+					}
+				}
+			}*/
+		}
 		
 		if (trigerLoadSave == 1){
 			trigerLoadSave = 0;
