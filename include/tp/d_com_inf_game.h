@@ -841,7 +841,7 @@ enum class ItemFlagBits : u32
 	{
 		u8 unk_0[0x4D0];
 		float pos[3];
-	} __attribute__((__packed__));	
+	} __attribute__((__packed__));
 	
 	// Should try to fill in the missing variables at some point
 	struct GameInfo
@@ -856,11 +856,12 @@ enum class ItemFlagBits : u32
 		u8 currentSpawnID;// 4E09
 		u8 unk_4e0A[4];  // 4E0A - 4E0D
 		NextStageVars nextStageVars; // 4E0E - 4E1D
-		u8 unk_4e1c[0xAA]; // 4E19 - 4EC7
-		EventSystem eventSystem; // 4EC8 - 4FDE
-		u8 unk_4fdd[0xDD0]; // 4FDD - 5DBF
-		LinkMapVars* linkMapPtr; // 5DA0 - 5DAB
-		u8 unk_5dac[0x18060];
+		u8 unk_4e1E[0xAA]; // 4E1E - 4EC7
+		EventSystem eventSystem; // 4EC8 - 4FDB
+		u8 unk_4fdc[0xDD0]; // 4FDC - 5DAB
+		LinkMapVars* linkMapPtr; // 5DAC - 5DAF
+		u8 unk_5db0[0x18060];
+		
 	} __attribute__((__packed__));
 
 	static_assert(sizeof(AreaNodes) == 0x20);
@@ -875,6 +876,11 @@ enum class ItemFlagBits : u32
 	static_assert(sizeof(MovingActors) == 0x59);
 	static_assert(sizeof(Ammo) == 0x10);
 	static_assert(sizeof(RespawnValues) == 0x21);
+	static_assert(sizeof(TunicColors) == 0x32AE);
+	static_assert(sizeof(LinkMapVars*) == 0x4);
+	static_assert(sizeof(EventSystem) == 0x114);
+	static_assert(sizeof(NextStageVars) == 0x10);
+	
 	
 	extern "C"
 	{
