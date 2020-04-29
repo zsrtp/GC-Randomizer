@@ -51,22 +51,22 @@ enum class ItemFlagBits : u32
 	Compass =                         36,
 	Ooccoo_FT =                       37,
 	Big_Key =                         38,
-	Ooccoo_Jr =                       39,
+	Ooccoo_Jr =                       39,//never set in normal game
 
 	Ordon_Sword =                     40,
 	Master_Sword =                    41,
 	Ordon_Shield =                    42,
 	Wooden_Shield =                   43,
 	Hylian_Shield =                   44,
-	Ooccoos_Note =                    45,
-	Ordon_Clothing =                  46,
+	Ooccoos_Note =                    45,//never set in normal game
+	Ordon_Clothing =                  46,//never set in normal game
 	Heros_Clothes =                   47,
 
 	Magic_Armor =                     48,
 	Zora_Armor =                      49,
-	Shadow_Crystal =                  50,
+	Shadow_Crystal =                  50,//never set in normal game
 	Ooccoo_Dungeon =                  51,
-	Small_Wallet =                    52,
+	Small_Wallet =                    52,//never set in normal game
 	Big_Wallet =                      53,
 	Giant_Wallet =                    54,
 	Null_37 =                         55,
@@ -93,16 +93,16 @@ enum class ItemFlagBits : u32
 	Master_Sword_Light =              73,
 	Fishing_Rod =                     74,
 	Slingshot =                       75,
-	Dominion_Rod_Uncharged =          76,
+	Dominion_Rod_Uncharged =          76,//never set in normal game
 	Null_4D =                         77,
 	Null_4E =                         78,
 	Giant_Bomb_Bag =                  79,
 
-	Empty_Bomb_Bag =                  80,
+	Empty_Bomb_Bag =                  80,//never set in normal game
 	Goron_Bomb_Bag =                  81,
 	Null_52 =                         82,
 	Null_53 =                         83,
-	Small_Quiver =                    84,
+	Small_Quiver =                    84,//never set in normal game
 	Big_Quiver =                      85,
 	Giant_Quiver =                    86,
 	Null_57 =                         87,
@@ -188,11 +188,11 @@ enum class ItemFlagBits : u32
 	Bee_Larva_Shop =                  158,
 	Black_Chu_Jelly =                 159,
 	
-	Tear_Of_Light =                   160,
+	Tear_Of_Light =                   160,//never set in normal game
 	Vessel_Of_Light_Faron =           161,
 	Vessel_Of_Light_Eldin =           162,
 	Vessel_Of_Light_Lanayru =         163,
-	Vessel_Of_Light_Full =            164,
+	Vessel_Of_Light_Full =            164,//never set in normal game
 	Null_A5 =                         165,
 	Null_A6 =                         166,
 	Null_A7 =                         167,
@@ -254,11 +254,11 @@ enum class ItemFlagBits : u32
 	Null_D8 =                         216,
 	Null_D9 =                         217,
 	Null_DA =                         218,
-	Null_DB =                         219,
-	Null_DC =                         220,
-	Null_DD =                         221,
-	Null_DE =                         222,
-	Null_DF =                         223,
+	Null_DB =                         219,//now used for sky letter 5
+	Null_DC =                         220,//now used for sky letter 4
+	Null_DD =                         221,//now used for sky letter 3
+	Null_DE =                         222,//now used for sky letter 2
+	Null_DF =                         223,//now used for sky letter 1
 	
 	Poe_Soul =                        224,
 	Null_E1 =                         225,
