@@ -874,7 +874,13 @@ enum class ItemFlagBits : u32
 		LinkMapVars* linkMapPtr; // 5DAC - 5DAF
 		u8 unk_5db0[0x4];
 		TunicColor* ColorPtr;// 5DB4 - 5DB7
-		u8 unk_5db8[0x18058];
+		u8 unk_5db8[0x2A];//5DB8 - 5DE1
+		u16 airMeter; //5DE2 - 5DE3
+		u8 unk_5de4[0x40];//5DE4 - 5E23
+		u8 aButton; //5E24 - 5E24
+		u8 unk_5e25[0x92];//5E25 - 5EB6
+		u8 airTimerDepleted; //5EB7 - 5EB7
+		u8 unk_5eb8[0x17F58];
 
 		
 	} __attribute__((__packed__));
