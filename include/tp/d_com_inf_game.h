@@ -751,7 +751,7 @@ enum class ItemFlagBits : u32
 		u8 unk_99[0x3];//offset: 0x99
 		ItemSlots itemWheel;//size:0x18 offset 0x9C
 		u8 itemSlotsOrder[0x18];//offset 0xB4
-		ItemFlags itemFlags[8];//size:0x20 offset 0xCC
+		u32 itemFlags[8];//size:0x20 offset 0xCC
 		Ammo ammo;//size:0x10 offset: 0xEC
 		u8 unk_FC[0xD];//offset 0xFC
 		DungeonRewards dungeonRewards;//size: 0x2 offset: 0x109
