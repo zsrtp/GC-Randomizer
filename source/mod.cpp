@@ -468,7 +468,7 @@ namespace mod
 			u32 loopAmount = sizeof(item::itemGetAnimationFlags) / sizeof(item::itemGetAnimationFlags[0]);
 			for (u32 i = 0; i < loopAmount; i++)
 			{
-				tools::setItemFlag(item::itemGetAnimationFlags[i]);
+				tools::setItemFlag(static_cast<ItemFlags>(item::itemGetAnimationFlags[i]));
 			}
 		}
 		

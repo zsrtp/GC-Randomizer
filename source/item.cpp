@@ -6,18 +6,18 @@
 
 namespace mod::item
 {
-	ItemFlags itemGetAnimationFlags[10] = 
+	u16 itemGetAnimationFlags[10] = 
 	{
-		ItemFlags::Blue_Rupee,
-		ItemFlags::Yellow_Rupee,
-		ItemFlags::Red_Rupee,
-		ItemFlags::Purple_Rupee,
-		ItemFlags::Orange_Rupee,
-		ItemFlags::Seeds_50,
-		ItemFlags::Arrows_30,
-		ItemFlags::Arrows_20,
-		ItemFlags::Arrows_10,
-		ItemFlags::Arrows_1,
+		static_cast<u16>(ItemFlags::Blue_Rupee),
+		static_cast<u16>(ItemFlags::Yellow_Rupee),
+		static_cast<u16>(ItemFlags::Red_Rupee),
+		static_cast<u16>(ItemFlags::Purple_Rupee),
+		static_cast<u16>(ItemFlags::Orange_Rupee),
+		static_cast<u16>(ItemFlags::Seeds_50),
+		static_cast<u16>(ItemFlags::Arrows_30),
+		static_cast<u16>(ItemFlags::Arrows_20),
+		static_cast<u16>(ItemFlags::Arrows_10),
+		static_cast<u16>(ItemFlags::Arrows_1),
 	};
 	
 	u32 getFlags(u8 item, u32 currentPlayerConditions)
