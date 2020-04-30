@@ -161,8 +161,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "colorPointer:", &gameInfo.ColorPtr, 'x', WatchInterpretation::_u32);
-		hudConsole->addWatch(page, "colorResult:", &colorResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Form:", &gameInfo.scratchPad.form, 'x', WatchInterpretation::_u8);
 		
 		
 		//event info
@@ -184,16 +183,41 @@ namespace mod
 		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
 		
+		
 		//color
-		page = hudConsole->addPage("Tunic Color1");
+		/*page = hudConsole->addPage("Tunic Color");
 		
 		hudConsole->addWatch(page, "red1:", &red1, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "green1:", &green1, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "blue1:", &blue1, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "red2:", &red2, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "green2:", &green2, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "blue2:", &blue2, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "blue2:", &blue2, 'x', WatchInterpretation::_u16);*/
 		
+		//buttons
+		/*page = hudConsole->addPage("Button texts");
+		
+		hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
+		hudConsole->addOption(page, "Y button:", &gameInfo.yButtonText, 0xFF);
+		hudConsole->addOption(page, "X button:", &gameInfo.xButtonText, 0xFF);
+		hudConsole->addOption(page, "B button:", &gameInfo.bButtonText, 0xFF);
+		hudConsole->addOption(page, "R button:", &gameInfo.rButtonText, 0xFF);
+		hudConsole->addOption(page, "stick button:", &gameInfo.stickButtonText, 0xFF);
+		hudConsole->addOption(page, "start button:", &gameInfo.startButtonText, 0xFF);
+		hudConsole->addOption(page, "C button:", &gameInfo.cButtonText, 0xFF);
+		hudConsole->addWatch(page, "A button:", &gameInfo.aButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Y button:", &gameInfo.yButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "X button:", &gameInfo.xButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "B button:", &gameInfo.bButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "R button:", &gameInfo.rButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "stick:", &gameInfo.stickButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "start button:", &gameInfo.startButtonText, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "C button:", &gameInfo.cButtonText, 'x', WatchInterpretation::_u8);*/
+		/*hudConsole->addWatch(page, "scoop:", &scoopResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "check:", &checkResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "items:", &itemsResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "map:", &mapResult, 'x', WatchInterpretation::_u16);*/
+
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");
 		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
@@ -479,23 +503,42 @@ namespace mod
 			red2 = gameInfo.ColorPtr->red2;
 			green2 = gameInfo.ColorPtr->green2;
 			blue2 = gameInfo.ColorPtr->blue2;
-			/*u16 last14 = 0;
-			for(colorResult = 0x0; colorResult < 0x6000; colorResult++)
-			{
-				
-				if (gameInfo.ColorPtr->unk_0[colorResult] == 0x14)
-				{
-					if (colorResult - last14 == 8)
-					{
-						break;
-					}
-					else
-					{
-						last14 = colorResult;
-					}
-				}
-			}*/
 		}
+		scoopResult = 0;
+		checkResult	= 0;
+		itemsResult = 0;
+		mapResult = 0;
+		/*for (u16 i = 0x0; i < 0xD3; i++)
+		{
+			if (gameInfo.unk_5de4[i] == 0x6C && scoopResult == 0)
+			{
+				scoopResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x4D && skipResult == 0)
+			{
+				skipResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x72 && actionResult == 0)
+			{
+				actionResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x60 && itemsResult == 0)
+			{
+				itemsResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x5F && mapResult == 0)
+			{
+				mapResult = i;
+			}
+			if ((gameInfo.unk_5de4[i] == 0x29 || gameInfo.unk_5de4[i] == 0x3D || gameInfo.unk_5de4[i] == 0x69) && zoomResult == 0)
+			{
+				zoomResult = i;
+			}
+			if ((gameInfo.unk_5de4[i] == 0x5E || gameInfo.unk_5de4[i] == 0x8 || gameInfo.unk_5de4[i] == 0x80) && checkResult == 0)
+			{
+				checkResult = i;
+			}			
+		}*/
 		
 		if (trigerLoadSave == 1){
 			trigerLoadSave = 0;
@@ -536,6 +579,17 @@ namespace mod
 		{
 			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
+		}
+		else if(gameInfo.rButtonText == 0 && tools::checkItemFlag(ItemFlags::Master_Sword) && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
+		{				
+			if (gameInfo.scratchPad.form == 0)
+			{// transform into wolf
+				gameInfo.scratchPad.form = 1;
+			}
+			else
+			{// transform into human
+				gameInfo.scratchPad.form = 0;
+			}
 		}
 
 		if(sysConsolePtr->consoleEnabled)

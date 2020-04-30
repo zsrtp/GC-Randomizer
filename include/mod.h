@@ -76,14 +76,17 @@ namespace mod
 			u8 dungeonFlagsView8;
 			u8 dungeonFlagsViewEdit;
 			
-			u16 colorResult;
-			
 			u16 red1;
 			u16 green1;
 			u16 blue1;
 			u16 red2;
 			u16 green2;
 			u16 blue2;
+			
+			u16 scoopResult;
+			u16 checkResult;
+			u16 itemsResult;
+			u16 mapResult;
 			
 		// Functions
 		private:
