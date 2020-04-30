@@ -60,6 +60,9 @@ namespace mod
 			
 			char skyAngle[30];
 			
+			u8 enableQuickTransform = 0;
+			
+			
 			u8 stage = 0;
 			u8 room = 0;
 			u8 spawn = 0;
@@ -89,6 +92,11 @@ namespace mod
 			u16 checkResult;
 			u16 itemsResult;
 			u16 mapResult;
+			u16 equipResult;
+			u16 backResult;
+			u16 zoomInResult;
+			u16 zoomOutResult;
+			u16 moveResult;
 			
 		// Functions
 		private:

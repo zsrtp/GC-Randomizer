@@ -42,6 +42,7 @@
 8009DA98:checkStageName
 800B2754:setStickData
 800BB4F0:checkHeavyStateOn
+800C782C:procCoMetamorphoseInit
 8011A734:checkTreasureRupeeReturn
 // data
 80388C0C:ladderVars

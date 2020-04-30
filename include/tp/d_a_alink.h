@@ -31,6 +31,7 @@ namespace tp::d_a_alink
 		bool checkStageName(const char* name); // Checks if dComIfG_gameInfo.currentStage is equal to name
 		void setStickData();
 		bool checkHeavyStateOn(s32 unk1, s32 unk2);
+		bool procCoMetamorphoseInit(void* linkMapPtr);
 		bool checkTreasureRupeeReturn(void* unk1, s32 item);
 
 		// Variables

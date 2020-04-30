@@ -161,7 +161,6 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "Form:", &gameInfo.scratchPad.form, 'x', WatchInterpretation::_u8);
 		
 		
 		//event info
@@ -173,8 +172,7 @@ namespace mod
 		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only
 		hudConsole->addOption(page, "Unused Slot:", &gameInfo.scratchPad.itemWheel.Item_Slot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Form:", &gameInfo.scratchPad.form, 0x1); //for testing only*/
-		
-		
+		hudConsole->addOption(page, "Fast transform?", &enableQuickTransform, 0x1);
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
@@ -182,7 +180,6 @@ namespace mod
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
-		
 		
 		//color
 		/*page = hudConsole->addPage("Tunic Color");
@@ -218,7 +215,12 @@ namespace mod
 		/*hudConsole->addWatch(page, "scoop:", &scoopResult, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "check:", &checkResult, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "items:", &itemsResult, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "map:", &mapResult, 'x', WatchInterpretation::_u16);*/
+		hudConsole->addWatch(page, "map:", &mapResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "equip:", &equipResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "back:", &backResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "zoom in:", &zoomInResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "zoom out:", &zoomOutResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "move:", &moveResult, 'x', WatchInterpretation::_u16);*/
 
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");
@@ -534,19 +536,16 @@ namespace mod
 		checkResult	= 0;
 		itemsResult = 0;
 		mapResult = 0;
+		equipResult = 0;
+		backResult = 0;
+		zoomInResult = 0;
+		zoomOutResult = 0;
+		moveResult = 0;
 		/*for (u16 i = 0x0; i < 0xD3; i++)
 		{
 			if (gameInfo.unk_5de4[i] == 0x6C && scoopResult == 0)
 			{
 				scoopResult = i;
-			}
-			if (gameInfo.unk_5de4[i] == 0x4D && skipResult == 0)
-			{
-				skipResult = i;
-			}
-			if (gameInfo.unk_5de4[i] == 0x72 && actionResult == 0)
-			{
-				actionResult = i;
 			}
 			if (gameInfo.unk_5de4[i] == 0x60 && itemsResult == 0)
 			{
@@ -556,14 +555,30 @@ namespace mod
 			{
 				mapResult = i;
 			}
-			if ((gameInfo.unk_5de4[i] == 0x29 || gameInfo.unk_5de4[i] == 0x3D || gameInfo.unk_5de4[i] == 0x69) && zoomResult == 0)
-			{
-				zoomResult = i;
-			}
 			if ((gameInfo.unk_5de4[i] == 0x5E || gameInfo.unk_5de4[i] == 0x8 || gameInfo.unk_5de4[i] == 0x80) && checkResult == 0)
 			{
 				checkResult = i;
-			}			
+			}
+			if (gameInfo.unk_5de4[i] == 0x54 && equipResult == 0)
+			{
+				equipResult = i;
+			}
+			if ((gameInfo.unk_5de4[i] == 0x12 || gameInfo.unk_5de4[i] == 0x6A) && backResult == 0)
+			{
+				backResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x7D && zoomInResult == 0)
+			{
+				zoomInResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x7E && zoomOutResult == 0)
+			{
+				zoomOutResult = i;
+			}
+			if (gameInfo.unk_5de4[i] == 0x78 && moveResult == 0)
+			{
+				moveResult = i;
+			}		
 		}*/
 		
 		if (trigerLoadSave == 1){
@@ -606,15 +621,18 @@ namespace mod
 			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
 		}
-		else if(gameInfo.rButtonText == 0 && tools::checkItemFlag(ItemFlags::Master_Sword) && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
+		else if(enableQuickTransform == 1 && gameInfo.rButtonText == 0 && (gameInfo.bButtonText == 0x3 || gameInfo.bButtonText == 0x26) && 
+		tools::checkItemFlag(ItemFlags::Master_Sword) && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
 		{				
-			if (gameInfo.scratchPad.form == 0)
-			{// transform into wolf
-				gameInfo.scratchPad.form = 1;
-			}
-			else
-			{// transform into human
-				gameInfo.scratchPad.form = 0;
+			// Make sure Link is actually loaded
+			tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
+			if (linkMapPtr)
+			{
+				if (!((linkMapPtr->isTargeting & 0x400000) != 0 && gameInfo.scratchPad.form == 0))
+				{
+					// Transform
+					tp::d_a_alink::procCoMetamorphoseInit(linkMapPtr);
+				}
 			}
 		}
 

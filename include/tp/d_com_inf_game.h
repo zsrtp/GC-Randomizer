@@ -841,6 +841,8 @@ enum class ItemFlagBits : u32
 	{
 		u8 unk_0[0x4D0];
 		float pos[3];
+		u8 unk_4DC[0x94];
+		u32 isTargeting;//570    at 0x400000 link is targeting
 	} __attribute__((__packed__));
 	
 	struct TunicColor
