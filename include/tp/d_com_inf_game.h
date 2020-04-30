@@ -846,13 +846,19 @@ enum class ItemFlagBits : u32
 	struct TunicColor
 	{
 		u8 unk_0[0x32A0];
-		u16 red1;
-		u16 green1;
-		u16 blue1;
-		u16 unk_32A6;
-		u16 red2;
-		u16 green2;
-		u16 blue2;
+		u8 redTopToggle;//0x4 disables red
+		u8 redTop;
+		u8 greenTopToggle;//0x4 disables green
+		u8 greenTop;
+		u8 blueTopToggle;//0x4 disables blue
+		u8 blueTop;
+		u8 unk_32A6[0x2];
+		u8 redBottomToggle;//0x4 disables red
+		u8 redBottom;
+		u8 greenBottomToggle;//0x4 disables green
+		u8 greenBottom;
+		u8 blueBottomToggle;//0x4 disables blue
+		u8 blueBottom;
 	} __attribute__((__packed__));
 	
 	// Should try to fill in the missing variables at some point

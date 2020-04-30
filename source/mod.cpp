@@ -187,12 +187,14 @@ namespace mod
 		//color
 		/*page = hudConsole->addPage("Tunic Color");
 		
-		hudConsole->addWatch(page, "red1:", &red1, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "green1:", &green1, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "blue1:", &blue1, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "red2:", &red2, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "green2:", &green2, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "blue2:", &blue2, 'x', WatchInterpretation::_u16);*/
+		hudConsole->addOption(page, "Top toggle:", &topToggle, 0x1);
+		hudConsole->addOption(page, "Red top:", &redTop, 0xFF);
+		hudConsole->addOption(page, "Green top:", &greenTop, 0xFF);
+		hudConsole->addOption(page, "Blue top:", &blueTop, 0xFF);
+		hudConsole->addOption(page, "Bottom toggle:", &bottomToggle, 0x1);
+		hudConsole->addOption(page, "Red bottom:", &redBottom, 0xFF);
+		hudConsole->addOption(page, "Green bottom:", &greenBottom, 0xFF);
+		hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF);*/
 		
 		//buttons
 		/*page = hudConsole->addPage("Button texts");
@@ -497,12 +499,36 @@ namespace mod
 		
 		if (gameInfo.ColorPtr != nullptr)
 		{
-			red1 = gameInfo.ColorPtr->red1;
-			green1 = gameInfo.ColorPtr->green1;
-			blue1 = gameInfo.ColorPtr->blue1;
-			red2 = gameInfo.ColorPtr->red2;
-			green2 = gameInfo.ColorPtr->green2;
-			blue2 = gameInfo.ColorPtr->blue2;
+			if (topToggle == 0)
+			{
+				gameInfo.ColorPtr->redTopToggle = 0x4;
+				gameInfo.ColorPtr->greenTopToggle = 0x4;
+				gameInfo.ColorPtr->blueTopToggle = 0x4;
+			}
+			else
+			{
+				gameInfo.ColorPtr->redTopToggle = 0x0;
+				gameInfo.ColorPtr->greenTopToggle = 0x0;
+				gameInfo.ColorPtr->blueTopToggle = 0x0;
+			}
+			gameInfo.ColorPtr->redTop = redTop;
+			gameInfo.ColorPtr->greenTop = greenTop;
+			gameInfo.ColorPtr->blueTop = blueTop;
+			if (bottomToggle == 0)
+			{
+				gameInfo.ColorPtr->redBottomToggle = 0x4;
+				gameInfo.ColorPtr->greenBottomToggle = 0x4;
+				gameInfo.ColorPtr->blueBottomToggle = 0x4;
+			}
+			else
+			{
+				gameInfo.ColorPtr->redBottomToggle = 0x0;
+				gameInfo.ColorPtr->greenBottomToggle = 0x0;
+				gameInfo.ColorPtr->blueBottomToggle = 0x0;
+			}
+			gameInfo.ColorPtr->redBottom = redBottom;
+			gameInfo.ColorPtr->greenBottom = greenBottom;
+			gameInfo.ColorPtr->blueBottom = blueBottom;
 		}
 		scoopResult = 0;
 		checkResult	= 0;

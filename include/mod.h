@@ -76,12 +76,14 @@ namespace mod
 			u8 dungeonFlagsView8;
 			u8 dungeonFlagsViewEdit;
 			
-			u16 red1;
-			u16 green1;
-			u16 blue1;
-			u16 red2;
-			u16 green2;
-			u16 blue2;
+			u8 topToggle = 1;
+			u8 redTop = 0;
+			u8 greenTop = 0;
+			u8 blueTop = 0;
+			u8 bottomToggle = 1;
+			u8 redBottom = 0;
+			u8 greenBottom = 0;
+			u8 blueBottom = 0;
 			
 			u16 scoopResult;
 			u16 checkResult;
