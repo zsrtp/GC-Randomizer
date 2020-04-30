@@ -875,10 +875,25 @@ enum class ItemFlagBits : u32
 		u8 unk_5db0[0x4];
 		TunicColor* ColorPtr;// 5DB4 - 5DB7
 		u8 unk_5db8[0x2A];//5DB8 - 5DE1
-		u16 airMeter; //5DE2 - 5DE3
-		u8 unk_5de4[0x40];//5DE4 - 5E23
-		u8 aButton; //5E24 - 5E24
-		u8 unk_5e25[0x92];//5E25 - 5EB6
+		u16 airMeter; //5DE2 - 5DE3 max = 258
+		u8 unk_5de4[0x38];//5DE4 - 5E1B
+		u8 rButtonText;//5E1C - 51EC
+		u8 bButtonText;//5E1D - 51ED
+		u8 unk_5E1E[0x6];//5E1E - 5E23
+		u8 aButtonText; //5E24 - 5E24
+		u8 unk_5e25;//5E25 - 5E25
+		u8 stickButtonText;//5E26 - 5E26
+		u8 unk_5e27[0xB];//5E27 - 5E5B
+		u8 startButtonText;//5E32 - 5E32
+		u8 unk_5e33[0xC];//5E33 - 5E3E
+		u8 cButtonText;//5E3F - 5E3F
+		u8 unk_5e40[0x1C];//5E40 - 5E5B
+		u8 xButtonText;//5E5C - 5E5C set to sense and doesn't unset
+		u8 unk_5e5D[0x3];//5E5D - 5E5F
+		u8 yButtonText;//5E60 - 5E60 set to dig and doesn't unset
+		u8 unk_5e61[0x2F];//5E61 - 5E8F
+		u8 promptShown;//5E90 set to 0x8 when button promt apprears on bottom or top of screen
+		u8 unk_5e91[0x26];//5E91 -5EB6
 		u8 airTimerDepleted; //5EB7 - 5EB7
 		u8 unk_5eb8[0x17F58];
 
@@ -900,7 +915,6 @@ enum class ItemFlagBits : u32
 	static_assert(sizeof(LinkMapVars*) == 0x4);
 	static_assert(sizeof(EventSystem) == 0x114);
 	static_assert(sizeof(NextStageVars) == 0x10);
-	
 	
 	extern "C"
 	{
