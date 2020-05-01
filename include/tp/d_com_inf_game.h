@@ -742,9 +742,9 @@ enum class ItemFlagBits : u32
 		u8 equippedWallet;//offset: 0x19 (0 = small, 1 = big, 2 = giant)
 		u8 unk_1A[0x4];//offset: 0x1A
 		u8 form;//offset: 0x1E (0 = human, 1 = wolf)
-		u8 unk_1F[0x10];//offset: 0x1F
-		ClearedTwilights clearedTwilights;//offset: 0x2F
-		u8 unk_30[0x4];//offset: 0x30
+		u8 unk_1F[0x12];//offset: 0x1F
+		ClearedTwilights clearedTwilights;//offset: 0x31
+		u8 unk_32[0x2];//offset: 0x32
 		float skyAngle;//offset: 0x34 Impacts time of day poes and towns
 		u8 unk_38[0x8];//offset: 0x38
 		MovingActors movingActors;//size:0x59 offset: 0x40
@@ -899,9 +899,13 @@ enum class ItemFlagBits : u32
 		u8 xButtonText;//5E5C - 5E5C set to sense and doesn't unset
 		u8 unk_5e5D[0x3];//5E5D - 5E5F
 		u8 yButtonText;//5E60 - 5E60 set to dig and doesn't unset
-		u8 unk_5e61[0x2F];//5E61 - 5E8F
-		u8 promptShown;//5E90 set to 0x8 when button promt apprears on bottom or top of screen
-		u8 unk_5e91[0x26];//5E91 -5EB6
+		u8 unk_5e61[0xB];//5E61 - 5E6B
+		u8 xItem;//5E6C - 5E6C
+		u8 yItem;//5E6D - 5E6D
+		u8 unk_5E6E[0x22];//5E6E - 5E8F
+		u8 bottomPromptShown;//5E90 set to 0x8 when button promt apprears on bottom of screen
+		u8 topPromptShown;//5E91 set to 0x8 when button promt apprears on top of screen
+		u8 unk_5e92[0x25];//5E92 - 5EB6
 		u8 airTimerDepleted; //5EB7 - 5EB7
 		u8 unk_5eb8[0x17F58];
 
