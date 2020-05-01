@@ -530,6 +530,14 @@ enum class ItemFlagBits : u32
 		
 	} __attribute__((__packed__));
 	
+	struct Settings
+	{
+		u8 sound;// Mono=0 / Stereo = 1 / Surround = 2
+		u8 targettingType;// Hold = 0 / Switch = 1
+		u8 rumble;// Off = 0 / On = 1
+		
+	} __attribute__((__packed__));
+	
 	struct DungeonFlags
 	{
 		u8 miniBossBeaten : 1,
@@ -769,7 +777,9 @@ enum class ItemFlagBits : u32
 		char linkName[16];//offset 0x1B4
 		u8 unk_1C4;
 		char eponaName[16];//offset 0x1C5
-		u8 unk_1D7[0x1B];//offset 0x1D5
+		u8 unk_1D5[0xC];//offset 0x1D5
+		Settings optionsSettings;//size: 0x3 offset 0x1E1
+		u8 unk_1E4[0xC];//offset 1E4
 		AllAreaNodes allAreaNodes;//size: 0x400 offset 0x1F0
 		ExploredStagesMap exploredMap;//size: 0x200 offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
