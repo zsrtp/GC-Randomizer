@@ -354,8 +354,7 @@ enum class ItemFlagBits : u32
 		char stage[8];
 		u8 spawn;
 		u8 room;
-		u8 unk_62;
-		u8 unk_63;
+		u8 unk_62[0x2];
 		float previous_position_X;
 		float previous_position_Y;
 		float previous_position_Z;
@@ -525,7 +524,7 @@ enum class ItemFlagBits : u32
 	struct FishingJournal
 	{
 		NumberOfFish numbers;//size 0xC
-		u8 unk_E[0x14];//offset 0xC
+		u8 unk_178[0x14];//offset 0xC
 		LargestFishes largest;//size 0x6 offset 0x20
 		
 	} __attribute__((__packed__));
