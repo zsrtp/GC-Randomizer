@@ -236,7 +236,7 @@ namespace mod::game_patch
 	{
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set first time wolf");
 
-		gameInfo.scratchPad.unk_30[0x0] |= 1;
+		gameInfo.scratchPad.unk_1F[0x11] |= 1;
 		//gameInfo.scratchPad.unk_0[0x030] |= 1;
 	}
 
