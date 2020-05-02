@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include "d_com_inf_game.h"
 
 namespace tp::d_a_alink
 {
