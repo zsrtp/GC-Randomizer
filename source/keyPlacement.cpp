@@ -57,7 +57,7 @@ namespace mod::keyPlacement
 	u16 GM_keys[3]
 	{
 		23,//Hub Bottom Chest
-		28,//Chest under water
+		27,//Chest under water
 		30//Outside Bemos Chest
 	};
 	u16 GM_1[2]
@@ -74,8 +74,8 @@ namespace mod::keyPlacement
 		354,//key shard 1
 		345,//ooccoo
 		26,//POH Chest
-		28,//Chest under water
-		27,//Small chest in water room
+		28,//Small chest in water room
+		27,//Chest under water
 		29//POH Chest 2
 	};
 	u16 GM_3[12]
@@ -87,8 +87,8 @@ namespace mod::keyPlacement
 		354,//key shard 1
 		345,//ooccoo
 		26,//POH Chest
-		28,//Chest under water
-		27,//Small chest in water room
+		28,//Small chest in water room
+		27,//Chest under water
 		29,//POH Chest 2
 		30,//Outside Bemos Chest
 		37//Outside Underwater
