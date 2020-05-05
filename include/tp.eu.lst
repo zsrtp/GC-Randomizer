@@ -30,11 +30,13 @@
 8001C17C:createItemForBoss
 8001C21C:createItemForMidBoss
 8001C260:createItemForDirectGet
+8001C2A4:createItemForSimpleDemo
 
 // d_map_path_dmap.o
 8003EF8C:getMapPlayerPos
 
 // d_item.o
+80097FBC:execItemGet
 80098010:checkItemGet
 800983E4:item_func_UTUWA_HEART
 

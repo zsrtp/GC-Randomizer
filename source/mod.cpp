@@ -195,9 +195,9 @@ namespace mod
 		hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF);*/
 		
 		//buttons
-		page = hudConsole->addPage("Button texts");
+		/*page = hudConsole->addPage("Button texts");
 		
-		/*hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
+		hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
 		hudConsole->addOption(page, "Y button:", &gameInfo.yButtonText, 0xFF);
 		hudConsole->addOption(page, "X button:", &gameInfo.xButtonText, 0xFF);
 		hudConsole->addOption(page, "B button:", &gameInfo.bButtonText, 0xFF);
@@ -526,16 +526,6 @@ namespace mod
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForSimpleDemo");
 
 				return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
-			}
-		);
-
-		createItem_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItem,
-			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3], s32 unk7)
-			{
-				// Call replacement function
-				item = global::modPtr->procItemCreateFunc(pos, item, "createItem");
-
-				return global::modPtr->createItem_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
 			}
 		);
 
