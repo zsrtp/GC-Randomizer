@@ -39,6 +39,7 @@ namespace mod
 			u8 isPoesanityEnabled = 1;
 			u8 isShopsanityEnabled = 1;
 			u8 areDungeonItemsRandomized = 1;
+			u8 isKeysanityEnabled = 1;
 			
 			u8 itemThatReplacesHalfMilk = 0;
 			u8 itemThatReplacesSlingShot = 0;
@@ -108,10 +109,14 @@ namespace mod
 			 */
 			bool isItemBombs(u8 itemID);
 			
-			
 			/**
 			 * checks if item given is a bottle content without a bottle
 			 */
 			bool isItemBottleFill(u8 itemID);
+			
+			/**
+			 * 
+			 */
+			void handleKeysanity();
 	};
 }

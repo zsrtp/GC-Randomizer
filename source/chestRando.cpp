@@ -6,6 +6,7 @@
 #include "tools.h"
 #include "array.h"
 #include "stage.h"
+#include "keyPlacement.h"
 
 #include <tp/d_com_inf_game.h>
 #include <tp/d_a_alink.h>
@@ -51,6 +52,8 @@ namespace mod
 				placeCheck(&item::checks[i], &item::checks[i]);
 			}
 		}
+
+		handleKeysanity();
 		
 		//do needed items in order
 		for(u16 i = 0; i < sizeof(item::checkPriorityOrder)/sizeof(u16); i++)
@@ -286,8 +289,11 @@ namespace mod
 		switch(check->type)
 		{
 			case item::ItemType::Key:
-				// Small + Big Keys
-				result = true;
+				// Small Keys + ordon pumpkin and cheese
+				if (isKeysanityEnabled == 0 || !isStageADungeon(check->stage))
+				{
+					result = true;
+				}
 			break;
 
 			case item::ItemType::Dungeon:
@@ -917,5 +923,444 @@ namespace mod
 			}
 		}
 		return false;
+	}
+	
+	void ChestRandomizer::handleKeysanity()
+	{
+		if (isKeysanityEnabled == 1)
+		{
+			item::ItemCheck* sourceCheck;
+			item::ItemCheck* destCheck;
+			u8 length;
+			u16 index;
+			//do FT_1
+			length = sizeof(keyPlacement::FT_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::FT_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::FT_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do FT_2
+			length = sizeof(keyPlacement::FT_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::FT_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::FT_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do FT_3
+			length = sizeof(keyPlacement::FT_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::FT_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::FT_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do FT_4
+			length = sizeof(keyPlacement::FT_4)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::FT_keys[3]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::FT_4[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do GM_1
+			length = sizeof(keyPlacement::GM_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::GM_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::GM_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do GM_2
+			length = sizeof(keyPlacement::GM_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::GM_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::GM_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do GM_3
+			length = sizeof(keyPlacement::GM_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::GM_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::GM_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do LBT_1
+			length = sizeof(keyPlacement::LBT_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::LBT_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::LBT_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do LBT_2
+			length = sizeof(keyPlacement::LBT_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::LBT_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::LBT_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do LBT_3
+			length = sizeof(keyPlacement::LBT_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::LBT_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::LBT_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do AG_1
+			length = sizeof(keyPlacement::AG_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::AG_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::AG_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do AG_2
+			length = sizeof(keyPlacement::AG_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::AG_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::AG_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do AG_3
+			length = sizeof(keyPlacement::AG_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::AG_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::AG_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do AG_4
+			length = sizeof(keyPlacement::AG_4)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::AG_keys[3]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::AG_4[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do AG_5
+			length = sizeof(keyPlacement::AG_5)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::AG_keys[4]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::AG_5[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do SPR_1
+			length = sizeof(keyPlacement::SPR_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::SPR_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::SPR_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do SPR_2
+			length = sizeof(keyPlacement::SPR_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::SPR_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::SPR_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do SPR_3
+			length = sizeof(keyPlacement::SPR_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::SPR_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::SPR_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do SPR_4
+			length = sizeof(keyPlacement::SPR_4)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::SPR_keys[3]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::SPR_4[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do SPR_5
+			length = sizeof(keyPlacement::SPR_5)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::SPR_keys[4]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::SPR_5[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do SPR_6
+			length = sizeof(keyPlacement::SPR_6)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::SPR_keys[5]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::SPR_6[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do ToT_1
+			length = sizeof(keyPlacement::ToT_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::ToT_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::ToT_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do ToT_2
+			length = sizeof(keyPlacement::ToT_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::ToT_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::ToT_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do ToT_3
+			length = sizeof(keyPlacement::ToT_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::ToT_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::ToT_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do CitS_1
+			length = sizeof(keyPlacement::CitS_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::CitS_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::CitS_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do PoT_1
+			length = sizeof(keyPlacement::PoT_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do PoT_2
+			length = sizeof(keyPlacement::PoT_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do PoT_3
+			length = sizeof(keyPlacement::PoT_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do PoT_4
+			length = sizeof(keyPlacement::PoT_4)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[3]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_4[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do PoT_5
+			length = sizeof(keyPlacement::PoT_5)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[4]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_5[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do PoT_6
+			length = sizeof(keyPlacement::PoT_6)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[5]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_6[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do PoT_7
+			length = sizeof(keyPlacement::PoT_7)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::PoT_keys[6]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::PoT_7[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			
+			//do HC_1
+			length = sizeof(keyPlacement::HC_1)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::HC_keys[0]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::HC_1[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do HC_2
+			length = sizeof(keyPlacement::HC_2)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::HC_keys[1]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::HC_2[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+			//do HC_3
+			length = sizeof(keyPlacement::HC_3)/sizeof(u16);
+			destCheck = &item::checks[keyPlacement::HC_keys[2]];
+			if(!destCheck->source)
+			{
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::HC_3[index]];
+				} while(sourceCheck->destination);
+				placeCheck(sourceCheck, destCheck);
+			}
+		}
 	}
 }

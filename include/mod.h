@@ -60,7 +60,7 @@ namespace mod
 			
 			char skyAngle[30];
 			
-			u8 enableQuickTransform = 0;
+			u8 enableQuickTransform = 1;
 			
 			
 			u8 stage = 0;
@@ -97,6 +97,8 @@ namespace mod
 			u16 zoomInResult;
 			u16 zoomOutResult;
 			u16 moveResult;
+			u16 throwResult;
+			
 			
 		// Functions
 		private:
@@ -158,5 +160,8 @@ namespace mod
 			s32 (*createItemForBoss_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7, s32 unk8) = nullptr;
 			s32 (*createItemForMidBoss_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7) = nullptr;
 			s32 (*createItemForDirectGet_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7) = nullptr;
+			s32 (*createItemForSimpleDemo_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7) = nullptr;
+			s32 (*createItem_trampoline)(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3], s32 unk7) = nullptr;
+
 	};
 }

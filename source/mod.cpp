@@ -115,7 +115,8 @@ namespace mod
 		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
 		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
 		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
-		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);	
+		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);
+		hudConsole->addOption(page, "Keysanity?", &chestRandomizer->isKeysanityEnabled, 0x1);
 		
 		
 		hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
@@ -194,9 +195,9 @@ namespace mod
 		hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF);*/
 		
 		//buttons
-		/*page = hudConsole->addPage("Button texts");
+		page = hudConsole->addPage("Button texts");
 		
-		hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
+		/*hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
 		hudConsole->addOption(page, "Y button:", &gameInfo.yButtonText, 0xFF);
 		hudConsole->addOption(page, "X button:", &gameInfo.xButtonText, 0xFF);
 		hudConsole->addOption(page, "B button:", &gameInfo.bButtonText, 0xFF);
@@ -204,6 +205,8 @@ namespace mod
 		hudConsole->addOption(page, "stick button:", &gameInfo.stickButtonText, 0xFF);
 		hudConsole->addOption(page, "start button:", &gameInfo.startButtonText, 0xFF);
 		hudConsole->addOption(page, "C button:", &gameInfo.cButtonText, 0xFF);
+		hudConsole->addOption(page, "X item:", &gameInfo.xItem, 0xFF);
+		hudConsole->addOption(page, "Y item:", &gameInfo.yItem, 0xFF);
 		hudConsole->addWatch(page, "A button:", &gameInfo.aButtonText, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "Y button:", &gameInfo.yButtonText, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "X button:", &gameInfo.xButtonText, 'x', WatchInterpretation::_u8);
@@ -220,7 +223,8 @@ namespace mod
 		hudConsole->addWatch(page, "back:", &backResult, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "zoom in:", &zoomInResult, 'x', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "zoom out:", &zoomOutResult, 'x', WatchInterpretation::_u16);
-		hudConsole->addWatch(page, "move:", &moveResult, 'x', WatchInterpretation::_u16);*/
+		hudConsole->addWatch(page, "move:", &moveResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u16);*/
 
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");
@@ -353,6 +357,61 @@ namespace mod
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
 		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
 		
+		/*page = hudConsole->addPage("testing adr1");
+		
+		
+		hudConsole->addWatch(page, "D:", &gameInfo.scratchPad.equipedItems.unk, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "17:", &gameInfo.scratchPad.unk_17[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "1A:", &gameInfo.scratchPad.unk_1A[0x0], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "1F:", &gameInfo.scratchPad.unk_1F[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "27:", &gameInfo.scratchPad.unk_1F[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "2F:", &gameInfo.scratchPad.unk_1F[0x10], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "32:", &gameInfo.scratchPad.unk_32[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "38:", &gameInfo.scratchPad.unk_38[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "62:", &gameInfo.scratchPad.movingActors.link.unk_62[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "7A:", &gameInfo.scratchPad.movingActors.unk_7A[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
+		
+		page = hudConsole->addPage("testing adr2");
+		
+		hudConsole->addWatch(page, "7E:", &gameInfo.scratchPad.movingActors.unk_7E[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "99:", &gameInfo.scratchPad.unk_99[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
+		hudConsole->addWatch(page, "F0:", &gameInfo.scratchPad.ammo.unk_F0, 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "F5:", &gameInfo.scratchPad.ammo.unk_F5, 'x', WatchInterpretation::_u32);//actual size:0x3
+		hudConsole->addWatch(page, "FC:", &gameInfo.scratchPad.unk_FC[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "104:", &gameInfo.scratchPad.unk_FC[0x8], 'x', WatchInterpretation::_u64);//actual size:0x5
+		hudConsole->addWatch(page, "10B:", &gameInfo.scratchPad.unk_10B, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "10D:", &gameInfo.scratchPad.unk_10D[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
+		hudConsole->addWatch(page, "115:", &gameInfo.scratchPad.unk_115[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
+		hudConsole->addWatch(page, "120:", &gameInfo.scratchPad.unk_120[0x0], 'x', WatchInterpretation::_u64);//actual size:0x6
+		
+		page = hudConsole->addPage("testing adr2");
+		
+		hudConsole->addWatch(page, "128:", &gameInfo.scratchPad.unk_128[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "130:", &gameInfo.scratchPad.unk_128[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "138:", &gameInfo.scratchPad.unk_128[0x10], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "140:", &gameInfo.scratchPad.unk_128[0x18], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "148:", &gameInfo.scratchPad.unk_128[0x20], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "150:", &gameInfo.scratchPad.unk_128[0x28], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "158:", &gameInfo.scratchPad.unk_128[0x30], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "160:", &gameInfo.scratchPad.unk_128[0x38], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "168:", &gameInfo.scratchPad.unk_128[0x40], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "178:", &gameInfo.scratchPad.fishingJournal.unk_178[0x0], 'x', WatchInterpretation::_u64);
+		
+		page = hudConsole->addPage("testing adr3");
+		
+		hudConsole->addWatch(page, "180:", &gameInfo.scratchPad.fishingJournal.unk_178[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "188:", &gameInfo.scratchPad.fishingJournal.unk_178[0x10], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "192:", &gameInfo.scratchPad.unk_192[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "19A:", &gameInfo.scratchPad.unk_192[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1A2:", &gameInfo.scratchPad.unk_192[0x10], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1AA:", &gameInfo.scratchPad.unk_192[0x18], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1B2:", &gameInfo.scratchPad.unk_192[0x20], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "1C4:", &gameInfo.scratchPad.unk_1C4, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "1D5:", &gameInfo.scratchPad.unk_1D5[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1DD:", &gameInfo.scratchPad.unk_1D5[0x8], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "1E4:", &gameInfo.scratchPad.unk_1E4[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1EC:", &gameInfo.scratchPad.unk_1E4[0x8], 'x', WatchInterpretation::_u32);*/
+		
 		// Print
 		hudConsole->draw();
 		system_console::setState(true, 0);
@@ -426,7 +485,8 @@ namespace mod
 
 				return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, unk3, unk4, unk5, unk6);
 			}
-		);
+		);		
+		
 		//this function is called when the heart spawns, not when link gets it		
 		//createItemForTrBoxDemo is called when heart container is gotten
 		createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
@@ -456,6 +516,26 @@ namespace mod
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForDirectGet");
 
 				return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+			}
+		);
+
+		createItemForSimpleDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForSimpleDemo,
+			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForSimpleDemo");
+
+				return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+			}
+		);
+
+		createItem_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItem,
+			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3], s32 unk7)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItem");
+
+				return global::modPtr->createItem_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
 			}
 		);
 
@@ -532,7 +612,7 @@ namespace mod
 			gameInfo.ColorPtr->greenBottom = greenBottom;
 			gameInfo.ColorPtr->blueBottom = blueBottom;
 		}
-		scoopResult = 0;
+		/*scoopResult = 0;
 		checkResult	= 0;
 		itemsResult = 0;
 		mapResult = 0;
@@ -541,7 +621,8 @@ namespace mod
 		zoomInResult = 0;
 		zoomOutResult = 0;
 		moveResult = 0;
-		/*for (u16 i = 0x0; i < 0xD3; i++)
+		throwResult = 0;
+		for (u16 i = 0x0; i < 0xD3; i++)
 		{
 			if (gameInfo.unk_5de4[i] == 0x6C && scoopResult == 0)
 			{
@@ -578,7 +659,11 @@ namespace mod
 			if (gameInfo.unk_5de4[i] == 0x78 && moveResult == 0)
 			{
 				moveResult = i;
-			}		
+			}
+			if ((gameInfo.unk_5de4[i] == 0x13 || gameInfo.unk_5de4[i] == 0x50))
+			{
+				throwResult = i;
+			}
 		}*/
 		
 		if (trigerLoadSave == 1){
@@ -632,6 +717,9 @@ namespace mod
 				{
 					// Transform
 					tp::d_a_alink::procCoMetamorphoseInit(linkMapPtr);
+					//tp::d_item::execItemGet(0x47);
+
+					
 				}
 			}
 		}
@@ -890,7 +978,9 @@ namespace mod
 		snprintf(lastItemDataY, 30, "%f", pos[1]);
 		snprintf(lastItemDataZ, 30, "%f", pos[2]);
 		// Runs once when Link picks up an item with text and is holding it towards the camera
-		if(randoEnabled && strcmp(funcIdentifier, "createItemForDirectGet") != 0 && strcmp(funcIdentifier, "createItemForBoss") != 0 && strcmp(funcIdentifier, "createItemForMidBoss") != 0)
+		if(randoEnabled && strcmp(funcIdentifier, "createItemForDirectGet") != 0 && strcmp(funcIdentifier, "createItemForBoss") != 0 &&
+		strcmp(funcIdentifier, "createItemForMidBoss") != 0 && strcmp(funcIdentifier, "createItemForSimpleDemo") != 0 && strcmp(funcIdentifier, "createItem") != 0 && 
+		strcmp(funcIdentifier, "createDemoItem") != 0 )
 		{
 			item = chestRandomizer->getItemReplacement(pos, item);
 		}
