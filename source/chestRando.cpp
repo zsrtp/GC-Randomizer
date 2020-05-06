@@ -44,8 +44,6 @@ namespace mod
 			item::checks[i].destination = nullptr;
 			item::checks[i].source = nullptr;
 		}
-
-		handleKeysanity();
 		
 		// Lock some checks
 		for(u16 i = 0; i < totalChecks; i++)
@@ -55,6 +53,8 @@ namespace mod
 				placeCheck(&item::checks[i], &item::checks[i]);
 			}
 		}
+		
+		handleKeysanity();
 		
 		//do needed items in order
 		for(u16 i = 0; i < sizeof(item::checkPriorityOrder)/sizeof(u16); i++)
@@ -291,7 +291,8 @@ namespace mod
 		{
 			case item::ItemType::Key:
 				// Small Keys + ordon pumpkin and cheese
-				if (isKeysanityEnabled == 0 || check->itemID == items::Item::Gate_Keys)
+				if (isKeysanityEnabled == 0 || check->itemID == items::Item::Gate_Keys || 
+				(Singleton::getInstance()->isForestEscapeEnabled == 1 && check->itemID == items::Item::Coro_Key))
 				{
 					result = true;
 				}
@@ -344,9 +345,13 @@ namespace mod
 			case items::Item::Fishing_Rod:
 				result = true;
 			break;
-						
+			
 			case items::Item::Master_Sword:
 				result = true;
+			break;
+			
+			case items::Item::Empty_Bottle:
+				result = true;//fishing hole bottle
 			break;
 			
 			case items::Item::Ancient_Sky_Book_empty:

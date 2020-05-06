@@ -5,6 +5,6 @@
 
 namespace mod::item
 {
-	extern ItemCheck checks[491];
+	extern ItemCheck checks[492];
 	extern u16 checkPriorityOrder[20];
 }
