@@ -7,6 +7,7 @@
 #include "array.h"
 #include "stage.h"
 #include "keyPlacement.h"
+#include "singleton.h"
 
 #include <tp/d_com_inf_game.h>
 #include <tp/d_a_alink.h>
@@ -1308,16 +1309,19 @@ namespace mod
 			} while(sourceCheck->destination || (sourceCheck->type == item::ItemType::PoeSoul && isPoesanityEnabled == 0) || 
 			(sourceCheck->type == item::ItemType::Bug && isBugsanityEnabled == 0) || (sourceCheck->type == item::ItemType::Shop && isShopsanityEnabled == 0));
 			placeCheck(sourceCheck, destCheck);
-			//do F_2
-			length = sizeof(keyPlacement::F_2)/sizeof(u16);
-			destCheck = &item::checks[keyPlacement::F_keys[1]];
-			do
+			if (Singleton::getInstance()->isForestEscapeEnabled == 0)
 			{
-				index = tools::getRandom(length);
-				sourceCheck = &item::checks[keyPlacement::F_2[index]];
-			} while(sourceCheck->destination || (sourceCheck->type == item::ItemType::PoeSoul && isPoesanityEnabled == 0) || 
-			(sourceCheck->type == item::ItemType::Bug && isBugsanityEnabled == 0) || (sourceCheck->type == item::ItemType::Shop && isShopsanityEnabled == 0));
-			placeCheck(sourceCheck, destCheck);
+				//do F_2
+				length = sizeof(keyPlacement::F_2)/sizeof(u16);
+				destCheck = &item::checks[keyPlacement::F_keys[1]];
+				do
+				{
+					index = tools::getRandom(length);
+					sourceCheck = &item::checks[keyPlacement::F_2[index]];
+				} while(sourceCheck->destination || (sourceCheck->type == item::ItemType::PoeSoul && isPoesanityEnabled == 0) || 
+				(sourceCheck->type == item::ItemType::Bug && isBugsanityEnabled == 0) || (sourceCheck->type == item::ItemType::Shop && isShopsanityEnabled == 0));
+				placeCheck(sourceCheck, destCheck);
+			}
 			
 			//do GD_1
 			length = sizeof(keyPlacement::GD_1)/sizeof(u16);
