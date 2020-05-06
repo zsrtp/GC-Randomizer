@@ -517,4 +517,53 @@ namespace mod::keyPlacement
 		275//big key
 	};
 	
+	
+	u16 F_keys[2]
+	{
+		2,//North Cave Key
+		351//coro key
+	};
+	u16 F_1[4]
+	{
+		296,//lantern
+		2,//North Cave Key
+		3,//PoH key cave
+		4//transition cave
+	};
+	u16 F_2[2]
+	{
+		329,//coro bottle
+		351//coro key
+	};
+	
+	u16 GD_keys[1]
+	{
+		353//camp key
+	};
+	
+	u16 GD_1[21]
+	{
+		125,//desert chest
+		126,//desert chest
+		127,//desert chest
+		131,//desert chest
+		133,//desert chest
+		134,//desert chest
+		135,//desert chest
+		136,//desert chest
+		137,//desert chest
+		138,//desert chest
+		139,//desert chest
+		140,//camp small chest 1
+		141,//camp small chest 2
+		338,//camp PoH
+		353,//camp key
+		377,//Male Dayfly
+		378,//Female Dayfly
+		417,//poe 13
+		418,//poe 14
+		419,//poe 15
+		422//poe 18
+	};
+	
 }

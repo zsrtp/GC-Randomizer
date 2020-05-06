@@ -57,4 +57,10 @@ namespace mod::keyPlacement
 	extern u16 HC_2[15];
 	extern u16 HC_3[15];
 	
+	extern u16 F_keys[2];
+	extern u16 F_1[4];
+	extern u16 F_2[2];
+	
+	extern u16 GD_keys[1];
+	extern u16 GD_1[21];
 }
