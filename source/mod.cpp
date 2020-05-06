@@ -111,7 +111,7 @@ namespace mod
 		// Debug
 		page = hudConsole->addPage("Debug Info");
 		
-		hudConsole->addOption(page, "Progressive Items?", &chestRandomizer->isProgressiveEnabled, 0x1);
+		hudConsole->addOption(page, "Progressive?", &chestRandomizer->isProgressiveEnabled, 0x1);
 		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
 		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
 		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
@@ -137,13 +137,27 @@ namespace mod
 		hudConsole->addOption(page, "Search ID:", &itemSearchID, 0xFF);
 		hudConsole->addOption(page, "Reverse ID:", &itemReverseSearchID, 0xFF);
 
-		hudConsole->addWatch(page, "1. Result:", &itemSearchResults, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "1. Reverse:", &itemReverseSearchResults, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Search Result:", &itemSearchResults, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Reverse Result:", &itemReverseSearchResults, 's', WatchInterpretation::_str);
 
 		hudConsole->addWatch(page, "MetadataID:", &lastItemDataID, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "MetadataX:", &lastItemDataX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "MetadataY:", &lastItemDataY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "MetadataZ:", &lastItemDataZ, 's', WatchInterpretation::_str);
+		
+		// Check search
+		page = hudConsole->addPage("Check Search");
+
+		hudConsole->addOption(page, "Search ID1:", &checkSearchID1, 0xFF);
+		hudConsole->addOption(page, "Search ID2:", &checkSearchID2, 0xFF);
+		hudConsole->addOption(page, "Reverse ID1:", &checkReverseSearchID1, 0xFF);
+		hudConsole->addOption(page, "Reverse ID2:", &checkReverseSearchID2, 0xFF);
+
+		hudConsole->addWatch(page, "Search ID:", &checkSearchID, 'd', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Reverse ID:", &checkReverseSearchID, 'd', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Search Result:", &checkSearchResults, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Reverse Result:", &checkReverseSearchResults, 's', WatchInterpretation::_str);
+		
 		
 		// Game info
 		page = hudConsole->addPage("Game Info");
@@ -806,6 +820,39 @@ namespace mod
 						// Found the source
 						snprintf(itemReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
 					}
+				}
+			}
+		}
+		
+		
+		checkSearchID = (checkSearchID2 * 0x100) + checkSearchID1;
+		checkReverseSearchID = (checkReverseSearchID2 * 0x100) + checkReverseSearchID1;
+		if(checkSearchID != lastCheckSearchID)
+		{
+			lastCheckSearchID = checkSearchID;
+
+			strcpy(checkSearchResults, "404");
+			if (checkSearchID < chestRandomizer->totalChecks)
+			{
+				item::ItemCheck* check = &item::checks[checkSearchID];
+				if (check->source)
+				{
+					snprintf(checkSearchResults, 40, "ID: %x Stage: %s Room: %d", check->source->itemID, check->source->stage, check->source->room);
+				}
+			}
+		}
+		else if(checkReverseSearchID != lastCheckReverseSearchID)
+		{
+			lastCheckReverseSearchID = checkReverseSearchID;
+
+			strcpy(checkReverseSearchResults, "404");
+
+			if (checkReverseSearchID < chestRandomizer->totalChecks)
+			{
+				item::ItemCheck* check = &item::checks[checkReverseSearchID];
+				if (check->destination)
+				{
+					snprintf(checkReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->destination->itemID, check->destination->stage, check->destination->room);
 				}
 			}
 		}

@@ -33,6 +33,7 @@ namespace mod
 			u8 truePause; // Disable controls during console?
 			u8 inputBuffering; // En/Disable buffering
 
+			//item search
 			u8 lastItemSearchID;
 			u8 itemSearchID;
 
@@ -40,6 +41,22 @@ namespace mod
 			u8 itemReverseSearchID;
 			char itemSearchResults[30];
 			char itemReverseSearchResults[30];
+			
+			
+			//check search
+			u8 checkSearchID1;
+			u8 checkSearchID2;
+			
+			u8 checkReverseSearchID1;
+			u8 checkReverseSearchID2;
+			
+			u16 lastCheckSearchID;
+			u16 checkSearchID;
+
+			u16 lastCheckReverseSearchID;
+			u16 checkReverseSearchID;
+			char checkSearchResults[30];
+			char checkReverseSearchResults[30];
 
 			// Debug info
 			char lastItemFunc[32]; // Last called item create function

@@ -9,7 +9,7 @@ namespace mod::keyPlacement
 		9,//Windless Bridge Chest
 		11,//totem key
 		343,//big baba
-		18,//North Deku like chest
+		18//North Deku like chest
 	};
 	u16 FT_1[5]
 	{
@@ -183,7 +183,7 @@ namespace mod::keyPlacement
 		147,//compass
 		148,//East Upper Redead Chest
 		407,//poe 3
-		149,//Ghoul Rat Small Chest
+		149//Ghoul Rat Small Chest
 	};
 	u16 AG_5[16]
 	{
@@ -229,7 +229,7 @@ namespace mod::keyPlacement
 		348,//ooccoo
 		172,//Courtyard Open Chest
 		171,//CY Partially Buried Chest
-		173,//pumpkin
+		173//pumpkin
 	};
 	u16 SPR_3[10]
 	{
@@ -258,7 +258,7 @@ namespace mod::keyPlacement
 		174,//Buried Chest
 		177,//Courtyard South Chest
 		290,//BaC
-		178,//cheese
+		178//cheese
 	};
 	u16 SPR_5[19]
 	{
@@ -305,7 +305,7 @@ namespace mod::keyPlacement
 		186,//Storage Chest Left
 		181,//Entry POH Chest
 		458,//poe 3
-		184,//Chilfos Small Chest
+		184//Chilfos Small Chest
 	};
 	
 	u16 ToT_keys[3]
@@ -403,7 +403,7 @@ namespace mod::keyPlacement
 		252,//East 2nd NE Chest
 		253,//East 2nd NW Chest
 		254,//map
-		255,//East 2nd SE Chest
+		255//East 2nd SE Chest
 	};
 	u16 PoT_5[14]
 	{

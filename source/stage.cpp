@@ -84,7 +84,7 @@ namespace mod::stage
 		"R_SP209"
 	};
 
-	const char* dungeonStages[17]
+	const char* dungeonStages[18]
 	{
 		allStages[Stage_Lakebed_Temple],
 		allStages[Stage_Deku_Toad],
@@ -99,6 +99,7 @@ namespace mod::stage
 		allStages[Stage_Palace_of_Twilight],
 		allStages[Stage_Phantom_Zant_1],
 		allStages[Stage_Phantom_Zant_2],
+		allStages[Stage_Hyrule_Castle],
 		allStages[Stage_Arbiters_Grounds],
 		allStages[Stage_Death_Sword],
 		allStages[Stage_Snowpeak_Ruins],
