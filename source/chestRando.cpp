@@ -515,6 +515,12 @@ namespace mod
 							rangeY = 3000.0f;
 							rangeZ = 3000.0f;
 						}
+						else if (sourceCheck->itemID == items::Item::Small_Key && ((0 == strcmp("D_MN05", sourceCheck->stage) && sourceCheck->room == 5))
+                        {//totem chest in FT (it can be knocked down both ways so more range is required)
+                            rangeX = 500.0f;
+                            rangeY = 500.0f;
+                            rangeZ = 800.0f;
+                        }
 						if(tools::fCompare(sourceCheck->position[0], pos[0]) < rangeX)
 						{
 							if(tools::fCompare(sourceCheck->position[1], pos[1]) < rangeY)
