@@ -41,7 +41,7 @@ namespace mod::keyPlacement
 	extern u16 ToT_3[16];
 	
 	extern u16 CitS_keys[1];
-	extern u16 CitS_1[4];
+	extern u16 CitS_1[7];
 	
 	extern u16 PoT_keys[7];
 	extern u16 PoT_1[1];

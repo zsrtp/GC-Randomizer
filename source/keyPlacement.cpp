@@ -352,12 +352,15 @@ namespace mod::keyPlacement
 	{
 		219//West Wing Chest 1
 	};
-	u16 CitS_1[4]
+	u16 CitS_1[7]
 	{
 		217,//Underwater Chest 1
 		218,//Underwater Chest 2
 		219,//West Wing Chest 1
-		350//ooccoo
+		350,//ooccoo
+		488,//Lantern_Oil
+		489,//Red_Potion
+		490//Blue_Potion
 	};
 	
 	u16 PoT_keys[7]
