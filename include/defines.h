@@ -31,7 +31,7 @@ typedef	signed char 		s8;
 #define MAX_HUDCONSOLE_PAGES 12 // HUDConsole
 
 // Mnemonics
-#define AUTHOR				"AECX"
+#define AUTHOR				"ZTPR"
 #define VERSION				"v0.13.1b"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo

@@ -79,7 +79,7 @@ namespace mod
 		strcpy(sysConsolePtr->consoleLine[21].line, "+/- Value: A/B/X/Y  Console  :  R + Z");
 		strcpy(sysConsolePtr->consoleLine[22].line, " Generate: R + Start (auto on new file)");
 		strcpy(sysConsolePtr->consoleLine[23].line, "Bring up the console to use commands");
-		strcpy(sysConsolePtr->consoleLine[24].line, "https://rando.tpspeed.run | Twitter: @theAECX");
+		strcpy(sysConsolePtr->consoleLine[24].line, "rando.tpspeed.run | Twitter: @ztprandomizer");
 
 		u8 page = 0;
 
