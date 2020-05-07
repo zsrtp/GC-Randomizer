@@ -7,8 +7,8 @@ namespace mod::keyPlacement
 	extern u16 FT_keys[4];
 	extern u16 FT_1[5];
 	extern u16 FT_2[5];
-	extern u16 FT_3[10];
-	extern u16 FT_4[10];
+	extern u16 FT_3[9];
+	extern u16 FT_4[9];
 	
 	extern u16 GM_keys[3];
 	extern u16 GM_1[2];

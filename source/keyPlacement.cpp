@@ -27,27 +27,25 @@ namespace mod::keyPlacement
 		344,//ooccoo
 		17//Water Cave Chest
 	};	
-	u16 FT_3[10]
+	u16 FT_3[9]
 	{
 		6,//entry
 		8,//map
 		9,//Windless Bridge Chest
 		344,//ooccoo
 		17,//Water Cave Chest
-		10,//mokey 2
 		13,//PoH deku ike
 		11,//totem key
 		12,//Small Chest West Tile
 		343//big baba
 	};
-	u16 FT_4[10]
+	u16 FT_4[9]
 	{
 		6,//entry
 		8,//map
 		9,//Windless Bridge Chest
 		344,//ooccoo
 		17,//Water Cave Chest
-		10,//mokey 2
 		13,//PoH deku ike
 		11,//totem key
 		12,//Small Chest West Tile
