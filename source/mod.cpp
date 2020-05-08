@@ -1414,7 +1414,19 @@ namespace mod
 						tools::clearItemFlag(ItemFlags::Ordon_Shield);
 						shieldTrickOn = 1;
 					}
-					
+					if (!tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1)
+					{
+						bombBag1Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
+						bombBag2Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
+						bombBag3Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
+						bombBag1Ammo = gameInfo.scratchPad.ammo.bombs1;
+						bombBag2Ammo = gameInfo.scratchPad.ammo.bombs2;
+						bombBag3Ammo = gameInfo.scratchPad.ammo.bombs3;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = 0xFF;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = 0xFF;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = 0xFF;
+						bombBagTrickOn = 1;
+					}
 				}
 				if (gameInfo.aButtonText == 0x23)
 				{//is in shop and is exiting the item select mode
@@ -1439,6 +1451,26 @@ namespace mod
 						}
 						shieldTrickOn = 0;
 					}
+					if (bombBagTrickOn == 1)
+					{
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
+						gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
+						gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
+						gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
+						bombBagTrickOn = 0;
+					}
+				}
+				if (tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 1)
+				{//bought bomb bag check
+					gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
+					gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
+					gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
+					gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
+					gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
+					gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
+					bombBagTrickOn = 0;
 				}
 			}
 		}

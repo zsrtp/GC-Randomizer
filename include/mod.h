@@ -123,6 +123,13 @@ namespace mod
 			u8 hadHShield;
 			u8 hadOShield;
 			u8 hadWShield;
+			u8 bombBagTrickOn = 0;
+			u8 bombBag1Contents;
+			u8 bombBag2Contents;
+			u8 bombBag3Contents;
+			u8 bombBag1Ammo;
+			u8 bombBag2Ammo;
+			u8 bombBag3Ammo;
 			
 			
 		// Functions
