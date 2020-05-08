@@ -116,6 +116,14 @@ namespace mod
 			u16 moveResult;
 			u16 throwResult;
 			
+			u8 bottle4Contents;
+			u8 bottleTrickOn = 0;
+			u8 allowBottleItemsShopAnytime = 1;
+			u8 shieldTrickOn = 0;
+			u8 hadHShield;
+			u8 hadOShield;
+			u8 hadWShield;
+			
 			
 		// Functions
 		private:
@@ -149,9 +157,20 @@ namespace mod
 			void giveAllStoryItems();
 			
 			/**
+			 * renders all shop items buyable no matter what you have in you inv
+			 * only works for bottle items for now
+			 */
+			void allowShopItemsAnytime();
+			
+			/**
 			 * order the item wheel correctly
 			 */
 			void reorderItemWheel();
+			
+			/**
+			 * checks if the current stage contains a shop
+			 */
+			bool isStageShop();
 
 		// Private members
 		//private:

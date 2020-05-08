@@ -541,7 +541,6 @@ namespace mod::keyPlacement
 	{
 		353//camp key
 	};
-	
 	u16 GD_1[21]
 	{
 		125,//desert chest

@@ -188,6 +188,7 @@ namespace mod
 		hudConsole->addOption(page, "Unused Slot:", &gameInfo.scratchPad.itemWheel.Item_Slot, 0xFF); //for testing only
 		hudConsole->addOption(page, "Form:", &gameInfo.scratchPad.form, 0x1); //for testing only*/
 		hudConsole->addOption(page, "Fast transform?", &enableQuickTransform, 0x1);
+		hudConsole->addOption(page, "no bottle req?", &allowBottleItemsShopAnytime, 0x1);
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
@@ -1003,6 +1004,8 @@ namespace mod
 		
 		reorderItemWheel();
 		
+		allowShopItemsAnytime();
+		
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
@@ -1303,6 +1306,76 @@ namespace mod
 		}
 	}
 	
+	void Mod::allowShopItemsAnytime()
+	{	
+		u8 hasEmptyBottleAlready = 1;
+		if (gameInfo.scratchPad.itemWheel.Bottle_1 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_2 != items::Item::Empty_Bottle && 
+		gameInfo.scratchPad.itemWheel.Bottle_3 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
+		{
+			hasEmptyBottleAlready = 0;
+		}
+	
+		if (isStageShop())
+		{
+			if ((tp::d_a_alink::checkStageName("R_SP160") && tp::d_kankyo::env_light.currentRoom == 4) || 
+			(tp::d_a_alink::checkStageName("F_SP108") && tp::d_kankyo::env_light.currentRoom == 4) || 
+			(tp::d_a_alink::checkStageName("F_SP116") && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 3)))
+			{//Coro shop/castle goron shop
+				if (gameInfo.aButtonText == 0x1C)
+				{//about to speak to merchant
+					if (allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0)
+					{
+						if (gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
+						{
+							bottle4Contents = gameInfo.scratchPad.itemWheel.Bottle_4;
+						}
+						gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
+						bottleTrickOn = 1;
+					}
+				}
+				if (gameInfo.aButtonText == 0x22)
+				{//selecting if you wanna buy or not
+					if (allowBottleItemsShopAnytime == 1 && bottleTrickOn == 1)
+					{
+						bottleTrickOn = 2;
+					}
+				}
+				if (gameInfo.aButtonText == 0x23)
+				{
+					if (allowBottleItemsShopAnytime == 1 && bottleTrickOn == 2)
+					{
+						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+					}
+					bottleTrickOn = 0;
+				}
+			}
+			else
+			{//normal shops
+				if (gameInfo.bButtonText == 0x2A)
+				{//is in shop and is selecting an item
+					if (allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0)
+					{
+						if (gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
+						{
+							bottle4Contents = gameInfo.scratchPad.itemWheel.Bottle_4;
+						}
+						gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
+						bottleTrickOn = 1;
+					}
+					
+				}
+				if (gameInfo.aButtonText == 0x23 && bottleTrickOn == 1)
+				{//is in shop and is exiting the item select mode
+					if (allowBottleItemsShopAnytime == 1)
+					{
+						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+					}
+					bottleTrickOn = 0;
+				}
+			}
+		}
+	}
+	
 	void Mod::reorderItemWheel()
 	{
 		u8 currentSlot = 0x0;
@@ -1441,7 +1514,20 @@ namespace mod
 		
 		for(u16 i = currentSlot; i < sizeof(gameInfo.scratchPad.itemSlotsOrder)/sizeof(u8); i++)
 		{
-			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xFF;
+			gameInfo.scratchPad.itemSlotsOrder[i] = 0xFF;
 		}
+	}
+	
+	bool Mod::isStageShop()
+	{
+		u8 totalShopStages = sizeof(stage::shopStages) / sizeof(stage::shopStages[0]);
+		for (u8 i = 0; i < totalShopStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::shopStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

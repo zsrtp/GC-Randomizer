@@ -117,4 +117,16 @@ namespace mod::stage
 		allStages[Stage_Stallord],
 		allStages[Stage_Blizzeta]
 	};
+	
+	const char* shopStages[8]
+	{
+		allStages[Stage_Ordon_Interiors],
+		allStages[Stage_Faron_Woods],
+		allStages[Stage_Kakariko_Interiors],
+		allStages[Stage_Death_Mountain],
+		allStages[Stage_Kakariko_Village],
+		allStages[Stage_Castle_Town_Shops],
+		allStages[Stage_Castle_Town],
+		allStages[Stage_City_in_the_Sky]
+	};
 }
