@@ -64,6 +64,11 @@ namespace mod::tools
 		void setItemFlag(ItemFlags flag);
 		
 		/**
+		 * Unsets a specific bit/flag in the itemFlags variable in tp::d_com_inf_game::gameInfo.scratchPad.itemFlags
+		 */
+		void clearItemFlag(ItemFlags flag);
+		
+		/**
 		 * Checks if a specific bit/flag in the itemFlags variable in tp::d_com_inf_game::gameInfo.scratchPad.itemFlags is set
 		 */
 		bool checkItemFlag(ItemFlags flag);

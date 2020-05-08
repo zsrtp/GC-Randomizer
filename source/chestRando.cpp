@@ -881,8 +881,8 @@ namespace mod
 	
 	bool ChestRandomizer::isStageADungeon(char* stage)
 	{
-		u32 totalDungeonStages = sizeof(stage::dungeonStages) / sizeof(stage::dungeonStages[0]);
-		for (u32 i = 0; i < totalDungeonStages; i++)
+		u8 totalDungeonStages = sizeof(stage::dungeonStages) / sizeof(stage::dungeonStages[0]);
+		for (u8 i = 0; i < totalDungeonStages; i++)
 		{
 			if (0 == strcmp(stage, stage::dungeonStages[i]))
 			{
@@ -926,8 +926,8 @@ namespace mod
 	
 	bool ChestRandomizer::isStageBoss()
 	{
-		u32 totalBossStages = sizeof(stage::bossStages) / sizeof(stage::bossStages[0]);
-		for (u32 i = 0; i < totalBossStages; i++)
+		u8 totalBossStages = sizeof(stage::bossStages) / sizeof(stage::bossStages[0]);
+		for (u8 i = 0; i < totalBossStages; i++)
 		{
 			if (tp::d_a_alink::checkStageName(stage::bossStages[i]))
 			{

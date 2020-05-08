@@ -1332,21 +1332,55 @@ namespace mod
 						gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
 						bottleTrickOn = 1;
 					}
+					if (tools::checkItemFlag(ItemFlags::Hylian_Shield))
+					{
+						hadHShield = 1;
+						tools::clearItemFlag(ItemFlags::Hylian_Shield);
+						shieldTrickOn = 1;
+					}
 				}
 				if (gameInfo.aButtonText == 0x22)
 				{//selecting if you wanna buy or not
-					if (allowBottleItemsShopAnytime == 1 && bottleTrickOn == 1)
+					if (bottleTrickOn == 1)
 					{
 						bottleTrickOn = 2;
+					}
+					if (shieldTrickOn == 1)
+					{
+						shieldTrickOn = 2;
 					}
 				}
 				if (gameInfo.aButtonText == 0x23)
 				{
-					if (allowBottleItemsShopAnytime == 1 && bottleTrickOn == 2)
+					if (bottleTrickOn == 2)
 					{
 						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+						bottleTrickOn = 0;
 					}
-					bottleTrickOn = 0;
+					if (shieldTrickOn == 2)
+					{
+						if (hadHShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Hylian_Shield);
+						}
+						shieldTrickOn = 0;
+					}
+				}
+				if (gameInfo.aButtonText == 0x6 || gameInfo.aButtonText == 0x79)
+				{//leaving
+					if (bottleTrickOn == 1)
+					{
+						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+						bottleTrickOn = 0;
+					}
+					if (shieldTrickOn == 1)
+					{
+						if (hadHShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Hylian_Shield);
+						}
+						shieldTrickOn = 0;
+					}
 				}
 			}
 			else
@@ -1362,15 +1396,49 @@ namespace mod
 						gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
 						bottleTrickOn = 1;
 					}
+					if (tools::checkItemFlag(ItemFlags::Hylian_Shield))
+					{
+						hadHShield = 1;
+						tools::clearItemFlag(ItemFlags::Hylian_Shield);
+						shieldTrickOn = 1;
+					}
+					if (tools::checkItemFlag(ItemFlags::Wooden_Shield))
+					{
+						hadWShield = 1;
+						tools::clearItemFlag(ItemFlags::Wooden_Shield);
+						shieldTrickOn = 1;
+					}
+					if (tools::checkItemFlag(ItemFlags::Ordon_Shield))
+					{
+						hadOShield = 1;
+						tools::clearItemFlag(ItemFlags::Ordon_Shield);
+						shieldTrickOn = 1;
+					}
 					
 				}
-				if (gameInfo.aButtonText == 0x23 && bottleTrickOn == 1)
+				if (gameInfo.aButtonText == 0x23)
 				{//is in shop and is exiting the item select mode
-					if (allowBottleItemsShopAnytime == 1)
+					if (bottleTrickOn == 1)
 					{
 						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+						bottleTrickOn = 0;
 					}
-					bottleTrickOn = 0;
+					if (shieldTrickOn == 1)
+					{
+						if (hadHShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Hylian_Shield);
+						}
+						if (hadWShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Wooden_Shield);
+						}
+						if (hadOShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Ordon_Shield);
+						}
+						shieldTrickOn = 0;
+					}
 				}
 			}
 		}

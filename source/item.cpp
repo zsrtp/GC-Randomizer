@@ -6,7 +6,7 @@
 
 namespace mod::item
 {
-	u16 itemGetAnimationFlags[10] = 
+	u8 itemGetAnimationFlags[10] = 
 	{
 		static_cast<u16>(ItemFlags::Blue_Rupee),
 		static_cast<u16>(ItemFlags::Yellow_Rupee),

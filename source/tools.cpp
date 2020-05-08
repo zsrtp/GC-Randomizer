@@ -92,6 +92,15 @@ namespace mod::tools
 		tempItemFlagsArray[tempFlagVar / flagsPerVar] |= 1 << (tempFlagVar % flagsPerVar);
 	}
 	
+	void clearItemFlag(ItemFlags flag)
+	{
+		u32 flagsPerVar = sizeof(u32) * 8;
+		u32 tempFlagVar = static_cast<u32>(flag);
+		
+		u32* tempItemFlagsArray = gameInfo.scratchPad.itemFlags;
+		tempItemFlagsArray[tempFlagVar / flagsPerVar] &= ~(1 << (tempFlagVar % flagsPerVar));
+	}
+	
 	bool checkItemFlag(ItemFlags flag)
 	{
 		u32 flagsPerVar = sizeof(u32) * 8;
