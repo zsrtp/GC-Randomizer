@@ -69,7 +69,12 @@ namespace mod
 			 * 
 			 * excludes hyrule castle since boss doesn't spawn heart container
 			 */
-			bool isStageBoss();			
+			bool isStageBoss();		
+
+			/**
+			 * checks if the stage is one of the 5 grotto stages
+			 */
+			bool isStageGrotto();			
 
 		private:
 			/**
@@ -115,8 +120,13 @@ namespace mod
 			bool isItemBottleFill(u8 itemID);
 			
 			/**
-			 * 
+			 * places the key checks correctly
 			 */
 			void handleKeysanity();
+			
+			/**
+			 * check if the check gotten in a grotto is the right one
+			 */
+			bool isGrottoCheckOk(u16 checkID);
 	};
 }

@@ -129,4 +129,13 @@ namespace mod::stage
 		allStages[Stage_Castle_Town],
 		allStages[Stage_City_in_the_Sky]
 	};
+	
+	const char* grottoStages[5]
+	{
+		allStages[Stage_Grotto_1],
+		allStages[Stage_Grotto_2],
+		allStages[Stage_Grotto_3],
+		allStages[Stage_Grotto_4],
+		allStages[Stage_Grotto_5]
+	};
 }
