@@ -1370,7 +1370,7 @@ namespace mod
 			u8 state = tp::d_com_inf_game::current_state;
 			if (tp::d_a_alink::checkStageName(stage::grottoStages[0]))
 			{
-				if (state == 0)
+				if (state == '0')
 				{
 					u16 length = sizeof(grottoChecks::g1_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1382,7 +1382,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 1)
+				else if (state == '1')
 				{
 					u16 length = sizeof(grottoChecks::g1_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1394,7 +1394,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 2)
+				else if (state == '2')
 				{
 					u16 length = sizeof(grottoChecks::g1_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1406,7 +1406,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 3)
+				else if (state == '3')
 				{
 					u16 length = sizeof(grottoChecks::g1_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1425,7 +1425,7 @@ namespace mod
 			}
 			else if (tp::d_a_alink::checkStageName(stage::grottoStages[1]))
 			{
-				if (state == 0)
+				if (state == '0')
 				{
 					u16 length = sizeof(grottoChecks::g2_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1437,7 +1437,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 1)
+				else if (state == '1')
 				{
 					u16 length = sizeof(grottoChecks::g2_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1449,7 +1449,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 2)
+				else if (state == '2')
 				{
 					u16 length = sizeof(grottoChecks::g2_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1461,7 +1461,7 @@ namespace mod
 					}
 					return false;
 				}
-				/*else if (state == 3)
+				/*else if (state == '3')
 				{
 					u16 length = sizeof(grottoChecks::g2_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1480,7 +1480,7 @@ namespace mod
 			}
 			else if (tp::d_a_alink::checkStageName(stage::grottoStages[2]))
 			{
-				if (state == 0)
+				if (state == '0')
 				{
 					u16 length = sizeof(grottoChecks::g3_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1492,7 +1492,7 @@ namespace mod
 					}
 					return false;
 				}
-				/*else if (state == 1)
+				/*else if (state == '1')
 				{
 					u16 length = sizeof(grottoChecks::g3_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1505,7 +1505,7 @@ namespace mod
 					return false;
 					
 				}*/
-				/*else if (state == 2)
+				/*else if (state == '2')
 				{
 					u16 length = sizeof(grottoChecks::g3_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1517,7 +1517,7 @@ namespace mod
 					}
 					return false;
 				}*/
-				/*else if (state == 3)
+				/*else if (state == '3')
 				{
 					u16 length = sizeof(grottoChecks::g3_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1536,7 +1536,7 @@ namespace mod
 			}
 			else if (tp::d_a_alink::checkStageName(stage::grottoStages[3]))
 			{
-				if (state == 0)
+				if (state == '0')
 				{
 					u16 length = sizeof(grottoChecks::g4_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1548,7 +1548,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 1)
+				else if (state == '1')
 				{
 					u16 length = sizeof(grottoChecks::g4_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1560,7 +1560,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 2)
+				else if (state == '2')
 				{
 					u16 length = sizeof(grottoChecks::g4_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1572,7 +1572,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 3)
+				else if (state == '3')
 				{
 					u16 length = sizeof(grottoChecks::g4_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1591,7 +1591,7 @@ namespace mod
 			}
 			else if (tp::d_a_alink::checkStageName(stage::grottoStages[4]))
 			{
-				if (state == 0)
+				if (state == '0')
 				{
 					u16 length = sizeof(grottoChecks::g5_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1603,7 +1603,7 @@ namespace mod
 					}
 					return false;
 				}
-				/*else if (state == 1)
+				/*else if (state == '1')
 				{
 					u16 length = sizeof(grottoChecks::g5_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1615,7 +1615,7 @@ namespace mod
 					}
 					return false;
 				}*/
-				else if (state == 2)
+				else if (state == '2')
 				{
 					u16 length = sizeof(grottoChecks::g5_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1627,7 +1627,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 3)
+				else if (state == '3')
 				{
 					u16 length = sizeof(grottoChecks::g5_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
@@ -1639,7 +1639,7 @@ namespace mod
 					}
 					return false;
 				}
-				else if (state == 4)
+				else if (state == '4')
 				{
 					u16 length = sizeof(grottoChecks::g5_4) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
