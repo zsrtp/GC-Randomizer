@@ -466,7 +466,7 @@ namespace mod
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
 		}
-		else if (item == items::Item::Bomb_Bag_Regular_Bombs || item == items::Item::Bomb_Bag_Water_Bombs || item == items::Item::Bomb_Bag_Bombslings)
+		else if (item == items::Item::Empty_Bomb_Bag)
 		{//set flag for Barne's bomb bag check
 			tools::setItemFlag(ItemFlags::Null_DA);
 		}
@@ -488,9 +488,7 @@ namespace mod
 				(item == items::Item::Ooccoo_FT && sourceCheck->itemID == items::Item::Ooccoo_Dungeon) ||
 				(item == items::Item::Lantern_Refill_Shop && sourceCheck->itemID == items::Item::Lantern_Oil_Shop) || 
 				(item == items::Item::Lantern_Refill_Scooped && sourceCheck->itemID == items::Item::Lantern_Oil_Scooped) || 
-				(sourceCheck->itemID == items::Item::Superb_Soup && (item == items::Item::Simple_Soup || item == items::Item::Good_Soup)) ||
-				(item == items::Item::Bomb_Bag_Water_Bombs && sourceCheck->itemID == items::Item::Bomb_Bag_Regular_Bombs) ||
-				(item == items::Item::Bomb_Bag_Bombslings && sourceCheck->itemID == items::Item::Bomb_Bag_Regular_Bombs))
+				(sourceCheck->itemID == items::Item::Superb_Soup && (item == items::Item::Simple_Soup || item == items::Item::Good_Soup)))
 				{
 					bool isOk = false;
 					
@@ -697,7 +695,7 @@ namespace mod
 										item = items::Item::Ancient_Sky_Book_completed;
 									}
 								}
-								else if(item == items::Item::Bomb_Bag_Regular_Bombs)
+								else if(item == items::Item::Empty_Bomb_Bag)
 								{
 									if (itemWheel->Bomb_Bag_1 == 0xFF)
 									{
