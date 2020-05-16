@@ -461,9 +461,6 @@ namespace mod
 
 		//skip MS Puzzle
 		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::skipGrovePuzzle, event::LoadEventAccuracy::Stage);
-		
-		//handle Malo Mart
-		eventListener->addLoadEvent(stage::allStages[Stage_Kakariko_Interiors], 0x3, 0xFF, 0xFF, 0xFF, game_patch::handleMaloShop, event::LoadEventAccuracy::Stage_Room);
 
 
 		//   =================
@@ -1315,6 +1312,11 @@ namespace mod
 		gameInfo.scratchPad.itemWheel.Bottle_3 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
 		{
 			hasEmptyBottleAlready = 0;
+		}
+	
+		if (tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			game_patch::handleMaloShop();
 		}
 	
 		if (isStageShop())
