@@ -479,6 +479,10 @@ namespace mod
 		{//set flag for Hawkeye check
 			tools::setItemFlag(ItemFlags::Null_D8);
 		}
+		else if (item == items::Item::Dungeon_Map && tp::d_a_alink::checkStageName("D_MN11"))
+		{//set flag to be able to enter kitchen
+			gameInfo.localAreaNodes.unk_0[0x10] |= 0x20;
+		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
