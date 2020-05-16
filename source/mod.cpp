@@ -1625,9 +1625,12 @@ namespace mod
 	{
 		if (tools::checkItemFlag(ItemFlags::Bed_Key) && tp::d_a_alink::checkStageName("D_MN11"))
 		{
+			float linkPos[3];
+			getPlayerPos(linkPos);
+			
 			if (gameInfo.aButtonText == 0x6 && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 1 ||
 			tp::d_kankyo::env_light.currentRoom == 2 || tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 4 ||
-			tp::d_kankyo::env_light.currentRoom == 7))
+			tp::d_kankyo::env_light.currentRoom == 7) && linkPos[1] == 0)
 			{
 				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b0;
 				yetaTrickOn = 1;
