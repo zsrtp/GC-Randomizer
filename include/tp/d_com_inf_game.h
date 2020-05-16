@@ -251,8 +251,8 @@ enum class ItemFlagBits : u32
 	Male_Dayfly =                     214,
 	Female_Dayfly =                   215,
 
-	Null_D8 =                         216,
-	Null_D9 =                         217,
+	Null_D8 =                         216,//now used for hawkeye check
+	Null_D9 =                         217,//now used for malo hylian shield check
 	Null_DA =                         218,//now used for Barne's bomb bag check
 	Null_DB =                         219,//now used for sky letter 5
 	Null_DC =                         220,//now used for sky letter 4

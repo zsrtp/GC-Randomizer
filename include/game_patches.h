@@ -130,4 +130,9 @@ namespace mod::game_patch
 	 * Gives Midna Text that allows transformation
 	 */
 	void giveMidnaTransform();
+	
+	/**
+	 * check wether to show hawkeye and hylian shield in malo mart
+	 */
+	void handleMaloShop();
 }

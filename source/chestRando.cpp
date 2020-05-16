@@ -471,6 +471,14 @@ namespace mod
 		{//set flag for Barne's bomb bag check
 			tools::setItemFlag(ItemFlags::Null_DA);
 		}
+		else if (item == items::Item::Hylian_Shield && tp::d_a_alink::checkStageName("R_SP109"))
+		{//set flag for Malo's Hylian Shield check
+			tools::setItemFlag(ItemFlags::Null_D9);
+		}
+		else if (item == items::Item::Hawkeye)
+		{//set flag for Hawkeye check
+			tools::setItemFlag(ItemFlags::Null_D8);
+		}
 		
 		for(u16 i = 0; i < totalChecks; i++)
 		{
@@ -965,7 +973,7 @@ namespace mod
 		{
 			item::ItemCheck* sourceCheck;
 			item::ItemCheck* destCheck;
-			u16 length;
+			u32 length;
 			u16 index;
 			//do FT_1
 			length = sizeof(keyPlacement::FT_1)/sizeof(u16);
@@ -1372,7 +1380,7 @@ namespace mod
 			{
 				if (state == '0')
 				{
-					u16 length = sizeof(grottoChecks::g1_0) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g1_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g1_0[i])
@@ -1384,7 +1392,7 @@ namespace mod
 				}
 				else if (state == '1')
 				{
-					u16 length = sizeof(grottoChecks::g1_1) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g1_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g1_1[i])
@@ -1396,7 +1404,7 @@ namespace mod
 				}
 				else if (state == '2')
 				{
-					u16 length = sizeof(grottoChecks::g1_2) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g1_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g1_2[i])
@@ -1408,7 +1416,7 @@ namespace mod
 				}
 				else if (state == '3')
 				{
-					u16 length = sizeof(grottoChecks::g1_3) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g1_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g1_3[i])
@@ -1427,7 +1435,7 @@ namespace mod
 			{
 				if (state == '0')
 				{
-					u16 length = sizeof(grottoChecks::g2_0) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g2_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g2_0[i])
@@ -1439,7 +1447,7 @@ namespace mod
 				}
 				else if (state == '1')
 				{
-					u16 length = sizeof(grottoChecks::g2_1) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g2_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g2_1[i])
@@ -1451,7 +1459,7 @@ namespace mod
 				}
 				else if (state == '2')
 				{
-					u16 length = sizeof(grottoChecks::g2_2) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g2_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g2_2[i])
@@ -1463,7 +1471,7 @@ namespace mod
 				}
 				/*else if (state == '3')
 				{
-					u16 length = sizeof(grottoChecks::g2_3) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g2_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g2_3[i])
@@ -1482,7 +1490,7 @@ namespace mod
 			{
 				if (state == '0')
 				{
-					u16 length = sizeof(grottoChecks::g3_0) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g3_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g3_0[i])
@@ -1494,7 +1502,7 @@ namespace mod
 				}
 				/*else if (state == '1')
 				{
-					u16 length = sizeof(grottoChecks::g3_1) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g3_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g3_1[i])
@@ -1507,7 +1515,7 @@ namespace mod
 				}*/
 				/*else if (state == '2')
 				{
-					u16 length = sizeof(grottoChecks::g3_2) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g3_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g3_2[i])
@@ -1519,7 +1527,7 @@ namespace mod
 				}*/
 				/*else if (state == '3')
 				{
-					u16 length = sizeof(grottoChecks::g3_3) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g3_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g3_3[i])
@@ -1538,7 +1546,7 @@ namespace mod
 			{
 				if (state == '0')
 				{
-					u16 length = sizeof(grottoChecks::g4_0) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g4_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g4_0[i])
@@ -1550,7 +1558,7 @@ namespace mod
 				}
 				else if (state == '1')
 				{
-					u16 length = sizeof(grottoChecks::g4_1) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g4_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g4_1[i])
@@ -1562,7 +1570,7 @@ namespace mod
 				}
 				else if (state == '2')
 				{
-					u16 length = sizeof(grottoChecks::g4_2) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g4_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g4_2[i])
@@ -1574,7 +1582,7 @@ namespace mod
 				}
 				else if (state == '3')
 				{
-					u16 length = sizeof(grottoChecks::g4_3) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g4_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g4_3[i])
@@ -1593,7 +1601,7 @@ namespace mod
 			{
 				if (state == '0')
 				{
-					u16 length = sizeof(grottoChecks::g5_0) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g5_0) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g5_0[i])
@@ -1605,7 +1613,7 @@ namespace mod
 				}
 				/*else if (state == '1')
 				{
-					u16 length = sizeof(grottoChecks::g5_1) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g5_1) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g5_1[i])
@@ -1617,7 +1625,7 @@ namespace mod
 				}*/
 				else if (state == '2')
 				{
-					u16 length = sizeof(grottoChecks::g5_2) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g5_2) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g5_2[i])
@@ -1629,7 +1637,7 @@ namespace mod
 				}
 				else if (state == '3')
 				{
-					u16 length = sizeof(grottoChecks::g5_3) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g5_3) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g5_3[i])
@@ -1641,7 +1649,7 @@ namespace mod
 				}
 				else if (state == '4')
 				{
-					u16 length = sizeof(grottoChecks::g5_4) / sizeof(u16);
+					u32 length = sizeof(grottoChecks::g5_4) / sizeof(u16);
 					for (u16 i = 0; i < length; i++)
 					{
 						if (checkID == grottoChecks::g5_4[i])

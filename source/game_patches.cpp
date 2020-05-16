@@ -298,4 +298,33 @@ namespace mod::game_patch
 		// Set Midna Transform flag (gets set at Master Sword)
 		gameInfo.scratchPad.eventBits[0xD] |= 0x4;
 	}
+	
+	void handleMaloShop()
+	{
+		//hylian shield check
+		if (!tools::checkItemFlag(ItemFlags::Null_D9))
+		{
+			gameInfo.localAreaNodes.unk_0[0xC] &= ~0x2;//unset flag for hylian shield bought
+			gameInfo.localAreaNodes.unk_0[0x13] |= 0x40;//set flag for hylian shield on counter
+		}
+		else 
+		{
+			gameInfo.localAreaNodes.unk_0[0xC] |= 0x2;//set flag for hylian shield bought
+			gameInfo.localAreaNodes.unk_0[0x13] &= ~0x40;//unset flag for hylian shield on counter
+		}
+		
+		//hawkeye check		
+		if (!tools::checkItemFlag(ItemFlags::Null_D8))
+		{
+			gameInfo.localAreaNodes.unk_0[0xC] |= 0x40;//set flag for hawkeye on counter
+			gameInfo.localAreaNodes.unk_0[0xC] &= ~0x20;//unset flag for arrows on counter (else causes crash)
+			gameInfo.localAreaNodes.unk_0[0xD] &= ~0x8;//unset flag for hawkeye bought
+		}
+		else
+		{
+			gameInfo.localAreaNodes.unk_0[0xC] &= ~0x40;//unset flag for hawkeye on counter
+			gameInfo.localAreaNodes.unk_0[0xC] |= 0x20;//set flag for arrows on counter
+			gameInfo.localAreaNodes.unk_0[0xD] |= 0x8;//set flag for hawkeye bought
+		}
+	}
 }

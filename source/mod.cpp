@@ -461,6 +461,9 @@ namespace mod
 
 		//skip MS Puzzle
 		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::skipGrovePuzzle, event::LoadEventAccuracy::Stage);
+		
+		//handle Malo Mart
+		eventListener->addLoadEvent(stage::allStages[Stage_Kakariko_Interiors], 0x3, 0xFF, 0xFF, 0xFF, game_patch::handleMaloShop, event::LoadEventAccuracy::Stage_Room);
 
 
 		//   =================
