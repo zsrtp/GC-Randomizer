@@ -242,7 +242,7 @@ namespace mod
 		hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u16);*/
 
 		//local area
-		/*page = hudConsole->addPage("Local Area 1");
+		page = hudConsole->addPage("Local Area 1");
 		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
@@ -324,53 +324,16 @@ namespace mod
 		hudConsole->addOption(page, "edit flags:", &dungeonFlagsViewEdit, 0x1); //for testing only
 		
 		
-		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);*/
-
-
-
-		//item slots
-		/*page = hudConsole->addPage("Item slots 1");
-		
-		hudConsole->addWatch(page, "slot0:", &gameInfo.scratchPad.itemSlotsOrder[0x0], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot1:", &gameInfo.scratchPad.itemSlotsOrder[0x1], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot2:", &gameInfo.scratchPad.itemSlotsOrder[0x2], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot3:", &gameInfo.scratchPad.itemSlotsOrder[0x3], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot4:", &gameInfo.scratchPad.itemSlotsOrder[0x4], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot5:", &gameInfo.scratchPad.itemSlotsOrder[0x5], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot6:", &gameInfo.scratchPad.itemSlotsOrder[0x6], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot7:", &gameInfo.scratchPad.itemSlotsOrder[0x7], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot8:", &gameInfo.scratchPad.itemSlotsOrder[0x8], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot9:", &gameInfo.scratchPad.itemSlotsOrder[0x9], 'x', WatchInterpretation::_u8);
-		
-		page = hudConsole->addPage("Item slots 2");
-		
-		hudConsole->addWatch(page, "slotA:", &gameInfo.scratchPad.itemSlotsOrder[0xA], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slotB:", &gameInfo.scratchPad.itemSlotsOrder[0xB], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slotC:", &gameInfo.scratchPad.itemSlotsOrder[0xC], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slotD:", &gameInfo.scratchPad.itemSlotsOrder[0xD], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slotE:", &gameInfo.scratchPad.itemSlotsOrder[0xE], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slotF:", &gameInfo.scratchPad.itemSlotsOrder[0xF], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot10:", &gameInfo.scratchPad.itemSlotsOrder[0x10], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot11:", &gameInfo.scratchPad.itemSlotsOrder[0x11], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot12:", &gameInfo.scratchPad.itemSlotsOrder[0x12], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot13:", &gameInfo.scratchPad.itemSlotsOrder[0x13], 'x', WatchInterpretation::_u8);
-		
-		page = hudConsole->addPage("Item slots 2");
-		
-		hudConsole->addWatch(page, "slot14:", &gameInfo.scratchPad.itemSlotsOrder[0x14], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot15:", &gameInfo.scratchPad.itemSlotsOrder[0x15], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot16:", &gameInfo.scratchPad.itemSlotsOrder[0x16], 'x', WatchInterpretation::_u8);
-		hudConsole->addWatch(page, "slot17:", &gameInfo.scratchPad.itemSlotsOrder[0x17], 'x', WatchInterpretation::_u8);*/
-		
+		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
 		
 		// save load
-		/*page = hudConsole->addPage("Save load");
+		page = hudConsole->addPage("Save load");
 		
 		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
 		hudConsole->addOption(page, "room:", &room, 60); //for testing only
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only
 		
 		/*page = hudConsole->addPage("testing adr1");
 		
@@ -1005,6 +968,8 @@ namespace mod
 		reorderItemWheel();
 		
 		allowShopItemsAnytime();
+		
+		fixYetaAndYeto();
 		
 		// Call original function
 		fapGm_Execute_trampoline();
@@ -1653,6 +1618,25 @@ namespace mod
 		for(u16 i = currentSlot; i < sizeof(gameInfo.scratchPad.itemSlotsOrder)/sizeof(u8); i++)
 		{
 			gameInfo.scratchPad.itemSlotsOrder[i] = 0xFF;
+		}
+	}
+	
+	void Mod::fixYetaAndYeto()
+	{
+		if (tools::checkItemFlag(ItemFlags::Bed_Key) && tp::d_a_alink::checkStageName("D_MN11"))
+		{
+			if (gameInfo.aButtonText == 0x6 && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 1 ||
+			tp::d_kankyo::env_light.currentRoom == 2 || tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 4 ||
+			tp::d_kankyo::env_light.currentRoom == 7))
+			{
+				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b0;
+				yetaTrickOn = 1;
+			}
+			if (gameInfo.aButtonText == 0x79 && yetaTrickOn == 1)
+			{
+				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
+				yetaTrickOn = 0;
+			}
 		}
 	}
 	
