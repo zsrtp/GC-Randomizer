@@ -865,14 +865,17 @@ namespace mod
 										if (item == items::Item::Lantern_Oil_Shop)
 										{
 											item = items::Item::Lantern_Refill_Shop;
+											gameInfo.scratchPad.counters.lantern_oil = gameInfo.scratchPad.counters.max_lantern_oil;
 										}
 										else if (item == items::Item::Lantern_Oil_Scooped)
 										{
 											item = items::Item::Lantern_Refill_Scooped;
+											gameInfo.scratchPad.counters.lantern_oil = gameInfo.scratchPad.counters.max_lantern_oil;
 										}
 										else if (item == items::Item::Yellow_Chu_Jelly)
 										{
 											item = items::Item::Lantern_Yellow_Chu_Chu;
+											gameInfo.scratchPad.counters.lantern_oil = gameInfo.scratchPad.counters.max_lantern_oil;
 										}
 										else
 										{
@@ -884,6 +887,11 @@ namespace mod
 										item = items::Item::Blue_Rupee;
 									}
 								}
+								if (item == items::Item::Blue_Rupee)
+								{//somehow the blue rupee item get don't work normally
+									tp::d_item::execItemGet(items::Item::Blue_Rupee);
+								}
+								
 								return item;
 							}
 							else
