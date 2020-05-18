@@ -69,7 +69,7 @@ namespace mod
 			char currentPosY[30];
 			char currentPosZ[30];
 
-			u16 linkAngle; 
+			s16 linkAngle; 
 
 			// Replacment handler
 			s32 procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32]);
