@@ -175,7 +175,7 @@ namespace mod
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "CurrentAngle:", &linkAngle, 'd', WatchInterpretation::_s16);	
+		hudConsole->addWatch(page, "CurrentAngle:", &linkAngle, 's', WatchInterpretation::_str);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
 		
 		
@@ -542,12 +542,12 @@ namespace mod
 		float linkPos[3];
 		getPlayerPos(linkPos);
 
-		snprintf(currentPosX, 30, "%f", linkPos[0]);
-		snprintf(currentPosY, 30, "%f", linkPos[1]);
-		snprintf(currentPosZ, 30, "%f", linkPos[2]);
+		snprintf(currentPosX, 30, "%04x", static_cast<u32>(linkPos[0]));
+		snprintf(currentPosY, 30, "%04x", static_cast<u32>(linkPos[1]));
+		snprintf(currentPosZ, 30, "%04x", static_cast<u32>(linkPos[2]));
 		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
 		
-		linkAngle = static_cast<s16>(tp::d_map_path_dmap::getMapPlayerAngleY());
+		snprintf(linkAngle, 30, "%02x", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
 		
 		
 		if (gameInfo.ColorPtr != nullptr)
