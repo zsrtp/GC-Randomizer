@@ -4,6 +4,7 @@
 *.bak
 
 create.sh
+gcipack.py
 
 .vscode/
 build.*/
