@@ -174,7 +174,8 @@ namespace mod
 		
 		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
-		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);	
+		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentAngle:", &linkAngle, 'd', WatchInterpretation::_u16);	
 		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
 		
 		
@@ -546,6 +547,8 @@ namespace mod
 		snprintf(currentPosZ, 30, "%f", linkPos[2]);
 		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
 		
+		linkAngle = static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY());
+		
 		
 		if (gameInfo.ColorPtr != nullptr)
 		{
@@ -675,7 +678,7 @@ namespace mod
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
 		}
 		else if(enableQuickTransform == 1 && gameInfo.rButtonText == 0 && (gameInfo.bButtonText == 0x3 || gameInfo.bButtonText == 0x26) && 
-		(gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0) && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
+		(gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
 		{				
 			// Make sure Link is actually loaded
 			tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;

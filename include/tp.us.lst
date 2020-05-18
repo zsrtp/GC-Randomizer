@@ -34,6 +34,7 @@
 
 // d_map_path_dmap.o
 8003EE5C:getMapPlayerPos
+8003EF20:getMapPlayerAngleY
 
 // d_item.o
 80097E8C:execItemGet
