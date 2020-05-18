@@ -242,7 +242,7 @@ namespace mod
 		hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u16);*/
 
 		//local area
-		page = hudConsole->addPage("Local Area 1");
+		/*page = hudConsole->addPage("Local Area 1");
 		hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
 		hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
@@ -324,16 +324,16 @@ namespace mod
 		hudConsole->addOption(page, "edit flags:", &dungeonFlagsViewEdit, 0x1); //for testing only
 		
 		
-		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);*/
 		
 		// save load
-		page = hudConsole->addPage("Save load");
+		/*page = hudConsole->addPage("Save load");
 		
 		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
 		hudConsole->addOption(page, "room:", &room, 60); //for testing only
 		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
 		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
 		
 		/*page = hudConsole->addPage("testing adr1");
 		
@@ -675,7 +675,7 @@ namespace mod
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
 		}
 		else if(enableQuickTransform == 1 && gameInfo.rButtonText == 0 && (gameInfo.bButtonText == 0x3 || gameInfo.bButtonText == 0x26) && 
-		tools::checkItemFlag(ItemFlags::Master_Sword) && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
+		(gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0) && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
 		{				
 			// Make sure Link is actually loaded
 			tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;

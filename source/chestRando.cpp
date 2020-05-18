@@ -9,6 +9,7 @@
 #include "keyPlacement.h"
 #include "singleton.h"
 #include "grottoChecks.h"
+#include "game_patches.h"
 
 #include <tp/d_com_inf_game.h>
 #include <tp/d_a_alink.h>
@@ -840,6 +841,10 @@ namespace mod
 								else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount < 60)
 								{//increase poe counter
 									gameInfo.scratchPad.poeCount++;
+								}
+								else if (item == items::Item::Shadow_Crystal)
+								{//shadow crystal doesn't actually do anything so we have to do its functionnality ourselves
+									game_patch::giveMidnaTransform();
 								}
 								else if (!tools::checkItemFlag(ItemFlags::Slingshot) && 
 									(item == items::Item::Seeds_50))
