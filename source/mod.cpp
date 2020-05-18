@@ -1397,7 +1397,7 @@ namespace mod
 						bombBagTrickOn = 1;
 					}
 				}
-				if (gameInfo.aButtonText == 0x23)
+				else if (gameInfo.aButtonText == 0x23)
 				{//is in shop and is exiting the item select mode
 					if (bottleTrickOn == 1)
 					{

@@ -887,10 +887,6 @@ namespace mod
 										item = items::Item::Blue_Rupee;
 									}
 								}
-								if (item == items::Item::Blue_Rupee)
-								{//somehow the blue rupee item get don't work normally
-									tp::d_item::execItemGet(items::Item::Blue_Rupee);
-								}
 								
 								return item;
 							}
