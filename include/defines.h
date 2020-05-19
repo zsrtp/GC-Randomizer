@@ -26,9 +26,15 @@ typedef	signed char 		s8;
   (byte & 0b00000010 ? '1' : '0'), \
   (byte & 0b00000001 ? '1' : '0')
 
+template <typename T>
+union floatBytes {
+  float f;
+  T b;
+};
+
 // Array modification
 #define MAX_LOAD_EVENTS 20 // eventListener
-#define MAX_HUDCONSOLE_PAGES 12 // HUDConsole
+#define MAX_HUDCONSOLE_PAGES 20 // HUDConsole
 
 // Mnemonics
 #define AUTHOR				"ZTPR"
