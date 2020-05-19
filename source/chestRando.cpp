@@ -832,10 +832,17 @@ namespace mod
 									{//for when MS and light Ms are implemented
 										item = items::Item::Master_Sword;
 									}
+									else if(item == items::Item::Dominion_Rod && tools::checkItemFlag(ItemFlags::Dominion_Rod))
+									{//for when powered dominion rod is implemented
+										item = items::Item::Dominion_Rod_Uncharged;
+									}
+									else if(item == items::Item::Dominion_Rod_Uncharged && !tools::checkItemFlag(ItemFlags::Dominion_Rod))
+									{//for when MS and light Ms are implemented
+										item = items::Item::Dominion_Rod;
+									}
 								}
-								if (item == items::Item::Dominion_Rod)
-								{
-									item = items::Item::Dominion_Rod;
+								if (item == items::Item::Dominion_Rod_Uncharged)
+								{//giving Dominion_Rod_Uncharged is the same as giving Dominion_Rod but there's no text (yet)
 									gameInfo.scratchPad.eventBits[0x25] |= 0x80;//set flag to charge dominion rod
 								}
 								else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount < 60)
