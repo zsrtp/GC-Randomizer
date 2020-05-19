@@ -306,6 +306,7 @@ namespace mod::game_patch
 		{
 			if (!tools::checkItemFlag(ItemFlags::Null_D9))
 			{
+				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hylian shield");
 				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x2;//unset flag for hylian shield bought
 				gameInfo.localAreaNodes.unk_0[0x13] |= 0x40;//set flag for hylian shield on counter
 			}
@@ -321,6 +322,7 @@ namespace mod::game_patch
 		{		
 			if (!tools::checkItemFlag(ItemFlags::Null_D8))
 			{
+				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hawkeye");
 				gameInfo.localAreaNodes.unk_0[0xC] |= 0x40;//set flag for hawkeye on counter
 				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x20;//unset flag for arrows on counter (else causes crash)
 				gameInfo.localAreaNodes.unk_0[0xD] &= ~0x8;//unset flag for hawkeye bought

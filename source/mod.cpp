@@ -542,9 +542,14 @@ namespace mod
 		float linkPos[3];
 		getPlayerPos(linkPos);
 
-		snprintf(currentPosX, 30, "%04x", static_cast<u32>(linkPos[0]));
-		snprintf(currentPosY, 30, "%04x", static_cast<u32>(linkPos[1]));
-		snprintf(currentPosZ, 30, "%04x", static_cast<u32>(linkPos[2]));
+
+		floatBytes<u32> x = {linkPos[0]};
+		floatBytes<u32> y = {linkPos[1]};
+		floatBytes<u32> z = {linkPos[2]};
+
+		snprintf(currentPosX, 30, "%04x", x.b);
+		snprintf(currentPosY, 30, "%04x", y.b);
+		snprintf(currentPosZ, 30, "%04x", z.b);
 		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
 		
 		snprintf(linkAngle, 30, "%02x", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
