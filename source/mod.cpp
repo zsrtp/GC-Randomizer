@@ -542,12 +542,11 @@ namespace mod
 		float linkPos[3];
 		getPlayerPos(linkPos);
 
+        typeTransform<float, u32> x = {linkPos[0]};
+        typeTransform<float, u32> y = {linkPos[1]};
+        typeTransform<float, u32> z = {linkPos[2]};
 
-		floatBytes<u32> x = {linkPos[0]};
-		floatBytes<u32> y = {linkPos[1]};
-		floatBytes<u32> z = {linkPos[2]};
-
-		snprintf(currentPosX, 30, "%04x", x.b);
+        snprintf(currentPosX, 30, "%04x", x.b);
 		snprintf(currentPosY, 30, "%04x", y.b);
 		snprintf(currentPosZ, 30, "%04x", z.b);
 		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
