@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defines.h"
+#include "d_com_inf_game.h"
 
 namespace tp::d_a_alink
 {
@@ -24,6 +25,7 @@ namespace tp::d_a_alink
 		u8 unk_5c[0x4];
 	} __attribute__((__packed__));
 
+
 	static_assert(sizeof(LadderVars) == 0x70);
 
 	extern "C"
@@ -31,6 +33,7 @@ namespace tp::d_a_alink
 		bool checkStageName(const char* name); // Checks if dComIfG_gameInfo.currentStage is equal to name
 		void setStickData();
 		bool checkHeavyStateOn(s32 unk1, s32 unk2);
+		bool procCoMetamorphoseInit(tp::d_com_inf_game::LinkMapVars* linkMapPtr);
 		bool checkTreasureRupeeReturn(void* unk1, s32 item);
 
 		// Variables

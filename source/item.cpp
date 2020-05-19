@@ -1,9 +1,23 @@
 #include "item.h"
 #include "items.h"
 #include "defines.h"
+#include <tp/d_com_inf_game.h>
 
 namespace mod::item
 {
+	u8 itemGetAnimationFlags[10] =
+	{
+		static_cast<u8>(ItemFlags::Blue_Rupee),
+		static_cast<u8>(ItemFlags::Yellow_Rupee),
+		static_cast<u8>(ItemFlags::Red_Rupee),
+		static_cast<u8>(ItemFlags::Purple_Rupee),
+		static_cast<u8>(ItemFlags::Orange_Rupee),
+		static_cast<u8>(ItemFlags::Seeds_50),
+		static_cast<u8>(ItemFlags::Arrows_30),
+		static_cast<u8>(ItemFlags::Arrows_20),
+		static_cast<u8>(ItemFlags::Arrows_10),
+		static_cast<u8>(ItemFlags::Arrows_1),
+	};
 	u32 getFlags(u8 item, u32 currentPlayerConditions)
 	{
 		u32 flags = currentPlayerConditions;

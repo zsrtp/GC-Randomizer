@@ -84,7 +84,7 @@ namespace mod::stage
 		"R_SP209"
 	};
 
-	const char* dungeonStages[17]
+	const char* dungeonStages[18]
 	{
 		allStages[Stage_Lakebed_Temple],
 		allStages[Stage_Deku_Toad],
@@ -99,6 +99,7 @@ namespace mod::stage
 		allStages[Stage_Palace_of_Twilight],
 		allStages[Stage_Phantom_Zant_1],
 		allStages[Stage_Phantom_Zant_2],
+		allStages[Stage_Hyrule_Castle],
 		allStages[Stage_Arbiters_Grounds],
 		allStages[Stage_Death_Sword],
 		allStages[Stage_Snowpeak_Ruins],
@@ -115,5 +116,26 @@ namespace mod::stage
 		allStages[Stage_Zant_Main],
 		allStages[Stage_Stallord],
 		allStages[Stage_Blizzeta]
+	};
+
+	const char* shopStages[8]
+	{
+		allStages[Stage_Ordon_Interiors],
+		allStages[Stage_Faron_Woods],
+		allStages[Stage_Kakariko_Interiors],
+		allStages[Stage_Death_Mountain],
+		allStages[Stage_Kakariko_Village],
+		allStages[Stage_Castle_Town_Shops],
+		allStages[Stage_Castle_Town],
+		allStages[Stage_City_in_the_Sky]
+	};
+
+	const char* grottoStages[5]
+	{
+		allStages[Stage_Grotto_1],
+		allStages[Stage_Grotto_2],
+		allStages[Stage_Grotto_3],
+		allStages[Stage_Grotto_4],
+		allStages[Stage_Grotto_5]
 	};
 }

@@ -76,13 +76,13 @@ namespace mod::items
 		Heros_Bow	=	0x43,
 		Clawshot	=	0x44,
 		Iron_Boots	=	0x45,
-		Dominion_Rod_Uncharged	=	0x46,
+		Dominion_Rod = 0x46,
 		Clawshots	=	0x47,
 		Lantern	=	0x48,
 		Master_Sword_Light	=	0x49,
 		Fishing_Rod	=	0x4A,
 		Slingshot	=	0x4B,
-		Dominion_Rod_Charged	=	0x4C,
+		Dominion_Rod_Uncharged = 0x4C,
 		/*?	=	0x4D,*/
 		/*?	=	0x4E,*/
 		Giant_Bomb_Bag	=	0x4F,

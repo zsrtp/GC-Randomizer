@@ -6,6 +6,297 @@
 
 namespace tp::d_com_inf_game
 {
+	enum class ItemFlagBits : u32
+	{
+		Recovery_Heart = 0,
+		Green_Rupee = 1,
+		Blue_Rupee = 2,
+		Yellow_Rupee = 3,
+		Red_Rupee = 4,
+		Purple_Rupee = 5,
+		Orange_Rupee = 6,
+		Silver_Rupee = 7,
+
+		Null_8 = 8,
+		Null_9 = 9,
+		Bombs_5 = 10,
+		Bombs_10 = 11,
+		Bombs_20 = 12,
+		Bombs_30 = 13,
+		Arrows_10 = 14,
+		Arrows_20 = 15,
+
+		Arrows_30 = 16,
+		Arrows_1 = 17,
+		Seeds_50 = 18,
+		Null_13 = 19,
+		Null_14 = 20,
+		Null_15 = 21,
+		Water_Bombs_5 = 22,
+		Water_Bombs_10 = 23,
+
+		Water_Bombs_15 = 24,
+		Water_Bombs_3 = 25,
+		Bomblings_5 = 26,
+		Bomblings_10 = 27,
+		Bomblings_3 = 28,
+		Bombling_1 = 29,
+		Fairy = 30,
+		Recovery_Heart_x3 = 31,
+
+		Small_Key = 32,
+		Piece_of_Heart = 33,
+		Heart_Container = 34,
+		Dungeon_Map = 35,
+		Compass = 36,
+		Ooccoo_FT = 37,
+		Big_Key = 38,
+		Ooccoo_Jr = 39,//never set in normal game
+
+		Ordon_Sword = 40,
+		Master_Sword = 41,
+		Ordon_Shield = 42,
+		Wooden_Shield = 43,
+		Hylian_Shield = 44,
+		Ooccoos_Note = 45,//never set in normal game
+		Ordon_Clothing = 46,//never set in normal game
+		Heros_Clothes = 47,
+
+		Magic_Armor = 48,
+		Zora_Armor = 49,
+		Shadow_Crystal = 50,//never set in normal game
+		Ooccoo_Dungeon = 51,
+		Small_Wallet = 52,//never set in normal game
+		Big_Wallet = 53,
+		Giant_Wallet = 54,
+		Null_37 = 55,
+
+		Null_38 = 56,
+		Null_39 = 57,
+		Null_3A = 58,
+		Null_3B = 59,
+		Null_3C = 60,
+		Coral_Earring = 61,
+		Hawkeye = 62,
+		Wooden_Sword = 63,
+
+		Boomerang = 64,
+		Spinner = 65,
+		Ball_and_Chain = 66,
+		Heros_Bow = 67,
+		Clawshot = 68,
+		Iron_Boots = 69,
+		Dominion_Rod = 70,
+		Clawshots = 71,
+
+		Lantern = 72,
+		Master_Sword_Light = 73,
+		Fishing_Rod = 74,
+		Slingshot = 75,
+		Dominion_Rod_Uncharged = 76,//never set in normal game
+		Null_4D = 77,
+		Null_4E = 78,
+		Giant_Bomb_Bag = 79,
+
+		Empty_Bomb_Bag = 80,//never set in normal game
+		Goron_Bomb_Bag = 81,
+		Null_52 = 82,
+		Null_53 = 83,
+		Small_Quiver = 84,//never set in normal game
+		Big_Quiver = 85,
+		Giant_Quiver = 86,
+		Null_57 = 87,
+
+		Fishing_Rod_Lure = 88,
+		Bow_Bombs = 89,
+		Bow_Hawkeye = 90,
+		Fishing_Rod_Bee_Larva = 91,
+		Fishing_Rod_Coral_Earring = 92,
+		Fishing_Rod_Worm = 93,
+		Fishing_Rod_Earring_Bee_Larva = 94,
+		Fishing_Rod_Earring_Worm = 95,
+
+		Empty_Bottle = 96,
+		Red_Potion_Shop = 97,
+		Green_Potion = 98,
+		Blue_Potion = 99,
+		Milk = 100,
+		Sera_Bottle = 101,
+		Lantern_Oil_Shop = 102,
+		Water = 103,
+
+		Lantern_Oil_Scooped = 104,
+		Red_Potion_Scooped = 105,
+		Nasty_soup = 106,
+		Hot_spring_water_Scooped = 107,
+		Fairy_Bottle = 108,
+		Hot_Spring_Water_Shop = 109,
+		Lantern_Refill_Scooped = 110,
+		Lantern_Refill_Shop = 111,
+
+		Bomb_Bag_Regular_Bombs = 112,
+		Bomb_Bag_Water_Bombs = 113,
+		Bomb_Bag_Bombslings = 114,
+		Fairy_Tears = 115,
+		Worm = 116,
+		Jovani_Bottle = 117,
+		Bee_Larva_Scooped = 118,
+		Rare_Chu_Jelly = 119,
+
+		Red_Chu_Jelly = 120,
+		Blue_Chu_Jelly = 121,
+		Green_Chu_Jelly = 122,
+		Yellow_Chu_Jelly = 123,
+		Purple_Chu_Jelly = 124,
+		Simple_Soup = 125,
+		Good_Soup = 126,
+		Superb_Soup = 127,
+
+		Renardos_Letter = 128,
+		Invoice = 129,
+		Wooden_Statue = 130,
+		Ilias_Charm = 131,
+		Horse_Call = 132,
+		Null_85 = 133,
+		Null_86 = 134,
+		Null_87 = 135,
+
+		Null_88 = 136,
+		Null_89 = 137,
+		Null_8A = 138,
+		Null_8B = 139,
+		Null_8C = 140,
+		Null_8D = 141,
+		Null_8E = 142,
+		Null_8F = 143,
+
+		Aurus_Memo = 144,
+		Asheis_Sketch = 145,
+		Null_92 = 146,
+		Null_93 = 147,
+		Null_94 = 148,
+		Null_95 = 149,
+		Null_96 = 150,
+		Null_97 = 151,
+
+		Null_98 = 152,
+		Null_99 = 153,
+		Null_9A = 154,
+		Null_9B = 155,
+		Lantern_Yellow_Chu_Chu = 156,
+		Coro_Bottle = 157,
+		Bee_Larva_Shop = 158,
+		Black_Chu_Jelly = 159,
+
+		Tear_Of_Light = 160,//never set in normal game
+		Vessel_Of_Light_Faron = 161,
+		Vessel_Of_Light_Eldin = 162,
+		Vessel_Of_Light_Lanayru = 163,
+		Vessel_Of_Light_Full = 164,//never set in normal game
+		Null_A5 = 165,
+		Null_A6 = 166,
+		Null_A7 = 167,
+
+		Null_A8 = 168,
+		Null_A9 = 169,
+		Null_AA = 170,
+		Null_AB = 171,
+		Null_AC = 172,
+		Null_AD = 173,
+		Null_AE = 174,
+		Null_AF = 175,
+
+		Ilias_Scent = 176,
+		Null_B1 = 177,
+		Poe_Scent = 178,
+		Reekfish_Scent = 179,
+		Youths_Scent = 180,
+		Medicine_Scent = 181,
+		Null_B6 = 182,
+		Null_B7 = 183,
+
+		Null_B8 = 184,
+		Null_B9 = 185,
+		Null_BA = 186,
+		Null_BB = 187,
+		Null_BC = 188,
+		Null_BD = 189,
+		Null_BE = 190,
+		Null_BF = 191,
+
+		Male_Beetle = 192,
+		Female_Beetle = 193,
+		Male_Butterfly = 194,
+		Female_Butterfly = 195,
+		Male_Stag_Beetle = 196,
+		Female_Stag_Beetle = 197,
+		Male_Grasshopper = 198,
+		Female_Grasshopper = 199,
+
+		Male_Phasmid = 200,
+		Female_Phasmid = 201,
+		Male_Pill_Bug = 202,
+		Female_Pill_Bug = 203,
+		Male_Mantis = 204,
+		Female_Mantis = 205,
+		Male_Ladybug = 206,
+		Female_Ladybug = 207,
+
+		Male_Snail = 208,
+		Female_Snail = 209,
+		Male_Dragonfly = 210,
+		Female_Dragonfly = 211,
+		Male_Ant = 212,
+		Female_Ant = 213,
+		Male_Dayfly = 214,
+		Female_Dayfly = 215,
+
+		Null_D8 = 216,//now used for hawkeye check
+		Null_D9 = 217,//now used for malo hylian shield check
+		Null_DA = 218,//now used for Barne's bomb bag check
+		Null_DB = 219,//now used for sky letter 5
+		Null_DC = 220,//now used for sky letter 4
+		Null_DD = 221,//now used for sky letter 3
+		Null_DE = 222,//now used for sky letter 2
+		Null_DF = 223,//now used for sky letter 1
+
+		Poe_Soul = 224,
+		Null_E1 = 225,
+		Null_E2 = 226,
+		Null_E3 = 227,
+		Null_E4 = 228,
+		Null_E5 = 229,
+		Null_E6 = 230,
+		Null_E7 = 231,
+
+		Null_E8 = 232,
+		Ancient_Sky_Book_empty = 233,
+		Ancient_Sky_Book_partly_filled = 234,
+		Ancient_Sky_Book_completed = 235,
+		Ooccoo_CitS = 236,
+		Purple_Rupee_Links_house = 237,
+		Small_Key_N_Faron_Gate = 238,
+		Null_EF = 239,
+
+		Null_F0 = 240,
+		Null_F1 = 241,
+		Null_F2 = 242,
+		Gate_Keys = 243,
+		Ordon_Pumpkin = 244,
+		Ordon_Goat_Cheese = 245,
+		Bed_Key = 246,
+		Null_F7 = 247,
+
+		Got_Lantern_Back = 248,
+		Key_Shard_1 = 249,
+		Key_Shard_2 = 250,
+		Key_Shard_3 = 251,
+		Null_FC = 252,
+		Big_Key_Goron_Mines = 253,
+		Coro_Key = 254,
+		NullItem = 255,
+	};
+
 	struct Counters
 	{
 		u16 max_health;
@@ -34,6 +325,19 @@ namespace tp::d_com_inf_game
 
 	} __attribute__((__packed__));
 
+	struct ClearedTwilights
+	{
+		u8 unk_0 : 1,
+			unk_1 : 1,
+			unk_2 : 1,
+			unk_3 : 1,
+			unk_4 : 1,
+			Lanayru : 1,
+			Eldin : 1,
+			Faron : 1;
+
+	} __attribute__((__packed__));
+
 	struct Epona
 	{
 		float position_X;
@@ -50,8 +354,7 @@ namespace tp::d_com_inf_game
 		char stage[8];
 		u8 spawn;
 		u8 room;
-		u8 unk_62;
-		u8 unk_63;
+		u8 unk_62[0x2];
 		float previous_position_X;
 		float previous_position_Y;
 		float previous_position_Z;
@@ -118,321 +421,11 @@ namespace tp::d_com_inf_game
 		u8 Bomb_Bag_2;
 		u8 Bomb_Bag_3;
 		u8 Ooccoo;
+		u8 Story;
 		u8 Fishing_Rod;
 		u8 Horse_Call;
 		u8 Sky_Book;
 		u8 Slingshot;
-	} __attribute__((__packed__));
-
-	struct ItemFlags1
-	{
-		u64 Recovery_Heart_x3 : 1,
-			Fairy : 1,
-			Bombling_1 : 1,
-			Bomblings_3 : 1,
-			Bomblings_10 : 1,
-			Bomblings_5 : 1,
-			Water_Bombs_3 : 1,
-			Water_Bombs_15 : 1,
-
-			Water_Bombs_10 : 1,
-			Water_Bombs_5 : 1,
-			Null_15 : 1,
-			Null_14 : 1,
-			Null_13 : 1,
-			Seeds_50 : 1,
-			Arrows_1 : 1,
-			Arrows_30 : 1,
-
-			Arrows_20 : 1,
-			Arrows_10 : 1,
-			Bombs_30 : 1,
-			Bombs_20 : 1,
-			Bombs_10 : 1,
-			Bombs_5 : 1,
-			Null_9 : 1,
-			Null_8 : 1,
-
-			Silver_Rupee : 1,
-			Orange_Rupee : 1,
-			Purple_Rupee : 1,
-			Red_Rupee : 1,
-			Yellow_Rupee : 1,
-			Blue_Rupee : 1,
-			Green_Rupee : 1,
-			Recovery_Heart : 1,
-
-			Wooden_Sword : 1,
-			Hawkeye : 1,
-			Coral_Earring : 1,
-			Null_3C : 1,
-			Null_3B : 1,
-			Null_3A : 1,
-			Null_39 : 1,
-			Null_38 : 1,
-
-			Null_37 : 1,
-			Giant_Wallet : 1,
-			Big_Wallet : 1,
-			Small_Wallet : 1,//never set in normal game
-			Ooccoo_Dungeon : 1,
-			Shadow_Crystal : 1,//never set in normal game
-			Zora_Armor : 1,
-			Magic_Armor : 1,
-
-			Heros_Clothes : 1,
-			Ordon_Clothing : 1,//never set in normal game
-			Ooccoos_Note : 1,//never set in normal game
-			Hylian_Shield : 1,
-			Wooden_Shield : 1,
-			Ordon_Shield : 1,
-			Master_Sword : 1,
-			Ordon_Sword : 1,
-
-			Ooccoo_Jr : 1,//never set in normal game
-			Big_Key : 1,
-			Ooccoo_FT : 1,
-			Compass : 1,
-			Dungeon_Map : 1,
-			Heart_Container : 1,
-			Piece_of_Heart : 1,
-			Small_Key : 1;
-	}__attribute__((__packed__));
-
-	struct ItemFlags2
-	{
-		u64 Fishing_Rod_Earring_Worm : 1,
-			Fishing_Rod_Earring_Bee_Larva : 1,
-			Fishing_Rod_Worm : 1,
-			Fishing_Rod_Coral_Earring : 1,
-			Fishing_Rod_Bee_Larva : 1,
-			Bow_Hawkeye : 1,
-			Bow_Bombs : 1,
-			Fishing_Rod_Lure : 1,
-
-			Null_57 : 1,
-			Giant_Quiver : 1,
-			Big_Quiver : 1,
-			Small_Quiver : 1,//never set in normal game
-			Null_53 : 1,
-			Null_52 : 1,
-			Goron_Bomb_Bag : 1,
-			Empty_Bomb_Bag : 1,//never set in normal game
-
-			Giant_Bomb_Bag : 1,
-			Null_4E : 1,
-			Null_4D : 1,
-			Dominion_Rod_Charged : 1,//never set in normal game
-			Slingshot : 1,
-			Fishing_Rod : 1,
-			Master_Sword_Light : 1,
-			Lantern : 1,
-
-			Clawshots : 1,
-			Dominion_Rod_Uncharged : 1,
-			Iron_Boots : 1,
-			Clawshot : 1,
-			Heros_Bow : 1,
-			Ball_and_Chain : 1,
-			Spinner : 1,
-			Boomerang : 1,
-
-			Superb_Soup : 1,
-			Good_Soup : 1,
-			Simple_Soup : 1,
-			Purple_Chu_Jelly : 1,
-			Yellow_Chu_Jelly : 1,
-			Green_Chu_Jelly : 1,
-			Blue_Chu_Jelly : 1,
-			Red_Chu_Jelly : 1,
-
-			Rare_Chu_Jelly : 1,
-			Bee_Larva_Scooped : 1,
-			Jovani_Bottle : 1,
-			Worm : 1,
-			Fairy_Tears : 1,
-			Bomb_Bag_Bombslings : 1,
-			Bomb_Bag_Water_Bombs : 1,
-			Bomb_Bag_Regular_Bombs : 1,
-
-			Lantern_Refill_Shop : 1,
-			Lantern_Refill_Scooped : 1,
-			Hot_Spring_Water_Shop : 1,
-			Fairy_Bottle : 1,
-			Hot_spring_water_Scooped : 1,
-			Nasty_soup : 1,
-			Red_Potion_Scooped : 1,
-			Lantern_Oil_Scooped : 1,
-
-			Water : 1,
-			Lantern_Oil_Shop : 1,
-			Sera_Bottle : 1,
-			Milk : 1,
-			Blue_Potion : 1,
-			Green_Potion : 1,
-			Red_Potion_Shop : 1,
-			Empty_Bottle : 1;
-	}__attribute__((__packed__));
-
-	struct ItemFlags3
-	{
-		u64 Black_Chu_Jelly : 1,
-			Bee_Larva_Shop : 1,
-			Coro_Bottle : 1,
-			Lantern_Yellow_Chu_Chu : 1,
-			Null_9B : 1,
-			Null_9A : 1,
-			Null_99 : 1,
-			Null_98 : 1,
-
-			Null_97 : 1,
-			Null_96 : 1,
-			Null_95 : 1,
-			Null_94 : 1,
-			Null_93 : 1,
-			Null_92 : 1,
-			Asheis_Sketch : 1,
-			Aurus_Memo : 1,
-
-			Null_8F : 1,
-			Null_8E : 1,
-			Null_8D : 1,
-			Null_8C : 1,
-			Null_8B : 1,
-			Null_8A : 1,
-			Null_89 : 1,
-			Null_88 : 1,
-
-			Null_87 : 1,
-			Null_86 : 1,
-			Null_85 : 1,
-			Horse_Call : 1,
-			Ilias_Charm : 1,
-			Wooden_Statue : 1,
-			Invoice : 1,
-			Renardos_Letter : 1,
-
-			Null_BF : 1,
-			Null_BE : 1,
-			Null_BD : 1,
-			Null_BC : 1,
-			Null_BB : 1,
-			Null_BA : 1,
-			Null_B9 : 1,
-			Null_B8 : 1,
-
-			Null_B7 : 1,
-			Null_B6 : 1,
-			Medicine_Scent : 1,
-			Youths_Scent : 1,
-			Reekfish_Scent : 1,
-			Poe_Scent : 1,
-			Null_B1 : 1,
-			Ilias_Scent : 1,
-
-			Null_AF : 1,
-			Null_AE : 1,
-			Null_AD : 1,
-			Null_AC : 1,
-			Null_AB : 1,
-			Null_AA : 1,
-			Null_A9 : 1,
-			Null_A8 : 1,
-
-			Null_A7 : 1,
-			Null_A6 : 1,
-			Null_A5 : 1,
-			Vessel_Of_Light_Full : 1,//never set in normal game
-			Vessel_Of_Light_Lanayru : 1,
-			Vessel_Of_Light_Eldin : 1,
-			Vessel_Of_Light_Faron : 1,
-			Tear_Of_Light : 1;//never set in normal game
-	}__attribute__((__packed__));
-
-	struct ItemFlags4
-	{
-
-		u64 Null_DF : 1,//now used for sky letter 1
-			Null_DE : 1,//now used for sky letter 2
-			Null_DD : 1,//now used for sky letter 3
-			Null_DC : 1,//now used for sky letter 4
-			Null_DB : 1,//now used for sky letter 5
-			Null_DA : 1,
-			Null_D9 : 1,
-			Null_D8 : 1,
-
-			Female_Dayfly : 1,
-			Male_Dayfly : 1,
-			Female_Ant : 1,
-			Male_Ant : 1,
-			Female_Dragonfly : 1,
-			Male_Dragonfly : 1,
-			Female_Snail : 1,
-			Male_Snail : 1,
-
-			Female_Ladybug : 1,
-			Male_Ladybug : 1,
-			Female_Mantis : 1,
-			Male_Mantis : 1,
-			Female_Pill_Bug : 1,
-			Male_Pill_Bug : 1,
-			Female_Phasmid : 1,
-			Male_Phasmid : 1,
-
-			Female_Grasshopper : 1,
-			Male_Grasshopper : 1,
-			Female_Stag_Beetle : 1,
-			Male_Stag_Beetle : 1,
-			Female_Butterfly : 1,
-			Male_Butterfly : 1,
-			Female_Beetle : 1,
-			Male_Beetle : 1,
-
-			NullItem : 1,
-			Coro_Key : 1,
-			Big_Key_Goron_Mines : 1,
-			Null_FC : 1,
-			Key_Shard_3 : 1,
-			Key_Shard_2 : 1,
-			Key_Shard_1 : 1,
-			Got_Lantern_Back : 1,
-
-			Null_F7 : 1,
-			Bed_Key : 1,
-			Ordon_Goat_Cheese : 1,
-			Ordon_Pumpkin : 1,
-			Gate_Keys : 1,
-			Null_F2 : 1,
-			Null_F1 : 1,
-			Null_F0 : 1,
-
-			Null_EF : 1,
-			Small_Key_N_Faron_Gate : 1,
-			Purple_Rupee_Links_house : 1,
-			Ooccoo_CitS : 1,
-			Ancient_Sky_Book_completed : 1,
-			Ancient_Sky_Book_partly_filled : 1,
-			Ancient_Sky_Book_empty : 1,
-			Null_E8 : 1,
-
-			Null_E7 : 1,
-			Null_E6 : 1,
-			Null_E5 : 1,
-			Null_E4 : 1,
-			Null_E3 : 1,
-			Null_E2 : 1,
-			Null_E1 : 1,
-			Poe_Soul : 1;
-
-	} __attribute__((__packed__));
-
-	struct ItemFlags
-	{
-		ItemFlags1 itemFlags1;
-		ItemFlags2 itemFlags2;
-		ItemFlags3 itemFlags3;
-		ItemFlags4 itemFlags4;
-
 	} __attribute__((__packed__));
 
 	struct Ammo
@@ -531,8 +524,16 @@ namespace tp::d_com_inf_game
 	struct FishingJournal
 	{
 		NumberOfFish numbers;//size 0xC
-		u8 unk_E[0x14];//offset 0xC
+		u8 unk_178[0x14];//offset 0xC
 		LargestFishes largest;//size 0x6 offset 0x20
+
+	} __attribute__((__packed__));
+
+	struct Settings
+	{
+		u8 sound;// Mono=0 / Stereo = 1 / Surround = 2
+		u8 targettingType;// Hold = 0 / Switch = 1
+		u8 rumble;// Off = 0 / On = 1
 
 	} __attribute__((__packed__));
 
@@ -564,7 +565,7 @@ namespace tp::d_com_inf_game
 		AreaNodes Sewers;//20
 		AreaNodes Faron;//40
 		AreaNodes Eldin;//60
-		AreaNodes Lanyru;//80
+		AreaNodes Lanayru;//80
 		AreaNodes Null_5;//A0
 		AreaNodes Hyrule_Field;//C0
 		AreaNodes Sacred_Grove;//E0
@@ -744,14 +745,20 @@ namespace tp::d_com_inf_game
 	{
 		Counters counters;//size: 0xA offset: 0x0
 		EquipedItems equipedItems;//size: 0xD offset: 0xA
-		u8 unk_17[0x1D];//offset 0x17
-		float skyAngle;//offset: 0x34
+		u8 unk_17[0x2];//offset: 0x17
+		u8 equippedWallet;//offset: 0x19 (0 = small, 1 = big, 2 = giant)
+		u8 unk_1A[0x4];//offset: 0x1A
+		u8 form;//offset: 0x1E (0 = human, 1 = wolf)
+		u8 unk_1F[0x12];//offset: 0x1F
+		ClearedTwilights clearedTwilights;//offset: 0x31
+		u8 unk_32[0x2];//offset: 0x32
+		float skyAngle;//offset: 0x34 Impacts time of day poes and towns
 		u8 unk_38[0x8];//offset: 0x38
 		MovingActors movingActors;//size:0x59 offset: 0x40
 		u8 unk_99[0x3];//offset: 0x99
-		ItemSlots itemWheel;//size:0x17 offset 0x9C
-		u8 itemSlots[0x19];//offset 0xB3
-		ItemFlags itemFlags;//size:0x20 offset 0xCC
+		ItemSlots itemWheel;//size:0x18 offset 0x9C
+		u8 itemSlotsOrder[0x18];//offset 0xB4
+		u32 itemFlags[8];//size:0x20 offset 0xCC
 		Ammo ammo;//size:0x10 offset: 0xEC
 		u8 unk_FC[0xD];//offset 0xFC
 		DungeonRewards dungeonRewards;//size: 0x2 offset: 0x109
@@ -764,12 +771,14 @@ namespace tp::d_com_inf_game
 		u8 unk_120[0x6];//offset: 0x120
 		Letters readLetters;//size: 0x2 offset: 0x126
 		u8 unk_128[0x44];//offset 0x128
-		FishingJournal fishJournal; //size: 0x26 offset: 0x16C
+		FishingJournal fishingJournal; //size: 0x26 offset: 0x16C
 		u8 unk_192[0x22];//offset 0x192
 		char linkName[16];//offset 0x1B4
 		u8 unk_1C4;
 		char eponaName[16];//offset 0x1C5
-		u8 unk_1D7[0x1B];//offset 0x1D5
+		u8 unk_1D5[0xC];//offset 0x1D5
+		Settings optionsSettings;//size: 0x3 offset 0x1E1
+		u8 unk_1E4[0xC];//offset 1E4
 		AllAreaNodes allAreaNodes;//size: 0x400 offset 0x1F0
 		ExploredStagesMap exploredMap;//size: 0x200 offset 0x5F0
 		u8 eventBits[0x150]; // Bitfield (QuestLogOffset - 7F0)
@@ -841,6 +850,26 @@ namespace tp::d_com_inf_game
 	{
 		u8 unk_0[0x4D0];
 		float pos[3];
+		u8 unk_4DC[0x94];
+		u32 isTargeting;//570    at 0x400000 link is targeting
+	} __attribute__((__packed__));
+
+	struct TunicColor
+	{
+		u8 unk_0[0x32A0];
+		u8 redTopToggle;//0x4 disables red
+		u8 redTop;
+		u8 greenTopToggle;//0x4 disables green
+		u8 greenTop;
+		u8 blueTopToggle;//0x4 disables blue
+		u8 blueTop;
+		u8 unk_32A6[0x2];
+		u8 redBottomToggle;//0x4 disables red
+		u8 redBottom;
+		u8 greenBottomToggle;//0x4 disables green
+		u8 greenBottom;
+		u8 blueBottomToggle;//0x4 disables blue
+		u8 blueBottom;
 	} __attribute__((__packed__));
 
 	// Should try to fill in the missing variables at some point
@@ -856,11 +885,40 @@ namespace tp::d_com_inf_game
 		u8 currentSpawnID;// 4E09
 		u8 unk_4e0A[4];  // 4E0A - 4E0D
 		NextStageVars nextStageVars; // 4E0E - 4E1D
-		u8 unk_4e1c[0xAA]; // 4E19 - 4EC7
-		EventSystem eventSystem; // 4EC8 - 4FDE
-		u8 unk_4fdd[0xDD0]; // 4FDD - 5DBF
-		LinkMapVars* linkMapPtr; // 5DA0 - 5DAB
-		u8 unk_5dac[0x18060];
+		u8 unk_4e1E[0xAA]; // 4E1E - 4EC7
+		EventSystem eventSystem; // 4EC8 - 4FDB
+		u8 unk_4fdc[0xDD0]; // 4FDC - 5DAB
+		LinkMapVars* linkMapPtr; // 5DAC - 5DAF
+		u8 unk_5db0[0x4];
+		TunicColor* ColorPtr;// 5DB4 - 5DB7
+		u8 unk_5db8[0x2A];//5DB8 - 5DE1
+		u16 airMeter; //5DE2 - 5DE3 max = 258
+		u8 unk_5de4[0x38];//5DE4 - 5E1B
+		u8 rButtonText;//5E1C - 51EC
+		u8 bButtonText;//5E1D - 51ED
+		u8 unk_5E1E[0x6];//5E1E - 5E23
+		u8 aButtonText; //5E24 - 5E24
+		u8 unk_5e25;//5E25 - 5E25
+		u8 stickButtonText;//5E26 - 5E26
+		u8 unk_5e27[0xB];//5E27 - 5E5B
+		u8 startButtonText;//5E32 - 5E32
+		u8 unk_5e33[0xC];//5E33 - 5E3E
+		u8 cButtonText;//5E3F - 5E3F
+		u8 unk_5e40[0x1C];//5E40 - 5E5B
+		u8 xButtonText;//5E5C - 5E5C set to sense and doesn't unset
+		u8 unk_5e5D[0x3];//5E5D - 5E5F
+		u8 yButtonText;//5E60 - 5E60 set to dig and doesn't unset
+		u8 unk_5e61[0xB];//5E61 - 5E6B
+		u8 xItem;//5E6C - 5E6C
+		u8 yItem;//5E6D - 5E6D
+		u8 unk_5E6E[0x22];//5E6E - 5E8F
+		u8 bottomPromptShown;//5E90 set to 0x8 when button promt apprears on bottom of screen
+		u8 topPromptShown;//5E91 set to 0x8 when button promt apprears on top of screen
+		u8 unk_5e92[0x25];//5E92 - 5EB6
+		u8 airTimerDepleted; //5EB7 - 5EB7
+		u8 unk_5eb8[0x17F58];
+
+
 	} __attribute__((__packed__));
 
 	static_assert(sizeof(AreaNodes) == 0x20);
@@ -875,6 +933,10 @@ namespace tp::d_com_inf_game
 	static_assert(sizeof(MovingActors) == 0x59);
 	static_assert(sizeof(Ammo) == 0x10);
 	static_assert(sizeof(RespawnValues) == 0x21);
+	static_assert(sizeof(LinkMapVars*) == 0x4);
+	static_assert(sizeof(EventSystem) == 0x114);
+	static_assert(sizeof(NextStageVars) == 0x10);
+
 
 	extern "C"
 	{

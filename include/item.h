@@ -4,6 +4,7 @@
 
 namespace mod::item
 {
+	
 	/**
 	 * Returns the flag(s) to an item under certain conditions
 	 * 
@@ -74,4 +75,9 @@ namespace mod::item
 		ItemCheck* source;
 		ItemCheck* destination;
 	};
+
+	/**
+	 * Contains the values for the flags to be set to skip the animations of first getting specific items
+	 */
+	extern u8 itemGetAnimationFlags[10];
 }
