@@ -439,8 +439,6 @@ namespace mod
 			gameInfo.scratchPad.tearCounters.Faron = 16;
 			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//give N faron warp
 			gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;//give midna jumps in mist area
-			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-            *tempAddress |= 0x400;//give ending blow		
 			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);//set flag for vessel since we'll skip it by reloading
 			gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
 			gameInfo.nextStageVars.triggerLoad |= 1;
@@ -450,9 +448,7 @@ namespace mod
 		{//set tear counter to 16
 			gameInfo.scratchPad.tearCounters.Eldin = 16;
 			gameInfo.localAreaNodes.unk_0[0x9] |= 0x20;//give death mountain warp
-			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary
-			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-            *tempAddress |= 0x800;//give shield attack		
+			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary	
 			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Eldin);//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -462,8 +458,6 @@ namespace mod
 			gameInfo.scratchPad.tearCounters.Lanayru = 16;
 			gameInfo.localAreaNodes.unk_0[0xA] |= 0x4;//give lake hylia warp
 			gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB] |= 0x8;//give castle town warp
-			u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-            *tempAddress |= 0x200;//give Backslice
 			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);//set flag for vessel since we'll skip it by reloading
 			gameInfo.nextStageVars.triggerLoad |= 1;
 			return item;
@@ -852,6 +846,41 @@ namespace mod
 								else if (item == items::Item::Shadow_Crystal)
 								{//shadow crystal doesn't actually do anything so we have to do its functionnality ourselves
 									game_patch::giveMidnaTransform();
+								}
+								else if (item == 0xE1)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x400;//give ending blow
+								}
+								else if (item == 0xE2)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x800;//give shield attack
+								}
+								else if (item == 0xE3)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x200;//give back slice
+								}
+								else if (item == 0xE4)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x100;//give helm splitter
+								}
+								else if (item == 0xE5)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x80;//give mortal draw
+								}
+								else if (item == 0xE6)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x40;//give jump strike
+								}
+								else if (item == 0xE7)
+								{
+									u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+									*tempAddress |= 0x20;//give great spin
 								}
 								else if (!tools::checkItemFlag(ItemFlags::Slingshot) && 
 									(item == items::Item::Seeds_50))
