@@ -1292,6 +1292,9 @@ namespace mod
 	
 	void Mod::allowShopItemsAnytime()
 	{	
+		float linkPos[3];
+		getPlayerPos(linkPos);
+	
 		u8 hasEmptyBottleAlready = 1;
 		if (gameInfo.scratchPad.itemWheel.Bottle_1 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_2 != items::Item::Empty_Bottle && 
 		gameInfo.scratchPad.itemWheel.Bottle_3 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
@@ -1403,7 +1406,8 @@ namespace mod
 						tools::clearItemFlag(ItemFlags::Ordon_Shield);
 						shieldTrickOn = 1;
 					}
-					if (!tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1)
+					if (!tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1 &&
+					linkPos[2] > -600)
 					{
 						bombBag1Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
 						bombBag2Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
