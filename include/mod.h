@@ -70,6 +70,8 @@ namespace mod
 			char currentPosZ[30];
 
 			char linkAngle[30]; 
+			
+			u8 coordsAreInHex = 0;
 
 			// Replacment handler
 			s32 procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32]);

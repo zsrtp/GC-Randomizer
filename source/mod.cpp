@@ -167,6 +167,7 @@ namespace mod
 		hudConsole->addOption(page, "open HF gates?", &Singleton::getInstance()->isGateUnlockEnabled, 0x1);
 		hudConsole->addOption(page, "skip goats1&2?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
 		hudConsole->addOption(page, "skip MS puzzle?", &Singleton::getInstance()->isMSPuzzleSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Coords as hex?", &coordsAreInHex, 0x1);
 		
 		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
@@ -541,17 +542,29 @@ namespace mod
 	{
 		float linkPos[3];
 		getPlayerPos(linkPos);
-
-        typeTransform<float, u32> x = {linkPos[0]};
-        typeTransform<float, u32> y = {linkPos[1]};
-        typeTransform<float, u32> z = {linkPos[2]};
-
-        snprintf(currentPosX, 30, "%04x", x.b);
-		snprintf(currentPosY, 30, "%04x", y.b);
-		snprintf(currentPosZ, 30, "%04x", z.b);
-		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
 		
-		snprintf(linkAngle, 30, "%02x", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
+		if (coordsAreInHex == 1)
+		{
+			typeTransform<float, u32> x = {linkPos[0]};
+			typeTransform<float, u32> y = {linkPos[1]};
+			typeTransform<float, u32> z = {linkPos[2]};
+
+			snprintf(currentPosX, 30, "%04x", x.b);
+			snprintf(currentPosY, 30, "%04x", y.b);
+			snprintf(currentPosZ, 30, "%04x", z.b);
+			
+			snprintf(linkAngle, 30, "%02x", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
+		}
+		else 
+		{
+			snprintf(currentPosX, 30, "%f", linkPos[0]);
+			snprintf(currentPosY, 30, "%f", linkPos[1]);
+			snprintf(currentPosZ, 30, "%f", linkPos[2]);
+			
+			snprintf(linkAngle, 30, "%d", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
+		}
+		
+		snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
 		
 		
 		if (gameInfo.ColorPtr != nullptr)
