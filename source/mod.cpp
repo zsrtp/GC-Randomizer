@@ -991,6 +991,8 @@ namespace mod
 		
 		fixYetaAndYeto();
 		
+		fixLBTBossDoor();
+		
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
@@ -1106,8 +1108,7 @@ namespace mod
 		//code to have all scents at once you need to unlock them tho
 		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]))
 		{
-			if (tools::checkItemFlag(ItemFlags::Youths_Scent) && 
-			(tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 2))
+			if (tools::checkItemFlag(ItemFlags::Youths_Scent) && tp::d_kankyo::env_light.currentRoom == 3)
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
 			}
@@ -1663,6 +1664,25 @@ namespace mod
 			{
 				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
 				yetaTrickOn = 0;
+			}
+		}
+	}
+	
+	void Mod::fixLBTBossDoor()
+	{
+		if (tp::d_a_alink::checkStageName("D_MN01") && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			float linkPos[3];
+			getPlayerPos(linkPos);
+			if (gameInfo.aButtonText == 0x6 && linkPos[1] <= -340 && linkPos[1] >= -320)
+			{
+				nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
+				LBTBossDoorTrickOn = 1;
+			}
+			if (gameInfo.aButtonText != 0x6 && LBTBossDoorTrickOn == 1)
+			{
+				gameInfo.localAreaNodes.nbKeys = nbLBTKeys;
+				LBTBossDoorTrickOn = 0;
 			}
 		}
 	}

@@ -137,6 +137,9 @@ namespace mod
 			
 			u8 yetaTrickOn = 0;
 			
+			u8 LBTBossDoorTrickOn = 0;
+			u8 nbLBTKeys = 0;
+			
 			
 		// Functions
 		private:
@@ -185,6 +188,11 @@ namespace mod
 			 * Allows Yeto to always be in the kitchen even with the BK
 			 */
 			void fixYetaAndYeto();
+			
+			/**
+			 * fix problem where opening LBT boss door removes a key
+			 */
+			void fixLBTBossDoor();
 			
 			/**
 			 * checks if the current stage contains a shop
