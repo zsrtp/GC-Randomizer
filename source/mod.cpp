@@ -1674,7 +1674,7 @@ namespace mod
 		{
 			float linkPos[3];
 			getPlayerPos(linkPos);
-			if (gameInfo.aButtonText == 0x6 && linkPos[1] <= -340 && linkPos[1] >= -320)
+			if (gameInfo.aButtonText == 0x6 && linkPos[1] >= -340 && linkPos[1] <= -320)
 			{
 				nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
 				LBTBossDoorTrickOn = 1;
