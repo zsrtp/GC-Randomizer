@@ -1679,7 +1679,7 @@ namespace mod
 				nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
 				LBTBossDoorTrickOn = 1;
 			}
-			if (gameInfo.aButtonText != 0x6 && LBTBossDoorTrickOn == 1)
+			if (gameInfo.aButtonText == 0x79 && LBTBossDoorTrickOn == 1)
 			{
 				gameInfo.localAreaNodes.nbKeys = nbLBTKeys;
 				LBTBossDoorTrickOn = 0;
