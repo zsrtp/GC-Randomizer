@@ -313,6 +313,14 @@ namespace mod::game_patch
 		}
 	}
 
+	void sellWaterBombs()
+	{
+		if (gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 && ((gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) == 0))//Escort Not Completed before Beating Lakebed
+		{
+			gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;
+		}
+	}
+
 	void accessDesert()
 	{
 		if (tools::checkItemFlag(ItemFlags::Master_Sword))

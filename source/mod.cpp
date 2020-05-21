@@ -463,8 +463,11 @@ namespace mod
 		//early Desert
 		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::earlyDesert, event::LoadEventAccuracy::Stage_Room_Spawn);
 
-		//early Desert
+		//desert Access
 		eventListener->addLoadEvent(stage::allStages[Stage_Gerudo_Desert], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::accessDesert, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//sell water bombs if you skip the escort
+		eventListener->addLoadEvent(stage::allStages[Stage_Kakariko_Village], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::sellWaterBombs, event::LoadEventAccuracy::Stage_Room_Spawn);
 
 
 
@@ -762,7 +765,19 @@ namespace mod
 		{
 			if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Start)))
 			{
-				chestRandomizer->generate();
+				if (customSeed == 0)
+				{	
+					u16 lastCheckSum = chestRandomizer->checkSum;
+					do
+					{
+						chestRandomizer->generate();
+					}
+					while (chestRandomizer->checkSum == lastCheckSum);
+				}
+				else
+				{
+					chestRandomizer->generate();
+				}
 			}
 
 			// Parse inputs of this frame
@@ -950,6 +965,8 @@ namespace mod
 
 		fixYetaAndYeto();
 
+		fixLBTBossDoor();
+
 		// Call original function
 		fapGm_Execute_trampoline();
 	}
@@ -1067,8 +1084,7 @@ namespace mod
 		//code to have all scents at once you need to unlock them tho
 		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]))
 		{
-			if (tools::checkItemFlag(ItemFlags::Youths_Scent) &&
-				(tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 2))
+			if (tools::checkItemFlag(ItemFlags::Youths_Scent) && tp::d_kankyo::env_light.currentRoom == 3)
 			{
 				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
 			}
@@ -1252,6 +1268,9 @@ namespace mod
 
 	void Mod::allowShopItemsAnytime()
 	{
+		float linkPos[3];
+		getPlayerPos(linkPos);
+
 		u8 hasEmptyBottleAlready = 1;
 		if (gameInfo.scratchPad.itemWheel.Bottle_1 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_2 != items::Item::Empty_Bottle &&
 			gameInfo.scratchPad.itemWheel.Bottle_3 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
@@ -1364,7 +1383,8 @@ namespace mod
 						shieldTrickOn = 1;
 					}
 
-					if (!tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1)
+					if (!tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1 &&
+						linkPos[2] > -600)
 					{
 						bombBag1Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
 						bombBag2Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
@@ -1622,6 +1642,25 @@ namespace mod
 			{
 				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
 				yetaTrickOn = 0;
+			}
+		}
+	}
+
+	void Mod::fixLBTBossDoor()
+	{
+		if (tp::d_a_alink::checkStageName("D_MN01") && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			float linkPos[3];
+			getPlayerPos(linkPos);
+			if (gameInfo.aButtonText == 0x6 && linkPos[1] >= -340 && linkPos[1] <= -320)
+			{
+				nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
+				LBTBossDoorTrickOn = 1;
+			}
+			if (gameInfo.aButtonText == 0x79 && LBTBossDoorTrickOn == 1)
+			{
+				gameInfo.localAreaNodes.nbKeys = nbLBTKeys;
+				LBTBossDoorTrickOn = 0;
 			}
 		}
 	}

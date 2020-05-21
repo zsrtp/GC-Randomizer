@@ -24,13 +24,11 @@ namespace mod
 		isGoatSkipEnabled = 1;
 		isMSPuzzleSkipEnabled = 1;
 		isCartEscortSkipEnabled = 1;
-		isEarlyCiTSEnabled = 1;
+		isEarlyCiTSEnabled = 0;
 		isCannonRepaired = 0;
-		isEarlyDesertEnabled = 1;
-		isBossKeyseyEnabled = 1;
+		isEarlyDesertEnabled = 0;
+		isBossKeyseyEnabled = 0;
 		isSewerSkipEnabled = 1;
-		isKB1Skipped = 1;
 		shuffledSkybook = 1;
 	}
-
 } 

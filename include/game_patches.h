@@ -183,4 +183,9 @@ namespace mod::game_patch
 	 * check whether you have MS before being allowed to enter the desert
 	 */
 	void accessDesert();
+
+	/**
+	 * check whether you have MS before being allowed to enter the desert
+	 */
+	void sellWaterBombs();
 }

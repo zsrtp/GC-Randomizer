@@ -13,18 +13,18 @@ namespace mod::item
 /* 3 */{0x21, 3, stage::allStages[45], 14, 0x1, 0xFF, 0b110000000000000000100, 1528.0000000, 250.0000000, -22.0000000, nullptr, nullptr}, //North Faron Cave Heart Piece Chest
 /* 4 */{0x03, 7, stage::allStages[45], 6, 0x1, 0xFF, 0b000000000000000000100, -38292.5312500, 400.0000000, -23129.9550780, nullptr, nullptr}, //Small Chest North of Trill
 /* 5 */{0xED, 7, stage::allStages[65], 7, 0x0, 0xFF, 0b110010000000000001000, 128.7043760, -1077.0000000, -607.5000000, nullptr, nullptr}, //Link's Basement Chest
-/* 6 */{0x03, 7, stage::allStages[6], 22, 0x1, 0xFF, 0b000000000000000000100, 900.0000000, 3110.0000000, 15825.0000000, nullptr, nullptr}, //FT Entrance Vine Chest
-/* 7 */{0x04, 7, stage::allStages[6], 0, 0x1, 0xFF, 0b100100000000000000100, 0.0000000, 2700.0000000, 5550.0000000, nullptr, nullptr}, //FT Central Chest Behind Stairs
-/* 8 */{0x23, 2, stage::allStages[6], 0, 0x1, 0x1, 0b110000000000000000100, 550.0000000, 3301.0095210, 5325.0000000, nullptr, nullptr}, //FT Map Chest
-/* 9 */{0x20, 8, stage::allStages[6], 9, 0x1, 0xFF, 0b110000000000000000100, 6908.0000000, 3580.2719730, -3305.0000000, nullptr, nullptr}, //FT Windless Bridge Chest
-/* 10 */{0x03, 7, stage::allStages[6], 2, 0x1, 0xFF, 0b110000000000000100100, 11559.7548830, 3152.0000000, 3761.2187500, nullptr, nullptr}, //FT Second Monkey Under Bridge Chest
-/* 11 */{0x20, 8, stage::allStages[6], 5, 0x1, 0xFF, 0b100000000000000100100, -9108.924805, 3302.0000000, 5547.310059, nullptr, nullptr}, //FT Totem Pole Chest
-/* 12 */{0x04, 7, stage::allStages[6], 5, 0x1, 0xFF, 0b100000000000000100100, -11721.1455080, 3750.0000000, 4717.8212890, nullptr, nullptr}, //FT West Tile Worm Small Chest
-/* 13 */{0x21, 3, stage::allStages[6], 3, 0x1, 0xFF, 0b110000000000000000100, -4000.0000000, 2955.5900880, 9075.0000000, nullptr, nullptr}, //FT Deku Like Heart Piece Chest
-/* 14 */{0x21, 3, stage::allStages[6], 5, 0x1, 0xFF, 0b110100000000000100100, -14275.0000000, 3402.7832030, 6150.0000000, nullptr, nullptr}, //FT West Tile Worm Heart Piece Chest
-/* 15 */{0x24, 2, stage::allStages[6], 0, 0x1, 0x1, 0b100100000000000000100, 0.0000000, 3150.0000000, 7125.0000000, nullptr, nullptr}, //FT Compass Chest
-/* 16 */{0x26, 2, stage::allStages[6], 1, 0x1, 0x1, 0b100100000000000000100, 9225.0009770, 3471.9599610, 8465.1347660, nullptr, nullptr}, //FT Big Key Chest
-/* 17 */{0x03, 7, stage::allStages[6], 1, 0x1, 0xFF, 0b000000000000000000100, 10261.0000000, 3175.0000000, 8295.0000000, nullptr, nullptr}, //FT East Water Cave Chest
+/* 6 */{0x03, 7, stage::allStages[6], 22, 0x1, 0xFF, 0b000000000000000000000, 900.0000000, 3110.0000000, 15825.0000000, nullptr, nullptr}, //FT Entrance Vine Chest
+/* 7 */{0x04, 7, stage::allStages[6], 0, 0x1, 0xFF, 0b100100000000000000000, 0.0000000, 2700.0000000, 5550.0000000, nullptr, nullptr}, //FT Central Chest Behind Stairs
+/* 8 */{0x23, 2, stage::allStages[6], 0, 0x1, 0x1, 0b110000000000000000000, 550.0000000, 3301.0095210, 5325.0000000, nullptr, nullptr}, //FT Map Chest
+/* 9 */{0x20, 8, stage::allStages[6], 9, 0x1, 0xFF, 0b110000000000000000000, 6908.0000000, 3580.2719730, -3305.0000000, nullptr, nullptr}, //FT Windless Bridge Chest
+/* 10 */{0x03, 7, stage::allStages[6], 2, 0x1, 0xFF, 0b110000000000000100000, 11559.7548830, 3152.0000000, 3761.2187500, nullptr, nullptr}, //FT Second Monkey Under Bridge Chest
+/* 11 */{0x20, 8, stage::allStages[6], 5, 0x1, 0xFF, 0b100000000000000100000, -9108.924805, 3302.0000000, 5547.310059, nullptr, nullptr}, //FT Totem Pole Chest
+/* 12 */{0x04, 7, stage::allStages[6], 5, 0x1, 0xFF, 0b100000000000000100000, -11721.1455080, 3750.0000000, 4717.8212890, nullptr, nullptr}, //FT West Tile Worm Small Chest
+/* 13 */{0x21, 3, stage::allStages[6], 3, 0x1, 0xFF, 0b110000000000000000000, -4000.0000000, 2955.5900880, 9075.0000000, nullptr, nullptr}, //FT Deku Like Heart Piece Chest
+/* 14 */{0x21, 3, stage::allStages[6], 5, 0x1, 0xFF, 0b110100000000000100000, -14275.0000000, 3402.7832030, 6150.0000000, nullptr, nullptr}, //FT West Tile Worm Heart Piece Chest
+/* 15 */{0x24, 2, stage::allStages[6], 0, 0x1, 0x1, 0b100100000000000000000, 0.0000000, 3150.0000000, 7125.0000000, nullptr, nullptr}, //FT Compass Chest
+/* 16 */{0x26, 2, stage::allStages[6], 1, 0x1, 0x1, 0b100100000000000000000, 9225.0009770, 3471.9599610, 8465.1347660, nullptr, nullptr}, //FT Big Key Chest
+/* 17 */{0x03, 7, stage::allStages[6], 1, 0x1, 0xFF, 0b000000000000000000000, 10261.0000000, 3175.0000000, 8295.0000000, nullptr, nullptr}, //FT East Water Cave Chest
 /* 18 */{0x20, 8, stage::allStages[6], 10, 0x2, 0xFF, 0b000100000010000000000, 1174.2510990, 5002.3901370, -9219.0937500, nullptr, nullptr}, //FT North Deku Like Chest
 /* 19 */{0x04, 7, stage::allStages[6], 11, 0x2, 0xFF, 0b100100000000000100000, 11183.0000000, 3806.5500490, -6305.0000000, nullptr, nullptr}, //FT East Tile Worm Chest
 /* 20 */{0x04, 7, stage::allStages[68], 2, 0x2, 0xFF, 0b000000000000000000000, -70.0000000, -6.0440000, -670.0000000, nullptr, nullptr}, //Kakariko Inn Small Chest
@@ -296,10 +296,10 @@ namespace mod::item
 /* 286 */{0x07, 7, stage::allStages[20], 8, 0xFF, 0xFF, 0b100100000001100100000, 2450.0000000, 6150.0000000, 2325.0000000, nullptr, nullptr}, //HC Treasure Room Sixth Small Chest
 /* 287 */{0x12, 5, stage::allStages[20], 8, 0xFF, 0xFF, 0b100100000001100100000, 2350.0000000, 6150.0000000, 2425.0000000, nullptr, nullptr}, //HC Treasure Room Seventh Small Chest
 /* 288 */{0x06, 7, stage::allStages[20], 8, 0xFF, 0xFF, 0b100100000001100100000, 2250.0000000, 6150.0000000, 2525.0000000, nullptr, nullptr}, //HC Treasure Room Eighth Small Chest
-/* 289 */{0x40, 0, stage::allStages[8], 2, 0x1, 0x1, 0b000000000000000000100, 205.3669740, 3901.0000000, -6120.5043950, nullptr, nullptr}, //FT Boomerang
+/* 289 */{0x40, 0, stage::allStages[8], 2, 0x1, 0x1, 0b000000000000000000000, 205.3669740, 3901.0000000, -6120.5043950, nullptr, nullptr}, //FT Boomerang
 /* 290 */{ 0x42, 0, stage::allStages[29], 51, 0x11, 0x11, 0b000000100100000000000, -0.0000460, 47.0000000, -473.7650150, nullptr, nullptr }, //SPR Ball and Chain
 /* 291 */{0x2A, 1, stage::allStages[65], 2, 0x1, 0x2, 0b000000000000000000100, -1261.1306150, 450.0000000, 10.0000000, nullptr, nullptr}, //Ordon Shield
-/* 292 */{0x28, 1, stage::allStages[65], 5, 0x1, 0x1, 0b000000000000000000000, 128.0923770, 7.8601500, -167.8504940, nullptr, nullptr}, //Ordon Sword
+/* 292 */{0x28, 1, stage::allStages[65], 5, 0x7, 0x1, 0b000000000000000000000, 128.0923770, 7.8601500, -167.8504940, nullptr, nullptr}, //Ordon Sword
 /* 293 */{0x4A, 0, stage::allStages[43], 0, 0x0, 0x0, 0b000000000000000000000, -3566.3000000, 579.2000000, 2977.2000000, nullptr, nullptr}, //Fishing Rod
 /* 294 */{0x65, 9, stage::allStages[65], 1, 0x0, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr}, //Sera Bottle
 /* 295 */{0x4B, 12, stage::allStages[65], 1, 0x0, 0x0, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr}, //Slingshot
@@ -350,11 +350,11 @@ namespace mod::item
 /* 340 */{ 0x21, 3, stage::allStages[51], 1, 0x12, 0xFF, 0b000000000000000000000, -71795.539062, -54450.000000, 56396.738281, nullptr, nullptr },
 /* 341 */{ 0x21, 3, stage::allStages[63], 0, 0x13, 0xFF, 0b000000000000000000010, 2200.000000, 104.574730, -1200.000000, nullptr, nullptr },
 /* 342 */{0x20, 8, stage::allStages[20], 13, 0xFF, 0xFF, 0b000000000000000000000, -7625.000000, 52.000000, -5525.000000, nullptr, nullptr}, //
-/* 343 */{0x20, 8, stage::allStages[6], 7, 0x1, 0xFF, 0b000000000000000000100, -5703.254883, 4372.640137, 11664.798828, nullptr, nullptr},
+/* 343 */{0x20, 8, stage::allStages[6], 7, 0x1, 0xFF, 0b000000000000000000000, -5703.254883, 4372.640137, 11664.798828, nullptr, nullptr},
 
 
 //Ooccoo
-/* 344 */{ 0x33, 2, stage::allStages[6], 1, 0x1, 0x1, 0b000000000000000000100, 3775.943604, 3167.790039, 5428.488281, nullptr, nullptr },
+/* 344 */{ 0x33, 2, stage::allStages[6], 1, 0x1, 0x1, 0b000000000000000000000, 3775.943604, 3167.790039, 5428.488281, nullptr, nullptr },
 /* 345 */{ 0x33, 2, stage::allStages[3], 14, 0x3, 0x3, 0b000000000000000000000, -14154.718750, 190.286682, 2185.947510, nullptr, nullptr },
 /* 346 */{ 0x33, 2, stage::allStages[0], 2, 0x6, 0x6, 0b000000000000000000000, 2045.683228, 1500.000000, 1642.919189, nullptr, nullptr },
 /* 347 */{ 0x33, 2, stage::allStages[24], 10, 0x9, 0x9, 0b000000000000000000000, -667.577815, -2100.000000, 4029.893311, nullptr, nullptr },
@@ -363,7 +363,7 @@ namespace mod::item
 /* 350 */{ 0x33, 2, stage::allStages[12], 16, 0x14, 0x14, 0b000000000000000000000, 6082.295898, 0.000000, 5896.656738, nullptr, nullptr },
 //overworld keys
 /* 351 */{ 0xfe, 8, stage::allStages[45], 4, 0xFF, 0xFF, 0b000000000000000000000, -13659.433594, -0.454284, -14367.083008, nullptr, nullptr },
-/* 352 */{ 0xf3, 8, stage::allStages[58], 13, 0x5, 0xFF, 0b000000000000000000000, -93334.218750, -5725.979980, 44504.023438, nullptr, nullptr },
+/* 352 */{ 0xf3, 4, stage::allStages[58], 13, 0x5, 0xFF, 0b000000000000000000000, -93334.218750, -5725.979980, 44504.023438, nullptr, nullptr },
 /* 353 */{ 0x20, 8, stage::allStages[55], 1, 0x9, 0xFF, 0b000000000000000000000, 4543.199219, 261.860168, -3035.944092, nullptr, nullptr },
 //goron mines key shards
 /* 354 */{ 0xf9, 2, stage::allStages[3], 14, 0x3, 0x3, 0b000000000000000000000, -15375.557617, -636.630005, 1595.673462, nullptr, nullptr },
@@ -424,7 +424,7 @@ namespace mod::item
 /*#2*/{ 0xe0, 11, stage::allStages[24], 3, 0x9, 0xFF, 0b100000000010000000010, 3606.844482, 150.030182, -5323.249512, nullptr, nullptr },
 /*#3*/{ 0xe0, 11, stage::allStages[24], 5, 0x9, 0xFF, 0b000000000000000000010, 5712.277344, 1050.019775, 4526.544922, nullptr, nullptr },
 /*#4*/{ 0xe0, 11, stage::allStages[24], 8, 0x9, 0xFF, 0b000000000000000000010, -4197.771973, 1040.154663, 4983.674805, nullptr, nullptr },
-/*#5*/{ 0xe0, 11, stage::allStages[73], 5, 0x9, 0xFF, 0b000000000000000000010, 4186.364746, -75.000000, 2795.808350, nullptr, nullptr },
+/*#5*/{ 0xe0, 11, stage::allStages[73], 5, 0x8, 0xFF, 0b000000000000000000010, 4186.364746, -75.000000, 2795.808350, nullptr, nullptr },
 /*#6*/{ 0xe0, 11, stage::allStages[31], 16, 0x10, 0xFF, 0b100000000000100000010, 126.849854, -20000.000000, -337.206903, nullptr, nullptr },
 /*#7*/{ 0xe0, 11, stage::allStages[31], 32, 0x13, 0xFF, 0b100000000100110000010, 231.875824, -40000.000000, -216.2944296, nullptr, nullptr },
 /*#8*/{ 0xe0, 11, stage::allStages[31], 43, 0x15, 0xFF, 0b100000000101110000010, -4560.734375, -53750.000000, -825.646851, nullptr, nullptr },
@@ -432,14 +432,14 @@ namespace mod::item
 /*#10*/{ 0xe0, 11, stage::allStages[12], 13, 0x15, 0xFF, 0b100000000001000000010, 3916.892090, 4496.779785, -12149.609375, nullptr, nullptr },
 /*#11*/{ 0xe0, 11, stage::allStages[47], 0, 0x8, 0xFF, 0b000000000000000000010, -2502.529785, -1533.660522, 18041.601562, nullptr, nullptr },
 /*#12*/{ 0xe0, 11, stage::allStages[45], 11, 0x8, 0xFF, 0b000000000000000000010, -25786.427734, 300.000000, -20456.810547, nullptr, nullptr },
-/*#13*/{ 0xe0, 11, stage::allStages[59], 0, 0x8, 0xFF, 0b000000000000000000010, 66240.039062, 143.258804, 56904.339844, nullptr, nullptr },
-/*#14*/{ 0xe0, 11, stage::allStages[59], 0, 0x8, 0xFF, 0b100000000010000000010, -816.907959, 2496.226562, 57933.289062, nullptr, nullptr },
-/*#15*/{ 0xe0, 11, stage::allStages[59], 0, 0x8, 0xFF, 0b100000000010000000010, 26747.324219, -46.507732, 26175.406250, nullptr, nullptr },
-/*#16*/{ 0xe0, 11, stage::allStages[37], 2, 0x8, 0xFF, 0b100000000010000000010, -1026.819824, 1.152117, -161.420013, nullptr, nullptr },
-/*#17*/{ 0xe0, 11, stage::allStages[37], 2, 0x8, 0xFF, 0b100000000010000000010, -286.849121, 3.514773, -895.548218, nullptr, nullptr },
-/*#18*/{ 0xe0, 11, stage::allStages[59], 0, 0x8, 0xFF, 0b100000000010000000010, -2024.554443, 16.013172, 11583.281250, nullptr, nullptr },
-/*#19*/{ 0xe0, 11, stage::allStages[55], 1, 0x8, 0xFF, 0b000000000000000000010, 1812.931274, 0.000000, 1155.415161, nullptr, nullptr },
-/*#20*/{ 0xe0, 11, stage::allStages[55], 3, 0x8, 0xFF, 0b000000000000000000010, 283.265228, 840.000000, -12366.407227, nullptr, nullptr },
+/*#13*/{ 0xe0, 11, stage::allStages[59], 0, 0x9, 0xFF, 0b000000000000000000010, 66240.039062, 143.258804, 56904.339844, nullptr, nullptr },
+/*#14*/{ 0xe0, 11, stage::allStages[59], 0, 0x9, 0xFF, 0b100000000010000000010, -816.907959, 2496.226562, 57933.289062, nullptr, nullptr },
+/*#15*/{ 0xe0, 11, stage::allStages[59], 0, 0x9, 0xFF, 0b100000000010000000010, 26747.324219, -46.507732, 26175.406250, nullptr, nullptr },
+/*#16*/{ 0xe0, 11, stage::allStages[37], 2, 0x9, 0xFF, 0b100000000010000000010, -1026.819824, 1.152117, -161.420013, nullptr, nullptr },
+/*#17*/{ 0xe0, 11, stage::allStages[37], 2, 0x9, 0xFF, 0b100000000010000000010, -286.849121, 3.514773, -895.548218, nullptr, nullptr },
+/*#18*/{ 0xe0, 11, stage::allStages[59], 0, 0x9, 0xFF, 0b100000000010000000010, -2024.554443, 16.013172, 11583.281250, nullptr, nullptr },
+/*#19*/{ 0xe0, 11, stage::allStages[55], 1, 0x9, 0xFF, 0b000000000000000000010, 1812.931274, 0.000000, 1155.415161, nullptr, nullptr },
+/*#20*/{ 0xe0, 11, stage::allStages[55], 3, 0x9, 0xFF, 0b000000000000000000010, 283.265228, 840.000000, -12366.407227, nullptr, nullptr },
 /*#21*/{ 0xe0, 11, stage::allStages[48], 0, 0x8, 0xFF, 0b000000000000000000010, 12836.060547, 100.000000, 178.608246, nullptr, nullptr },
 /*#22*/{ 0xe0, 11, stage::allStages[48], 0, 0x8, 0xFF, 0b000000000000000000010, 14444.615234, 256.835815, -527.642578, nullptr, nullptr },
 /*#24*/{ 0xe0, 11, stage::allStages[63], 0, 0x13, 0xFF, 0b100000000000010000010, 1683.054077, 480.000000, -6715.406250, nullptr, nullptr },
@@ -482,7 +482,7 @@ namespace mod::item
 /*#60*/{ 0xe0, 11, stage::allStages[50], 0, 0x8, 0xFF, 0b000000000000000000010, 297.160065, -4608.964844, 7384.047852, nullptr, nullptr },
 /*60 poe reward*/{ 0x07, 7, stage::allStages[73], 5, 0x15, 0xFF, 0b000000000000000000000, 4250.363281, 134.492020, 1813.639648, nullptr, nullptr },
 //sky book quest
-/*empty*/{ 0xe9, 0, stage::allStages[72], 0, 0xFF, 0x13, 0b000000000000010000000, -532.266479, 1.500000, -343.810791, nullptr, nullptr },
+/*empty*/{ 0xe9, 0, stage::allStages[72], 0, 0x13, 0x13, 0b000000000000010000000, -532.266479, 1.500000, -343.810791, nullptr, nullptr },
 /*faron*/{ 0xea, 0, stage::allStages[45], 8, 0x13, 0x13, 0b000000000000010000000, -17500.000000, -310.000000, -20950.000000, nullptr, nullptr },
 /*eldin gorge*/{ 0xea, 0, stage::allStages[56], 3, 0x13, 0x13, 0b000000000000010000000, -10195.000000, -4760.000000, 39363.000000, nullptr, nullptr },
 /*edin bridge*/{ 0xea, 0, stage::allStages[56], 0, 0x13, 0x13, 0b000000000000010000000, 33650.000000, -80.000000, -35970.000000, nullptr, nullptr },
