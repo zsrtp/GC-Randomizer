@@ -32,7 +32,7 @@ namespace mod
 			u8 randoEnabled; // Randomize chests?
 			u8 truePause; // Disable controls during console?
 			u8 inputBuffering; // En/Disable buffering
-
+			
 			//item search
 			u8 lastItemSearchID;
 			u8 itemSearchID;

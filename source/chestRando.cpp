@@ -252,8 +252,8 @@ namespace mod
 			sourceCheck = &item::checks[index];
 		} while(!checkCondition(sourceCheck, destCheck) || sourceCheck->destination || sourceCheck->sourceLayer > maxLayer || sourceCheck->sourceLayer < minLayer ||
 		 (destCheck->type == item::ItemType::Bug && 0 == strcmp("R_SP160", sourceCheck->stage) &&  sourceCheck->room == 3) || //agitha can't give bugs
-		 (destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)) || //dungeon items only in their own dungeon
-		 (destCheck->type == item::ItemType::Dungeon && index == 115)); //dont place dungeon items at clawshot goron mines check
+		 (areDungeonItemsRandomized == 1 && destCheck->type == item::ItemType::Dungeon && 0 != strcmp(destCheck->stage, sourceCheck->stage)) || //dungeon items only in their own dungeon
+		 (areDungeonItemsRandomized == 1 && destCheck->type == item::ItemType::Dungeon && index == 115)); //dont place dungeon items at clawshot goron mines check
 
 		return sourceCheck;
 	}
@@ -293,8 +293,7 @@ namespace mod
 		{
 			case item::ItemType::Key:
 				// Small Keys + ordon pumpkin and cheese
-				if (isKeysanityEnabled == 0 || check->itemID == items::Item::Gate_Keys || 
-				(Singleton::getInstance()->isForestEscapeEnabled == 1 && check->itemID == items::Item::Coro_Key))
+				if (isKeysanityEnabled == 0 || (Singleton::getInstance()->isForestEscapeEnabled == 1 && isKeysanityEnabled == 1 && check->itemID == items::Item::Coro_Key))
 				{
 					result = true;
 				}

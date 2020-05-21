@@ -362,7 +362,7 @@ namespace mod::item
 /* 350 */{0x33, 2, stage::allStages[12], 16, 0x14, 0x14, 0b000000000000000000000, 6082.295898, 0.000000, 5896.656738, nullptr, nullptr},
 //overworld keys
 /* 351 */{0xfe, 8, stage::allStages[45], 4, 0xFF, 0xFF, 0b000000000000000000000, -13659.433594, -0.454284, -14367.083008, nullptr, nullptr},
-/* 352 */{0xf3, 8, stage::allStages[58], 13, 0x5, 0xFF, 0b000000000000000000000, -93334.218750, -5725.979980, 44504.023438, nullptr, nullptr},
+/* 352 */{0xf3, 4, stage::allStages[58], 13, 0x5, 0xFF, 0b000000000000000000000, -93334.218750, -5725.979980, 44504.023438, nullptr, nullptr},
 /* 353 */{0x20, 8, stage::allStages[55], 1, 0x9, 0xFF, 0b000000000000000000000, 4543.199219, 261.860168, -3035.944092, nullptr, nullptr},
 //goron mines key shards
 /* 354 */{0xf9, 2, stage::allStages[3], 14, 0x3, 0x3, 0b000000000000000000000, -15375.557617, -636.630005, 1595.673462, nullptr, nullptr},
