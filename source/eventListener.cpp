@@ -28,10 +28,13 @@ namespace mod::event
 
 	void EventListener::checkLoadEvents()
 	{
-		char* stage = gameInfo.nextStageVars.nextStage;
-		u8 room = gameInfo.nextStageVars.nextRoom;
-		u8 spawn = static_cast<u8>(gameInfo.nextStageVars.nextSpawnPoint);
-		u8 state = gameInfo.nextStageVars.nextState;
+		tp::d_com_inf_game::NextStageVars* nextStageVars = &gameInfo.nextStageVars;
+		
+		
+		char* stage = nextStageVars->nextStage;
+		u8 room = nextStageVars->nextRoom;
+		u8 spawn = static_cast<u8>(nextStageVars->nextSpawnPoint);
+		u8 state = nextStageVars->nextState;
 		u8 eventid = gameInfo.eventSystem.currentEventID;
 
 		for(u8 i = 0; i < loadEventIndex; i++)

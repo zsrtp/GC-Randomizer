@@ -29,19 +29,21 @@ namespace mod::tools
 
 	void triggerSaveLoad(char* stage, u8 room, u8 spawn, u8 state, u8 event)
 	{
-		strcpy(gameInfo.nextStageVars.nextStage, stage);
-		gameInfo.nextStageVars.nextRoom = room;
-		gameInfo.nextStageVars.nextSpawnPoint = spawn;
-		gameInfo.nextStageVars.nextState = state;
+		tp::d_com_inf_game::NextStageVars* nextStageVars = &gameInfo.nextStageVars;
+		
+		strcpy(nextStageVars->nextStage, stage);
+		nextStageVars->nextRoom = room;
+		nextStageVars->nextSpawnPoint = spawn;
+		nextStageVars->nextState = state;
 
 		gameInfo.eventSystem.nextEventID = event;
 		gameInfo.respawnValues.respawnAnimation = 0;
-		gameInfo.nextStageVars.isVoidorWarp = 0;
+		nextStageVars->isVoidorWarp = 0;
 		gameInfo.respawnValues.respawnCutscene = 0;
 		gameInfo.eventSystem.immediateControl = 0xFFFF;
-		gameInfo.nextStageVars.fadeType = 0x13;
+		nextStageVars->fadeType = 0x13;
 
-		gameInfo.nextStageVars.triggerLoad = true;
+		nextStageVars->triggerLoad = true;
 	}
 
 	void setCutscene(bool skippable, bool fade, tp::evt_control::csFunc onSkip)

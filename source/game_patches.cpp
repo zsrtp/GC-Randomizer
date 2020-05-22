@@ -301,19 +301,21 @@ namespace mod::game_patch
 	
 	void handleMaloShop()
 	{
+		tp::d_com_inf_game::AreaNodes* localAreaNodes = &gameInfo.localAreaNodes;
+		
 		//hylian shield check
 		if ((gameInfo.scratchPad.eventBits[0xA] & 0x8) != 0)//KB1 done
 		{
 			if (!tools::checkItemFlag(ItemFlags::Null_D9))
 			{
 				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hylian shield");
-				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x2;//unset flag for hylian shield bought
-				gameInfo.localAreaNodes.unk_0[0x13] |= 0x40;//set flag for hylian shield on counter
+				localAreaNodes->unk_0[0xC] &= ~0x2;//unset flag for hylian shield bought
+				localAreaNodes->unk_0[0x13] |= 0x40;//set flag for hylian shield on counter
 			}
 			else 
 			{
-				gameInfo.localAreaNodes.unk_0[0xC] |= 0x2;//set flag for hylian shield bought
-				gameInfo.localAreaNodes.unk_0[0x13] &= ~0x40;//unset flag for hylian shield on counter
+				localAreaNodes->unk_0[0xC] |= 0x2;//set flag for hylian shield bought
+				localAreaNodes->unk_0[0x13] &= ~0x40;//unset flag for hylian shield on counter
 			}
 		}
 		
@@ -323,15 +325,15 @@ namespace mod::game_patch
 			if (!tools::checkItemFlag(ItemFlags::Null_D8))
 			{
 				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hawkeye");
-				gameInfo.localAreaNodes.unk_0[0xC] |= 0x40;//set flag for hawkeye on counter
-				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x20;//unset flag for arrows on counter (else causes crash)
-				gameInfo.localAreaNodes.unk_0[0xD] &= ~0x8;//unset flag for hawkeye bought
+				localAreaNodes->unk_0[0xC] |= 0x40;//set flag for hawkeye on counter
+				localAreaNodes->unk_0[0xC] &= ~0x20;//unset flag for arrows on counter (else causes crash)
+				localAreaNodes->unk_0[0xD] &= ~0x8;//unset flag for hawkeye bought
 			}
 			else
 			{
-				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x40;//unset flag for hawkeye on counter
-				gameInfo.localAreaNodes.unk_0[0xC] |= 0x20;//set flag for arrows on counter
-				gameInfo.localAreaNodes.unk_0[0xD] |= 0x8;//set flag for hawkeye bought
+				localAreaNodes->unk_0[0xC] &= ~0x40;//unset flag for hawkeye on counter
+				localAreaNodes->unk_0[0xC] |= 0x20;//set flag for arrows on counter
+				localAreaNodes->unk_0[0xD] |= 0x8;//set flag for hawkeye bought
 			}
 		}
 	}
