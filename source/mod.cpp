@@ -765,19 +765,7 @@ namespace mod
 		{
 			if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Start)))
 			{
-				if (customSeed == 0)
-				{	
-					u16 lastCheckSum = chestRandomizer->checkSum;
-					do
-					{
-						chestRandomizer->generate();
-					}
-					while (chestRandomizer->checkSum == lastCheckSum);
-				}
-				else
-				{
-					chestRandomizer->generate();
-				}
+				chestRandomizer->generate();
 			}
 
 			// Parse inputs of this frame

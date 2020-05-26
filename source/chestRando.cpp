@@ -459,6 +459,7 @@ namespace mod
 			{
 				u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
 				*tempAddress |= 0x400;//give ending blow
+				gameInfo.localAreaNodes.unk_0[0x17] |= 0xC0;//kill bugs in Coro's house
 				gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
 				gameInfo.localAreaNodes.unk_0[0xC] |= 0x80;//set flag for midna to think you followed the monkey in the mist
 				gameInfo.scratchPad.eventBits[0x1B] = 0x78; //skip the monkey escort

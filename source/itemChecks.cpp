@@ -299,7 +299,7 @@ namespace mod::item
 /* 289 */{0x40, 0, stage::allStages[8], 2, 0x1, 0x1, 0b000000000000000000000, 205.3669740, 3901.0000000, -6120.5043950, nullptr, nullptr}, //FT Boomerang
 /* 290 */{ 0x42, 0, stage::allStages[29], 51, 0x11, 0x11, 0b000000100100000000000, -0.0000460, 47.0000000, -473.7650150, nullptr, nullptr }, //SPR Ball and Chain
 /* 291 */{0x2A, 1, stage::allStages[65], 2, 0x1, 0x2, 0b000000000000000000100, -1261.1306150, 450.0000000, 10.0000000, nullptr, nullptr}, //Ordon Shield
-/* 292 */{0x28, 1, stage::allStages[65], 5, 0x7, 0x1, 0b000000000000000000000, 128.0923770, 7.8601500, -167.8504940, nullptr, nullptr}, //Ordon Sword
+/* 292 */{0x28, 1, stage::allStages[65], 5, 0x1, 0x7, 0b000000000000000000000, 128.0923770, 7.8601500, -167.8504940, nullptr, nullptr}, //Ordon Sword
 /* 293 */{0x4A, 0, stage::allStages[43], 0, 0x0, 0x0, 0b000000000000000000000, -3566.3000000, 579.2000000, 2977.2000000, nullptr, nullptr}, //Fishing Rod
 /* 294 */{0x65, 9, stage::allStages[65], 1, 0x0, 0xFF, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr}, //Sera Bottle
 /* 295 */{0x4B, 12, stage::allStages[65], 1, 0x0, 0x0, 0b000000000000000000000, -55.0000000, 0.0000000, -156.0000000, nullptr, nullptr}, //Slingshot
