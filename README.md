@@ -2,10 +2,10 @@
 [Homepage](https://rando.tpspeed.run) | [Development Information](https://dev.tpspeed.run) | [Mirror](https://git.aecx.cc) | [Discord](https://discord.tpspeed.run)
 
 #### Disclaimer
-> As of 2020 the new Repository is just [Randomizer](https://github.com/zsrtp/Randomizer) due to massive code and structural changes
+> In early 2020, a new repository called [Randomizer](https://github.com/zsrtp/Randomizer) was made for this randomizer due to massive code and structural changes that are planned. At the moment, it is empty.
 
 > This project is based on Piston's [ttyd-tools](https://github.com/PistonMiner/ttyd-tools) and ported to Twilight Princess by [Zephiles](https://github.com//Zephiles)
-> 
+
 ### Info
 This is template code without any game changing logic whatsoever.
 It randomizes every item Link gets then turns towards the camera with the item floating above his hands (excluding getting an item for the first time on the ground).
@@ -14,13 +14,19 @@ This means these items are not randomized in this version:
 * Shadow Crystal
 * Horse Call
 * Master Sword infused with light
+* Recharged Dominion Rod
+* All 7 hidden skills
+* All 5 scents
 * Shop ammo that doesn't trigger a cutscene
 * Floor rupees/arrows/seeds
 * Scoopable bottle contents (might be possible in an update from the [official version](https://github.com/zsrtp/Randomizer) )
 * Fished items (might be possible in an update from the [official version](https://github.com/zsrtp/Randomizer) )
 
 ### What is planned for later versions
-* Keysanity (very complex, might not do it)
+* Implementing chests in place of non randomizable unique items
+* Making shop ammo that doesn't trigger a cutscene randomizable
+* Skips (idk Lunar will always find something more to skip)
+* Text edits
 
 ### If you think an item check wasn't randomized properly:
 1. Get the item check in-game
