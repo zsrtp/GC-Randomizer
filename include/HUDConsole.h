@@ -1,7 +1,8 @@
 #pragma once
 
-#include "defines.h"
 #include <tp/JFWSystem.h>
+
+#include "defines.h"
 
 namespace mod
 {

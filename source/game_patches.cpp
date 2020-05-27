@@ -156,30 +156,6 @@ namespace mod::game_patch
 			gameInfo.nextStageVars.nextSpawnPoint = 0x0;
 		}
 	}
-	
-
-	void allowFaronEscape()
-	{
-		if (Singleton::getInstance()->isForestEscapeEnabled == 1)
-		{
-			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
-			if (gameInfo.nextStageVars.nextRoom != 5)
-			{
-				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 || gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 ||
-					gameInfo.scratchPad.tearCounters.Faron != 16 || (tp::d_com_inf_game::current_state == 0x65 && !tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron)))
-				{
-					return;
-				}
-				else
-				{
-					strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
-					// reload faron woods as state 2
-					//tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
-					gameInfo.nextStageVars.nextState = 0x2;
-				}
-			}
-		}
-	}
 
 	void unlockHFGates()
 	{
@@ -313,14 +289,6 @@ namespace mod::game_patch
 		}
 	}
 
-	void sellWaterBombs()
-	{
-		if (gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 && ((gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) == 0))//Escort Not Completed before Beating Lakebed
-		{
-			gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;
-		}
-	}
-
 	void accessDesert()
 	{
 		if (tools::checkItemFlag(ItemFlags::Master_Sword))
@@ -333,6 +301,14 @@ namespace mod::game_patch
 			gameInfo.nextStageVars.nextRoom = 0x0;
 			gameInfo.nextStageVars.nextSpawnPoint = 0x4D;
 			tp::d_item::execItemGet(0x2);
+		}
+	}
+
+	void sellWaterBombs()
+	{
+		if (gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 && ((gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) == 0))//Escort Not Completed before Beating Lakebed
+		{
+			gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;
 		}
 	}
 
@@ -455,17 +431,6 @@ namespace mod::game_patch
 
 		// Set Midna Transform flag (gets set at Master Sword)
 		gameInfo.scratchPad.eventBits[0xD] |= 0x4;
-	}
-
-	void skipKB1()
-	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping KB1");
-
-		// Load back to Ordon Spring
-		strncpy(gameInfo.nextStageVars.nextStage, stage::allStages[Stage_Title_Screen], sizeof(gameInfo.nextStageVars.nextStage) - 1);
-		gameInfo.nextStageVars.nextRoom = 0x0;
-		gameInfo.nextStageVars.nextSpawnPoint = 0x1;
-		gameInfo.nextStageVars.nextState = 0x4;
 	}
 
 	void handleMaloShop()

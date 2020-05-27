@@ -32,7 +32,7 @@ typedef	signed char 		s8;
 
 // Mnemonics
 #define AUTHOR				"ZTPR"
-#define VERSION				"v0.15b"
+#define VERSION				"v0.15.1a"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos

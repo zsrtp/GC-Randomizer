@@ -25,7 +25,6 @@ namespace mod
 		u8 isEarlyDesertEnabled;
 		u8 isBossKeyseyEnabled;
 		u8 isSewerSkipEnabled;
-		u8 isKB1Skipped;
 		u8 shuffledSkybook;
 
 		private:

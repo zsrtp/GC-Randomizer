@@ -165,3 +165,6 @@
 
 //canwarp
 804069B6:can_warp
+
+//resource.o
+802a9490:parseCharacter_1Byte

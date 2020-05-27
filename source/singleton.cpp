@@ -31,4 +31,5 @@ namespace mod
 		isSewerSkipEnabled = 1;
 		shuffledSkybook = 1;
 	}
+
 } 

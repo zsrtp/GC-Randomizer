@@ -150,11 +150,6 @@ namespace mod::game_patch
 	void setLanayruWolf();
 
 	/**
-	 * sets the flag for KB1 to be complete
-	 */
-	void skipKB1();
-
-	/**
 	 * sets Faron state after warping from lanayru
 	 */
 	void fixLanayruFaron();

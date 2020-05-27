@@ -946,5 +946,6 @@ namespace tp::d_com_inf_game
 		//extern char wallet_text[13];
 		//extern char wallet_description[96];
 		extern u8 can_warp;
+		
 	}
 }
