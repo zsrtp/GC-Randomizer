@@ -3,6 +3,7 @@
 #include "defines.h"
 
 #include <tp/evt_control.h>
+#include <tp/d_com_inf_game.h>
 
 namespace mod::tools
 {
@@ -56,5 +57,21 @@ namespace mod::tools
 		 * @param count The number of bytes
 		 */
 		u16 fletcher16(u8* data, s32 count);
+
+		/**
+		 * Sets a specific bit/flag in the itemFlags variable in tp::d_com_inf_game::gameInfo.scratchPad.itemFlags
+		 */
+		void setItemFlag(ItemFlags flag);
+
+		/**
+		 * Unsets a specific bit/flag in the itemFlags variable in tp::d_com_inf_game::gameInfo.scratchPad.itemFlags
+		 */
+		void clearItemFlag(ItemFlags flag);
+
+
+		/**
+		 * Checks if a specific bit/flag in the itemFlags variable in tp::d_com_inf_game::gameInfo.scratchPad.itemFlags is set
+		 */
+		bool checkItemFlag(ItemFlags flag);
 	}
 }

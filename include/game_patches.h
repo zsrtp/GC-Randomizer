@@ -79,11 +79,6 @@ namespace mod::game_patch
 	void setBublinState();
 
 	/**
-	* Opens the Snowpeak Ruins Doors
-	*/
-	void openSnowpeakDoors();
-
-	/**
 	 * Sets the flag after Ilia CS
 	 * which tells the game that you started
 	 * with sewers
@@ -149,7 +144,48 @@ namespace mod::game_patch
 	 */
 	void skipCartEscort();
 
+	/**
+	 * warps player to Lanayru twilight gate if they don't have MS
+	 */
 	void setLanayruWolf();
 
+	/**
+	 * sets the flag for KB1 to be complete
+	 */
+	void skipKB1();
+
+	/**
+	 * sets Faron state after warping from lanayru
+	 */
 	void fixLanayruFaron();
+
+	/**
+	 * Fixes the cannon and puts it at lake hylia
+	 */
+	void earlyCiTS();
+
+	/**
+	 * Fyer will let you go to the desert if you have MS
+	 */
+	void earlyDesert();
+
+	/**
+	 * give boss key to all dungeons
+	 */
+	void unlockBossDoors();
+
+	/**
+	 * check wether to show hawkeye and hylian shield in malo mart
+	 */
+	void handleMaloShop();
+
+	/**
+	 * check whether you have MS before being allowed to enter the desert
+	 */
+	void accessDesert();
+
+	/**
+	 * check whether you have MS before being allowed to enter the desert
+	 */
+	void sellWaterBombs();
 }

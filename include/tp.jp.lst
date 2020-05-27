@@ -27,14 +27,17 @@
 // f_op_actor_mng.o
 8001BBE8:createItemForPresentDemo
 8001BC74:createItemForTrBoxDemo
+8001c078:createDemoItem
 8001C0D4:createItemForBoss
 8001C174:createItemForMidBoss
 8001C1B8:createItemForDirectGet
+8001C1FC:createItemForSimpleDemo
 
 // d_map_path_dmap.o
 8003EE5C:getMapPlayerPos
 
 // d_item.o
+80097ECC:execItemGet
 80097F20:checkItemGet
 800982F4:item_func_UTUWA_HEART
 
@@ -42,6 +45,7 @@
 8009DA98:checkStageName
 800B2754:setStickData
 800BB4F0:checkHeavyStateOn
+800C782C:procCoMetamorphoseInit
 8011A734:checkTreasureRupeeReturn
 // data
 80388C0C:ladderVars
@@ -129,7 +133,10 @@
 // string.o
 8036AE30:strcmp
 8036AFC8:strcpy
-8036af84:strncpy
+8036AF84:strncpy
+
+//currentState
+803B8000:current_state
 
 // m_Do_controller_pad.o
 // data
