@@ -466,44 +466,45 @@ namespace mod
             tp::d_com_inf_game::GameInfo* gameInfoPtr = &gameInfo;
             if (isTwilightSkipEnabled == 1)
             {
-                gameInfo.scratchPad.tearCounters.Faron = 16;
-                gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;   // give N faron warp
-                gameInfo.localAreaNodes.unk_0[0x8] = 0xFF;   // give midna jumps in mist area
-                gameInfo.localAreaNodes.unk_0[0xC] |= 0x80;  // set flag for midna to think you followed the monkey in the mist
-                gameInfo.scratchPad.eventBits[0x1B] = 0x78;  // skip the monkey escort
-                u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                *tempAddress |= 0x400;                       // give ending blow
-                gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;  // mark read the midna text when you warp to N Faron for bridge
+                gameInfoPtr->scratchPad.tearCounters.Faron = 16;
+                gameInfoPtr->localAreaNodes.unk_0[0xB] |= 0x4;  // give N faron warp
+                gameInfoPtr->localAreaNodes.unk_0[0x8] = 0xFF;  // give midna jumps in mist area
+                gameInfoPtr->localAreaNodes.unk_0[0xC] |=
+                    0x80;  // set flag for midna to think you followed the monkey in the mist
+                gameInfoPtr->scratchPad.eventBits[0x1B] = 0x78;  // skip the monkey escort
+                u16* tempAddress = reinterpret_cast<u16*>(&gameInfoPtr->scratchPad.eventBits[0x29]);
+                *tempAddress |= 0x400;                           // give ending blow
+                gameInfoPtr->localAreaNodes.unk_0[0x12] |= 0x4;  // mark read the midna text when you warp to N Faron for bridge
                 if (Singleton::getInstance()->isForestEscapeEnabled == 1)
                 {
-                    gameInfo.scratchPad.eventBits[0x6] |=
+                    gameInfoPtr->scratchPad.eventBits[0x6] |=
                         0x26;  // warp the kak bridge, give map warp, set Forest Temple Story Flag
                 }
                 else
                 {
-                    gameInfo.scratchPad.eventBits[0x6] |= 0x24;  // warp the kak bridge, give map warp
-                    gameInfo.localAreaNodes.unk_0[0xF] |= 0x8;   // set flag for midna text after twilight
+                    gameInfoPtr->scratchPad.eventBits[0x6] |= 0x24;  // warp the kak bridge, give map warp
+                    gameInfoPtr->localAreaNodes.unk_0[0xF] |= 0x8;   // set flag for midna text after twilight
                 }
 
-                gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xF] |= 0x2;   // cutscene for Gorge Bridge Watched
-                gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xE] |= 0x20;  // cutscene for entering Field Watched
-                gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x8] |= 0x1;   // Midna text for warping the bridge
-                gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9] |= 0x20;  // give Gorge Warp
+                gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xF] |= 0x2;   // cutscene for Gorge Bridge Watched
+                gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xE] |= 0x20;  // cutscene for entering Field Watched
+                gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x8] |= 0x1;   // Midna text for warping the bridge
+                gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9] |= 0x20;  // give Gorge Warp
 
-                gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x8] |=
+                gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0x8] |=
                     0x61;  // set Midna Text for Ook Bridge Broken, Boomerang, and freeing first monkey
-                gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x9] |= 0x40;  // Ook Bridge Broken
-                gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0xF] |=
+                gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0x9] |= 0x40;  // Ook Bridge Broken
+                gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0xF] |=
                     0x6;  // Midna text for pre-diababa room and open room monkey
-                gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x10] |= 0x4;  // Midna text for compass
+                gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0x10] |= 0x4;  // Midna text for compass
 
-                gameInfo.scratchPad.eventBits[0x5E] |= 0x10;  // Midna Text After Beating Forest Temple
+                gameInfoPtr->scratchPad.eventBits[0x5E] |= 0x10;  // Midna Text After Beating Forest Temple
 
-                if (gameInfo.scratchPad.eventBits[0x5] != 0xFF)
+                if (gameInfoPtr->scratchPad.eventBits[0x5] != 0xFF)
                 {
-                    gameInfo.scratchPad.eventBits[0x5] = 0xFF;  // Ensure Epona is Stolen
+                    gameInfoPtr->scratchPad.eventBits[0x5] = 0xFF;  // Ensure Epona is Stolen
                 }
-                gameInfo.nextStageVars.triggerLoad |= 1;
+                gameInfoPtr->nextStageVars.triggerLoad |= 1;
                 return item;
             }
             else
