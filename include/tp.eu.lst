@@ -12,6 +12,11 @@
 800351EC:getSave
 80035220:putSave
 
+// d_stage.o
+80025914:actorCommonLayerInit
+// data
+803F8034:mStatus_roomControl
+
 // d_event.o
 800428A8:defaultSkipStb
 80042B04:skipper
@@ -27,7 +32,6 @@
 // f_op_actor_mng.o
 8001BC90:createItemForPresentDemo
 8001BD1C:createItemForTrBoxDemo
-8001C120:createDemoItem
 8001C17C:createItemForBoss
 8001C21C:createItemForMidBoss
 8001C260:createItemForDirectGet
@@ -35,6 +39,7 @@
 
 // d_map_path_dmap.o
 8003EF8C:getMapPlayerPos
+8003F050:getMapPlayerAngleY
 
 // d_item.o
 80097FBC:execItemGet
@@ -153,9 +158,3 @@
 // JFWSystem.o
 // data
 80453180:systemConsole
-
-//currentState
-803A8393:current_state
-
-//canWarp
-80408956:can_warp
