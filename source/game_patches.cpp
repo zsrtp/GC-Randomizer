@@ -478,6 +478,7 @@ namespace mod::game_patch
 				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hylian shield");
 				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x2;//unset flag for hylian shield bought
 				gameInfo.localAreaNodes.unk_0[0x13] |= 0x40;//set flag for hylian shield on counter
+				gameInfo.localAreaNodes.unk_0[0x15] &= ~0x40;//unset flag for red potion on right
 			}
 			else
 			{
@@ -494,13 +495,27 @@ namespace mod::game_patch
 			{
 				gameInfo.localAreaNodes.unk_0[0xC] |= 0x40;//set flag for hawkeye on counter
 				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x20;//unset flag for arrows on counter (else causes crash)
-				gameInfo.localAreaNodes.unk_0[0xD] &= ~0x8;//unset flag for hawkeye bought
+				gameInfo.localAreaNodes.unk_0[0xD] &= ~0x8;//unset flag for hawkeye sold out
+				gameInfo.localAreaNodes.unk_0[0x15] &= ~0x10;//unset flag for red potion on left
 			}
 			else
 			{
 				gameInfo.localAreaNodes.unk_0[0xC] &= ~0x40;//unset flag for hawkeye on counter
-				gameInfo.localAreaNodes.unk_0[0xC] |= 0x20;//set flag for arrows on counter
-				gameInfo.localAreaNodes.unk_0[0xD] |= 0x8;//set flag for hawkeye bought
+				if (tools::checkItemFlag(ItemFlags::Null_D9))
+				{
+					gameInfo.localAreaNodes.unk_0[0xC] |= 0x20;//set flag for arrows on counter
+					gameInfo.localAreaNodes.unk_0[0x15] |= 0x40;//set flag for red potion on right
+					gameInfo.localAreaNodes.unk_0[0x15] &= ~0x10;//unset flag for red potion on left
+					gameInfo.localAreaNodes.unk_0[0xD] |= 0x8;//set flag for hawkeye sold out
+				}
+				else
+				{
+					gameInfo.localAreaNodes.unk_0[0xC] &= ~0x20;//unset flag for arrows on counter
+					gameInfo.localAreaNodes.unk_0[0x15] &= ~0x40;//unset flag for red potion on right
+					gameInfo.localAreaNodes.unk_0[0x15] |= 0x10;//set flag for red potion on left
+					gameInfo.localAreaNodes.unk_0[0xD] &= ~0x8;//unset flag for hawkeye sold out
+
+				}
 			}
 		}
 	}
