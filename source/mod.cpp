@@ -24,6 +24,7 @@
 #include "array.h"
 #include "chestRando.h"
 #include "controller.h"
+#include "customChecks.h"
 #include "defines.h"
 #include "eventListener.h"
 #include "game_patches.h"
@@ -315,13 +316,13 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 'x', WatchInterpretation::_u8);//16
         hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 'x',
         WatchInterpretation::_u8);//8 hudConsole->addWatch(page, "Castle Town:",
-        &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 'x', WatchInterpretation::_u8);//8 hudConsole->addWatch(page,
-        "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-        hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 'x',
-        WatchInterpretation::_u8);//4 hudConsole->addWatch(page, "Lake Hylia:",
-        &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 'x', WatchInterpretation::_u8);//4 hudConsole->addWatch(page, "Zora
-        River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 'x', WatchInterpretation::_u8);//32 page =
-        hudConsole->addPage("Warps 2"); hudConsole->addOption(page, "Death Mountain:",
+        &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 'x', WatchInterpretation::_u8);//8
+        hudConsole->addWatch(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 'x',
+        WatchInterpretation::_u8);//32 hudConsole->addWatch(page, "Zoras Domain:",
+        &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 'x', WatchInterpretation::_u8);//4 hudConsole->addWatch(page,
+        "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 'x', WatchInterpretation::_u8);//4
+        hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 'x',
+        WatchInterpretation::_u8);//32 page = hudConsole->addPage("Warps 2"); hudConsole->addOption(page, "Death Mountain:",
         &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 0xFF); hudConsole->addOption(page, "Kakariko:",
         &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 0xFF); hudConsole->addOption(page, "South Faron:",
         &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 0xFF); hudConsole->addOption(page, "North Faron:",
@@ -356,22 +357,23 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         hudConsole->addWatch(page, "2F:", &gameInfo.scratchPad.unk_1F[0x10], 'x', WatchInterpretation::_u16);
         hudConsole->addWatch(page, "32:", &gameInfo.scratchPad.unk_32[0x0], 'x', WatchInterpretation::_u16);
         hudConsole->addWatch(page, "38:", &gameInfo.scratchPad.unk_38[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "62:", &gameInfo.scratchPad.movingActors.link.unk_62[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "7A:", &gameInfo.scratchPad.movingActors.unk_7A[0x0], 'x',
+        hudConsole->addWatch(page, "62:", &gameInfo.scratchPad.movingActors.link.unk_62[0x0], 'x',
+        WatchInterpretation::_u16); hudConsole->addWatch(page, "7A:", &gameInfo.scratchPad.movingActors.unk_7A[0x0], 'x',
         WatchInterpretation::_u32);//actual size:0x3
 
         page = hudConsole->addPage("testing adr2");
 
         hudConsole->addWatch(page, "7E:", &gameInfo.scratchPad.movingActors.unk_7E[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "99:", &gameInfo.scratchPad.unk_99[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
-        hudConsole->addWatch(page, "F0:", &gameInfo.scratchPad.ammo.unk_F0, 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "F5:", &gameInfo.scratchPad.ammo.unk_F5, 'x', WatchInterpretation::_u32);//actual size:0x3
-        hudConsole->addWatch(page, "FC:", &gameInfo.scratchPad.unk_FC[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "104:", &gameInfo.scratchPad.unk_FC[0x8], 'x', WatchInterpretation::_u64);//actual size:0x5
-        hudConsole->addWatch(page, "10B:", &gameInfo.scratchPad.unk_10B, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "10D:", &gameInfo.scratchPad.unk_10D[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
-        hudConsole->addWatch(page, "115:", &gameInfo.scratchPad.unk_115[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
-        hudConsole->addWatch(page, "120:", &gameInfo.scratchPad.unk_120[0x0], 'x', WatchInterpretation::_u64);//actual size:0x6
+        hudConsole->addWatch(page, "99:", &gameInfo.scratchPad.unk_99[0x0], 'x', WatchInterpretation::_u32);//actual
+        size:0x3 hudConsole->addWatch(page, "F0:", &gameInfo.scratchPad.ammo.unk_F0, 'x', WatchInterpretation::_u32);
+        hudConsole->addWatch(page, "F5:", &gameInfo.scratchPad.ammo.unk_F5, 'x', WatchInterpretation::_u32);//actual
+        size:0x3 hudConsole->addWatch(page, "FC:", &gameInfo.scratchPad.unk_FC[0x0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "104:", &gameInfo.scratchPad.unk_FC[0x8], 'x', WatchInterpretation::_u64);//actual
+        size:0x5 hudConsole->addWatch(page, "10B:", &gameInfo.scratchPad.unk_10B, 'x', WatchInterpretation::_u8);
+        hudConsole->addWatch(page, "10D:", &gameInfo.scratchPad.unk_10D[0x0], 'x', WatchInterpretation::_u64);//actual
+        size:0x7 hudConsole->addWatch(page, "115:", &gameInfo.scratchPad.unk_115[0x0], 'x',
+        WatchInterpretation::_u64);//actual size:0x7 hudConsole->addWatch(page, "120:", &gameInfo.scratchPad.unk_120[0x0],
+        'x', WatchInterpretation::_u64);//actual size:0x6
 
         page = hudConsole->addPage("testing adr2");
 
@@ -384,22 +386,24 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         hudConsole->addWatch(page, "158:", &gameInfo.scratchPad.unk_128[0x30], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "160:", &gameInfo.scratchPad.unk_128[0x38], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "168:", &gameInfo.scratchPad.unk_128[0x40], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "178:", &gameInfo.scratchPad.fishingJournal.unk_178[0x0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "178:", &gameInfo.scratchPad.fishingJournal.unk_178[0x0], 'x',
+        WatchInterpretation::_u64);
 
         page = hudConsole->addPage("testing adr3");
 
-        hudConsole->addWatch(page, "180:", &gameInfo.scratchPad.fishingJournal.unk_178[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "188:", &gameInfo.scratchPad.fishingJournal.unk_178[0x10], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "192:", &gameInfo.scratchPad.unk_192[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "19A:", &gameInfo.scratchPad.unk_192[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1A2:", &gameInfo.scratchPad.unk_192[0x10], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1AA:", &gameInfo.scratchPad.unk_192[0x18], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1B2:", &gameInfo.scratchPad.unk_192[0x20], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "1C4:", &gameInfo.scratchPad.unk_1C4, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "1D5:", &gameInfo.scratchPad.unk_1D5[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1DD:", &gameInfo.scratchPad.unk_1D5[0x8], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "1E4:", &gameInfo.scratchPad.unk_1E4[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1EC:", &gameInfo.scratchPad.unk_1E4[0x8], 'x', WatchInterpretation::_u32);*/
+        hudConsole->addWatch(page, "180:", &gameInfo.scratchPad.fishingJournal.unk_178[0x8], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "188:", &gameInfo.scratchPad.fishingJournal.unk_178[0x10],
+        'x', WatchInterpretation::_u32); hudConsole->addWatch(page, "192:", &gameInfo.scratchPad.unk_192[0x0], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "19A:", &gameInfo.scratchPad.unk_192[0x8], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "1A2:", &gameInfo.scratchPad.unk_192[0x10], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "1AA:", &gameInfo.scratchPad.unk_192[0x18], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "1B2:", &gameInfo.scratchPad.unk_192[0x20], 'x',
+        WatchInterpretation::_u16); hudConsole->addWatch(page, "1C4:", &gameInfo.scratchPad.unk_1C4, 'x',
+        WatchInterpretation::_u8); hudConsole->addWatch(page, "1D5:", &gameInfo.scratchPad.unk_1D5[0x0], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "1DD:", &gameInfo.scratchPad.unk_1D5[0x8], 'x',
+        WatchInterpretation::_u32); hudConsole->addWatch(page, "1E4:", &gameInfo.scratchPad.unk_1E4[0x0], 'x',
+        WatchInterpretation::_u64); hudConsole->addWatch(page, "1EC:", &gameInfo.scratchPad.unk_1E4[0x8], 'x',
+        WatchInterpretation::_u32);*/
 
         // Print
         hudConsole->draw();
@@ -1684,6 +1688,67 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
     void Mod::doCustomTRESActor(void* mStatus_roomControl)
     {
-        // tp::d_com_inf_game::GameInfo* pGameInfo = &tp::d_com_inf_game::dComIfG_gameInfo;
+        tp::d_com_inf_game::GameInfo* pGameInfo = &tp::d_com_inf_game::dComIfG_gameInfo;
+
+        u32 numChecks = sizeof(customChecks) / sizeof(customChecks[0]);
+
+        // Count and temp array for the checks for this stage+room
+        u32 checkCount = 0;
+        customCheck* checks = new customCheck[5];  // Assume there's never more than 5 custom checks per stage+room
+
+        // Loop through checks and place if correct room and stage
+        for (u32 i = 0; i < numChecks; i++)
+        {
+            customCheck* check = &customChecks[i];
+
+            if (0 == strcmp(pGameInfo->nextStageVars.nextStage, check->stage) &&
+                pGameInfo->nextStageVars.nextRoom == check->room)
+            {
+                checks[checkCount] = *check;
+                checkCount++;
+            }
+        }
+
+        if (checkCount > 0)
+        {
+            // Create required structs
+            tp::d_stage::TRES* TRES = new tp::d_stage::TRES[checkCount];
+            tp::d_stage::dzxChunkTypeInfo chunkInfo;
+            strcpy(chunkInfo.tag, "ACTR");  // has to be ACTR for the function we use
+            chunkInfo.numChunks = checkCount;
+            chunkInfo.chunkDataPtr = TRES;
+
+            // Populate TRES array with data
+            for (u32 i = 0; i < checkCount; i++)
+            {
+                customCheck check = checks[i];
+
+                strcpy(TRES[i].actorName, "tboxA0\0");
+                TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);
+
+                // Translate hex to float (1:1)
+                typeTransform<u32, float> X, Y, Z;
+                X.a = check.X;
+                Y.a = check.Y;
+                Z.a = check.Z;
+
+                TRES[i].X = X.b;
+                TRES[i].Y = Y.b;
+                TRES[i].Z = Z.b;
+
+                TRES[i].angle = check.Angle;
+
+                TRES[i].item = check.itemID;
+            }
+
+            // Create the actors; last 2 params 0 and nullptr to avoid infinite loop! (identification for self-call inside the
+            // hook)
+            tp::d_stage::actorCommonLayerInit(mStatus_roomControl, &chunkInfo, 0, nullptr);
+
+            delete[] TRES;
+        }
+
+        delete[] checks;
+        return;
     }
 }  // namespace mod

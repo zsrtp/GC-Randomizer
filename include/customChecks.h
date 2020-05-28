@@ -27,7 +27,7 @@ namespace mod
         /*Ordon Shield*/
         {"F_SP103", 0, 0, 0x74, 0x2A, 0x454BF27A, 0x4479E28F, 0x447534C8, 0xF932, nullptr},
         /*Ordon Sword*/
-        {"R_SP01", 5, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, nullptr},
+        {"R_SP01", 4, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, nullptr},
         /*Sera Bottle*/
         {"F_SP103", 0, 1, 0x7C, 0x65, 0x444C8DC3, 0x42AF0000, 0xC4CB2577, 0xA3E7, nullptr},
         /*Slingshot*/

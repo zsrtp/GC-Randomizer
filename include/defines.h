@@ -14,6 +14,12 @@ typedef signed short s16;
 typedef unsigned char u8;
 typedef signed char s8;
 
+template <typename A, typename B>
+union typeTransform {
+    A a;
+    B b;
+};
+
 // Helper
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)                                                                               \
