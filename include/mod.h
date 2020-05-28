@@ -193,6 +193,11 @@ namespace mod
              * Inserts custom TRES Boxes if applicable to this stage+room
              */
             void doCustomTRESActor(void* mStatus_roomControl);
+            
+            /**
+             * Inserts custom TRES Boxes if applicable to this stage+room
+             */
+            bool checkCustomTRESRequirements(u32 CustomTRESID);
 
 
         // Private members

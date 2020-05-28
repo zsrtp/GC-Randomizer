@@ -1847,7 +1847,8 @@ namespace mod
             customCheck* check = &customChecks[i];
 
             if (0 == strcmp(pGameInfo->nextStageVars.nextStage, check->stage) &&
-                (0xFF == check->room || pGameInfo->nextStageVars.nextRoom == check->room))  // 0xFF = no need to check for room
+                (0xFF == check->room || pGameInfo->nextStageVars.nextRoom == check->room) && // 0xFF = no need to check for room
+                checkCustomTRESRequirements(i))
             {
                 checks[checkCount] = *check;
                 checkCount++;
@@ -1895,5 +1896,82 @@ namespace mod
 
         delete[] checks;
         return;
+    }
+    
+    
+    bool Mod::checkCustomTRESRequirements(u32 CustomTRESID)
+    {
+        if (CustomTRESID == 0 || CustomTRESID == 1)
+        {//ordon sword & shield
+            return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;//have sewers been done
+        }
+        else if (CustomTRESID == 2 || CustomTRESID == 3)
+        {//sera bottle & slingshot
+            return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;//is goats 1 done
+        }
+        else if (CustomTRESID == 6)
+        {//coral earring
+            return tools::checkItemFlag(ItemFlags::Asheis_Sketch);
+        }
+        else if (CustomTRESID == 7)
+        {//Auru's Memo
+            return gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1;
+        }
+        else if (CustomTRESID == 9)
+        {//Horse Call
+            return tools::checkItemFlag(ItemFlags::Ilias_Charm);
+        }
+        else if (CustomTRESID == 10)
+        {//Coro Key
+            return gameInfo.scratchPad.clearedTwilights.Faron == 0b1;
+        }
+        else if (CustomTRESID == 11)
+        {//Gate keys
+            return (gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) != 0;//is escort done
+        }//we'd need to check if KB2 is done instead
+        else if (CustomTRESID == 16)
+        {//powered dominion rod
+            return tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty);
+        }
+        else if (CustomTRESID == 17)
+        {//light Master sword
+            return (gameInfo.localAreaNodes.unk_0[0x2] & 0xC) != 0;//both sols placed
+        }//needs testing not sure if it's the right value
+        else if (CustomTRESID == 18)
+        {//ending blow
+            return gameInfo.scratchPad.clearedTwilights.Faron == 0b1;
+        }
+        else if (CustomTRESID == 19)
+        {//shield bash
+            return gameInfo.scratchPad.clearedTwilights.Eldin == 0b1;
+        }//we'd need to check for howling stone instead
+        else if (CustomTRESID == 20)
+        {//back slice
+            return gameInfo.scratchPad.clearedTwilights.Lanayru == 0b1;
+        }//we'd need to check for howling stone instead
+        else if (CustomTRESID == 21)
+        {//Helm Splitter
+            return gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1;
+        }//we'd need to check for howling stone instead
+        else if (CustomTRESID == 22)
+        {//Mortal Draw
+            return tools::checkItemFlag(ItemFlags::Aurus_Memo);
+        }//we'd need to check for howling stone instead
+        else if (CustomTRESID == 23)
+        {//Jump Strike
+            return tools::checkItemFlag(ItemFlags::Reekfish_Scent);
+        }//we'd need to check for howling stone instead
+        else if (CustomTRESID == 24)
+        {//Great Spin
+            return (gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x8] & 0x10) != 0;//check if path to hidden village is opened
+        }//we'd need to check for howling stone instead
+        else if (CustomTRESID == 28)
+        {//Reekfish scent
+            return tools::checkItemFlag(ItemFlags::Coral_Earring);
+        }
+        else
+        {
+            return true;
+        }
     }
 } // namespace mo
