@@ -1,8 +1,8 @@
-/**	@file d_stage.h
- *	@brief Stage related functions and fields
+/**    @file d_stage.h
+ *    @brief Stage related functions and fields
  *
- *	@author AECX
- *	@bug No known bugs.
+ *    @author AECX
+ *    @bug No known bugs.
  */
 
 #pragma once

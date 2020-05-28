@@ -1,8 +1,8 @@
-/**	@file dzx.h
- *	@brief dzx related definitions
+/**    @file dzx.h
+ *    @brief dzx related definitions
  *
- *	@author AECX
- *	@bug No known bugs.
+ *    @author AECX
+ *    @bug No known bugs.
  */
 #pragma once
 #include <string.h>
