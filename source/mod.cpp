@@ -1702,7 +1702,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
             customCheck* check = &customChecks[i];
 
             if (0 == strcmp(pGameInfo->nextStageVars.nextStage, check->stage) &&
-                pGameInfo->nextStageVars.nextRoom == check->room)
+                (pGameInfo->nextStageVars.nextRoom == check->room || tp::d_kankyo::env_light.currentRoom == check->room))
             {
                 checks[checkCount] = *check;
                 checkCount++;
