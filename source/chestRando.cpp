@@ -429,7 +429,7 @@ namespace mod
 		{//set flag for having talked to Bo
 			gameInfo.scratchPad.eventBits[0x1C] |= 0x20;
 		}
-		else if (item == items::Item::Poe_Soul)
+		else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount >= 1)
 		{//decrease poe counter
 			gameInfo.scratchPad.poeCount--;
 		}
@@ -559,9 +559,13 @@ namespace mod
 							{
 								snprintf(lastDestInfo, 50, "%s->%d->%x", sourceCheck->destination->stage, sourceCheck->destination->room, sourceCheck->destination->itemID);
 								item = sourceCheck->destination->itemID;
-								if (sourceCheck->type == item::ItemType::Bug || sourceCheck->type == item::ItemType::Shop || sourceCheck->itemID == items::Item::Heart_Container)
+								if (sourceCheck->type == item::ItemType::Bug || sourceCheck->itemID == items::Item::Heart_Container)
 								{
 									sourceCheck->destination = &item::checks[263];//green rupee
+								}
+								else if (sourceCheck->type == item::ItemType::Shop)
+								{
+									sourceCheck->destination = &item::checks[i];
 								}
 								else if (sourceCheck->itemID != items::Item::Big_Quiver && sourceCheck->itemID != items::Item::Giant_Quiver && // quiver checks called twice somehow
 								sourceCheck->type != item::ItemType::Dungeon && sourceCheck->type != item::ItemType::Gear && sourceCheck->type != item::ItemType::Equip) // some checks are called twice i don't wanna list them all, but dungeon items, gear, and equipable items only have one check each intheir stage
@@ -1018,11 +1022,12 @@ namespace mod
 	void ChestRandomizer::handleKeysanity()
 	{
 		if (isKeysanityEnabled == 1)
-		{
+		{						
 			item::ItemCheck* sourceCheck;
 			item::ItemCheck* destCheck;
 			u32 length;
 			u16 index;
+			
 			//do FT_1
 			length = sizeof(keyPlacement::FT_1)/sizeof(u16);
 			destCheck = &item::checks[keyPlacement::FT_keys[0]];
