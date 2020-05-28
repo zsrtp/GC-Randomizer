@@ -9,6 +9,7 @@
 #include <tp/d_save.h>
 #include <tp/JFWSystem.h>
 #include <tp/d_com_inf_game.h>
+#include <tp/d_item.h>
 #include <tp/evt_control.h>
 #include <cstring>
 #include <cstdio>
@@ -34,8 +35,8 @@ namespace mod::cutscene_skip
 }
 
 namespace mod::game_patch
-{	
-	
+{
+
 	void assemblyOverwrites()
 	{
 		// Default to US/JP
@@ -69,13 +70,13 @@ namespace mod::game_patch
 	{
 		// Adjust Link's climbing speeds
 		tp::d_a_alink::LadderVars* LadderVars = &tp::d_a_alink::ladderVars;
-		LadderVars->ladderClimbInitSpeed 			= 1.8;
-		LadderVars->ladderReachTopClimbUpSpeed 		= 1.765;
-		LadderVars->ladderTopStartClimbDownSpeed 	= 1.8;
-		LadderVars->ladderBottomGetOffSpeed 		= 1.8;
-		LadderVars->ladderClimbSpeed 				= 1.575;
-		LadderVars->wallClimbHorizontalSpeed 		= 2.0;
-		LadderVars->wallClimbVerticalSpeed 			= 1.875;
+		LadderVars->ladderClimbInitSpeed = 1.8;
+		LadderVars->ladderReachTopClimbUpSpeed = 1.765;
+		LadderVars->ladderTopStartClimbDownSpeed = 1.8;
+		LadderVars->ladderBottomGetOffSpeed = 1.8;
+		LadderVars->ladderClimbSpeed = 1.575;
+		LadderVars->wallClimbHorizontalSpeed = 2.0;
+		LadderVars->wallClimbVerticalSpeed = 1.875;
 	}
 
 	void removeIBLimit()
@@ -123,22 +124,25 @@ namespace mod::game_patch
 
 	void skipSewers()
 	{
-		strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Sewers");
+		if (Singleton::getInstance()->isSewerSkipEnabled == 1)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> Skipping Sewers");
 
-		// Set sewers flags
-		giveMidna();
-		giveSense();
+			// Set sewers flags
+			giveMidna();
+			giveSense();
 
-		// We should be wolf
-		setFirstTimeWolf();
+			// We should be wolf
+			setFirstTimeWolf();
 
-		// Set sewers flags (zelda cutscenes, unchained wolf link, bla)
-		gameInfo.scratchPad.eventBits[0x05] |= 0x7A;
-		
-		gameInfo.scratchPad.equipedItems.sword = 0x3F;
+			// Set sewers flags (zelda cutscenes, unchained wolf link, bla)
+			gameInfo.scratchPad.eventBits[0x05] |= 0x7A;
+			
+			gameInfo.scratchPad.equipedItems.sword = 0x3F;
 
-		// Load back to Ordon Spring
-		tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Spring], 0x1, 0x3, 0x4);
+			// Load back to Ordon Spring
+			tools::triggerSaveLoad(stage::allStages[Stage_Ordon_Spring], 0x1, 0x3, 0x4);
+		}
 	}
 	
 	void skipMDH()
@@ -153,33 +157,6 @@ namespace mod::game_patch
 			gameInfo.nextStageVars.nextSpawnPoint = 0x0;
 		}
 	}
-	
-	void allowFaronEscape()
-    {
-		if (Singleton::getInstance()->isForestEscapeEnabled == 1)
-		{
-			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
-			if (gameInfo.nextStageVars.nextRoom != 5)
-			{        
-				if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 || 
-					gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 || 
-					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 || 
-					!tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron) || 
-						(tp::d_com_inf_game::current_state == 0x65 && 
-						!tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron)))
-				{
-					return;
-				}
-				else
-				{
-					strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
-					// reload faron woods as state 2
-					//tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom, gameInfo.nextStageVars.nextSpawnPoint, a); --obsolete code
-					gameInfo.nextStageVars.nextState = 0x2;
-				}
-			}
-		}
-    }
 	
 	void unlockHFGates()
 	{
@@ -223,14 +200,149 @@ namespace mod::game_patch
 		
 	}
 	
-	void skipGrovePuzzle()
-    {		
-		if (Singleton::getInstance()->isMSPuzzleSkipEnabled == 1 && (gameInfo.localAreaNodes.unk_0[0xB] & 0x4) == 0)
-		{			
-			strcpy(sysConsolePtr->consoleLine[20].line, "Skipping MS Puzzle");
-			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//skip Sacred Grove Puzzle
+	void setBublinState()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "state was not 1");
+		if (gameInfo.nextStageVars.nextRoom != 3)
+		{
+			if (gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.bossBeaten == 0b1)
+			{
+				strcpy(sysConsolePtr->consoleLine[20].line, "-> Setting Bublin State");
+				// reload bublin camp as state 3
+				// tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom,
+				// gameInfo.nextStageVars.nextSpawnPoint, a);
+				gameInfo.nextStageVars.nextState = 0x3;
+			}
+			else
+			{
+				return;
+			}
 		}
-    }
+	}
+
+	void skipGrovePuzzle()
+	{
+		if (Singleton::getInstance()->isMSPuzzleSkipEnabled == 1 && (gameInfo.localAreaNodes.unk_0[0xB] & 0x4) == 0)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "Skipping MS Puzzle");
+			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;  // skip Sacred Grove Puzzle
+		}
+	}
+	
+	void unlockBossDoors()
+	{
+		if (Singleton::getInstance()->isBossKeyseyEnabled == 1)
+		{
+			gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bigKeyGotten = 0b1;	   // unlock Diababa Door
+			gameInfo.scratchPad.allAreaNodes.Goron_Mines.dungeon.bigKeyGotten = 0b1;		 // unlock Fryus Door
+			gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bigKeyGotten = 0b1;	  // unlock Morpheel Door
+			gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.bigKeyGotten = 0b1;	// unlock Stallord Door
+			gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bigKeyGotten = 0b1;	  // unlock Blizzetta Door
+			gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bigKeyGotten = 0b1;	  // unlock Armaghoma Door
+			gameInfo.scratchPad.allAreaNodes.City_in_the_Sky.dungeon.bigKeyGotten = 0b1;	 // unlock Argorok Door
+			gameInfo.scratchPad.allAreaNodes.Palace_of_Twilight.dungeon.bigKeyGotten = 0b1;  // unlock Zant Door
+			gameInfo.scratchPad.allAreaNodes.Hyrule_Castle.dungeon.bigKeyGotten = 0b1;	   // unlock Ganon Door
+		}
+	}
+	
+	void earlyCiTS()
+	{
+		if (Singleton::getInstance()->isEarlyCiTSEnabled == 1)
+		{
+			if (Singleton::getInstance()->isCannonRepaired == 0)
+			{
+				if (gameInfo.scratchPad.tearCounters.Lanayru == 16)
+				{
+					gameInfo.scratchPad.eventBits[0x3B] |= 0x8;  // repairs Cannon at lake
+					Singleton::getInstance()->isCannonRepaired = 1;
+				}
+			}
+		}
+	}
+
+	void earlyDesert()
+	{
+		if (Singleton::getInstance()->isEarlyDesertEnabled == 1 && gameInfo.scratchPad.eventBits[0x26] < 0x80 &&
+			tools::checkItemFlag(ItemFlags::Master_Sword))
+		{
+			gameInfo.scratchPad.eventBits[0x26] |= 0x80;  // Allow you to use the cannon in the desert
+		}
+	}
+
+	void accessDesert()
+	{
+		if (tools::checkItemFlag(ItemFlags::Master_Sword))
+		{
+			return;
+		}
+		else
+		{
+			strncpy(gameInfo.nextStageVars.nextStage, stage::allStages[Stage_Lake_Hylia],
+					sizeof(gameInfo.nextStageVars.nextStage) - 1);
+			gameInfo.nextStageVars.nextRoom = 0x0;
+			gameInfo.nextStageVars.nextSpawnPoint = 0x4D;
+			tp::d_item::execItemGet(0x2);
+		}
+	}
+
+	void sellWaterBombs()
+	{
+		if (gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 &&
+			((gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) == 0))  // Escort Not Completed before Beating Lakebed
+		{
+			gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;
+		}
+	}
+
+	void skipCartEscort()
+	{
+		if (Singleton::getInstance()->isCartEscortSkipEnabled == 1)
+		{
+			tools::triggerSaveLoad(stage::allStages[Stage_Kakariko_Interiors], 0x2, 0x3, 0xD);
+		}
+	}
+	
+	void setLanayruWolf()
+	{
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Set wolf");
+
+		if (gameInfo.scratchPad.form == 0 && !tools::checkItemFlag(ItemFlags::Master_Sword) &&
+			!tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Lanayru))
+		{
+			strncpy(gameInfo.nextStageVars.nextStage, stage::allStages[Stage_Hyrule_Field],
+					sizeof(gameInfo.nextStageVars.nextStage) - 1);
+			gameInfo.nextStageVars.nextRoom = 0x9;
+			gameInfo.nextStageVars.nextSpawnPoint = 0xA;
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	void fixLanayruFaron()
+	{
+		if (Singleton::getInstance()->isGateUnlockEnabled == 1)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "state was not 0");
+			if (gameInfo.nextStageVars.nextRoom != 5)
+			{
+				if (gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 ||
+					gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 ||
+					gameInfo.scratchPad.tearCounters.Faron != 16 ||
+					(tp::d_com_inf_game::current_state == 0x65 && !tools::checkItemFlag(ItemFlags::Vessel_Of_Light_Faron)))
+				{
+					return;
+				}
+				else if (gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1)
+				{
+					strcpy(sysConsolePtr->consoleLine[20].line, "-> Allowing Faron Escape");
+					// reload faron woods as state 2
+					gameInfo.nextStageVars.nextState = 0x2;
+				}
+			}
+		}
+	}
 
 	void setFirstTimeWolf()
 	{
@@ -308,7 +420,6 @@ namespace mod::game_patch
 		{
 			if (!tools::checkItemFlag(ItemFlags::Null_D9))
 			{
-				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hylian shield");
 				localAreaNodes->unk_0[0xC] &= ~0x2;//unset flag for hylian shield bought
 				localAreaNodes->unk_0[0x13] |= 0x40;//set flag for hylian shield on counter
 				localAreaNodes->unk_0[0x15] &= ~0x40;//unset flag for red potion on right
@@ -325,7 +436,6 @@ namespace mod::game_patch
 		{		
 			if (!tools::checkItemFlag(ItemFlags::Null_D8))
 			{
-				strcpy(sysConsolePtr->consoleLine[20].line, "-> selling hawkeye");
 				localAreaNodes->unk_0[0xC] |= 0x40;//set flag for hawkeye on counter
 				localAreaNodes->unk_0[0xC] &= ~0x20;//unset flag for arrows on counter (else causes crash)
 				localAreaNodes->unk_0[0xD] &= ~0x8;//unset flag for hawkeye sold out

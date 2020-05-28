@@ -23,6 +23,13 @@ namespace mod
 		isGateUnlockEnabled = 1;
 		isGoatSkipEnabled = 1;
 		isMSPuzzleSkipEnabled = 1;
+		isCartEscortSkipEnabled = 1;
+		isEarlyCiTSEnabled = 0;
+		isCannonRepaired = 0;
+		isEarlyDesertEnabled = 0;
+		isBossKeyseyEnabled = 0;
+		isSewerSkipEnabled = 1;
+		shuffledSkybook = 1;
 	}
 
 }

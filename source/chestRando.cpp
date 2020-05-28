@@ -434,32 +434,156 @@ namespace mod
 			gameInfo.scratchPad.poeCount--;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Faron)
-		{//set tear counter to 16
-			gameInfo.scratchPad.tearCounters.Faron = 16;
-			gameInfo.localAreaNodes.unk_0[0xB] |= 0x4;//give N faron warp
-			gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;//give midna jumps in mist area
-			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);//set flag for vessel since we'll skip it by reloading
-			gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
-			gameInfo.nextStageVars.triggerLoad |= 1;
-			return item;
+		{
+			// set tear counter to 16
+			tp::d_com_inf_game::GameInfo* gameInfoPtr = &gameInfo;
+			if (isTwilightSkipEnabled == 1)
+			{
+				gameInfoPtr->scratchPad.tearCounters.Faron = 16;
+				gameInfoPtr->localAreaNodes.unk_0[0xB] |= 0x4;  // give N faron warp
+				gameInfoPtr->localAreaNodes.unk_0[0x8] = 0xFF;  // give midna jumps in mist area
+				gameInfoPtr->localAreaNodes.unk_0[0xC] |=
+					0x80;  // set flag for midna to think you followed the monkey in the mist
+				gameInfoPtr->scratchPad.eventBits[0x1B] = 0x78;  // skip the monkey escort
+				u16* tempAddress = reinterpret_cast<u16*>(&gameInfoPtr->scratchPad.eventBits[0x29]);
+				*tempAddress |= 0x400;						   // give ending blow
+				gameInfoPtr->localAreaNodes.unk_0[0x12] |= 0x4;  // mark read the midna text when you warp to N Faron for bridge
+				if (Singleton::getInstance()->isForestEscapeEnabled == 1)
+				{
+					gameInfoPtr->scratchPad.eventBits[0x6] |=
+						0x26;  // warp the kak bridge, give map warp, set Forest Temple Story Flag
+				}
+				else
+				{
+					gameInfoPtr->scratchPad.eventBits[0x6] |= 0x24;  // warp the kak bridge, give map warp
+					gameInfoPtr->localAreaNodes.unk_0[0xF] |= 0x8;   // set flag for midna text after twilight
+				}
+
+				gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xF] |= 0x2;   // cutscene for Gorge Bridge Watched
+				gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xE] |= 0x20;  // cutscene for entering Field Watched
+				gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x8] |= 0x1;   // Midna text for warping the bridge
+				gameInfoPtr->scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9] |= 0x20;  // give Gorge Warp
+
+				gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0x8] |=
+					0x61;  // set Midna Text for Ook Bridge Broken, Boomerang, and freeing first monkey
+				gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0x9] |= 0x40;  // Ook Bridge Broken
+				gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0xF] |=
+					0x6;  // Midna text for pre-diababa room and open room monkey
+				gameInfoPtr->scratchPad.allAreaNodes.Forest_Temple.unk_0[0x10] |= 0x4;  // Midna text for compass
+
+				gameInfoPtr->scratchPad.eventBits[0x5E] |= 0x10;  // Midna Text After Beating Forest Temple
+
+				if (gameInfoPtr->scratchPad.eventBits[0x5] != 0xFF)
+				{
+					gameInfoPtr->scratchPad.eventBits[0x5] = 0xFF;  // Ensure Epona is Stolen
+				}
+				gameInfoPtr->nextStageVars.triggerLoad |= 1;
+				return item;
+			}
+			else
+			{
+				u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
+				*tempAddress |= 0x400;						// give ending blow
+				gameInfo.localAreaNodes.unk_0[0x12] |= 0x4;   // mark read the midna text when you warp to N Faron for bridge
+				gameInfo.localAreaNodes.unk_0[0x17] |= 0xC0;  // kill bugs in Coro's house
+				gameInfo.localAreaNodes.unk_0[0xC] |= 0x80;   // set flag for midna to think you followed the monkey in the mist
+				gameInfo.scratchPad.eventBits[0x1B] = 0x78;   // skip the monkey escort
+				gameInfo.scratchPad.eventBits[0x6] |= 0x24;   // warp the kak bridge, give map warp
+
+				if (Singleton::getInstance()->isForestEscapeEnabled == 1)
+				{
+					gameInfo.scratchPad.eventBits[0x6] |=
+						0x26;  // warp the kak bridge, give map warp, set Forest Temple Story Flag
+				}
+				else
+				{
+					gameInfo.scratchPad.eventBits[0x6] |= 0x24;  // warp the kak bridge, give map warp
+					gameInfo.localAreaNodes.unk_0[0xF] |= 0x8;   // set flag for midna text after twilight
+				}
+				gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xF] |= 0x2;   // cutscene for Gorge Bridge Watched
+				gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x8] |= 0x1;   // Midna text for warping the bridge
+				gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9] |= 0x20;  // give Gorge Warp
+
+				gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x8] |=
+					0x61;  // set Midna Text for Ook Bridge Broken, Boomerang, and freeing first monkey
+				gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x9] |= 0x40;  // Ook Bridge Broken
+				gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0xF] |=
+					0x6;  // Midna text for pre-diababa room and open room monkey
+				gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x10] |= 0x4;  // Midna text for compass
+
+				gameInfo.scratchPad.eventBits[0x5E] |= 0x10;  // Midna Text After Beating Forest Temple
+				if (gameInfo.scratchPad.eventBits[0x5] != 0xFF)
+				{
+					gameInfo.scratchPad.eventBits[0x5] = 0xFF;  // Ensure Epona is Stolen
+				}
+				return item;
+			}
 		}
 		else if (item == items::Item::Vessel_Of_Light_Eldin)
-		{//set tear counter to 16
-			gameInfo.scratchPad.tearCounters.Eldin = 16;
-			gameInfo.localAreaNodes.unk_0[0x9] |= 0x20;//give death mountain warp
-			gameInfo.localAreaNodes.unk_0[0x14] |= 1;//give midna jumps for top of sanctuary	
-			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Eldin);//set flag for vessel since we'll skip it by reloading
-			gameInfo.nextStageVars.triggerLoad |= 1;
-			return item;
+		{  // set tear counter to 16
+			if (isTwilightSkipEnabled == 1)
+			{
+				gameInfo.scratchPad.tearCounters.Eldin = 16;
+				gameInfo.localAreaNodes.unk_0[0x9] |= 0x20;   // give death mountain warp
+				gameInfo.localAreaNodes.unk_0[0x14] |= 1;	 // give midna jumps for top of sanctuary
+				gameInfo.localAreaNodes.unk_0[0x10] |= 0x10;  // skip Graveyard CS
+				gameInfo.localAreaNodes.unk_0[0x13] |= 0x20;  // skip Kak CS
+
+				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Eldin);  // set flag for vessel since we'll skip it by reloading
+
+				gameInfo.scratchPad.eventBits[0x6] |= 0x1;	// tame Epona
+				gameInfo.scratchPad.eventBits[0xA] |= 0x8;	// Beat KB1
+				gameInfo.scratchPad.eventBits[0x14] |= 0x10;  // Put Bo Outside
+				gameInfo.scratchPad.eventBits[0x7] =
+					0xCE;  // skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched
+
+				gameInfo.nextStageVars.triggerLoad |= 1;
+				return item;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.unk_0[0x10] |= 0x10;  // skip Graveyard CS
+				gameInfo.localAreaNodes.unk_0[0x13] |= 0x20;  // skip Kak CS
+
+				gameInfo.scratchPad.eventBits[0x6] |= 0x1;	// tame Epona
+				gameInfo.scratchPad.eventBits[0xA] |= 0x8;	// Beat KB1
+				gameInfo.scratchPad.eventBits[0x14] |= 0x10;  // Put Bo Outside
+				gameInfo.scratchPad.eventBits[0x7] =
+					0xCE;  // skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched
+				return item;
+			}
 		}
 		else if (item == items::Item::Vessel_Of_Light_Lanayru)
-		{//set tear counter to 16
-			gameInfo.scratchPad.tearCounters.Lanayru = 16;
-			gameInfo.localAreaNodes.unk_0[0xA] |= 0x4;//give lake hylia warp
-			gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB] |= 0x8;//give castle town warp
-			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);//set flag for vessel since we'll skip it by reloading
-			gameInfo.nextStageVars.triggerLoad |= 1;
-			return item;
+		{  // set tear counter to 16
+			if (isTwilightSkipEnabled == 1)
+			{
+				gameInfo.scratchPad.tearCounters.Lanayru = 16;
+				gameInfo.localAreaNodes.unk_0[0xA] |= 0x4;	// give lake hylia warp
+				gameInfo.localAreaNodes.unk_0[0x16] |= 0x80;  // watched Ooccoo CiTS CS
+
+				gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB] |= 0x8;	 // give castle town warp
+				gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x13] |= 0x40;  // watched the CS when entering the desert
+
+				gameInfo.scratchPad.eventBits[0x40] |= 0x8;  // have been to desert (prevents cannon warp crash)
+
+				u16* secondTempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0xF7]);
+				*secondTempAddress |= 0x1F4;  // make it so you only have to donate 500 Rupees to Charlo
+				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);  // set flag for vessel since we'll skip it by reloading
+				gameInfo.nextStageVars.triggerLoad |= 1;
+				return item;
+			}
+			else
+			{
+				gameInfo.localAreaNodes.unk_0[0x16] |= 0x80;  // watched Ooccoo CiTS CS
+
+				gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x13] |= 0x40;  // watched the CS when entering the desert
+
+				gameInfo.scratchPad.eventBits[0x40] |= 0x8;  // have been to desert (prevents cannon warp crash)
+
+				u16* secondTempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0xF7]);
+				*secondTempAddress |= 0x1F4;  // make it so you only have to donate 500 Rupees to Charlo
+				return item;
+			}
 		}
 		else if (item == items::Item::Empty_Bomb_Bag)
 		{//set flag for Barne's bomb bag check
@@ -670,6 +794,13 @@ namespace mod
 										}
 										else if (tools::checkItemFlag(ItemFlags::Null_DB))
 										{
+											gameInfo.scratchPad.eventBits[0x25] |= 0x40;  // Set the Owl Statue in Kak to be able to be moved
+											gameInfo.scratchPad.eventBits[0x5F] |= 0x20;  // Shad leaves so you can warp
+											if (Singleton::getInstance()->isCannonRepaired == 0)
+											{
+												gameInfo.scratchPad.eventBits[0x3B] |= 0x8;  // repairs Cannon at lake
+												Singleton::getInstance()->isCannonRepaired = 1;
+											}
 											item = items::Item::Ancient_Sky_Book_completed;
 										}
 									}
@@ -706,6 +837,13 @@ namespace mod
 										}
 										else if (tools::checkItemFlag(ItemFlags::Null_DB))
 										{
+											gameInfo.scratchPad.eventBits[0x25] |= 0x40;  // Set the Owl Statue in Kak to be able to be moved
+											gameInfo.scratchPad.eventBits[0x5F] |= 0x20;  // Shad leaves so you can warp
+											if (Singleton::getInstance()->isCannonRepaired == 0)
+											{
+												gameInfo.scratchPad.eventBits[0x3B] |= 0x8;  // repairs Cannon at lake
+												Singleton::getInstance()->isCannonRepaired = 1;
+											}
 											item = items::Item::Ancient_Sky_Book_completed;
 										}
 									}

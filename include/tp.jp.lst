@@ -1,5 +1,6 @@
 // memory
 80003458:memset
+80003540:memcpy
 
 // m_Do_ext.o
 // text
@@ -11,6 +12,11 @@
 80032AA8:getRupeeMax
 800350BC:getSave
 800350F0:putSave
+
+// d_stage.o
+8002586C:actorCommonLayerInit
+// data
+803F01D4:mStatus_roomControl
 
 // d_event.o
 80042778:defaultSkipStb
@@ -145,6 +151,7 @@
 // d_com_inf_game.o
 // data
 80400300:dComIfG_gameInfo
+8002B36C:setItemBombNumCount
 
 // d_kankyo.o
 // data

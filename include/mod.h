@@ -3,6 +3,7 @@
 #include "defines.h"
 #include <tp/d_com_inf_game.h>
 #include <tp/DynamicLink.h>
+#include <tp/dzx.h>
 #include "eventListener.h"
 #include "chestRando.h"
 #include "HUDConsole.h"
@@ -109,17 +110,6 @@ namespace mod
 			u8 greenBottom = 0;
 			u8 blueBottom = 0;
 			
-			u16 scoopResult;
-			u16 checkResult;
-			u16 itemsResult;
-			u16 mapResult;
-			u16 equipResult;
-			u16 backResult;
-			u16 zoomInResult;
-			u16 zoomOutResult;
-			u16 moveResult;
-			u16 throwResult;
-			
 			u8 bottle4Contents;
 			u8 bottleTrickOn = 0;
 			u8 allowBottleItemsShopAnytime = 1;
@@ -198,6 +188,12 @@ namespace mod
 			 * checks if the current stage contains a shop
 			 */
 			bool isStageShop();
+			
+			/**
+			 * Inserts custom TRES Boxes if applicable to this stage+room
+			 */
+			void doCustomTRESActor(void* mStatus_roomControl);
+
 
 		// Private members
 		//private:
@@ -217,6 +213,8 @@ namespace mod
 
 			void (*item_func_UTUWA_HEART_trampoline)() = nullptr;
 
+			void (*actorCommonLayerInit_trampoline)(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4) = nullptr;
+			
 			// Item functions
 			s32 (*createItemForPresentDemo_trampoline)(const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3]) = nullptr;
 			s32 (*createItemForTrBoxDemo_trampoline)(const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3]) = nullptr;
@@ -224,6 +222,9 @@ namespace mod
 			s32 (*createItemForMidBoss_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7) = nullptr;
 			s32 (*createItemForDirectGet_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7) = nullptr;
 			s32 (*createItemForSimpleDemo_trampoline)(const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7) = nullptr;
+			
+			void (*setItemBombNumCount_trampoline)(u32 unk1, u8 bagNb, short amount) = nullptr;
+
 
 	};
 }

@@ -39,6 +39,7 @@ namespace mod
 			u8 isPoesanityEnabled = 1;
 			u8 isShopsanityEnabled = 1;
 			u8 areDungeonItemsRandomized = 1;
+			u8 isTwilightSkipEnabled = 1;
 			u8 isKeysanityEnabled = 1;
 			
 			u8 itemThatReplacesHalfMilk = 0;

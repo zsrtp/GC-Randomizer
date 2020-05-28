@@ -136,7 +136,7 @@ enum class ItemFlagBits : u32
 
 	Bomb_Bag_Regular_Bombs =          112,
 	Bomb_Bag_Water_Bombs =            113,
-	Bomb_Bag_Bombslings =             114,
+	Bomb_Bag_Bomblings =             114,
 	Fairy_Tears =                     115,
 	Worm =                            116,
 	Jovani_Bottle =                   117,
@@ -261,13 +261,13 @@ enum class ItemFlagBits : u32
 	Null_DF =                         223,//now used for sky letter 1
 	
 	Poe_Soul =                        224,
-	Null_E1 =                         225,
-	Null_E2 =                         226,
-	Null_E3 =                         227,
-	Null_E4 =                         228,
-	Null_E5 =                         229,
-	Null_E6 =                         230,
-	Null_E7 =                         231,
+	Null_E1 =                         225,//now used for ending blow
+	Null_E2 =                         226,//now used for shield bash
+	Null_E3 =                         227,//now used for back slice
+	Null_E4 =                         228,//now used for helm splitter
+	Null_E5 =                         229,//now used for mortal draw
+	Null_E6 =                         230,//now used for jump strike
+	Null_E7 =                         231,//now used for great spin
 
 	Null_E8 =                         232,
 	Ancient_Sky_Book_empty =          233,
@@ -941,5 +941,6 @@ enum class ItemFlagBits : u32
 	{
 		extern GameInfo dComIfG_gameInfo;
 		extern u8 current_state;
+		extern void setItemBombNumCount(u32 unk1, u8 bagNb, short amout);//amount will be the og (ex: if you can only have 5 more bombs and buy 10, it'll still ahow 10)
 	}
 }

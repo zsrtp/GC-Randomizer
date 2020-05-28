@@ -63,28 +63,12 @@ namespace mod::game_patch
 	 * triggers the load to zelda's tower
 	 */
 	void skipMDH();
-	
+
 	/**
-	 * Removes midna from preventing you from leaving faron
-	 * changes the state of faron from 0 to 2
-	 */
-	void allowFaronEscape();
-	
-	/**
-	 * Removes the locks from the 2 bulblin gates in HF
-	 * change doesn't get saved so set it evry time you load into HF
-	 */
-	void unlockHFGates();
-	
-	/**
-	 * when spawning in goats 2, will warp you to Illia taking Epona CS
-	 */
-	void skipGoats();
-	
-	/**
-	 * when entering Sacred grove, sets the flag for MS puzzle
-	 */
-	void skipGrovePuzzle();
+	* Adds the chests that disappear after KB3
+	* changes the state of faron from 1 to 3
+	*/
+	void setBublinState();
 
 	/**
 	 * Sets the flag after Ilia CS
@@ -102,7 +86,6 @@ namespace mod::game_patch
 	 * Sets form to wolf
 	 */
 	void setWolf();
-
 
 	/**
 	 * Activates the sense button (X)
@@ -130,9 +113,65 @@ namespace mod::game_patch
 	 * Gives Midna Text that allows transformation
 	 */
 	void giveMidnaTransform();
-	
+
+	/**
+	 * Removes the locks from the 2 bulblin gates in HF
+	 * change doesn't get saved so set it evry time you load into HF
+	 */
+	void unlockHFGates();
+
+	/**
+	 * when spawning in goats 2, will warp you to Illia taking Epona CS
+	 */
+	void skipGoats();
+
+	/**
+	 * opens the door the the master sword in sacred grove
+	 */
+	void skipGrovePuzzle();
+
+	/**
+	 * when you spawn into the Cart Escort, game will spawn you in Kakariko Afterwards
+	 */
+	void skipCartEscort();
+
+	/**
+	 * warps player to Lanayru twilight gate if they don't have MS
+	 */
+	void setLanayruWolf();
+
+	/**
+	 * sets Faron state after warping from lanayru
+	 */
+	void fixLanayruFaron();
+
+	/**
+	 * Fixes the cannon and puts it at lake hylia
+	 */
+	void earlyCiTS();
+
+	/**
+	 * Fyer will let you go to the desert if you have MS
+	 */
+	void earlyDesert();
+
+	/**
+	 * give boss key to all dungeons
+	 */
+	void unlockBossDoors();
+
 	/**
 	 * check wether to show hawkeye and hylian shield in malo mart
 	 */
 	void handleMaloShop();
+
+	/**
+	 * check whether you have MS before being allowed to enter the desert
+	 */
+	void accessDesert();
+
+	/**
+	 * check whether you have MS before being allowed to enter the desert
+	 */
+	void sellWaterBombs();
 }
