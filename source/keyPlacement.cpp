@@ -205,9 +205,9 @@ namespace mod::keyPlacement
 
 	u16 SPR_keys[6]
 	{
-		171,//CY Partially Buried Chest
+		174,//CY Partially Buried Chest
 		173,//pumpkin
-		174,//Buried Chest
+		171,//Buried Chest
 		178,//cheese
 		180,//Wooden Beam C. Chest
 		184//Chilfos Small Chest
@@ -218,7 +218,7 @@ namespace mod::keyPlacement
 		339,//map
 		348,//ooccoo
 		172,//Courtyard Open Chest
-		171//CY Partially Buried Chest
+		174//CY Partially Buried Chest
 	};
 	u16 SPR_2[6]
 	{
@@ -226,7 +226,7 @@ namespace mod::keyPlacement
 		339,//map
 		348,//ooccoo
 		172,//Courtyard Open Chest
-		171,//CY Partially Buried Chest
+		174,//CY Partially Buried Chest
 		173//pumpkin
 	};
 	u16 SPR_3[10]
@@ -235,12 +235,12 @@ namespace mod::keyPlacement
 		339,//map
 		348,//ooccoo
 		172,//Courtyard Open Chest
-		171,//CY Partially Buried Chest
+		174,//CY Partially Buried Chest
 		173,//pumpkin
 		185,//Storage Chest Right
 		175,//Small Beams Chest
 		176,//compass
-		174//Buried Chest
+		171//Buried Chest
 	};
 	u16 SPR_4[13]
 	{
@@ -248,12 +248,12 @@ namespace mod::keyPlacement
 		339,//map
 		348,//ooccoo
 		172,//Courtyard Open Chest
-		171,//CY Partially Buried Chest
+		174,//CY Partially Buried Chest
 		173,//pumpkin
 		185,//Storage Chest Right
 		175,//Small Beams Chest
 		176,//compass
-		174,//Buried Chest
+		171,//Buried Chest
 		177,//Courtyard South Chest
 		290,//BaC
 		178//cheese
@@ -264,12 +264,12 @@ namespace mod::keyPlacement
 		339,//map
 		348,//ooccoo
 		172,//Courtyard Open Chest
-		171,//CY Partially Buried Chest
+		174,//CY Partially Buried Chest
 		173,//pumpkin
 		185,//Storage Chest Right
 		175,//Small Beams Chest
 		176,//compass
-		174,//Buried Chest
+		171,//Buried Chest
 		177,//Courtyard South Chest
 		290,//BaC
 		178,//cheese
@@ -286,12 +286,12 @@ namespace mod::keyPlacement
 		339,//map
 		348,//ooccoo
 		172,//Courtyard Open Chest
-		171,//CY Partially Buried Chest
+		174,//CY Partially Buried Chest
 		173,//pumpkin
 		185,//Storage Chest Right
 		175,//Small Beams Chest
 		176,//compass
-		174,//Buried Chest
+		171,//Buried Chest
 		177,//Courtyard South Chest
 		290,//BaC
 		178,//cheese
@@ -517,7 +517,7 @@ namespace mod::keyPlacement
 		274,//SE Balcony Tower Chest
 		275//big key
 	};
-	
+
 	u16 F_keys[2]
 	{
 		2,//North Cave Key
@@ -565,5 +565,5 @@ namespace mod::keyPlacement
 		419,//poe 15
 		422//poe 18
 	};
-	
+
 }
