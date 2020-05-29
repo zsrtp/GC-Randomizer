@@ -29,7 +29,7 @@ struct customCheck
 
 namespace mod
 {
-    customCheck customChecks[30] = {
+    customCheck customChecks[35] = {
         /*Ordon Shield*/
         {"F_SP103", 0, 0, 0x74, 0x2A, 0x454BF27A, 0x4479E28F, 0x447534C8, 0xF932, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*remove ordon shield*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Ordon Sword*/
@@ -48,10 +48,18 @@ namespace mod
         {"F_SP115", 0, 1, 0x7C, 0x90, 0xC7E2E398, 0xC6770800, 0x47656746, 0x143D, [](){ gameInfo.scratchPad.eventBits[0x25] |= 0x30;/*Auru Cutscene Complete + Auru's Memo gotten*/ }, [](){ return gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1; } },
         /*Ashei's Sketch*/
         {"F_SP114", 0, 1, 0x7C, 0x91, 0x46F71891, 0xC6502A32, 0xC6348FA6, 0x86E6, [](){ gameInfo.scratchPad.eventBits[0x29] |= 0x40;/*Got Ashei's Sketch from Ashei*/ }, [](){ return true; } },
+        /*Renardo's Letter*/
+        {"R_SP109", 0, 1, 0x68, 0x80, 0x43D3A702, 0x0, 0x43D5A60B, 0xC1FD, [](){ gameInfo.scratchPad.eventBits[0xF] |= 0x80;/*Got Renardo's Letter from Renardo*/ }, [](){ return gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bossBeaten == 0b1; } },
+        /*Invoice*/
+        {"R_SP116", 5, 1, 0x70, 0x81, 0x45282E22, 0xC48FC000, 0x453BED7D, 0x0000, [](){ gameInfo.scratchPad.eventBits[0x21] |= 0x80;/*Got Invoice from Telma*/ }, [](){ return tools::checkItemFlag(ItemFlags::Renardos_Letter); } },
+        /*Wooden Statue*/
+        {"F_SP122", 16, 1, 0x68, 0x82, 0xC7493734, 0xC5C3E9D7, 0x46F956C6, 0x7FE1, [](){ gameInfo.scratchPad.eventBits[0x22] |= 0x80;/*Got Wooden Statue from wolves*/ }, [](){ return tools::checkItemFlag(ItemFlags::Medicine_Scent); } },
+        /*Ilia's Charm*/
+        {"F_SP128", 0, 1, 0x64, 0x83, 0x44F7650C, 0x42D20705, 0xC4A1A68B, 0x4226, [](){ gameInfo.scratchPad.eventBits[0x22] |= 0x4;/*Got Ilia's Charm from Impaz*/ }, [](){ return true;/*need flag for having saved the hidden village*/ } },
         /*Horse Call*/
         {"R_SP109", 0, 1, 0x74, 0x84, 0x43CDBCA1, 0x0, 0xC31EEBF3, 0xBDBE, [](){ gameInfo.scratchPad.eventBits[0x23] |= 0x20;/*Got horse call from Illia*/ }, [](){ return tools::checkItemFlag(ItemFlags::Ilias_Charm); } },
         /*Fishing Hole Bottle*/
-        {"F_SP127", 0, 1, 0x7C, 0x60, 0x45B27147, 0x420C0000, 0x450F716A, 0x62E5, nullptr, [](){ return true; } },
+        {"F_SP127", 0, 1, 0x7C, 0x60, 0x45B27147, 0x420C0000, 0x450F716A, 0x62E5, [](){ gameInfo.scratchPad.eventBits[0x39] |= 0x8;/*Got fishing hole bottle*/ }, [](){ return true; } },
         /*Coro Key*/
         {"F_SP108", 0xFF, 0, 0xF4, 0xFE, 0xC64BA600, 0x403DA884, 0xC663BC8E, 0x7A11, [](){ gameInfo.scratchPad.eventBits[0x1A] |= 0x10;/*Talked to Coro after Faron Twilight*/ }, [](){ return gameInfo.scratchPad.clearedTwilights.Faron == 0b1; } },
         /*Gate Keys*/

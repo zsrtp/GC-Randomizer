@@ -1822,15 +1822,15 @@ namespace mod
     
     void Mod::preventPoweringUpDomRod()
     {    
-        if (itemWheel->Sky_Book = 0xFF && tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty) && !tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_partly_filled))
+        if (gameInfo.scratchPad.itemWheel.Sky_Book == 0xFF && tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty) && !tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_partly_filled))
         {
-            itemWheel->Sky_Book = items::Item::Ancient_Sky_Book_empty;
+            gameInfo.scratchPad.itemWheel.Sky_Book = items::Item::Ancient_Sky_Book_empty;
         }
         if (tp::d_a_alink::checkStageName("R_SP209"))
         {
-            if (itemWheel->Sky_Book == items::Item::Ancient_Sky_Book_empty)
+            if (gameInfo.scratchPad.itemWheel.Sky_Book == items::Item::Ancient_Sky_Book_empty)
             {
-                itemWheel->Sky_Book = 0xFF;
+                gameInfo.scratchPad.itemWheel.Sky_Book = 0xFF;
             }
         }
     }
