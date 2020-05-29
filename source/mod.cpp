@@ -1886,7 +1886,10 @@ namespace mod
             {
                 customCheck check = checks[i];
                 
-                check.overrides();
+				if (check.overrides != nullptr)
+				{
+				    check.overrides();
+				}
 
                 strcpy(TRES[i].actorName, "tboxA0\0");
                 TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);
