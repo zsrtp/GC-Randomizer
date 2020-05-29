@@ -294,6 +294,7 @@ namespace mod::game_patch
             gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
             gameInfo.scratchPad.eventBits[0x8] |= 0x40;//escort started
             gameInfo.scratchPad.eventBits[0x8] |= 0x10;//escort finished
+            gameInfo.scratchPad.eventBits[0x8] |= 0x4;//got zora armor from Rutela
         }
     }
 
@@ -305,6 +306,7 @@ namespace mod::game_patch
             gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
             gameInfo.scratchPad.eventBits[0x8] |= 0x40;//escort started
             gameInfo.scratchPad.eventBits[0x8] |= 0x10;//escort finished
+            gameInfo.scratchPad.eventBits[0x8] |= 0x4;//got zora armor from Rutela
             tools::triggerSaveLoad(stage::allStages[Stage_Kakariko_Interiors], 0x2, 0x3, 0xD);
         }
     }

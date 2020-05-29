@@ -185,6 +185,11 @@ namespace mod
             void fixLBTBossDoor();
             
             /**
+             * removes the empty skybook if you are in the sanctuary basement
+             */
+            void preventPoweringUpDomRod();
+            
+            /**
              * checks if the current stage contains a shop
              */
             bool isStageShop();

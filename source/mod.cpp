@@ -1114,6 +1114,8 @@ namespace mod
         
         fixLBTBossDoor();
         
+        preventPoweringUpDomRod();
+        
         // Call original function
         fapGm_Execute_trampoline();
     }
@@ -1818,6 +1820,21 @@ namespace mod
         }
     }
     
+    void Mod::preventPoweringUpDomRod()
+    {    
+        if (itemWheel->Sky_Book = 0xFF && tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty) && !tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_partly_filled))
+        {
+            itemWheel->Sky_Book = items::Item::Ancient_Sky_Book_empty;
+        }
+        if (tp::d_a_alink::checkStageName("R_SP209"))
+        {
+            if (itemWheel->Sky_Book == items::Item::Ancient_Sky_Book_empty)
+            {
+                itemWheel->Sky_Book = 0xFF;
+            }
+        }
+    }
+    
     bool Mod::isStageShop()
     {
         u8 totalShopStages = sizeof(stage::shopStages) / sizeof(stage::shopStages[0]);
@@ -1868,6 +1885,8 @@ namespace mod
             for (u32 i = 0; i < checkCount; i++)
             {
                 customCheck check = checks[i];
+                
+                check.overrides();
 
                 strcpy(TRES[i].actorName, "tboxA0\0");
                 TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);

@@ -22,7 +22,7 @@ struct customCheck
 
     s32 Angle;
 
-    void (*override)();
+    void (*overrides)();
     
     bool (*requirement)();
 };
@@ -31,37 +31,39 @@ namespace mod
 {
     customCheck customChecks[30] = {
         /*Ordon Shield*/
-        {"F_SP103", 0, 0, 0x74, 0x2A, 0x454BF27A, 0x4479E28F, 0x447534C8, 0xF932, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+        {"F_SP103", 0, 0, 0x74, 0x2A, 0x454BF27A, 0x4479E28F, 0x447534C8, 0xF932, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*remove ordon shield*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Ordon Sword*/
-        {"R_SP01", 4, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+        {"R_SP01", 4, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon sword*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Sera Bottle*/
-        {"F_SP103", 0, 1, 0x7C, 0x65, 0x444C8DC3, 0x42AF0000, 0xC4CB2577, 0xA3E7, nullptr, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
+        {"F_SP103", 0, 1, 0x7C, 0x65, 0x444C8DC3, 0x42AF0000, 0xC4CB2577, 0xA3E7, [](){ gameInfo.scratchPad.eventBits[0x10] |= 0x1;/*cat cs watched*/ }, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
         /*Slingshot*/
-        {"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, nullptr, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
+        {"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, [](){ gameInfo.scratchPad.eventBits[0x10] |= 0x1; }, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
         /*Lantern*/
         {"F_SP108", 0xFF, 1, 0xF8, 0x48, 0xC66D4C1B, 0x41C19A25, 0xC65D2696, 0x36EC, nullptr, [](){ return true; } },
         /*Zora Armor*/
-        {"F_SP111", 0, 1, 0x7C, 0x31, 0x46A85A96, 0x43FA0000, 0x43944190, 0xC270, nullptr, [](){ return true; } },
+        {"F_SP111", 0, 1, 0x7C, 0x31, 0x46A85A96, 0x43FA0000, 0x43944190, 0xC270, [](){ gameInfo.scratchPad.eventBits[0x8] |= 0x4;/*got zora armor from Rutela*/ }, [](){ return true; } },
         /*Coral Earring*/
-        {"F_SP111", 0, 1, 0x78, 0x3D, 0x46A81087, 0x43FA57D9, 0xC3BCEFAC, 0xC270, nullptr, [](){ return tools::checkItemFlag(ItemFlags::Asheis_Sketch); } },
+        {"F_SP111", 0, 1, 0x78, 0x3D, 0x46A81087, 0x43FA57D9, 0xC3BCEFAC, 0xC270, [](){ gameInfo.scratchPad.eventBits[0x3B] |= 0x80;/*Got Coral Earring from Ralis*/ }, [](){ return tools::checkItemFlag(ItemFlags::Asheis_Sketch); } },
         /*Auru's Memo*/
-        {"F_SP115", 0, 1, 0x7C, 0x90, 0xC7E2E398, 0xC6770800, 0x47656746, 0x143D, nullptr, [](){ return gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1; } },
+        {"F_SP115", 0, 1, 0x7C, 0x90, 0xC7E2E398, 0xC6770800, 0x47656746, 0x143D, [](){ gameInfo.scratchPad.eventBits[0x25] |= 0x30;/*Auru Cutscene Complete + Auru's Memo gotten*/ }, [](){ return gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1; } },
         /*Ashei's Sketch*/
-        {"F_SP114", 0, 1, 0x7C, 0x91, 0x46F71891, 0xC6502A32, 0xC6348FA6, 0x86E6, nullptr, [](){ return true; } },
+        {"F_SP114", 0, 1, 0x7C, 0x91, 0x46F71891, 0xC6502A32, 0xC6348FA6, 0x86E6, [](){ gameInfo.scratchPad.eventBits[0x29] |= 0x40;/*Got Ashei's Sketch from Ashei*/ }, [](){ return true; } },
         /*Horse Call*/
-        {"R_SP109", 0, 1, 0x74, 0x84, 0x43CDBCA1, 0x0, 0xC31EEBF3, 0xBDBE, nullptr, [](){ return tools::checkItemFlag(ItemFlags::Ilias_Charm); } },
+        {"R_SP109", 0, 1, 0x74, 0x84, 0x43CDBCA1, 0x0, 0xC31EEBF3, 0xBDBE, [](){ gameInfo.scratchPad.eventBits[0x23] |= 0x20;/*Got horse call from Illia*/ }, [](){ return tools::checkItemFlag(ItemFlags::Ilias_Charm); } },
+        /*Fishing Hole Bottle*/
+        {"F_SP127", 0, 1, 0x7C, 0x60, 0x45B27147, 0x420C0000, 0x450F716A, 0x62E5, nullptr, [](){ return true; } },
         /*Coro Key*/
-        {"F_SP108", 0xFF, 0, 0xF4, 0xFE, 0xC64BA600, 0x403DA884, 0xC663BC8E, 0x7A11, nullptr, [](){ return gameInfo.scratchPad.clearedTwilights.Faron == 0b1; } },
+        {"F_SP108", 0xFF, 0, 0xF4, 0xFE, 0xC64BA600, 0x403DA884, 0xC663BC8E, 0x7A11, [](){ gameInfo.scratchPad.eventBits[0x1A] |= 0x10;/*Talked to Coro after Faron Twilight*/ }, [](){ return gameInfo.scratchPad.clearedTwilights.Faron == 0b1; } },
         /*Gate Keys*/
         {"F_SP121", 0xFF, 1, 0x7C, 0xF3, 0xC781DFDB, 0xC607B38E, 0x47897B50, 0xC0C9, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x8] & 0x40) != 0;/*was escort started*/ } },
         /*Camp Key*/
         {"F_SP118", 1, 0, 0x7C, 0x20, 0x457F816B, 0x43820000, 0xC572F680, 0x0000, nullptr, [](){ return true; } },
         /*Jovani Poe*/
-        {"R_SP160", 5, 0, 0x7C, 0xE0, 0x45906531, 0xC2960000, 0x45229AEB, 0xC3C9, nullptr, [](){ return true; } },
+        {"R_SP160", 5, 0, 0x7C, 0xE0, 0x45906531, 0xC2960000, 0x45229AEB, 0xC3C9, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x80;/*killed poe*/ gameInfo.localAreaNodes.unk_0[0xF] |= 0x7;/*cs + open path to sewers*/ }, [](){ return true; } },
         /*Shadow Crystal*/
-        {"F_SP117", 1, 0, 0x7C, 0x32, 0xC36EB7DC, 0x44CB2000, 0xC5964574, 0x0000, nullptr, [](){ return true; } },
+        {"F_SP117", 1, 0, 0x7C, 0x32, 0xC36EB7DC, 0x44CB2000, 0xC5964574, 0x0000, [](){ gameInfo.scratchPad.eventBits[0x10] |= 0x20;/*got master sword cs*/ }, [](){ return true; } },
         /*Master Sword*/
-        {"F_SP117", 1, 2, 0x78, 0x29, 0x4372ACFB, 0x44CB2000, 0xC5991A55, 0x0000, nullptr, [](){ return true; } },
+        {"F_SP117", 1, 2, 0x78, 0x29, 0x4372ACFB, 0x44CB2000, 0xC5991A55, 0x0000, [](){ gameInfo.scratchPad.eventBits[0x10] |= 0x20;/*got master sword cs*/ }, [](){ return true; } },
         /*Powered Dominion Rod*/
         {"R_SP209", 7, 1, 0x70, 0x4C, 0xC3DB30E9, 0xC4408000, 0xC523C471, 0x3CF0, nullptr, [](){ return tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty); } },
         /*Light Master Sword*/

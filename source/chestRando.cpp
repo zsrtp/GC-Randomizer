@@ -794,10 +794,11 @@ namespace mod
                                         }
                                         else if (tools::checkItemFlag(ItemFlags::Null_DB))
                                         {
-                                            gameInfo.scratchPad.eventBits[0x25] |= 0x40;  // Set the Owl Statue in Kak to be able to be moved
-                                            gameInfo.scratchPad.eventBits[0x5F] |= 0x20;  // Shad leaves so you can warp
+                                            gameInfo.scratchPad.eventBits[0x60] |= 0x4; //set shad to be back in the basement
                                             if (Singleton::getInstance()->isCannonRepaired == 0)
                                             {
+                                                gameInfo.scratchPad.eventBits[0x25] |= 0x40;  // Set the Owl Statue in Kak to be able to be moved
+                                                gameInfo.scratchPad.eventBits[0x5F] |= 0x20;  // Shad leaves so you can warp
                                                 gameInfo.scratchPad.eventBits[0x3B] |= 0x8;  // repairs Cannon at lake
                                                 Singleton::getInstance()->isCannonRepaired = 1;
                                             }
@@ -837,10 +838,11 @@ namespace mod
                                         }
                                         else if (tools::checkItemFlag(ItemFlags::Null_DB))
                                         {
-                                            gameInfo.scratchPad.eventBits[0x25] |= 0x40;  // Set the Owl Statue in Kak to be able to be moved
-                                            gameInfo.scratchPad.eventBits[0x5F] |= 0x20;  // Shad leaves so you can warp
+                                            gameInfo.scratchPad.eventBits[0x60] |= 0x4; //set shad to be back in the basement
                                             if (Singleton::getInstance()->isCannonRepaired == 0)
                                             {
+                                                gameInfo.scratchPad.eventBits[0x25] |= 0x40;  // Set the Owl Statue in Kak to be able to be moved
+                                                gameInfo.scratchPad.eventBits[0x5F] |= 0x20;  // Shad leaves so you can warp
                                                 gameInfo.scratchPad.eventBits[0x3B] |= 0x8;  // repairs Cannon at lake
                                                 Singleton::getInstance()->isCannonRepaired = 1;
                                             }
