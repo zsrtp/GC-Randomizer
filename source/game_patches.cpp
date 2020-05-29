@@ -160,7 +160,7 @@ namespace mod::game_patch
     
     void unlockHFGates()
     {
-        if (Singleton::getInstance()->isGateUnlockEnabled == 1)
+        if (Singleton::getInstance()->isGateUnlockEnabled == 1 || tools::checkItemFlag(ItemFlags::Gate_Keys))
         {
             gameInfo.unk_979[0x7] |= 0x6;//2 = lanyru gate 4 = eldin gorge gate
         }
@@ -292,6 +292,8 @@ namespace mod::game_patch
         {
             gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard
             gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
+            gameInfo.scratchPad.eventBits[0x8] |= 0x40;//escort started
+            gameInfo.scratchPad.eventBits[0x8] |= 0x10;//escort finished
         }
     }
 
@@ -301,6 +303,8 @@ namespace mod::game_patch
         {
             gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard
             gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
+            gameInfo.scratchPad.eventBits[0x8] |= 0x40;//escort started
+            gameInfo.scratchPad.eventBits[0x8] |= 0x10;//escort finished
             tools::triggerSaveLoad(stage::allStages[Stage_Kakariko_Interiors], 0x2, 0x3, 0xD);
         }
     }
