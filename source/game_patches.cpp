@@ -290,7 +290,8 @@ namespace mod::game_patch
         if (gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 &&
             ((gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) == 0))  // Escort Not Completed before Beating Lakebed
         {
-            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;
+            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard
+            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
         }
     }
 
@@ -298,6 +299,8 @@ namespace mod::game_patch
     {
         if (Singleton::getInstance()->isCartEscortSkipEnabled == 1)
         {
+            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard
+            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
             tools::triggerSaveLoad(stage::allStages[Stage_Kakariko_Interiors], 0x2, 0x3, 0xD);
         }
     }
