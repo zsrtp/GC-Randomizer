@@ -326,6 +326,57 @@ namespace mod
         
         
         hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);*/
+		
+		/*page = hudConsole->addPage("event bits 1");   
+        hudConsole->addWatch(page, "bits0to7:", &gameInfo.scratchPad.eventBits[0x0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits8toF:", &gameInfo.scratchPad.eventBits[0x8], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits10to17:", &gameInfo.scratchPad.eventBits[0x10], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits18to1F:", &gameInfo.scratchPad.eventBits[0x18], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits20to27:", &gameInfo.scratchPad.eventBits[0x20], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits28to2F:", &gameInfo.scratchPad.eventBits[0x28], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits30to37:", &gameInfo.scratchPad.eventBits[0x30], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits38to3F:", &gameInfo.scratchPad.eventBits[0x38], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits40to47:", &gameInfo.scratchPad.eventBits[0x40], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits48to4F:", &gameInfo.scratchPad.eventBits[0x48], 'x', WatchInterpretation::_u64);
+		page = hudConsole->addPage("event bits 2");   
+        hudConsole->addWatch(page, "bits50to57:", &gameInfo.scratchPad.eventBits[0x50], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits58to5F:", &gameInfo.scratchPad.eventBits[0x58], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits60to67:", &gameInfo.scratchPad.eventBits[0x60], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits68to6F:", &gameInfo.scratchPad.eventBits[0x68], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits70to77:", &gameInfo.scratchPad.eventBits[0x70], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits78to7F:", &gameInfo.scratchPad.eventBits[0x78], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits80to87:", &gameInfo.scratchPad.eventBits[0x80], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits88to8F:", &gameInfo.scratchPad.eventBits[0x88], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits90to97:", &gameInfo.scratchPad.eventBits[0x90], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits98to9F:", &gameInfo.scratchPad.eventBits[0x98], 'x', WatchInterpretation::_u64);
+		page = hudConsole->addPage("event bits 3");   
+        hudConsole->addWatch(page, "bitsA0toA7:", &gameInfo.scratchPad.eventBits[0xA0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsA8toAF:", &gameInfo.scratchPad.eventBits[0xA8], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsB0toB7:", &gameInfo.scratchPad.eventBits[0xB0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsB8toBF:", &gameInfo.scratchPad.eventBits[0xB8], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsC0toC7:", &gameInfo.scratchPad.eventBits[0xC0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsC8toCF:", &gameInfo.scratchPad.eventBits[0xC8], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsD0toD7:", &gameInfo.scratchPad.eventBits[0xD0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsD8toDF:", &gameInfo.scratchPad.eventBits[0xD8], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsE0toE7:", &gameInfo.scratchPad.eventBits[0xE0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsE8toEF:", &gameInfo.scratchPad.eventBits[0xE8], 'x', WatchInterpretation::_u64);
+		page = hudConsole->addPage("event bits 4");
+        hudConsole->addWatch(page, "bitsF0toF7:", &gameInfo.scratchPad.eventBits[0xF0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bitsF8toFF:", &gameInfo.scratchPad.eventBits[0xF8], 'x', WatchInterpretation::_u64);  
+        hudConsole->addWatch(page, "bits100to107:", &gameInfo.scratchPad.eventBits[0x100], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits108to10F:", &gameInfo.scratchPad.eventBits[0x108], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits110to117:", &gameInfo.scratchPad.eventBits[0x110], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits118to11F:", &gameInfo.scratchPad.eventBits[0x118], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits120to127:", &gameInfo.scratchPad.eventBits[0x120], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits128to12F:", &gameInfo.scratchPad.eventBits[0x128], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits130to137:", &gameInfo.scratchPad.eventBits[0x130], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits138to13F:", &gameInfo.scratchPad.eventBits[0x138], 'x', WatchInterpretation::_u64);
+		page = hudConsole->addPage("event bits 5");
+        hudConsole->addWatch(page, "bits140to147:", &gameInfo.scratchPad.eventBits[0x140], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "bits148to14F:", &gameInfo.scratchPad.eventBits[0x148], 'x', WatchInterpretation::_u64);  
+        hudConsole->addWatch(page, "minigame0to7:", &gameInfo.scratchPad.miniGameBits[0x0], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "minigame8toF:", &gameInfo.scratchPad.miniGameBits[0x8], 'x', WatchInterpretation::_u64);
+        hudConsole->addWatch(page, "minigame10to17:", &gameInfo.scratchPad.miniGameBits[0x10], 'x', WatchInterpretation::_u64);*/
         
         // save load
         /*page = hudConsole->addPage("Save load");
