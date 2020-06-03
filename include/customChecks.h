@@ -33,15 +33,15 @@ namespace mod
         /*Ordon Shield*/
         {"F_SP103", 0, 0, 0x74, 0x2A, 0x454BF27A, 0x4479E28F, 0x447534C8, 0xF932, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*remove ordon shield*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Ordon Sword*/
-        {"R_SP01", 4, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon sword*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+        {"R_SP01", , 0, 0x70, 0x28, 0xC2AE78E3, 0x0, 0x413A3E3A, 0x4452, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon sword*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Fishing rod*/
         {"F_SP103", 0, 1, 0x68, 0x4A, 0xC3FEB5F1, 0x42960000, 0x4514FB40, 0x883A, [](){ gameInfo.scratchPad.eventBits[0x3] |= 0x5;/*brought Cradle to Uli and got fishing rod*/ gameInfo.scratchPad.eventBits[0x46] |= 0x1;/*took cradle from monkey*/ }, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
         /*Sera Bottle*/
         {"F_SP103", 0, 1, 0x7C, 0x65, 0x444C8DC3, 0x42AF0000, 0xC4CB2577, 0xA3E7, [](){ gameInfo.scratchPad.eventBits[0x12] |= 0x8;/*can shop at Sera's shop*/ gameInfo.scratchPad.eventBits[0x14] |= 0x8;/*Sera Bottle gotten*/ }, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
         /*Slingshot*/
-        {"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, [](){ gameInfo.scratchPad.eventBits[0x49] |= 0x2;/*Bought Slingshot from Sera*/ }, [](){ return gameInfo.scratchPad.counters.rupees >= 30 && (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
+        {"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, [](){ gameInfo.scratchPad.eventBits[0x49] |= 0x2;/*Bought Slingshot from Sera*/ }, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
         /*Lantern*/
-        {"F_SP108", 0xFF, 1, 0xF8, 0x48, 0xC66D4C1B, 0x41C19A25, 0xC65D2696, 0x36EC, nullptr, [](){ return true; } },
+        {"F_SP108", 0xFF, 1, 0xF8, 0x48, 0xC66D4C1B, 0x41C19A25, 0xC65D2696, 0x36EC, [](){ gameInfo.scratchPad.eventBits[0xF] |= 0x1;/*got Lantern from Coro*/ }, [](){ return true; } },
         /*Zora Armor*/
         {"F_SP111", 0, 1, 0x7C, 0x31, 0x46A85A96, 0x43FA0000, 0x43944190, 0xC270, [](){ gameInfo.scratchPad.eventBits[0x8] |= 0x4;/*got zora armor from Rutela*/ }, [](){ return true; } },
         /*Coral Earring*/
