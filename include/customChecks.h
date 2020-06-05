@@ -63,7 +63,7 @@ namespace mod
         /*Fishing Hole Bottle*/
         {"F_SP127", 0, 1, 0x7C, 0x60, 0x45B27147, 0x420C0000, 0x450F716A, 0x62E5, [](){ gameInfo.scratchPad.eventBits[0x39] |= 0x8;/*Got fishing hole bottle*/ }, [](){ return true; } },
         /*Coro Key*/
-        {"F_SP108", 0xFF, 0, 0xF4, 0xFE, 0xC64BA600, 0x403DA884, 0xC663BC8E, 0x7A11, [](){ gameInfo.scratchPad.eventBits[0x1A] |= 0x10;/*Talked to Coro after Faron Twilight*/ }, [](){ return gameInfo.scratchPad.clearedTwilights.Faron == 0b1; } },
+        {"F_SP108", 0xFF, 0, 0xF4, 0xFE, 0xC64BA600, 0x403DA884, 0xC663BC8E, 0x7A11, [](){ gameInfo.scratchPad.eventBits[0x1A] |= 0x10;/*Talked to Coro after Faron Twilight*/ gameInfo.localAreaNodes.unk_0[0xD] |= 0x4;/*got Coro key*/ }, [](){ return gameInfo.scratchPad.clearedTwilights.Faron == 0b1; } },
         /*Gate Keys*/
         {"F_SP121", 0xFF, 1, 0x7C, 0xF3, 0xC781DFDB, 0xC607B38E, 0x47897B50, 0xC0C9, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x8] & 0x40) != 0;/*was escort started*/ } },
         /*Camp Key*/
@@ -81,17 +81,17 @@ namespace mod
         /*Ending Blow*/
         {"F_SP108", 6, 2, 0xF0, 0xE1, 0xC71A5B41, 0x44898000, 0xC6E08544, 0x0000, nullptr, [](){ return gameInfo.scratchPad.clearedTwilights.Faron == 0b1; } },
         /*Shield Bash*/
-        {"F_SP104", 1, 2, 0x6C, 0xE2, 0xC4BB1F1C, 0x438C0000, 0xC613CAAA, 0x4138, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x80) != 0;/*DMT howling stone done*/ } },
+        {"F_SP104", 1, 2, 0x6C, 0xE2, 0xC4BB1F1C, 0x438C0000, 0xC613CAAA, 0x4138, [](){ gameInfo.scratchPad.eventBits[0x3C] |= 0x8;/*Got Skill from Ordon Wolf*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x80) != 0;/*DMT howling stone done*/ } },
         /*Back Slice*/
-        {"F_SP122", 8, 2, 0x78, 0xE3, 0xC78590C8, 0xC4834000, 0x45B7BC37, 0xC15B, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x40) != 0;/*UZR howling stone done*/ } },
+        {"F_SP122", 8, 2, 0x78, 0xE3, 0xC78590C8, 0xC4834000, 0x45B7BC37, 0xC15B, [](){ gameInfo.scratchPad.eventBits[0x3C] |= 0x4;/*Got Skill from West CT Wolf*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x40) != 0;/*UZR howling stone done*/ } },
         /*Helm Splitter*/
-        {"F_SP122", 16, 2, 0x74, 0xE4, 0xC75990D6, 0xC5BEA000, 0x46C3B269, 0x0000, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x20) != 0;/*Faron howling stone done*/ } },
+        {"F_SP122", 16, 2, 0x74, 0xE4, 0xC75990D6, 0xC5BEA000, 0x46C3B269, 0x0000, [](){ gameInfo.scratchPad.eventBits[0x3C] |= 0x2;/*Got Skill from South CT Field Wolf*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x20) != 0;/*Faron howling stone done*/ } },
         /*Mortal Draw*/
-        {"F_SP124", 0, 2, 0x78, 0xE5, 0xC53E0B78, 0x41C428F6, 0x46318C93, 0x4565, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x10) != 0;/*Lake Hylia howling stone done*/ } },
+        {"F_SP124", 0, 2, 0x78, 0xE5, 0xC53E0B78, 0x41C428F6, 0x46318C93, 0x4565, [](){ gameInfo.scratchPad.eventBits[0x3C] |= 0x1;/*Got Skill from Bublin Camp Wolf*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x10) != 0;/*Lake Hylia howling stone done*/ } },
         /*Jump Strike*/
-        {"F_SP111", 0, 2, 0x6C, 0xE6, 0x467D1395, 0x44034000, 0xC1F855A7, 0x3EE7, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x8) != 0;/*Snowpeak howling stone done*/ } },
+        {"F_SP111", 0, 2, 0x6C, 0xE6, 0x467D1395, 0x44034000, 0xC1F855A7, 0x3EE7, [](){ gameInfo.scratchPad.eventBits[0x3D] |= 0x80;/*Got Skill from Graveyard Wolf*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x8) != 0;/*Snowpeak howling stone done*/ } },
         /*Great Spin*/
-        {"F_SP116", 1, 2, 0x78, 0xE7, 0x42204113, 0x44480000, 0xC61FB41E, 0x0000, nullptr, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x4) != 0;/*Hidden Village howling stone done*/ } },
+        {"F_SP116", 1, 2, 0x78, 0xE7, 0x42204113, 0x44480000, 0xC61FB41E, 0x0000, [](){ gameInfo.scratchPad.eventBits[0x3D] |= 0x40;/*Got Skill from Barrier Wolf*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x3A] & 0x4) != 0;/*Hidden Village howling stone done*/ } },
         /*Youth's Scent*/
         {"F_SP121", 0xFF, 0, 0x70, 0xB4, 0xC681A76B, 0xC5C99000, 0x4783ED29, 0xA6A9, nullptr, [](){ return true; } },
         /*Ilia's Scent*/

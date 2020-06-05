@@ -992,38 +992,31 @@ namespace mod
                                 }
                                 else if (item == 0xE1)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x400;//give ending blow
+                                    gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
                                 }
                                 else if (item == 0xE2)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x800;//give shield attack
+                                    gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
                                 }
                                 else if (item == 0xE3)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x200;//give back slice
+                                    gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
                                 }
                                 else if (item == 0xE4)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x100;//give helm splitter
+                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
                                 }
                                 else if (item == 0xE5)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x80;//give mortal draw
+                                    gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
                                 }
                                 else if (item == 0xE6)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x40;//give jump strike
+                                    gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jump strike
                                 }
                                 else if (item == 0xE7)
                                 {
-                                    u16* tempAddress = reinterpret_cast<u16*>(&gameInfo.scratchPad.eventBits[0x29]);
-                                    *tempAddress |= 0x20;//give great spin
+                                    gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
                                 }
                                 else if (!tools::checkItemFlag(ItemFlags::Slingshot) && 
                                     (item == items::Item::Seeds_50))
