@@ -135,9 +135,15 @@ namespace mod::game_patch
             // We should be wolf
             setFirstTimeWolf();
 
-            // Set sewers flags (zelda cutscenes, unchained wolf link, bla)
+            // Set sewers flags (escaped cell cs, Midna intro cs, unchained wolf link, zelda cutscene, First trip to Sewers Done)
             gameInfo.scratchPad.eventBits[0x05] |= 0x7A;
-            
+			
+            // Set more sewers flags (talk to midna after escaping cell in sewers, listened to first guard in sewers)
+            gameInfo.scratchPad.eventBits[0x1A] |= 0x82;
+			
+            // Set more sewers flags (spawned into sewers twilight as wolf)
+            gameInfo.scratchPad.eventBits[0x4D] |= 0x8;
+			
             gameInfo.scratchPad.equipedItems.sword = 0x3F;
 
             // Load back to Ordon Spring
