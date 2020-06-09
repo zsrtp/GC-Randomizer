@@ -26,13 +26,20 @@ typedef	signed char 		s8;
   (byte & 0b00000010 ? '1' : '0'), \
   (byte & 0b00000001 ? '1' : '0')
 
+// Allows to transform data as bytes 1:1 from A<-->B and vice versa
+template <typename A, typename B>
+union typeTransform {
+	A a;
+	B b;
+};
+
 // Array modification
 #define MAX_LOAD_EVENTS 20 // eventListener
 #define MAX_HUDCONSOLE_PAGES 12 // HUDConsole
 
 // Mnemonics
 #define AUTHOR				"ZTPR"
-#define VERSION				"v0.15b"
+#define VERSION				"v0.15.2a"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos

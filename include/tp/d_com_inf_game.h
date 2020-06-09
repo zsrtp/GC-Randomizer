@@ -136,7 +136,7 @@ namespace tp::d_com_inf_game
 
 		Bomb_Bag_Regular_Bombs = 112,
 		Bomb_Bag_Water_Bombs = 113,
-		Bomb_Bag_Bombslings = 114,
+		Bomb_Bag_Bomblings = 114,
 		Fairy_Tears = 115,
 		Worm = 116,
 		Jovani_Bottle = 117,
@@ -261,13 +261,13 @@ namespace tp::d_com_inf_game
 		Null_DF = 223,//now used for sky letter 1
 
 		Poe_Soul = 224,
-		Null_E1 = 225,
-		Null_E2 = 226,
-		Null_E3 = 227,
-		Null_E4 = 228,
-		Null_E5 = 229,
-		Null_E6 = 230,
-		Null_E7 = 231,
+		Null_E1 = 225,//now used for ending blow
+		Null_E2 = 226,//now used for shield bash
+		Null_E3 = 227,//now used for back slice
+		Null_E4 = 228,//now used for helm splitter
+		Null_E5 = 229,//now used for mortal draw
+		Null_E6 = 230,//now used for jump strike
+		Null_E7 = 231,//now used for great spin
 
 		Null_E8 = 232,
 		Ancient_Sky_Book_empty = 233,
@@ -836,7 +836,9 @@ namespace tp::d_com_inf_game
 		u16 immediateControl; // 4edb - 4edc
 		u8 unk_00[0x4]; // 4edd - 4EE0
 		u8 nextEventID; // 4EE1
-		u8 unk1A[0xD1];
+		u8 unk1A[0xCB];
+		u8 eventFlag;
+		u8 unkE7[0x5];
 		u8 currentEventID;
 		u8 unk_ec[0x14];
 		tp::evt_control::csFunc* onSkip;		 // if != 0 the function stored here will run, otherwise unskippable
@@ -942,9 +944,11 @@ namespace tp::d_com_inf_game
 	{
 		extern GameInfo dComIfG_gameInfo;
 		extern u8 current_state;
+		extern void setItemBombNumCount(u32 unk1, u8 bagNb, short amout);//amount will be the og (ex: if you can only have 5 more bombs and buy 10, it'll still ahow 10)
 		extern u8 next_state;
 		//extern char wallet_text[13];
 		//extern char wallet_description[96];
 		extern u8 can_warp;
+		
 	}
 }

@@ -1,5 +1,6 @@
 // memory
 80003458:memset
+80003540:memcpy
 
 // m_Do_ext.o
 // text
@@ -11,6 +12,11 @@
 80032B50:getRupeeMax
 800351EC:getSave
 80035220:putSave
+
+/ d_stage.o
+80025914:actorCommonLayerInit
+// data
+803F8034:mStatus_roomControl
 
 // d_event.o
 800428A8:defaultSkipStb
@@ -35,6 +41,7 @@
 
 // d_map_path_dmap.o
 8003EF8C:getMapPlayerPos
+8003F050:getMapPlayerAngleY
 
 // d_item.o
 80097FBC:execItemGet
@@ -47,6 +54,7 @@
 800BB6C4:checkHeavyStateOn
 800C7A00:procCoMetamorphoseInit
 8011A908:checkTreasureRupeeReturn
+803DEDF4:linkStatus
 // data
 8039038C:ladderVars
 
@@ -145,6 +153,7 @@
 // d_com_inf_game.o
 // data
 80408160:dComIfG_gameInfo
+8002B414:setItemBombNumCount
 
 // d_kankyo.o
 // data

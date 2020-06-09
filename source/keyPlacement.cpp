@@ -517,7 +517,7 @@ namespace mod::keyPlacement
 		274,//SE Balcony Tower Chest
 		275//big key
 	};
-
+	
 	u16 F_keys[2]
 	{
 		2,//North Cave Key
@@ -565,5 +565,5 @@ namespace mod::keyPlacement
 		419,//poe 15
 		422//poe 18
 	};
-
+	
 }
