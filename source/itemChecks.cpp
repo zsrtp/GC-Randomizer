@@ -51,7 +51,7 @@ namespace mod::item
 		/* 41 */{0x06, 7, stage::allStages[46], 0, 0x5, 0xFF, 0b000000101100000000000, -4027.7336430, 3200.0000000, -8970.9990230, nullptr, nullptr}, //Kakariko Watchtower Alcove Chest
 		/* 42 */{0x21, 3, stage::allStages[56], 0, 0x5, 0xFF, 0b000000001000000000000, 11550.0000000, 2700.0000000, 24090.0000000, nullptr, nullptr}, //Eldin Bomb Rock Ledge Heart Piece Chest
 		/* 43 */{0x03, 7, stage::allStages[50], 1, 0x5, 0xFF, 0b000000000000000000000, 2784.3178710, -4587.8901370, 10773.4140620, nullptr, nullptr}, //ZD Small Chest By Mother and Child Isles
-		/* 44 */{0x04, 7, stage::allStages[50], 1, 0xFF, 0xFF, 0b000000000000000000000, 3810.8435060, -3535.5300290, 11344.8876950, nullptr, nullptr}, //ZD Small Chest Under Waterfall
+		/* 44 */{0x04, 7, stage::allStages[50], 1, 0x8, 0x8, 0b000000000000000000000, 3810.8435060, -3535.5300290, 11344.8876950, nullptr, nullptr}, //ZD Small Chest Under Waterfall
 		/* 45 */{0x06, 7, stage::allStages[52], 0, 0x5, 0xFF, 0b001000000000000000000, -97123.5468750, -19490.0000000, 58585.6992190, nullptr, nullptr}, //Lake Hylia Underwater Chest
 		/* 46 */{0x0F, 5, stage::allStages[0], 0, 0x6, 0xFF, 0b000000000000001000000, -1707.6793210, 1250.0000000, 15388.9882810, nullptr, nullptr}, //LBT Lobby Left Chest
 		/* 47 */{0x17, 5, stage::allStages[0], 0, 0x6, 0xFF, 0b000000000000001000000, -144.6737980, 1250.0000000, 16525.8710940, nullptr, nullptr}, //LBT Lobby Rear Chest
@@ -346,7 +346,7 @@ namespace mod::item
 		/* 336 */{ 0x21, 3, stage::allStages[56], 0, 0x8, 0xFF, 0b000000000000000000000, -25148.583984, -200.000000, 9814.881836, nullptr, nullptr },
 		/* 337 */{ 0x21, 3, stage::allStages[61], 0, 0x8, 0xFF, 0b000000000000000000000, 3618.216797, 232.476608, 541.905518, nullptr, nullptr },
 		/* 338 */{ 0x21, 3, stage::allStages[55], 1, 0x8, 0xFF, 0b000000000000000000000, 4708.924805, 260.000000, -3120.967529, nullptr, nullptr },
-		/* 339 */{ 0x23, 2, stage::allStages[27], 1, 0xFF, 0x11, 0b000000000000000000000, 293.920288, 0.000000, -337.167480, nullptr, nullptr }, // Yeta Map
+		/* 339 */{ 0x23, 2, stage::allStages[27], 1, 0x11, 0x11, 0b000000000000000000000, 293.920288, 0.000000, -337.167480, nullptr, nullptr }, // Yeta Map
 		/* 340 */{ 0x21, 3, stage::allStages[51], 1, 0x12, 0xFF, 0b000000000000000000000, -71795.539062, -54450.000000, 56396.738281, nullptr, nullptr },
 		/* 341 */{ 0x21, 3, stage::allStages[63], 0, 0x13, 0xFF, 0b000000000000000000010, 2200.000000, 104.574730, -1200.000000, nullptr, nullptr },
 		/* 342 */{0x20, 8, stage::allStages[20], 13, 0xFF, 0xFF, 0b000000000000000000000, -7625.000000, 52.000000, -5525.000000, nullptr, nullptr}, //

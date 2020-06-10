@@ -102,5 +102,5 @@ namespace mod
 		/*Medicine Scent*/
 		{"R_SP160", 2, 0, 0x74, 0xB5, 0x45EC0BF6, 0xC33E0000, 0xC4D9EA4C, 0xC26D, nullptr, []() { return true; } },
 		/*Snowpeak Map*/
-		{"D_MN11", 0xFF, 0, 0x74, 0x23, 0x447AF8E0, 0x00000000, 0xC42C93A9, 0xFEED, nullptr, []() { return true; } } };
+		 {"D_MN11", 0xFF, 0, 0x74, 0x23, 0x447AF8E0, 0x00000000, 0xC42C93A9, 0xFEED, []() { gameInfo.localAreaNodes.unk_0[0xA] |= 0x10;/*got map from Yeta*/ gameInfo.scratchPad.eventBits[0xB] |= 0x20;/*Talked to Yeta in SPR first time*/ gameInfo.localAreaNodes.unk_0[0x10] |= 0x20;/*Yeta lets you open kitchen door*/ gameInfo.localAreaNodes.unk_0[0x16] |= 0x40;/*Yeta points to kitchen cs*/ }, []() { return true; } } };
 };

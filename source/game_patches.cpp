@@ -595,7 +595,7 @@ namespace mod::game_patch
 		allAreaNodesPtr->Arbiters_Grounds.unk_0[0xE] |= 0x10; //opening CS
 		allAreaNodesPtr->Arbiters_Grounds.unk_0[0x12] |= 0x8; //cs after raising rails
 
-		allAreaNodesPtr->Snowpeak_Ruins.unk_0[0x10] |= 0x30; //enter cannonball room cs, unlock door to yeto
+		allAreaNodesPtr->Snowpeak_Ruins.unk_0[0x10] |= 0x10; //enter cannonball room cs
 		allAreaNodesPtr->Snowpeak_Ruins.unk_0[0x14] |= 0x41; //entrance cs, midna text after bedroom key
 		allAreaNodesPtr->Snowpeak_Ruins.unk_0[0x15] |= 0x2A; //freezard tower cs, enter NE room cs watched, East Courtyard Dig CS
 		allAreaNodesPtr->Snowpeak_Ruins.unk_0[0x16] |= 0x28; //midna text after cheese and pumpkin
@@ -630,12 +630,11 @@ namespace mod::game_patch
 		allAreaNodesPtr->Hyrule_Castle.unk_0[0x17] |= 0x80; //lone darknut room me torch watched
 		
 		//Set Local Area Node flags
-		tp::d_com_inf_game::AreaNodes* csLocalAreaNodesPtr = &gameInfo.localAreaNodes;
-		csLocalAreaNodesPtr->unk_0[0x8] = 0xFF;//give midna jumps in mist area
-		csLocalAreaNodesPtr->unk_0[0xC] |= 0x80;//set flag for midna to think you followed the monkey in the mist
-		csLocalAreaNodesPtr->unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
-		csLocalAreaNodesPtr->unk_0[0xF] |= 0x8;//set flag for midna text after twilight
-		csLocalAreaNodesPtr->unk_0[0xE] |= 0x9;//cs after entering Faron,spring cs with spirit
+		allAreaNodesPtr->Faron.unk_0[0x8] = 0xFF;//give midna jumps in mist area
+		allAreaNodesPtr->Faron.unk_0[0xC] |= 0x90;//set flag for midna to think you followed the monkey in the mist, trill lets you shop
+		allAreaNodesPtr->Faron.unk_0[0x12] |= 0x4;//mark read the midna text when you warp to N Faron for bridge
+		allAreaNodesPtr->Faron.unk_0[0xF] |= 0x8;//set flag for midna text after twilight
+		allAreaNodesPtr->Faron.unk_0[0xE] |= 0x9;//cs after entering Faron,spring cs with spirit
 
 		//Apply Randomizer Options
 		checkBossKeysey();
@@ -725,8 +724,8 @@ namespace mod::game_patch
 
 					//Unlock Warps
 					allAreaNodesPtr->Ordon.unk_0[0xD] = 0x10; // give Ordon Spring Warp
-					gameInfo.localAreaNodes.unk_0[0x13] = 0x80;//give S faron warp
-					gameInfo.localAreaNodes.unk_0[0xB] = 0x4;//give N faron warp
+					allAreaNodesPtr->Faron.unk_0[0x13] = 0x80;//give S faron warp
+					allAreaNodesPtr->Faron.unk_0[0xB] = 0x4;//give N faron warp
 					allAreaNodesPtr->Eldin.unk_0[0x9] |= 0x20; // give Death Mountain Warp
 					allAreaNodesPtr->Eldin.unk_0[0x8] |= 0x80; // give Kakariko Warp
 					allAreaNodesPtr->Hyrule_Field.unk_0[0x17] = 0x8; //give Bridge of Eldin Warp

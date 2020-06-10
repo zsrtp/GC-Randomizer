@@ -947,12 +947,14 @@ namespace mod
 									gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.unk_0[0x9] |= 0x4; //Unlock Lobby Courtyard Door
 									gameInfo.scratchPad.eventBits[0x4] |= 0x80; //Told Yeta About Pumpkin
 									gameInfo.scratchPad.eventBits[0x0] |= 0x22; //Yeto took pumpkin and put it in soup
+									gameInfo.scratchPad.eventBits[0x14] |= 0x40; //Unlock Lobby Door
 								}
 								else if (item == items::Item::Ordon_Goat_Cheese)
 								{
 									gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.unk_0[0x9] |= 0x8; //Unlock West Wing Door
 									gameInfo.scratchPad.eventBits[0x1] |= 0x20; //Told Yeta About Cheese
 									gameInfo.scratchPad.eventBits[0x0] |= 0x11; //Yeto took Cheese and put it in soup
+									gameInfo.scratchPad.eventBits[0x14] |= 0x20; //Unlock West Door
 								}
 								else if (item == 0xE1)
 								{

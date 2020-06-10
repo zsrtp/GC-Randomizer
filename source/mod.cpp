@@ -803,20 +803,23 @@ namespace mod
 			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
 		}
-		/*else if (enableQuickTransform == 1 && gameInfo.rButtonText == 0 && ((((gameInfo.aButtonText == 0x79 || gameInfo.aButtonText == 0x0 || gameInfo.aButtonText == 0x4) && gameInfo.eventSystem.eventFlag ==0) && tp::d_a_alink::linkStatus->status == 0x1) || gameInfo.aButtonText == 0x9) &&
-			(gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
+		else if (tp::d_a_alink::linkStatus)
 		{
-			// Make sure Link is actually loaded
-			tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
-			if (linkMapPtr)
+			if (enableQuickTransform == 1 && gameInfo.rButtonText == 0 && ((((gameInfo.aButtonText == 0x79 || gameInfo.aButtonText == 0x0 || gameInfo.aButtonText == 0x4) && gameInfo.eventSystem.eventFlag == 0) && tp::d_a_alink::linkStatus->status == 0x1) || gameInfo.aButtonText == 0x9) &&
+				(gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
 			{
-				if (!((linkMapPtr->isTargeting & 0x400000) != 0 && gameInfo.scratchPad.form == 0))
+				// Make sure Link is actually loaded
+				tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
+				if (linkMapPtr)
 				{
-					// Transform
-					tp::d_a_alink::procCoMetamorphoseInit(linkMapPtr);
+					if (!((linkMapPtr->isTargeting & 0x400000) != 0 && gameInfo.scratchPad.form == 0))
+					{
+						// Transform
+						tp::d_a_alink::procCoMetamorphoseInit(linkMapPtr);
+					}
 				}
 			}
-		}*/
+		}
 
 		if (sysConsolePtr->consoleEnabled)
 		{
