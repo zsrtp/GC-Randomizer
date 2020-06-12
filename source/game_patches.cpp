@@ -137,13 +137,13 @@ namespace mod::game_patch
 
             // Set sewers flags (escaped cell cs, Midna intro cs, unchained wolf link, zelda cutscene, First trip to Sewers Done)
             gameInfo.scratchPad.eventBits[0x05] |= 0x7A;
-			
+            
             // Set more sewers flags (talk to midna after escaping cell in sewers, listened to first guard in sewers)
             gameInfo.scratchPad.eventBits[0x1A] |= 0x82;
-			
+            
             // Set more sewers flags (spawned into sewers twilight as wolf)
             gameInfo.scratchPad.eventBits[0x4D] |= 0x8;
-			
+            
             gameInfo.scratchPad.equipedItems.sword = 0x3F;
 
             // Load back to Ordon Spring
@@ -296,8 +296,7 @@ namespace mod::game_patch
         if (gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 &&
             ((gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] & 0x40) == 0))  // Escort Not Completed before Beating Lakebed
         {
-            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard
-            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
+            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard + Barnes sells water bombs
             gameInfo.scratchPad.eventBits[0x8] |= 0x40;//escort started
             gameInfo.scratchPad.eventBits[0x8] |= 0x10;//escort finished
             gameInfo.scratchPad.eventBits[0x8] |= 0x4;//got zora armor from Rutela
@@ -308,8 +307,7 @@ namespace mod::game_patch
     {
         if (Singleton::getInstance()->isCartEscortSkipEnabled == 1)
         {
-            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard
-            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x16] |= 0x40;//Barnes sells water bombs
+            gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x17] |= 0x40;//remove rock in graveyard + Barnes sells water bombs
             gameInfo.scratchPad.eventBits[0x8] |= 0x40;//escort started
             gameInfo.scratchPad.eventBits[0x8] |= 0x10;//escort finished
             gameInfo.scratchPad.eventBits[0x8] |= 0x4;//got zora armor from Rutela
@@ -447,7 +445,7 @@ namespace mod::game_patch
         }
         
         //hawkeye check    
-        if ((gameInfo.scratchPad.eventBits[0xEF] & 0x8) != 0)//Bow mini-game PoH gotten
+        if ((gameInfo.scratchPad.eventBits[0x9] & 0x40) != 0)//Bow mini-game started
         {        
             if (!tools::checkItemFlag(ItemFlags::Null_D8))
             {

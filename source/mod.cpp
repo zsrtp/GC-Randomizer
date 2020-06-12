@@ -326,8 +326,11 @@ namespace mod
         
         
         hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);*/
-		
-		/*page = hudConsole->addPage("event bits 1");   
+        
+        /*page = hudConsole->addPage("event bits 1");
+        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
+        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
+        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
         hudConsole->addWatch(page, "bits0to7:", &gameInfo.scratchPad.eventBits[0x0], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits8toF:", &gameInfo.scratchPad.eventBits[0x8], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits10to17:", &gameInfo.scratchPad.eventBits[0x10], 'x', WatchInterpretation::_u64);
@@ -338,7 +341,10 @@ namespace mod
         hudConsole->addWatch(page, "bits38to3F:", &gameInfo.scratchPad.eventBits[0x38], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits40to47:", &gameInfo.scratchPad.eventBits[0x40], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits48to4F:", &gameInfo.scratchPad.eventBits[0x48], 'x', WatchInterpretation::_u64);
-		page = hudConsole->addPage("event bits 2");   
+        page = hudConsole->addPage("event bits 2");
+        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
+        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
+        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
         hudConsole->addWatch(page, "bits50to57:", &gameInfo.scratchPad.eventBits[0x50], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits58to5F:", &gameInfo.scratchPad.eventBits[0x58], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits60to67:", &gameInfo.scratchPad.eventBits[0x60], 'x', WatchInterpretation::_u64);
@@ -349,7 +355,10 @@ namespace mod
         hudConsole->addWatch(page, "bits88to8F:", &gameInfo.scratchPad.eventBits[0x88], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits90to97:", &gameInfo.scratchPad.eventBits[0x90], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits98to9F:", &gameInfo.scratchPad.eventBits[0x98], 'x', WatchInterpretation::_u64);
-		page = hudConsole->addPage("event bits 3");   
+        page = hudConsole->addPage("event bits 3");
+        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
+        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
+        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
         hudConsole->addWatch(page, "bitsA0toA7:", &gameInfo.scratchPad.eventBits[0xA0], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bitsA8toAF:", &gameInfo.scratchPad.eventBits[0xA8], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bitsB0toB7:", &gameInfo.scratchPad.eventBits[0xB0], 'x', WatchInterpretation::_u64);
@@ -360,7 +369,10 @@ namespace mod
         hudConsole->addWatch(page, "bitsD8toDF:", &gameInfo.scratchPad.eventBits[0xD8], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bitsE0toE7:", &gameInfo.scratchPad.eventBits[0xE0], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bitsE8toEF:", &gameInfo.scratchPad.eventBits[0xE8], 'x', WatchInterpretation::_u64);
-		page = hudConsole->addPage("event bits 4");
+        page = hudConsole->addPage("event bits 4");
+        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
+        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
+        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
         hudConsole->addWatch(page, "bitsF0toF7:", &gameInfo.scratchPad.eventBits[0xF0], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bitsF8toFF:", &gameInfo.scratchPad.eventBits[0xF8], 'x', WatchInterpretation::_u64);  
         hudConsole->addWatch(page, "bits100to107:", &gameInfo.scratchPad.eventBits[0x100], 'x', WatchInterpretation::_u64);
@@ -371,7 +383,7 @@ namespace mod
         hudConsole->addWatch(page, "bits128to12F:", &gameInfo.scratchPad.eventBits[0x128], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits130to137:", &gameInfo.scratchPad.eventBits[0x130], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits138to13F:", &gameInfo.scratchPad.eventBits[0x138], 'x', WatchInterpretation::_u64);
-		page = hudConsole->addPage("event bits 5");
+        page = hudConsole->addPage("event bits 5");
         hudConsole->addWatch(page, "bits140to147:", &gameInfo.scratchPad.eventBits[0x140], 'x', WatchInterpretation::_u64);
         hudConsole->addWatch(page, "bits148to14F:", &gameInfo.scratchPad.eventBits[0x148], 'x', WatchInterpretation::_u64);  
         hudConsole->addWatch(page, "minigame0to7:", &gameInfo.scratchPad.miniGameBits[0x0], 'x', WatchInterpretation::_u64);
@@ -793,6 +805,12 @@ namespace mod
             gameInfo.ColorPtr->blueBottom = blueBottom;
         }
         
+        if (triggerEventFlagEdit == 1)
+        {
+            triggerEventFlagEdit = 0;
+            gameInfo.scratchPad.eventBits[eventFlagToEdit] = newValueForEventFlag;
+        }
+        
         if (trigerLoadSave == 1){
             trigerLoadSave = 0;
             tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
@@ -833,7 +851,8 @@ namespace mod
             // Toggle console            
             system_console::setState(!sysConsolePtr->consoleEnabled, 0);
         }
-        else if(enableQuickTransform == 1 && gameInfo.rButtonText == 0 && (gameInfo.bButtonText == 0x3 || gameInfo.bButtonText == 0x26) && 
+        else if(enableQuickTransform == 1 && gameInfo.rButtonText == 0 && gameInfo.eventSystem.eventFlag == 0 && 
+        (gameInfo.aButtonText == 0x79 || gameInfo.aButtonText == 0x0 || gameInfo.aButtonText == 0x4 || gameInfo.aButtonText == 0x9) && 
         (gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
         {                
             // Make sure Link is actually loaded
@@ -1589,7 +1608,7 @@ namespace mod
                         tools::clearItemFlag(ItemFlags::Ordon_Shield);
                         shieldTrickOn = 1;
                     }
-                    if (!tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1 &&
+                    if ((gameInfo.scratchPad.eventBits[0x9] & 0x8) == 0/*didn't buy bomb bag yet*/ && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1 &&
                     linkPos[2] > -600)
                     {
                         bombBag1Contents = itemWheel->Bomb_Bag_1;
@@ -1638,7 +1657,7 @@ namespace mod
                         bombBagTrickOn = 0;
                     }
                 }
-                if (tools::checkItemFlag(ItemFlags::Null_DA) && bombBagTrickOn == 1)
+                if ((gameInfo.scratchPad.eventBits[0x9] & 0x8) != 0/*bought bomb bag*/ && bombBagTrickOn == 1)
                 {//bought bomb bag check
                     itemWheel->Bomb_Bag_1 = bombBag1Contents;
                     itemWheel->Bomb_Bag_2 = bombBag2Contents;
@@ -1937,10 +1956,10 @@ namespace mod
             {
                 customCheck check = checks[i];
                 
-				if (check.overrides != nullptr)
-				{
-				    check.overrides();
-				}
+                if (check.overrides != nullptr)
+                {
+                    check.overrides();
+                }
 
                 strcpy(TRES[i].actorName, "tboxA0\0");
                 TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);

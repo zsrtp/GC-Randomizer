@@ -585,10 +585,6 @@ namespace mod
                 return item;
             }
         }
-        else if (item == items::Item::Empty_Bomb_Bag)
-        {//set flag for Barne's bomb bag check
-            tools::setItemFlag(ItemFlags::Null_DA);
-        }
         else if (item == items::Item::Hylian_Shield && tp::d_a_alink::checkStageName("R_SP109"))
         {//set flag for Malo's Hylian Shield check
             tools::setItemFlag(ItemFlags::Null_D9);
@@ -660,7 +656,7 @@ namespace mod
                                 rangeZ = 3000.0f;
                             }
                             else if (sourceCheck->itemID == items::Item::Small_Key && 0 == strcmp("D_MN05", sourceCheck->stage) && sourceCheck->room == 5)
-                            {//totem chest in FT (it can be knocked down both ways so more range is required)
+                            {//totem chest in FT (it can be knocked down 15 ways so more range is required)
                                 rangeX = 500.0f;
                                 rangeY = 500.0f;
                                 rangeZ = 800.0f;
@@ -989,6 +985,20 @@ namespace mod
                                 else if (item == items::Item::Shadow_Crystal)
                                 {//shadow crystal doesn't actually do anything so we have to do its functionnality ourselves
                                     game_patch::giveMidnaTransform();
+                                }
+                                else if (item == items::Item::Ordon_Pumpkin)
+                                {
+                                    gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.unk_0[0x9] |= 0x4; //Unlock Lobby Courtyard Door
+                                    gameInfo.scratchPad.eventBits[0x4] |= 0x80; //Told Yeta About Pumpkin
+                                    gameInfo.scratchPad.eventBits[0x0] |= 0x22; //Yeto took pumpkin and put it in soup
+                                    gameInfo.scratchPad.eventBits[0x14] |= 0x40; //Yeta unlocks NW door in SPR
+                                }
+                                else if (item == items::Item::Ordon_Goat_Cheese)
+                                {
+                                    gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.unk_0[0x9] |= 0x8; //Unlock West Wing Door
+                                    gameInfo.scratchPad.eventBits[0x1] |= 0x20; //Told Yeta About Cheese
+                                    gameInfo.scratchPad.eventBits[0x0] |= 0x11; //Yeto took Cheese and put it in soup
+                                    gameInfo.scratchPad.eventBits[0x14] |= 0x20; //Yeta unlocks west door in SPR
                                 }
                                 else if (item == 0xE1)
                                 {

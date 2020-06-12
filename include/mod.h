@@ -131,6 +131,10 @@ namespace mod
             u8 nbLBTKeys = 0;
             
             
+            u8 eventFlagToEdit = 0;
+            u8 newValueForEventFlag = 0;
+            u8 triggerEventFlagEdit = 0;
+            
         // Functions
         private:
             /**

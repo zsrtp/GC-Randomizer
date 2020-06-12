@@ -29,11 +29,11 @@ struct customCheck
 
 namespace mod
 {
-    customCheck customChecks[36] = {
+    customCheck customChecks[37] = {
         /*Ordon Shield*/
-        {"F_SP103", 0, 0, 0x74, 0x2A, 0x454BF27A, 0x4479E28F, 0x447534C8, 0xF932, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*remove ordon shield*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+        {"F_SP103", 0, 0, 0x74, 0x2A, 0x44A21492, 0x4415B148, 0x4312341B, 0x12D0, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*remove ordon shield*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Ordon Sword*/
-        {"R_SP01", , 0, 0x70, 0x28, 0xC2AE78E3, 0x0, 0x413A3E3A, 0x4452, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon sword*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+        {"R_SP01", 5, 0, 0x70, 0x28, 0xC2AE78E3, 0x0, 0x413A3E3A, 0x4452, [](){ gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon sword*/ }, [](){ return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
         /*Fishing rod*/
         {"F_SP103", 0, 1, 0x68, 0x4A, 0xC3FEB5F1, 0x42960000, 0x4514FB40, 0x883A, [](){ gameInfo.scratchPad.eventBits[0x3] |= 0x5;/*brought Cradle to Uli and got fishing rod*/ gameInfo.scratchPad.eventBits[0x46] |= 0x1;/*took cradle from monkey*/ }, [](){ return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
         /*Sera Bottle*/
@@ -101,5 +101,8 @@ namespace mod
         /*Reekfish Scent*/
         {"F_SP113", 1, 0, 0x64, 0xB3, 0x456A7496, 0xC5BB109B, 0x464D4470, 0xD6E8, nullptr, [](){ return tools::checkItemFlag(ItemFlags::Coral_Earring); } },
         /*Medicine Scent*/
-        {"R_SP160", 2, 0, 0x74, 0xB5, 0x45EC0BF6, 0xC33E0000, 0xC4D9EA4C, 0xC26D, nullptr, [](){ return true; } }};
+        {"R_SP160", 2, 0, 0x74, 0xB5, 0x45EC0BF6, 0xC33E0000, 0xC4D9EA4C, 0xC26D, nullptr, [](){ return true; } },
+        /*Snowpeak Map*/
+        {"D_MN11", 0xFF, 0, 0x74, 0x23, 0x447AF8E0, 0x00000000, 0xC42C93A9, 0xFEED, [](){ gameInfo.localAreaNodes.unk_0[0xA] |= 0x10;/*got map from Yeta*/ gameInfo.scratchPad.eventBits[0xB] |= 0x20;/*Talked to Yeta in SPR first time*/ gameInfo.localAreaNodes.unk_0[0x10] |= 0x20;/*Yeta lets you open kitchen door*/ gameInfo.localAreaNodes.unk_0[0x16] |= 0x40;/*Yeta points to kitchen cs*/ }, []() { return true; } }
+    };
 };
