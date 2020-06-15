@@ -14,7 +14,7 @@ namespace tp::d_stage
 {
     extern "C"
     {
-        void* mStatus_roomControl;
+        extern void* mStatus_roomControl;
 
         /**
          *  @brief Initialises Actors, can run multiple times per load
