@@ -1,5 +1,6 @@
 // memory
 80003458:memset
+80003540:memcpy
 
 // m_Do_ext.o
 // text
@@ -32,6 +33,7 @@
 // f_op_actor_mng.o
 8001BBE8:createItemForPresentDemo
 8001BC74:createItemForTrBoxDemo
+8001c078:createDemoItem
 8001C0D4:createItemForBoss
 8001C174:createItemForMidBoss
 8001C1B8:createItemForDirectGet
@@ -52,6 +54,7 @@
 800BB4F0:checkHeavyStateOn
 800C782C:procCoMetamorphoseInit
 8011A734:checkTreasureRupeeReturn
+803D6F94:linkStatus
 // data
 80388C0C:ladderVars
 
@@ -150,6 +153,7 @@
 // d_com_inf_game.o
 // data
 80400300:dComIfG_gameInfo
+8002B36C:setItemBombNumCount
 
 // d_kankyo.o
 // data
@@ -158,3 +162,9 @@
 // JFWSystem.o
 // data
 8044B2F8:systemConsole
+
+//currentState
+803B8000:current_state
+
+//canWarp
+80400AF6:can_warp

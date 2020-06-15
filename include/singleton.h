@@ -26,6 +26,9 @@ namespace mod
 		u8 isBossKeyseyEnabled;
 		u8 isSewerSkipEnabled;
 		u8 shuffledSkybook;
+		u8 isIntroSkipped;
+		u8 isTwilightSkipped;
+		u8 diababaMusicFixed;
 
 		private:
 

@@ -28,6 +28,12 @@ namespace tp::d_a_alink
 
 	static_assert(sizeof(LadderVars) == 0x70);
 
+	struct LinkStatus
+	{
+		u8 unk_0[0xA2];
+		u8 status;
+	} __attribute__((__packed__));
+
 	extern "C"
 	{
 		bool checkStageName(const char* name); // Checks if dComIfG_gameInfo.currentStage is equal to name
@@ -38,5 +44,6 @@ namespace tp::d_a_alink
 
 		// Variables
 		extern LadderVars ladderVars;
+		extern LinkStatus* linkStatus;
 	}
 }

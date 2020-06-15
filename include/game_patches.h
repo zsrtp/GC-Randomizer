@@ -59,18 +59,6 @@ namespace mod::game_patch
 	 * and sets the flags accordingly
 	 */
 	void skipSewers();
-	
-	/**
-	 * Skips Midna's Desperate Hour
-	 * triggers the load to zelda's tower
-	 */
-	void skipMDH();
-	
-	/**
-	 * Removes midna from preventing you from leaving faron
-	 * changes the state of faron from 0 to 2
-	 */
-	void allowFaronEscape();
 
 	/**
 	* Adds the chests that disappear after KB3
@@ -127,7 +115,7 @@ namespace mod::game_patch
 	 * Removes the locks from the 2 bulblin gates in HF
 	 * change doesn't get saved so set it evry time you load into HF
 	 */
-	void unlockHFGates();
+	void setFieldBits();
 
 	/**
 	 * when spawning in goats 2, will warp you to Illia taking Epona CS
@@ -137,7 +125,7 @@ namespace mod::game_patch
 	/**
 	 * opens the door the the master sword in sacred grove
 	 */
-	void skipGrovePuzzle();
+	void setGroveFlags();
 
 	/**
 	 * when you spawn into the Cart Escort, game will spawn you in Kakariko Afterwards
@@ -148,11 +136,6 @@ namespace mod::game_patch
 	 * warps player to Lanayru twilight gate if they don't have MS
 	 */
 	void setLanayruWolf();
-
-	/**
-	 * sets Faron state after warping from lanayru
-	 */
-	void fixLanayruFaron();
 
 	/**
 	 * Fixes the cannon and puts it at lake hylia
@@ -167,7 +150,7 @@ namespace mod::game_patch
 	/**
 	 * give boss key to all dungeons
 	 */
-	void unlockBossDoors();
+	void checkBossKeysey();
 
 	/**
 	 * check wether to show hawkeye and hylian shield in malo mart
@@ -180,7 +163,29 @@ namespace mod::game_patch
 	void accessDesert();
 
 	/**
-	 * check whether you have MS before being allowed to enter the desert
+	 * skips midna text and story CS
 	 */
-	void sellWaterBombs();
+	void skipTextAndCS();
+
+	/**
+	 * escort avalable at any time
+	 */
+	void setEscortState();
+
+	/**
+	 * skips the zant CS for MDH
+	 */
+	void skipMDHCS();
+
+	void fixFTBossMusic();
+
+	/**
+	 * won't allow you to leave the forest if Faron escape is disabled until you beat Diababa
+	 */
+	void allowFaronEscape();
+
+	/**
+	 * set MDH skip after Lanayru Twilight
+	 */
+	void skipMDH();
 }

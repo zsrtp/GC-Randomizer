@@ -30,6 +30,9 @@ namespace mod
 		isBossKeyseyEnabled = 0;
 		isSewerSkipEnabled = 1;
 		shuffledSkybook = 1;
+		isIntroSkipped = 1;
+		isTwilightSkipped = 1;
+		diababaMusicFixed = 0;
 	}
 
 } 

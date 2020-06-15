@@ -1,5 +1,6 @@
 // memory
 80003458:memset
+80003540:memcpy
 
 // m_Do_ext.o
 // text
@@ -12,7 +13,7 @@
 800351EC:getSave
 80035220:putSave
 
-// d_stage.o
+/ d_stage.o
 80025914:actorCommonLayerInit
 // data
 803F8034:mStatus_roomControl
@@ -32,6 +33,7 @@
 // f_op_actor_mng.o
 8001BC90:createItemForPresentDemo
 8001BD1C:createItemForTrBoxDemo
+8001C120:createDemoItem
 8001C17C:createItemForBoss
 8001C21C:createItemForMidBoss
 8001C260:createItemForDirectGet
@@ -52,6 +54,7 @@
 800BB6C4:checkHeavyStateOn
 800C7A00:procCoMetamorphoseInit
 8011A908:checkTreasureRupeeReturn
+803DEDF4:linkStatus
 // data
 8039038C:ladderVars
 
@@ -150,6 +153,7 @@
 // d_com_inf_game.o
 // data
 80408160:dComIfG_gameInfo
+8002B414:setItemBombNumCount
 
 // d_kankyo.o
 // data
@@ -158,3 +162,9 @@
 // JFWSystem.o
 // data
 80453180:systemConsole
+
+//currentState
+803A8393:current_state
+
+//canWarp
+80408956:can_warp
