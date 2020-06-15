@@ -529,16 +529,7 @@ namespace mod
         actorCommonLayerInit_trampoline = patch::hookFunction(tp::d_stage::actorCommonLayerInit,
             [](void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4)
             {
-                // if unk4 is nullptr and unk3 is 0 it's probably ourselves calling this function
-                // Thus don't call it again to avoid an infinite loop!
-                if (unk3 != 0 && unk4)
-                {
-                    // doCustomTRESActor will call this function with unk3=0 and unk4=nullptr
-                    // So we only need to pass the status_roomControl (which should be static through LST anyway)
-                    // to maintain consistency
-                    global::modPtr->doCustomTRESActor(mStatus_roomControl);
-                }
-
+                global::modPtr->doCustomTRESActor(mStatus_roomControl);
                 return global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, chunkTypeInfo, unk3, unk4);
             }
         );
@@ -1961,7 +1952,7 @@ namespace mod
                     check.overrides();
                 }
 
-                strcpy(TRES[i].actorName, "tboxA0\0");
+                strcpy(TRES[i].actorName, "tboxA0");
                 TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);
 
                 // Translate hex to float (1:1)
@@ -1979,9 +1970,8 @@ namespace mod
                 TRES[i].item = check.itemID;
             }
 
-            // Create the actors; last 2 params 0 and nullptr to avoid infinite loop! (identification for self-call inside the
-            // hook)
-            tp::d_stage::actorCommonLayerInit(mStatus_roomControl, &chunkInfo, 0, nullptr);
+            // Create the actors
+            global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, &chunkInfo, 0, nullptr);
 
             delete[] TRES;
         }
