@@ -543,7 +543,7 @@ namespace mod
         );
 
         createItemForPresentDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForPresentDemo,
-            [](const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3])
+            [](const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const s16 rot[3], const float scale[3])
             {
                 // Call replacement function
                 /*char txt[50];
@@ -553,60 +553,60 @@ namespace mod
                 
                 item = global::modPtr->procItemCreateFunc(pos, item, "createItemForPresentDemo");
 
-                return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+                return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk3, unk4, unk5, rot, scale);
             }
         );
             
 
         createItemForTrBoxDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
-            [](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
+            [](const float pos[3], s32 item, s32 itemPickupFlag, s32 roomNo, const s16 rot[3], const float scale[3])
             {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc(pos, item, "createItemForTrBoxDemo");
 
-                return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, unk3, unk4, unk5, unk6);
+                return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, itemPickupFlag, roomNo, rot, scale);
             }
         );        
         
         //this function is called when the heart spawns, not when link gets it        
         //createItemForTrBoxDemo is called when heart container is gotten
         createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
-            [](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7, s32 unk8)
+            [](const float pos[3], s32 item, s32 roomNo, const s16 rot[3], const float scale[3], float unk6, float unk7, s32 parameters)
             {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc(pos, item, "createItemForBoss");
 
-                return global::modPtr->createItemForBoss_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7, unk8);
+                return global::modPtr->createItemForBoss_trampoline(pos, item, roomNo, rot, scale, unk6, unk7, parameters);
             }
         );
 
         createItemForMidBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForMidBoss,
-            [](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7)
+            [](const float pos[3], s32 item, s32 roomNo, const s16 rot[3], const float scale[3], s32 unk6, s32 itemPickupFlag)
             {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc(pos, item, "createItemForMidBoss");
 
-                return global::modPtr->createItemForMidBoss_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+                return global::modPtr->createItemForMidBoss_trampoline(pos, item, roomNo, rot, scale, unk6, itemPickupFlag);
             }
         );
 
         createItemForDirectGet_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForDirectGet,
-            [](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+            [](const float pos[3], s32 item, s32 unk3, const s16 rot[3], const float scale[3], float unk6, float unk7)
             {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc(pos, item, "createItemForDirectGet");
 
-                return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+                return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, rot, scale, unk6, unk7);
             }
         );
 
         createItemForSimpleDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForSimpleDemo,
-            [](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+            [](const float pos[3], s32 item, s32 unk3, const s16 rot[3], const float scale[3], float unk6, float unk7)
             {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc(pos, item, "createItemForSimpleDemo");
 
-                return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+                return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, rot, scale, unk6, unk7);
             }
         );
 
