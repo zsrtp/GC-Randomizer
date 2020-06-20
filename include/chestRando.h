@@ -74,7 +74,18 @@ namespace mod
 			/**
 			 * checks if the stage is one of the 5 grotto stages
 			 */
+
+			bool isStageDungeon();
+
 			bool isStageGrotto();
+
+			bool isStageInterior();
+
+			bool isStageCave();
+
+			bool isStageSpecial();
+
+			bool isStageTOD();
 
 
 		private:

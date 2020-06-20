@@ -14,7 +14,7 @@ namespace tp::d_stage
 {
 	extern "C"
 	{
-		void* mStatus_roomControl;
+		extern void* mStatus_roomControl;
 
 		/**
 		 *  @brief Initialises Actors, can run multiple times per load
@@ -24,6 +24,7 @@ namespace tp::d_stage
 		 *  @param unk3 unknown
 		 *  @param unk4 unknown
 		 */
-		void actorCommonLayerInit(void* mStatus_roomControl, dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4);
+		bool actorCommonLayerInit(void* mStatus_roomControl, dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4);
+		bool actorInit(void* mStatus_roomControl, dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4);
 	}
 }  // namespace tp::d_stage

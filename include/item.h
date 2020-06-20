@@ -57,7 +57,8 @@ namespace mod::item
 		Bug = 10,
 		PoeSoul = 11,
 		Shop = 12,
-		Skill = 13
+		Skill = 13,
+		Scent = 14
 	};
 
 	/**

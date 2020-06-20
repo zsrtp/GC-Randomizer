@@ -130,7 +130,10 @@ namespace mod
 			u8 LBTBossDoorTrickOn = 0;
 			u8 nbLBTKeys = 0;
 
-			
+			u8 eventFlagToEdit = 0;
+			u8 newValueForEventFlag = 0;
+			u8 triggerEventFlagEdit = 0;
+
 		// Functions
 		private:
 			/**
@@ -218,7 +221,9 @@ namespace mod
 
 			void (*item_func_UTUWA_HEART_trampoline)() = nullptr;
 
-			void(*actorCommonLayerInit_trampoline)(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4) = nullptr;
+			bool (*actorCommonLayerInit_trampoline)(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4) = nullptr;
+
+			void (*putSave_trampoline)(tp::d_com_inf_game::GameInfo* gameInfoPtr, s32 areaID) = nullptr;
 
 			// Item functions
 			s32 (*createItemForPresentDemo_trampoline)(const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3]) = nullptr;

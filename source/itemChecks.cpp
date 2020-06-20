@@ -6,7 +6,7 @@
 
 namespace mod::item
 {
-	ItemCheck checks[503] = {
+	ItemCheck checks[505] = {
 		/* 0 */{0x3F, 1, stage::allStages[65], 4, 0x0, 0x0, 0b000000000000000000000, -1.6259740, 0.0000000, -207.4881290, nullptr, nullptr}, //Wooden Sword Chest
 		/* 1 */{0x03, 7, stage::allStages[40], 0, 0x1, 0xFF, 0b110000000000000000100, -3550.8691410, 4450.0000000, -694.8996580, nullptr, nullptr}, // South Faron Cave Small Chest
 		/* 2 */{0xEE, 8, stage::allStages[45], 14, 0x1, 0xFF, 0b000000000000000000100, 1221.9044190, 50.0000000, -7.9423170, nullptr, nullptr}, //North Faron Cave Key Chest
@@ -226,7 +226,7 @@ namespace mod::item
 		/* 216 */{ 0x06, 7, stage::allStages[59], 0, 0x13, 0xFF, 0b000000000000010000000, 16263.9707030, 989.6500240, 60708.4648440, nullptr, nullptr },
 		/* 217 */{ 0x18, 5, stage::allStages[12], 0, 0x14, 0xFF, 0b101000000010000000000, -1170.0834960, -755.0000000, 6670.0000000, nullptr, nullptr },
 		/* 218 */{ 0x04, 7, stage::allStages[12], 0, 0x14, 0xFF, 0b101000000010000000000, 1170.0000000, -755.0000000, 6670.0000000, nullptr, nullptr },
-		/* 219 */{ 0x20, 8, stage::allStages[12], 10, 0x14, 0xFF, 0b100000000010100000000, -14514.4443360, 0.0000000, -12000.8310550, nullptr, nullptr },
+		/* 219 */{ 0x20, 8, stage::allStages[12], 10, 0x15, 0xFF, 0b100000000010100000000, -14514.4443360, 0.0000000, -12000.8310550, nullptr, nullptr },
 		/* 220 */{ 0x23, 2, stage::allStages[12], 5, 0x14, 0x14, 0b101000000010100000000, 17665.1347660, 0.0000000, -11924.1035160, nullptr, nullptr },
 		/* 221 */{ 0x03, 7, stage::allStages[12], 7, 0x14, 0xFF, 0b101000000010100000000, 15824.6093750, -110.0000000, -9750.6855470, nullptr, nullptr },
 		/* 222 */{ 0x04, 7, stage::allStages[12], 7, 0x14, 0xFF, 0b101000000010100000000, 17550.0000000, 1500.0000000, -7200.0000000, nullptr, nullptr },
@@ -549,17 +549,17 @@ namespace mod::item
 		//{0x68, 12, stage::allStages[20], 2, 0xFF, 0xFF, 0b000000000000000000000, -1334.620239, 1250.000000, -3007.779053, nullptr, nullptr},
 		//Yeto soup
 		//{0x7f, 12, stage::allStages[27], 2, 0x11, 0xFF, 0b000000000000000000000, 3154.522705, 144.729996, 340.811127, nullptr, nullptr},
-		
+
 		//Custom Chests
 		//Shadow Crystal
-		/*493*/{ 0x32, 0, stage::allStages[54], 1, 0x7, 0x7, 0b000000000000000000000, -235.256332, 1625.000000, -4709.996582, nullptr, nullptr },
+		/*493*/{ 0x32, 0, stage::allStages[54], 1, 0x6, 0x6, 0b000000000000000000000, -235.256332, 1625.000000, -4709.996582, nullptr, nullptr },
 		//Master Sword
 		/*494*/{ 0x29, 0, stage::allStages[54], 1, 0x7, 0x7, 0b000000000000000000000, 246.137573, 1625.000000, -4787.551270, nullptr, nullptr },
 		//Dominion Rod Uncharged
-		/*495*/{ 0x4C, 0, stage::allStages[75], 7, 0x13, 0x13, 0b000000000000000000000, -339.546478, -770.000000, -2616.305908, nullptr, nullptr },
+		/*495*/{ 0x4C, 0, stage::allStages[75], 7, 0x12, 0x12, 0b000000000000000000000, -339.546478, -770.000000, -2616.305908, nullptr, nullptr },
 		//Light Sword
 		/*496*/ { 0x49, 0, stage::allStages[60], 1, 0x15, 0x15, 0b000000000000000000000, 1801.005249, 4413.458984, -21176.376953, nullptr, nullptr },
-		
+
 		//Ending Blow
 		/*497*/ { 0xE1, 13, stage::allStages[45], 6, 0xFF, 0xFF, 0b000000000000000000000, -39511.792969, 1100.000000, -28626.875000, nullptr, nullptr },
 		//Shield Bash
@@ -573,7 +573,12 @@ namespace mod::item
 		//Jump Strike
 		/*502*/ { 0xE6, 13, stage::allStages[48], 0, 0xFF, 0xFF, 0b000000000000000000000, 16308.677734, 525.000000, -31.427549, nullptr, nullptr },
 		//Great Spin
-		/*503*/ { 0xE7, 13, stage::allStages[53], 1, 0xFF, 0xFF, 0b000000000000000000000, 43.525406, 800.000000, -10109.346680, nullptr, nullptr }
+		/*503*/ { 0xE7, 13, stage::allStages[53], 1, 0xFF, 0xFF, 0b000000000000000000000, 43.525406, 800.000000, -10109.346680, nullptr, nullptr },
+
+		//Reekfish Scent
+		/*504*/ { 0xB3, 14, stage::allStages[50], 1, 0xFF, 0xFF, 0b000000000000000000000, 3673.396973, -5986.576172, 13185.018555, nullptr, nullptr },
+		//Medicine Scent
+		/*505*/ { 0xB5, 14, stage::allStages[73], 2, 0xFF, 0xFF, 0b000000000000000000000, 7454.945801, -190.000000, -1734.022095, nullptr, nullptr }
 	};
 
 	u16 checkPriorityOrder[24] = {

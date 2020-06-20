@@ -253,7 +253,7 @@ namespace tp::d_com_inf_game
 
 		Null_D8 = 216,//now used for hawkeye check
 		Null_D9 = 217,//now used for malo hylian shield check
-		Null_DA = 218,//now used for Barne's bomb bag check
+		Null_DA = 218,
 		Null_DB = 219,//now used for sky letter 5
 		Null_DC = 220,//now used for sky letter 4
 		Null_DD = 221,//now used for sky letter 3

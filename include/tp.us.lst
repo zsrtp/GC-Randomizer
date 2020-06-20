@@ -15,6 +15,7 @@
 
 // d_stage.o
 8002586C:actorCommonLayerInit
+80025A38:actorInit
 // data
 803F6094:mStatus_roomControl
 

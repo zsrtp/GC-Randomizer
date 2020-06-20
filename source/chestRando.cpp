@@ -14,6 +14,7 @@
 #include <tp/d_com_inf_game.h>
 #include <tp/d_item.h>
 #include <tp/d_a_alink.h>
+#include <tp/d_kankyo.h>
 #include <tp/JFWSystem.h>
 #include <cstdio>
 #include <cstring>
@@ -340,6 +341,10 @@ namespace mod
 		case item::ItemType::Skill:
 			result = true;
 			break;
+
+		case item::ItemType::Scent:
+			result = true;
+			break;
 		}
 
 		switch (check->itemID)
@@ -432,7 +437,7 @@ namespace mod
 		{//set flag for having talked to Bo
 			gameInfo.scratchPad.eventBits[0x1C] |= 0x20;
 		}
-		else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount >= 1)
+		else if (item == items::Item::Poe_Soul && gameInfo.scratchPad.poeCount >= 1 && !(tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Shops]) && tp::d_kankyo::env_light.currentRoom == 5))
 		{//decrease poe counter
 			gameInfo.scratchPad.poeCount--;
 		}
@@ -444,29 +449,35 @@ namespace mod
 			if (Singleton::getInstance()->isTwilightSkipped == 1)
 			{
 				//Set Faron Twilight Flags
-				scratchPadPtr->clearedTwilights.Faron = 0b1; //Clear Faron Twilight
-				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
-				scratchPadPtr->tearCounters.Faron = 16;
-				eventBitsPtr[0x29] |= 0x4;//give ending blow	
-				eventBitsPtr[0x5] = 0xFF; //Ensure Epona is Stolen, give Midna Charge
-				eventBitsPtr[0x6] |= 0x10; //Faron Twilight Progression flag
+					scratchPadPtr->clearedTwilights.Faron = 0b1; //Clear Faron Twilight
+					tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
+					scratchPadPtr->tearCounters.Faron = 16;
+					eventBitsPtr[0x5] = 0xFF; //Ensure Epona is Stolen, give Midna Charge
+					eventBitsPtr[0x6] |= 0x10; //Faron Twilight Progression flag
+					eventBitsPtr[0xC] |= 0x8; //Set Sword and Shield to not be on back
+					tools::setItemFlag(ItemFlags::Heros_Clothes);
 
-				//Set Eldin Twilight Flags
-				scratchPadPtr->clearedTwilights.Eldin = 0b1; // Clear Eldin Twilight
-				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Eldin);
-				eventBitsPtr[0x6] |= 0x1; //tame Epona
-				eventBitsPtr[0xA] |= 0x8; //Beat KB1
-				eventBitsPtr[0x14] |= 0x10; //Put Bo Outside
-				eventBitsPtr[0x7] = 0xD6; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched, Eldin Twilight Story Progression Flag
+					//Set Eldin Twilight Flags
+					scratchPadPtr->clearedTwilights.Eldin = 0b1; // Clear Eldin Twilight
+					tools::setItemFlag(ItemFlags::Vessel_Of_Light_Eldin);
+					scratchPadPtr->tearCounters.Eldin = 16;
+					eventBitsPtr[0x6] |= 0x1; //tame Epona
+					eventBitsPtr[0xA] |= 0x8; //Beat KB1
+					eventBitsPtr[0x14] |= 0x10; //Put Bo Outside
+					eventBitsPtr[0x7] = 0xDE; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched, Eldin Twilight Story Progression Flag
+					eventBitsPtr[0x41] |= 0x10; //Told Fado about the Kids
 
-				//Set Lanayru Twilight Flags
-				scratchPadPtr->clearedTwilights.Lanayru = 0b1; // Clear Lanayru Twilight
-				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);
-				allAreaNodesPtr->Hyrule_Field.unk_0[0xB] |= 0x80;//water on Field map
-				allAreaNodesPtr->Hyrule_Field.unk_0[0xF] |= 0x10;//open south CT Shortcut to Faron
-				eventBitsPtr[0x30] |= 0x40; //gave springwater to south CT goron
-				eventBitsPtr[0x8] |= 0x80; //ZD Thawed
-				eventBitsPtr[0xC] |= 0x2; //Lanayru Twilight Story Progression Flag
+					//Set Lanayru Twilight Flags
+					scratchPadPtr->clearedTwilights.Lanayru = 0b1; // Clear Lanayru Twilight
+					tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);
+					scratchPadPtr->tearCounters.Lanayru = 16;
+					allAreaNodesPtr->Hyrule_Field.unk_0[0xB] |= 0x80;//water on Field map
+					allAreaNodesPtr->Hyrule_Field.unk_0[0xF] |= 0x10;//open south CT Shortcut to Faron
+					allAreaNodesPtr->Lanayru.unk_0[0xF] |= 0x1;//water on Map
+					eventBitsPtr[0x30] |= 0x40; //gave springwater to south CT goron
+					eventBitsPtr[0x8] |= 0x80; //ZD Thawed
+					eventBitsPtr[0xC] |= 0x2; //Lanayru Twilight Story Progression Flag
+					eventBitsPtr[0xA] |= 0x10; //Kagorok Howl at Lake
 
 				//Unlock Map Regions
 				scratchPadPtr->movingActors.exploredRegions.Snowpeak = 0b1;
@@ -488,8 +499,6 @@ namespace mod
 				allAreaNodesPtr->Lanayru.unk_0[0xB] |= 0x4; // give Zora's Domain Warp
 				allAreaNodesPtr->Lanayru.unk_0[0xA] |= 0x4;//give lake hylia warp
 
-				tools::setItemFlag(ItemFlags::Heros_Clothes);
-
 				//Faron Escape
 				if (Singleton::getInstance()->isForestEscapeEnabled == 1)
 				{
@@ -498,6 +507,14 @@ namespace mod
 				else
 				{
 					eventBitsPtr[0x6] |= 0x24; //warp the kak bridge, give map warp
+				}
+
+				//Skip MDH?
+				if (Singleton::getInstance()->isMDHSkipEnabled == 1)
+				{
+					//set MDH flags
+					gameInfo.scratchPad.eventBits[0xC] |= 0x1; //MDH Started
+					gameInfo.scratchPad.eventBits[0x1E] |= 0x8; //MDH Completed
 				}
 
 				gameInfo.nextStageVars.triggerLoad |= 1;
@@ -514,10 +531,10 @@ namespace mod
 				{
 					eventBitsPtr[0x6] |= 0x24; //warp the kak bridge, give map warp
 				}
+				gameInfo.localAreaNodes.unk_0[0x9] = 0x10;//unlock N Faron gate
 				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
 				return item;
 			}
-			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Eldin)
@@ -528,17 +545,13 @@ namespace mod
 			eventBitsPtr[0x6] |= 0x1; //tame Epona
 			eventBitsPtr[0xA] |= 0x8; //Beat KB1
 			eventBitsPtr[0x14] |= 0x10; //Put Bo Outside
-			eventBitsPtr[0x7] = 0xD6; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched, Eldin Twilight Story Progression Flag
+			eventBitsPtr[0x7] = 0xD6; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Lanayru)
 		{
 			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Lanayru);
 			return item;
-		}
-		else if (item == items::Item::Empty_Bomb_Bag)
-		{//set flag for Barne's bomb bag check
-			tools::setItemFlag(ItemFlags::Null_DA);
 		}
 		else if (item == items::Item::Hylian_Shield && tp::d_a_alink::checkStageName("R_SP109"))
 		{//set flag for Malo's Hylian Shield check
@@ -758,13 +771,9 @@ namespace mod
 										else if (tools::checkItemFlag(ItemFlags::Null_DB))
 										{
 											gameInfo.scratchPad.eventBits[0x60] |= 0x4; //set shad to be back in the basement
-											if (Singleton::getInstance()->isCannonRepaired == 0)
-											{
-												gameInfo.scratchPad.eventBits[0x25] |= 0x40; //Set the Owl Statue in Kak to be able to be moved
-												gameInfo.scratchPad.eventBits[0x5F] |= 0x20; //Shad leaves so you can warp
-												gameInfo.scratchPad.eventBits[0x3B] |= 0x8; //repairs Cannon at lake
-												Singleton::getInstance()->isCannonRepaired = 1;
-											}
+											gameInfo.scratchPad.eventBits[0x25] |= 0x40; //Set the Owl Statue in Kak to be able to be moved
+											gameInfo.scratchPad.eventBits[0x5F] |= 0x20; //Shad leaves so you can warp
+											gameInfo.scratchPad.eventBits[0x3B] |= 0x8; //repairs Cannon at lake
 											item = items::Item::Ancient_Sky_Book_completed;
 										}
 									}
@@ -802,13 +811,9 @@ namespace mod
 										else if (tools::checkItemFlag(ItemFlags::Null_DB))
 										{
 											gameInfo.scratchPad.eventBits[0x60] |= 0x4; //set shad to be back in the basement
-											if (Singleton::getInstance()->isCannonRepaired == 0)
-											{
-												gameInfo.scratchPad.eventBits[0x25] |= 0x40; //Set the Owl Statue in Kak to be able to be moved
-												gameInfo.scratchPad.eventBits[0x5F] |= 0x20; //Shad leaves so you can warp
-												gameInfo.scratchPad.eventBits[0x3B] |= 0x8; //repairs Cannon at lake
-												Singleton::getInstance()->isCannonRepaired = 1;
-											}
+											gameInfo.scratchPad.eventBits[0x25] |= 0x40; //Set the Owl Statue in Kak to be able to be moved
+											gameInfo.scratchPad.eventBits[0x5F] |= 0x20; //Shad leaves so you can warp
+											gameInfo.scratchPad.eventBits[0x3B] |= 0x8; //repairs Cannon at lake
 											item = items::Item::Ancient_Sky_Book_completed;
 										}
 									}
@@ -941,6 +946,14 @@ namespace mod
 								else if (item == items::Item::Shadow_Crystal)
 								{//shadow crystal doesn't actually do anything so we have to do its functionnality ourselves
 									game_patch::giveMidnaTransform();
+									if (Singleton::getInstance()->isMDHSkipEnabled == 1)
+									{
+										gameInfo.scratchPad.unk_1F[0x11] |= 0x8; //Midna on Back
+									}
+								}
+								else if (item == items::Item::Dominion_Rod_Uncharged)
+								{
+									gameInfo.scratchPad.eventBits[0x25] |= 0x80;//set flag to charge dominion rod
 								}
 								else if (item == items::Item::Ordon_Pumpkin)
 								{
@@ -948,6 +961,7 @@ namespace mod
 									gameInfo.scratchPad.eventBits[0x4] |= 0x80; //Told Yeta About Pumpkin
 									gameInfo.scratchPad.eventBits[0x0] |= 0x22; //Yeto took pumpkin and put it in soup
 									gameInfo.scratchPad.eventBits[0x14] |= 0x40; //Unlock Lobby Door
+									gameInfo.localAreaNodes.unk_0[0x9] |= 0x4;//unlock courtyard door
 								}
 								else if (item == items::Item::Ordon_Goat_Cheese)
 								{
@@ -955,6 +969,7 @@ namespace mod
 									gameInfo.scratchPad.eventBits[0x1] |= 0x20; //Told Yeta About Cheese
 									gameInfo.scratchPad.eventBits[0x0] |= 0x11; //Yeto took Cheese and put it in soup
 									gameInfo.scratchPad.eventBits[0x14] |= 0x20; //Unlock West Door
+									gameInfo.localAreaNodes.unk_0[0x9] |= 0x8;//unlock west wing door
 								}
 								else if (item == 0xE1)
 								{
@@ -983,6 +998,14 @@ namespace mod
 								else if (item == 0xE7)
 								{
 									gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+								}
+								else if (item == items::Item::Reekfish_Scent)
+								{
+									gameInfo.scratchPad.eventBits[0x61] |= 0x20;//allow you to go to snowpeak
+								}
+								else if (item == items::Item::Medicine_Scent)
+								{
+									gameInfo.scratchPad.eventBits[0x2F] |= 0x4;//smelled Medicine Scent
 								}
 								else if (item == items::Item::Bed_Key)
 								{
@@ -1126,6 +1149,71 @@ namespace mod
 		for (u32 i = 0; i < totalGrottoStages; i++)
 		{
 			if (tp::d_a_alink::checkStageName(stage::grottoStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageDungeon()
+	{
+		u32 totalDungeonStages = sizeof(stage::dungeonStages) / sizeof(stage::dungeonStages[0]);
+		for (u32 i = 0; i < totalDungeonStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::dungeonStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageInterior()
+	{
+		u32 totalInteriorStages = sizeof(stage::interiorStages) / sizeof(stage::interiorStages[0]);
+		for (u32 i = 0; i < totalInteriorStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::interiorStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageCave()
+	{
+		u32 totalCaveStages = sizeof(stage::caveStages) / sizeof(stage::caveStages[0]);
+		for (u32 i = 0; i < totalCaveStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::caveStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageSpecial()
+	{
+		u32 totalSpecialStages = sizeof(stage::specialStages) / sizeof(stage::specialStages[0]);
+		for (u32 i = 0; i < totalSpecialStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::specialStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageTOD()
+	{
+		u32 totalTODStages = sizeof(stage::timeOfDayStages) / sizeof(stage::timeOfDayStages[0]);
+		for (u32 i = 0; i < totalTODStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::timeOfDayStages[i]))
 			{
 				return true;
 			}

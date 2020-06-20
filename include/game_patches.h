@@ -150,7 +150,7 @@ namespace mod::game_patch
 	/**
 	 * give boss key to all dungeons
 	 */
-	void unlockBossDoors();
+	void checkBossKeysey();
 
 	/**
 	 * check wether to show hawkeye and hylian shield in malo mart
@@ -175,5 +175,19 @@ namespace mod::game_patch
 	/**
 	 * skips the zant CS for MDH
 	 */
+	void skipMDHCS();
+
+	void fixFTBossMusic();
+
+	/**
+	 * won't allow you to leave the forest if Faron escape is disabled until you beat Diababa
+	 */
+	void allowFaronEscape();
+
+	/**
+	 * set MDH skip after Lanayru Twilight
+	 */
 	void skipMDH();
+
+	void setLanternFlag();
 }
