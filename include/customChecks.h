@@ -95,7 +95,7 @@ namespace mod
         /*Youth's Scent*/
         {"F_SP121", 0xFF, 0, 0x70, 0xB4, 0xC681A76B, 0xC5C99000, 0x4783ED29, 0xA6A9, [](){ gameInfo.scratchPad.eventBits[0x22] |= 0x40;/*Got Youth's scent*/ gameInfo.localAreaNodes.unk_0[0x16] |= 0x4;/*Midna text after getting Youth's scent*/ gameInfo.localAreaNodes.unk_0[0x17] |= 0x40;/*got youth's scent cs*/ }, [](){ return true; } },
         /*Ilia's Scent*/
-        {"F_SP121", 0xFF, 0, 0x6C, 0xB0, 0xC5DD1EF2, 0x4529ED9A, 0xC73F5AD1, 0x71A6, nullptr, [](){ return true; } },
+        {"F_SP121", 0xFF, 0, 0x6C, 0xB0, 0xC5DD1EF2, 0x4529ED9A, 0xC73F5AD1, 0x71A6, [](){ gameInfo.scratchPad.eventBits[0x22] |= 0x20;/*Got Ilia's scent*/ gameInfo.localAreaNodes.unk_0[0x16] |= 0x20;/*Midna text after getting Ilia's scent*/ gameInfo.localAreaNodes.unk_0[0x17] |= 0x80;/*got Ilia's scent cs*/ }, [](){ return true; } },
         /*Poe Scent*/
         {"D_MN10", 0xFF, 0, 0x3C, 0xB2, 0xC1571A39, 0xC1200000, 0x4355109A, 0x0000, nullptr, [](){ return true; } },
         /*Reekfish Scent*/
