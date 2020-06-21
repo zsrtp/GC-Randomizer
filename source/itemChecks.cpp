@@ -552,7 +552,7 @@ namespace mod::item
 
 		//Custom Chests
 		//Shadow Crystal
-		/*493*/{ 0x32, 0, stage::allStages[54], 1, 0x6, 0x6, 0b000000000000000000000, -235.256332, 1625.000000, -4709.996582, nullptr, nullptr },
+		/*493*/{ 0x32, 0, stage::allStages[54], 1, 0x7, 0x6, 0b000000000000000000000, -235.256332, 1625.000000, -4709.996582, nullptr, nullptr },
 		//Master Sword
 		/*494*/{ 0x29, 0, stage::allStages[54], 1, 0x7, 0x7, 0b000000000000000000000, 246.137573, 1625.000000, -4787.551270, nullptr, nullptr },
 		//Dominion Rod Uncharged
