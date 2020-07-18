@@ -38,7 +38,7 @@ namespace mod
 	    /*Sera Bottle*/
 		{"F_SP103", 0, 1, 0x7C, 0x65, 0x444C8DC3, 0x42AF0000, 0xC4CB2577, 0xA3E7, []() { gameInfo.scratchPad.eventBits[0x12] |= 0x8;/*can shop at Sera's shop*/ gameInfo.scratchPad.eventBits[0x14] |= 0x8;/*Sera Bottle gotten*/ }, []() { return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
 		/*Slingshot*/
-		{"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, nullptr /*Flag is set in game_patches to avoid interaction with vanilla check*/, []() { return gameInfo.scratchPad.counters.rupees >= 30 && (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
+		{"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, nullptr /*Flag is set in game_patches to avoid interaction with vanilla check*/, []() { return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
 		/*Lantern*/
 		{"F_SP108", 0xFF, 1, 0xF8, 0x48, 0xC66D4C1B, 0x41C19A25, 0xC65D2696, 0x36EC, nullptr, []() { return true; } },
 		/*Zora Armor*/

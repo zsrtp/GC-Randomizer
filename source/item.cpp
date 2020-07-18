@@ -48,7 +48,7 @@ namespace mod::item
 				flags |= item::Condition::Water_Bombs;
 			break;
 
-			case items::Item::Bomb_Bag_Regular_Bombs:
+			case items::Item::Empty_Bomb_Bag:
 				flags |= item::Condition::Bombs;
 				flags |= item::Condition::Water_Bombs;
 			break;
@@ -89,8 +89,8 @@ namespace mod::item
 				flags |= item::Condition::Ordon_Sword;
 			break;
 						
-			case items::Item::Master_Sword:
-				flags |= item::Condition::Master_Sword;
+			case items::Item::Shadow_Crystal:
+				flags |= item::Condition::Shadow_Crystal;
 			break;
 						
 			case items::Item::Ordon_Shield:
@@ -115,4 +115,10 @@ namespace mod::item
 
 		return flags;
 	}
+
+	u8 itemsWithNoFieldModel[2] =
+	{
+		0x32,
+		0x40
+	};
 }

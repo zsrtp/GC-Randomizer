@@ -38,7 +38,7 @@ namespace mod::item
 		Coral_Earring	= 0b000000000000000010000,//0x3D
 		Wooden_Sword	= 0b000000000000000001000,//0x3F
 		Ordon_Sword		= 0b000000000000000000100,//0x28
-		Master_Sword	= 0b000000000000000000010,//0x29 locked not randomized yet (implies transformation too)
+		Shadow_Crystal	= 0b000000000000000000010,//0x32 
 		Shield			= 0b000000000000000000001,//0x2C
 	};
 
@@ -82,4 +82,5 @@ namespace mod::item
 	 * Contains the values for the flags to be set to skip the animations of first getting specific items
 	 */
 	extern u8 itemGetAnimationFlags[10];
+	extern u8 itemsWithNoFieldModel[2];
 }

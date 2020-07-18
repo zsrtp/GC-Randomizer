@@ -12,6 +12,20 @@
 
 namespace tp::d_stage
 {
+	struct Item
+	{
+		char objectName[8];
+		u8 paramOne;
+		u8 paramTwo;
+		u8 membitFlag;
+		u8 item;
+		float pos[3];
+		s16 rot[3];
+		u16 enemyNum;
+	} __attribute__((__packed__));
+
+	static_assert(sizeof(Item) == 0x20);
+
 	extern "C"
 	{
 		extern void* mStatus_roomControl;

@@ -56,6 +56,14 @@
 800C77F4:procCoMetamorphoseInit
 8011A6FC:checkTreasureRupeeReturn
 803DCE54:linkStatus
+8038e77c:lanternVariables
+80115c20:checkEventRun
+800cf270:checkCanoeRide
+800cf25c:checkBoardRide
+800cf284:checkHorseRide
+800cf2c8:checkSpinnerRide
+800cf2b4:checkBoarRide
+
 // data
 8038EB8C:ladderVars
 
@@ -178,3 +186,11 @@
 
 //resource.o
 802a9490:parseCharacter_1Byte
+
+//d_item_data.o
+803AC5A0:item_resource
+803ADD88:field_item_res
+803AED78:item_info
+
+//d_meter2_info.o
+804301A4:wZButtonPtr

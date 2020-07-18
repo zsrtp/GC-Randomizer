@@ -168,7 +168,7 @@ namespace mod::stage
 		allStages[Stage_Hidden_Skill]
 	};
 
-	const char* timeOfDayStages[19]
+	const char* timeOfDayStages[18]
 	{
 		allStages[Stage_Ordon_Village],
 		allStages[Stage_Ordon_Spring],
@@ -176,11 +176,10 @@ namespace mod::stage
 		allStages[Stage_Faron_Woods],
 		allStages[Stage_Death_Mountain],
 		allStages[Stage_Kakariko_Graveyard],
+		allStages[Stage_Kakariko_Village],
 		allStages[Stage_Zoras_River],
 		allStages[Stage_Zoras_Domain],
 		allStages[Stage_Upper_Zoras_River],
-		allStages[Stage_Snowpeak],
-		allStages[Stage_Ordon_Ranch],
 		allStages[Stage_Lake_Hylia],
 		allStages[Stage_Outside_Castle_Town],
 		allStages[Stage_Hyrule_Field],

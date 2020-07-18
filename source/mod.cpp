@@ -33,6 +33,8 @@
 #include <tp/d_msg_flow.h>
 #include <tp/DynamicLink.h>
 #include <tp/d_item.h>
+#include <tp/d_item_data.h>
+#include <tp/d_meter2_info.h>
 #include <cstdio>
 #include <cstring>
 
@@ -70,10 +72,12 @@ namespace mod
 		game_patch::assemblyOverwrites();
 		game_patch::increaseWalletSize();
 		game_patch::increaseClimbSpeed();
-		/*
-		 * Causes issues right now (argarok cannot be beaten)
-		 * game_patch::removeIBLimit();
-		 */
+		
+		
+		// Causes issues right now (argarok cannot be beaten)
+		//game_patch::removeIBLimit();
+		
+		 
 
 		// Init rando
 		tools::randomSeed = 0x9e3779b97f4a7c15;
@@ -119,13 +123,6 @@ namespace mod
 		// Debug
 		page = hudConsole->addPage("Debug Info");
 		
-		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
-		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
-		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
-		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);
-		hudConsole->addOption(page, "Key Shuffle?", &chestRandomizer->isKeysanityEnabled, 0x1);
-		hudConsole->addOption(page, "Skybooksanity?", &Singleton::getInstance()->shuffledSkybook, 0x1);
-		
 		
 		
 		hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
@@ -166,6 +163,16 @@ namespace mod
 		hudConsole->addWatch(page, "Reverse ID:", &checkReverseSearchID, 'd', WatchInterpretation::_u16);
 		hudConsole->addWatch(page, "Search Result:", &checkSearchResults, 's', WatchInterpretation::_str);
 		hudConsole->addWatch(page, "Reverse Result:", &checkReverseSearchResults, 's', WatchInterpretation::_str);
+
+		//Shuffled Checks
+		page = hudConsole->addPage("Shuffled Checks");
+		
+		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
+		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
+		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
+		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);
+		hudConsole->addOption(page, "Key Shuffle?", &chestRandomizer->isKeysanityEnabled, 0x1);
+		hudConsole->addOption(page, "Sky Character?", &Singleton::getInstance()->shuffledSkybook, 0x1);
 		
 		// Game info 1
 		page = hudConsole->addPage("Skips 1");
@@ -204,7 +211,10 @@ namespace mod
 		hudConsole->addOption(page, "No Shop Bottl?", &allowBottleItemsShopAnytime, 0x1);
 		hudConsole->addOption(page, "Fast transform?", &enableQuickTransform, 0x1);
 		hudConsole->addOption(page, "Skip Intro?", &Singleton::getInstance()->isIntroSkipped, 0x1);
-		//hudConsole->addOption(page, "Midna ToD Skip?", &Singleton::getInstance()->midnaTimeControl, 0x1);
+		hudConsole->addOption(page, "Midna ToD Skip?", &Singleton::getInstance()->midnaTimeControl, 0x1);
+		hudConsole->addOption(page, "Early ToT?", &Singleton::getInstance()->isEarlyToTEnabled, 0x1);
+		hudConsole->addOption(page, "Early PoT?", &Singleton::getInstance()->isEarlyPoTEnabled, 0x1);
+		hudConsole->addOption(page, "Open HC?", &Singleton::getInstance()->isEarlyHCEnabled, 0x1);
 		//color
 		/*page = hudConsole->addPage("Tunic Color1");
 
@@ -252,8 +262,10 @@ namespace mod
 
 		
 		//event info
-		page = hudConsole->addPage("Event Info");
+		page = hudConsole->addPage("Skips 3/ Event");
 		//hudConsole->addOption(page, "Coords as hex?", &coordsAreInHex, 0x1);
+		hudConsole->addOption(page, "GM Story Flag?", &Singleton::getInstance()->isGMStoryPatch, 0x1);
+		hudConsole->addOption(page, "Start w/ Crstl?", &Singleton::getInstance()->startWithCrystal, 0x1);
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
@@ -261,6 +273,15 @@ namespace mod
 		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
+
+		//Cosmetic Changes
+		page = hudConsole->addPage("Cosmetic");
+		hudConsole->addOption(page, "LTN In Rd:", &innerRed, 0xFF);
+		hudConsole->addOption(page, "LTN In Green:", &innerGreen, 0xFF);
+		hudConsole->addOption(page, "LTN In Blue:", &innerBlue, 0xFF);
+		hudConsole->addOption(page, "LTN Ot Red:", &outerRed, 0xFF);
+		hudConsole->addOption(page, "LTN Ot Green:", &outerGreen, 0xFF);
+		hudConsole->addOption(page, "LTN Ot Blue:", &outerBlue, 0xFF);
 		
 		//local area
 		/*page = hudConsole->addPage("Local Area 1");		
@@ -442,9 +463,6 @@ namespace mod
 		
 		//skip MS Puzzle
 		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGroveFlags, event::LoadEventAccuracy::Stage);
-
-		//skip Cart Escort
-		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xC, 0x2, 0xFF, 0xFF, game_patch::skipCartEscort, event::LoadEventAccuracy::Stage_Room_Spawn);
 		
 		//Fix Lanayru Softlock
 		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x0, 0x5, 0xE, 0xFF, game_patch::setLanayruWolf, event::LoadEventAccuracy::Stage_Room_Spawn);
@@ -462,7 +480,7 @@ namespace mod
 		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x1, 0x16, 0xFF, 0xFF, game_patch::skipMDHCS, event::LoadEventAccuracy::Stage_Room_Spawn);
 
 		//Fix FT Boss Music
-		eventListener->addLoadEvent(stage::allStages[Stage_Diababa], 0x32, 0x1, 0xFF, 0xFF, game_patch::fixFTBossMusic, event::LoadEventAccuracy::Stage);
+		eventListener->addLoadEvent(stage::allStages[Stage_Diababa], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixFTBossMusic, event::LoadEventAccuracy::Stage);
 
 		// Allow Faron Escape
 		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage);
@@ -470,11 +488,42 @@ namespace mod
 		//Skip MDH After Lanayru
 		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x1, 0x14, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
 
-		//Set Lantern gotten from Coro Flag
-		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0x0, 0xFF, 0xFF, game_patch::setLanternFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		//set Coro Lantern Flag
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setLanternFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
 
+		//unset dungeon flags after beating dungeon
+		eventListener->addLoadEvent(stage::allStages[Stage_Forest_Temple], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixFTState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Goron_Mines], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixGMState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Lakebed_Temple], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixLBTState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Arbiters_Grounds], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixAGState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Snowpeak_Ruins], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixSPRState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Temple_of_Time], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixToTState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_City_in_the_Sky], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixCiTSState, event::LoadEventAccuracy::Stage_Room_Spawn);
 
+		//set dungeon and boss flags
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setFTDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		eventListener->addLoadEvent(stage::allStages[Stage_Death_Mountain_Sumo_Hall], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGMDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Kakariko_Village], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGMDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Fyrus], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGMBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setLakeDungeonFlags, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Morpheel], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setLBTBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
 
+		eventListener->addLoadEvent(stage::allStages[Stage_Bublin_Camp], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setAGDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Mirror_Chamber], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setAGDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Stallord], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setAGBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Snowpeak], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setSPRDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Blizzeta], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setSPRBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setToTDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Armogohma], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setToTBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Argorok], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setCiTSBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//Break Barrier
+		eventListener->addLoadEvent(stage::allStages[Stage_Castle_Town], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::breakBarrier, event::LoadEventAccuracy::Stage_Room_Spawn);
 		//   =================
 		//  | Function Hooks  |
 		//   =================
@@ -744,6 +793,11 @@ namespace mod
 			snprintf(linkAngle, 30, "%d", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
 		}
 
+		if (gameInfo.nextStageVars.nextSpawnPoint != 0xFF)
+		{
+			lastGoodSpawn = gameInfo.nextStageVars.nextSpawnPoint;
+		}
+
 
 		if (gameInfo.ColorPtr != nullptr)
 		{
@@ -834,39 +888,42 @@ namespace mod
 			// Toggle console			
 			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
 		}
-		else if (tp::d_a_alink::linkStatus)
+
+		if (controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R | controller::PadInputs::Button_Y))
 		{
-			if (enableQuickTransform == 1 && gameInfo.rButtonText == 0 && ((((gameInfo.aButtonText == 0x24) && gameInfo.eventSystem.eventFlag == 0) && tp::d_a_alink::linkStatus->status == 0x1)) &&
-				(gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_Z))
+			if (canQuickTransform())
 			{
-				// Make sure Link is actually loaded
-				tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
-				if (linkMapPtr)
+				if (gameInfo.linkMapPtr->equippedItem != items::Ball_and_Chain)
 				{
-					if (!((linkMapPtr->isTargeting & 0x400000) != 0 && gameInfo.scratchPad.form == 0))
-					{
-						// Transform
-						tp::d_a_alink::procCoMetamorphoseInit(linkMapPtr);
-					}
+					// Transform
+					tp::d_a_alink::procCoMetamorphoseInit(gameInfo.linkMapPtr);
 				}
+
 			}
-			/*else if (tp::d_a_alink::linkStatus->status == 0x5 && gameInfo.aButtonText == 0x23 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_Z) && Singleton::getInstance()->midnaTimeControl == 1 &&
-				chestRandomizer->isStageTOD())
-			{
-				if (gameInfo.scratchPad.skyAngle >= 180 && gameInfo.scratchPad.skyAngle <= 359)
-				{
-					gameInfo.scratchPad.skyAngle = 0;
-					gameInfo.nextStageVars.nextSpawnPoint = 0x0;
-					gameInfo.nextStageVars.triggerLoad |= 1;
-				}
-				else if (gameInfo.scratchPad.skyAngle >= 0 && gameInfo.scratchPad.skyAngle <= 179)
-				{
-					gameInfo.scratchPad.skyAngle = 180;
-					gameInfo.nextStageVars.nextSpawnPoint = 0x0;
-					gameInfo.nextStageVars.triggerLoad |= 1;
-				}
-			}*/
 		}
+		
+		if (canChangeToD() && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R | controller::PadInputs::Button_Y))
+		{
+			if (gameInfo.scratchPad.skyAngle >= 105 && gameInfo.scratchPad.skyAngle <= 284)
+			{
+				gameInfo.scratchPad.skyAngle = 285;
+				if (gameInfo.nextStageVars.nextSpawnPoint == 0xFF)
+				{
+					gameInfo.nextStageVars.nextSpawnPoint = lastGoodSpawn;
+				}
+				gameInfo.nextStageVars.triggerLoad |= 1;
+			}
+			else if (gameInfo.scratchPad.skyAngle >= 285 || gameInfo.scratchPad.skyAngle <= 104)
+			{
+				gameInfo.scratchPad.skyAngle = 105;
+				if (gameInfo.nextStageVars.nextSpawnPoint == 0xFF)
+				{
+					gameInfo.nextStageVars.nextSpawnPoint = lastGoodSpawn;
+				}
+				gameInfo.nextStageVars.triggerLoad |= 1;
+			}
+		}
+		
 
 		if (sysConsolePtr->consoleEnabled)
 		{
@@ -985,7 +1042,6 @@ namespace mod
 				frame_counter = 0;
 			}
 		}
-
 		checkSearchID = (checkSearchID2 * 0x100) + checkSearchID1;
 		checkReverseSearchID = (checkReverseSearchID2 * 0x100) + checkReverseSearchID1;
 		if (checkSearchID != lastCheckSearchID)
@@ -1066,6 +1122,11 @@ namespace mod
 
 		// Call original function
 		fapGm_Execute_trampoline();
+
+		changeLanternColor();
+		//setFieldModels();
+		fixFTTotemMonkey();
+
 	}
 
 	s32 Mod::procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32])
@@ -1264,12 +1325,18 @@ namespace mod
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
 			}
 		}
-		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Graveyard]) ||
-			tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]))
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]))
 		{
 			if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
 			{
 				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Graveyard]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
 			}
 		}
 		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Interiors]) && tp::d_kankyo::env_light.currentRoom == 0)
@@ -1762,6 +1829,17 @@ namespace mod
 		}
 	}
 
+	void Mod::fixFTTotemMonkey()
+	{
+		if (tp::d_a_alink::checkStageName("D_MN05") && tp::d_kankyo::env_light.currentRoom == 12)
+		{
+			if ((gameInfo.localAreaNodes.unk_0[0xA] & 0x4) != 0)
+			{
+				gameInfo.localAreaNodes.unk_0[0x12] |= 0x1;
+			}
+		}
+	}
+
 	void Mod::preventPoweringUpDomRod()
 	{
 		if (gameInfo.scratchPad.itemWheel.Sky_Book == 0xFF && tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty) && !tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_partly_filled))
@@ -1860,4 +1938,147 @@ namespace mod
 		delete[] checks;
 		return;
 	}
+
+	void Mod::changeLanternColor()
+	{
+
+		// set lantern variables
+		u32 lanternVariableAddress = reinterpret_cast<u32>(&tp::d_a_alink::lanternVariables);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x3D) = reinterpret_cast<u8>(innerRed);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x3F) = reinterpret_cast<u8>(innerGreen);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x41) = reinterpret_cast<u8>(innerBlue);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x43) = reinterpret_cast<u8>(outerRed);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x45) = reinterpret_cast<u8>(outerGreen);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x47) = reinterpret_cast<u8>(outerBlue);
+	}
+
+	bool Mod::canQuickTransform()
+	{
+		// Make sure Link is actually loaded
+		tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
+		//check to make sure that the quick transform variable is enabled
+		if (enableQuickTransform == 0)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> option disabled");
+			return false;
+		}
+		
+		if (!linkMapPtr)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> no valid spot");
+			return false;
+		}
+
+		// Make sure Link currently isnt in an event
+		if (tp::d_a_alink::checkEventRun(linkMapPtr))
+		{
+			return false;
+		}
+
+		// Get the value for the alpha of the Z button
+		// Pointer path is not currently defined yet
+		u32 zButtonAlphaPtr = reinterpret_cast<u32>(tp::d_meter2_info::wZButtonPtr);
+		if (!zButtonAlphaPtr)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> alpha ptr 1 failed");
+			return false;
+		}
+
+		zButtonAlphaPtr = *reinterpret_cast<u32*>(zButtonAlphaPtr + 0x10C);
+		if (!zButtonAlphaPtr)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> alpha ptr 2 failed");
+			return false;
+		}
+
+		float zButtonAlpha = *reinterpret_cast<float*>(zButtonAlphaPtr + 0x720);
+
+		// Check if the Z button is dimmed
+		if (zButtonAlpha != 1.f)
+		{
+			// Z button is currently dimmed, so don't allow transforming
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> z button dimmed");
+			return false;
+		}
+
+		//make sure link is not underwater, or talking to anyone
+		if (tp::d_a_alink::linkStatus->status != 0x1)
+		{
+			//link is in an invalid state
+			return false;
+		} 
+
+		// Make sure you have the ability to warp
+		if ((gameInfo.scratchPad.eventBits[0xD] & 0x4) == 0) 
+		{
+			return false;
+		}
+
+		//Check to see if link is riding a snowboard
+		if (tp::d_a_alink::checkBoardRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on board");
+			return false;
+		}
+		
+		//Check to see if link is riding the canoe
+		if (tp::d_a_alink::checkCanoeRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on canoe");
+			return false;
+		}
+		
+		//Check to see if link is riding Epona
+		if (tp::d_a_alink::checkHorseRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on horse");
+			return false;
+		}
+		
+		//Check to see if link is riding a boar
+		if (tp::d_a_alink::checkBoarRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on boar");
+			return false;
+		}
+		
+		//Check to see if link is riding the spinner
+		if (tp::d_a_alink::checkSpinnerRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on spinner");
+			return false;
+		}
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Can Transform");
+		return true;
+	}
+
+	bool Mod::canChangeToD()
+	{
+		if ((gameInfo.scratchPad.eventBits[0xD] & 0x4) == 0)
+		{
+			return false;
+		}
+		
+		if (gameInfo.aButtonText != 0x23)
+		{
+			return false;
+		}
+		
+		if (gameInfo.eventSystem.actionStatus != 0x29)
+		{
+			return false;
+		}
+		
+		if (Singleton::getInstance()->midnaTimeControl == 0)
+		{
+			return false;
+		}
+			
+		if (!chestRandomizer->isStageTOD())
+		{
+			return false;
+		}
+		return true;
+	}
+
 } // namespace mod

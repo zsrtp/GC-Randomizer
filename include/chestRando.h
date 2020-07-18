@@ -40,6 +40,9 @@ namespace mod
 			u8 areDungeonItemsRandomized = 1;
 			u8 isTwilightSkipEnabled = 1;
 			u8 isKeysanityEnabled = 1;
+			u8 areHeartPiecesRandomized = 1;
+			u8 areRupeesRandomized = 1;
+			u8 areAmmoRandomized = 1;
 			
 			u8 itemThatReplacesHalfMilk = 0;
 			u8 itemThatReplacesSlingShot = 0;

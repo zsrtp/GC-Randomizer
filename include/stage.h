@@ -12,5 +12,5 @@ namespace mod::stage
 	extern const char* caveStages[6];
 	extern const char* interiorStages[8];
 	extern const char* specialStages[3];
-	extern const char* timeOfDayStages[19];
+	extern const char* timeOfDayStages[18];
 }
