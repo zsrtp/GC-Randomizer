@@ -251,7 +251,7 @@ namespace mod::game_patch
 
 	void fixSPRState()
 	{
-		if (Singleton::getInstance()->hasSPRBeenBeaten == 1 || Singleton::getInstance()->isEarlyToTEnabled == 1)
+		if (Singleton::getInstance()->hasSPRBeenBeaten == 1)
 		{
 			gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten = 0b0; //unset boss flag
 			gameInfo.scratchPad.eventBits[0x20] &= ~0x8; //unset story flag
@@ -393,10 +393,6 @@ namespace mod::game_patch
 			gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten = 0b1; //set boss flag
 			gameInfo.scratchPad.eventBits[0x20] |= 0x8; //set story flag
 		}
-		else if (Singleton::getInstance()->isEarlyToTEnabled == 1)
-		{
-			gameInfo.scratchPad.eventBits[0x20] |= 0x8; //set story flag
-		}
 	}
 
 	void setSPRBossFlag()
@@ -417,6 +413,11 @@ namespace mod::game_patch
 		{
 			gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bossBeaten = 0b1; //set boss flag
 			gameInfo.scratchPad.eventBits[0x20] |= 0x4; //set story flag
+		}
+
+		if (Singleton::getInstance()->isEarlyToTEnabled == 1)
+		{
+			gameInfo.nextStageVars.nextState = 0x2;
 		}
 	}
 
@@ -928,7 +929,7 @@ namespace mod::game_patch
 		if (Singleton::getInstance()->isEarlyToTEnabled == 1)
 		{
 			gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17] |= 0x10; //SG Portal
-			gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x9] |= 0x40; //ToT Stairs
+			gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x9] |= 0x70; //ToT Stairs
 			gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0xB] |= 0x10; //Pushed block as human
 		}
 

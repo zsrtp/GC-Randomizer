@@ -893,12 +893,8 @@ namespace mod
 		{
 			if (canQuickTransform())
 			{
-				if (gameInfo.linkMapPtr->equippedItem != items::Ball_and_Chain)
-				{
-					// Transform
+				// Transform
 					tp::d_a_alink::procCoMetamorphoseInit(gameInfo.linkMapPtr);
-				}
-
 			}
 		}
 		
@@ -2048,6 +2044,12 @@ namespace mod
 			strcpy(sysConsolePtr->consoleLine[20].line, "-> on spinner");
 			return false;
 		}
+
+		if (gameInfo.linkMapPtr->equippedItem == items::Ball_and_Chain)
+		{
+			return false;
+		}
+
 		strcpy(sysConsolePtr->consoleLine[20].line, "-> Can Transform");
 		return true;
 	}
