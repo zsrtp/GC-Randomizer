@@ -16,6 +16,7 @@
 #include <tp/d_a_alink.h>
 #include <tp/d_kankyo.h>
 #include <tp/JFWSystem.h>
+#include <tp/resource.h>
 #include <cstdio>
 #include <cstring>
 
@@ -69,18 +70,6 @@ namespace mod
 				if (destCheck->itemID == items::Item::Ordon_Sword)
 				{
 					sourceCheck = findSource(destCheck->destLayer, 0x1, destCheck);//to prevent woodensword from being overwritten before losing it			
-				}
-				else if (destCheck->itemID == items::Item::Ordon_Shield || destCheck->itemID == items::Item::Wooden_Shield || destCheck->itemID == items::Item::Hylian_Shield)
-				{
-					sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
-				}
-				else if (destCheck->itemID == items::Item::Zora_Armor || destCheck->itemID == items::Item::Magic_Armor)
-				{
-					sourceCheck = findSource(destCheck->destLayer, 0x2, destCheck);//to prevent softlocking the game when you try to get ordon shield check		
-				}
-				else if (isProgressiveEnabled == 0 && destCheck->itemID == items::Item::Clawshots)
-				{
-					sourceCheck = findSource(destCheck->destLayer, 0x7, destCheck);//to prevent Clawshots from being overwritten by Clawshot
 				}
 				else
 				{
@@ -309,6 +298,30 @@ namespace mod
 				result = true;
 			}
 			break;
+		
+		case item::ItemType::HeartPiece:
+			// Map, compass, big key
+			if (areHeartPiecesRandomized == 0)
+			{
+				result = true;
+			}
+			break;
+		
+		case item::ItemType::Rupee:
+			// Map, compass, big key
+			if (areRupeesRandomized == 0)
+			{
+				result = true;
+			}
+			break;
+
+		case item::ItemType::Ammo:
+			// Map, compass, big key
+			if (areAmmoRandomized == 0)
+			{
+				result = true;
+			}
+			break;
 
 		case item::ItemType::Story:
 			if (check->itemID != items::Item::Aurus_Memo && check->itemID != items::Item::Asheis_Sketch)
@@ -441,6 +454,10 @@ namespace mod
 		{//decrease poe counter
 			gameInfo.scratchPad.poeCount--;
 		}
+		else if (item == items::Item::Ooccoo_Dungeon && tp::d_a_alink::checkStageName(stage::allStages[Stage_City_in_the_Sky]))
+		{
+			Singleton::getInstance()->hasCiTSOoccoo = 1;
+		}
 		else if (item == items::Item::Vessel_Of_Light_Faron)
 		{
 			tp::d_com_inf_game::ScratchPad* scratchPadPtr = &gameInfo.scratchPad;
@@ -452,7 +469,7 @@ namespace mod
 					scratchPadPtr->clearedTwilights.Faron = 0b1; //Clear Faron Twilight
 					tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
 					scratchPadPtr->tearCounters.Faron = 16;
-					eventBitsPtr[0x5] = 0xFF; //Ensure Epona is Stolen, give Midna Charge
+					eventBitsPtr[0x5] |= 0xFF; //Ensure Epona is Stolen, give Midna Charge
 					eventBitsPtr[0x6] |= 0x10; //Faron Twilight Progression flag
 					eventBitsPtr[0xC] |= 0x8; //Set Sword and Shield to not be on back
 					tools::setItemFlag(ItemFlags::Heros_Clothes);
@@ -464,7 +481,7 @@ namespace mod
 					eventBitsPtr[0x6] |= 0x1; //tame Epona
 					eventBitsPtr[0xA] |= 0x8; //Beat KB1
 					eventBitsPtr[0x14] |= 0x10; //Put Bo Outside
-					eventBitsPtr[0x7] = 0xDE; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched, Eldin Twilight Story Progression Flag
+					eventBitsPtr[0x7] |= 0xDE; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched, Eldin Twilight Story Progression Flag
 					eventBitsPtr[0x41] |= 0x10; //Told Fado about the Kids
 
 					//Set Lanayru Twilight Flags
@@ -499,8 +516,6 @@ namespace mod
 				allAreaNodesPtr->Lanayru.unk_0[0xB] |= 0x4; // give Zora's Domain Warp
 				allAreaNodesPtr->Lanayru.unk_0[0xA] |= 0x4;//give lake hylia warp
 
-				tools::setItemFlag(ItemFlags::Heros_Clothes);
-
 				//Faron Escape
 				if (Singleton::getInstance()->isForestEscapeEnabled == 1)
 				{
@@ -509,6 +524,14 @@ namespace mod
 				else
 				{
 					eventBitsPtr[0x6] |= 0x24; //warp the kak bridge, give map warp
+				}
+
+				//Skip MDH?
+				if (Singleton::getInstance()->isMDHSkipEnabled == 1)
+				{
+					//set MDH flags
+					gameInfo.scratchPad.eventBits[0xC] |= 0x1; //MDH Started
+					gameInfo.scratchPad.eventBits[0x1E] |= 0x8; //MDH Completed
 				}
 
 				gameInfo.nextStageVars.triggerLoad |= 1;
@@ -525,10 +548,10 @@ namespace mod
 				{
 					eventBitsPtr[0x6] |= 0x24; //warp the kak bridge, give map warp
 				}
+				gameInfo.localAreaNodes.unk_0[0x9] = 0x10;//unlock N Faron gate
 				tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
 				return item;
 			}
-			tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Eldin)
@@ -539,7 +562,7 @@ namespace mod
 			eventBitsPtr[0x6] |= 0x1; //tame Epona
 			eventBitsPtr[0xA] |= 0x8; //Beat KB1
 			eventBitsPtr[0x14] |= 0x10; //Put Bo Outside
-			eventBitsPtr[0x7] = 0xD6; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched, Eldin Twilight Story Progression Flag
+			eventBitsPtr[0x7] |= 0xD6; //skip Gor Coron Sumo and Enter Mines also Trigger KB1 and mark Post-KB1 CS as watched
 			return item;
 		}
 		else if (item == items::Item::Vessel_Of_Light_Lanayru)
@@ -939,10 +962,17 @@ namespace mod
 								}
 								else if (item == items::Item::Shadow_Crystal)
 								{//shadow crystal doesn't actually do anything so we have to do its functionnality ourselves
-									game_patch::giveMidnaTransform();
-									if (Singleton::getInstance()->isMDHSkipEnabled == 1)
+									if (Singleton::getInstance()->startWithCrystal == 1)
 									{
-										gameInfo.scratchPad.unk_1F[0x11] |= 0x8; //Midna on Back
+										item = items::Item::Silver_Rupee;
+									}
+									else
+									{
+										game_patch::giveMidnaTransform();
+										if (Singleton::getInstance()->isMDHSkipEnabled == 1)
+										{
+											gameInfo.scratchPad.unk_1F[0x11] |= 0x8; //Midna on Back
+										}
 									}
 								}
 								else if (item == items::Item::Dominion_Rod_Uncharged)
@@ -967,31 +997,374 @@ namespace mod
 								}
 								else if (item == 0xE1)
 								{
-									gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+													{
+														if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+														{
+															gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+														}
+														else
+														{
+															gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+														}
+
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+											}
+
+										}
+										else
+										{
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+											}
+										}
+
+									}
+									else
+									{
+										gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow										
+									}
 								}
 								else if (item == 0xE2)
 								{
-									gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+													{
+														if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+														{
+															gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+														}
+														else
+														{
+															gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+														}
+
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+											}
+
+										}
+										else
+										{
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+											}
+										}
+
+									}
+									else
+									{
+										gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+									}
 								}
 								else if (item == 0xE3)
 								{
-									gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+								if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+								{
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+											}
+
+										}
+										else
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+										}
+
+									}
+									else
+									{
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+										}
+									}
+
+								}
+								else
+								{
+									gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+								}
 								}
 								else if (item == 0xE4)
 								{
-									gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+								if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+								{
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+											}
+
+										}
+										else
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+										}
+
+									}
+									else
+									{
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+										}
+									}
+
+								}
+								else
+								{
+									gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+								}
 								}
 								else if (item == 0xE5)
 								{
-									gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+								if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+								{
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+											}
+
+										}
+										else
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+										}
+
+									}
+									else
+									{
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+										}
+									}
+
+								}
+								else
+								{
+									gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+								}
 								}
 								else if (item == 0xE6)
 								{
-									gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jump strike
+								if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+								{
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+											}
+
+										}
+										else
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+										}
+
+									}
+									else
+									{
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+										}
+									}
+
+								}
+								else
+								{
+									gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+								}
 								}
 								else if (item == 0xE7)
 								{
-									gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+								if ((gameInfo.scratchPad.eventBits[0x29] & 0x4) != 0)/*have ending blow*/
+								{
+									if ((gameInfo.scratchPad.eventBits[0x29] & 0x8) != 0)/*have shield attack*/
+									{
+										if ((gameInfo.scratchPad.eventBits[0x29] & 0x2) != 0)/*have back slice*/
+										{
+											if ((gameInfo.scratchPad.eventBits[0x29] & 0x1) != 0)/*have helm splitter*/
+											{
+												if ((gameInfo.scratchPad.eventBits[0x2A] & 0x80) != 0)/*have mortal draw*/
+												{
+													if ((gameInfo.scratchPad.eventBits[0x2A] & 0x40) != 0)/*have jump strike*/
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x20;//give great spin
+													}
+													else
+													{
+														gameInfo.scratchPad.eventBits[0x2A] |= 0x40;//give jumpstrike
+													}
+
+												}
+												else
+												{
+													gameInfo.scratchPad.eventBits[0x2A] |= 0x80;//give mortal draw
+												}
+
+											}
+											else
+											{
+												gameInfo.scratchPad.eventBits[0x29] |= 0x1;//give helm splitter
+											}
+
+										}
+										else
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x2;//give back slice
+										}
+
+									}
+									else
+									{
+										{
+											gameInfo.scratchPad.eventBits[0x29] |= 0x8;//give shield attack
+										}
+									}
+
+								}
+								else
+								{
+									gameInfo.scratchPad.eventBits[0x29] |= 0x4;//give ending blow
+								}
 								}
 								else if (item == items::Item::Reekfish_Scent)
 								{
@@ -1143,6 +1516,71 @@ namespace mod
 		for (u32 i = 0; i < totalGrottoStages; i++)
 		{
 			if (tp::d_a_alink::checkStageName(stage::grottoStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageDungeon()
+	{
+		u32 totalDungeonStages = sizeof(stage::dungeonStages) / sizeof(stage::dungeonStages[0]);
+		for (u32 i = 0; i < totalDungeonStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::dungeonStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageInterior()
+	{
+		u32 totalInteriorStages = sizeof(stage::interiorStages) / sizeof(stage::interiorStages[0]);
+		for (u32 i = 0; i < totalInteriorStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::interiorStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageCave()
+	{
+		u32 totalCaveStages = sizeof(stage::caveStages) / sizeof(stage::caveStages[0]);
+		for (u32 i = 0; i < totalCaveStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::caveStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageSpecial()
+	{
+		u32 totalSpecialStages = sizeof(stage::specialStages) / sizeof(stage::specialStages[0]);
+		for (u32 i = 0; i < totalSpecialStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::specialStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool ChestRandomizer::isStageTOD()
+	{
+		u32 totalTODStages = sizeof(stage::timeOfDayStages) / sizeof(stage::timeOfDayStages[0]);
+		for (u32 i = 0; i < totalTODStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::timeOfDayStages[i]))
 			{
 				return true;
 			}

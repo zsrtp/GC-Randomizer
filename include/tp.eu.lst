@@ -15,6 +15,7 @@
 
 / d_stage.o
 80025914:actorCommonLayerInit
+80025AE0:actorInit
 // data
 803F8034:mStatus_roomControl
 
@@ -55,6 +56,13 @@
 800C7A00:procCoMetamorphoseInit
 8011A908:checkTreasureRupeeReturn
 803DEDF4:linkStatus
+8038FF7C:lanternVariables
+80115E2C:checkEventRun
+800CF47C:checkCanoeRide
+800CF468:checkBoardRide
+800CF490:checkHorseRide
+800CF4D4:checkSpinnerRide
+800CF4C0:checkBoarRide
 // data
 8039038C:ladderVars
 
@@ -168,3 +176,6 @@
 
 //canWarp
 80408956:can_warp
+
+//d_meter2_info.o
+80432164:wZButtonPtr

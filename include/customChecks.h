@@ -30,15 +30,15 @@ namespace mod
 {
 	customCheck customChecks[37] = {
 		/*Ordon Shield*/
-		{"F_SP103", 0, 0, 0x74, 0x2A, 0x456C12A0, 0x43390000, 0x44405C5E, 0x5FA0, []() { gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*remove ordon shield*/ }, []() { return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+		{"F_SP103", 0, 0, 0x74, 0x2A, 0x456C12A0, 0x43390000, 0x44405C5E, 0x5FA0, []() { gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon shield*/ }, []() { return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
 		/*Ordon Sword*/
-		{"R_SP01", 4, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, []() { gameInfo.localAreaNodes.unk_0[0x8] |= 0x4;/*remove ordon sword*/ }, []() { return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
+		{"R_SP01", 4, 0, 0x70, 0x28, 0x439D0602, 0x0, 0xC26ABE99, 0xCC7D, []() { gameInfo.localAreaNodes.unk_0[0x8] |= 0x1;/*got ordon sword*/ gameInfo.localAreaNodes.unk_0[0x1B] |= 0x8;/*remove ordon sword*/ }, []() { return (gameInfo.scratchPad.eventBits[0x5] & 0x7A) != 0;/*have sewers been done*/ } },
 		/*Fishing rod*/
 	    {"F_SP103", 0, 1, 0x68, 0x4A, 0xC3FEB5F1, 0x42960000, 0x4514FB40, 0x883A, []() { gameInfo.scratchPad.eventBits[0x3] |= 0x5;/*brought Cradle to Uli and got fishing rod*/ gameInfo.scratchPad.eventBits[0x46] |= 0x1;/*took cradle from monkey*/ }, []() { return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
 	    /*Sera Bottle*/
 		{"F_SP103", 0, 1, 0x7C, 0x65, 0x444C8DC3, 0x42AF0000, 0xC4CB2577, 0xA3E7, []() { gameInfo.scratchPad.eventBits[0x12] |= 0x8;/*can shop at Sera's shop*/ gameInfo.scratchPad.eventBits[0x14] |= 0x8;/*Sera Bottle gotten*/ }, []() { return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
 		/*Slingshot*/
-		{"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, nullptr /*Flag is set in game_patches to avoid interaction with vanilla check*/, []() { return gameInfo.scratchPad.counters.rupees >= 30 && (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
+		{"F_SP103", 0, 0, 0x78, 0x4B, 0xC3EDF8A9, 0x44CD922E, 0x45F31BF5, 0x7881, nullptr /*Flag is set in game_patches to avoid interaction with vanilla check*/, []() { return (gameInfo.localAreaNodes.unk_0[0xC] & 0x2) != 0;/*is goats 1 done*/ } },
 		/*Lantern*/
 		{"F_SP108", 0xFF, 1, 0xF8, 0x48, 0xC66D4C1B, 0x41C19A25, 0xC65D2696, 0x36EC, nullptr, []() { return true; } },
 		/*Zora Armor*/
@@ -56,7 +56,7 @@ namespace mod
 		/*Wooden Statue*/
 		{"F_SP122", 16, 1, 0x68, 0x82, 0xC7493734, 0xC5C3E9D7, 0x46F956C6, 0x7FE1, []() { gameInfo.scratchPad.eventBits[0x22] |= 0x80;/*Got Wooden Statue from wolves*/ }, []() { return tools::checkItemFlag(ItemFlags::Medicine_Scent); } },
 		/*Ilia's Charm*/
-		{"F_SP128", 0, 1, 0x64, 0x83, 0x44F7650C, 0x42D20705, 0xC4A1A68B, 0x4226, nullptr /*Flag is set in game_patches to avoid interaction with vanilla check*/, []() { return (gameInfo.localAreaNodes.unk_0[0x9] & 0x2) != 0; /*All Bublins dead in HV*/ } },
+		{"F_SP128", 0, 1, 0x64, 0x83, 0x44F7650C, 0x42D20705, 0xC4A1A68B, 0x4226, nullptr /*Flag is set in game_patches to avoid interaction with vanilla check*/, []() { return true; } },
 		/*Horse Call*/
 		{"R_SP109", 0, 1, 0x74, 0x84, 0x43CDBCA1, 0x0, 0xC31EEBF3, 0xBDBE, []() { gameInfo.scratchPad.eventBits[0x23] |= 0x20;/*Got horse call from Illia*/ }, []() { return tools::checkItemFlag(ItemFlags::Ilias_Charm); } },
 		/*Fishing Hole Bottle*/
@@ -66,9 +66,9 @@ namespace mod
 		/*Gate Keys*/
 		 {"F_SP121", 0xFF, 1, 0x7C, 0xF3, 0xC781DFDB, 0xC607B38E, 0x47897B50, 0xC0C9, nullptr, []() { return (gameInfo.scratchPad.eventBits[0x8] & 0x40) != 0;/*was escort started*/ } },
 		/*Camp Key*/
-		{"F_SP118", 1, 0, 0x7C, 0x20, 0x457F816B, 0x43820000, 0xC572F680, 0x0000, nullptr, []() { return true; } },
+		{"F_SP118", 1, 0, 0x7C, 0x20, 0x457F816B, 0x43820000, 0xC572F680, 0x0000, []() { gameInfo.localAreaNodes.unk_0[0x4] |= 0x80;/*get camp key*/ }, []() { return true; } },
 		/*Jovani Poe*/
-		{"R_SP160", 5, 0, 0x7C, 0xE0, 0x45906531, 0xC2960000, 0x45229AEB, 0xC3C9, []() { gameInfo.localAreaNodes.unk_0[0x8] |= 0x80;/*killed poe*/ gameInfo.localAreaNodes.unk_0[0xF] |= 0x7;/*cs + open path to sewers*/ }, []() { return true; } },
+		{"R_SP160", 5, 0, 0x7C, 0xE0, 0x45906531, 0xC2960000, 0x45229AEB, 0xC3C9, []() { gameInfo.localAreaNodes.unk_0[0x8] |= 0x80;/*killed poe*/ gameInfo.localAreaNodes.unk_0[0xF] |= 0x7;/*cs + open path to sewers*/ gameInfo.localAreaNodes.unk_0[0x17] |= 0x8; /*Gengle Free*/}, []() { return true; } },
 		/*Shadow Crystal*/
 		{"F_SP117", 1, 0, 0x7C, 0x32, 0xC36EB7DC, 0x44CB2000, 0xC5964574, 0x0000, []() { gameInfo.scratchPad.eventBits[0x10] |= 0x20;/*got master sword cs*/ }, []() { return true; } },
 		/*Master Sword*/
@@ -94,7 +94,7 @@ namespace mod
 		/*Youth's Scent*/
 		 {"F_SP121", 0xFF, 0, 0x70, 0xB4, 0xC681A76B, 0xC5C99000, 0x4783ED29, 0xA6A9, []() { gameInfo.scratchPad.eventBits[0x22] |= 0x40;/*Got Youth's scent*/ gameInfo.localAreaNodes.unk_0[0x16] |= 0x4;/*Midna text after getting Youth's scent*/ gameInfo.localAreaNodes.unk_0[0x17] |= 0x40;/*got youth's scent cs*/ }, []() { return true; } },
 		/*Ilia's Scent*/
-		{"F_SP121", 0xFF, 0, 0x6C, 0xB0, 0xC5DD1EF2, 0x4529ED9A, 0xC73F5AD1, 0x71A6, nullptr, []() { return true; } },
+		{"F_SP121", 0xFF, 0, 0x6C, 0xB0, 0xC5DD1EF2, 0x4529ED9A, 0xC73F5AD1, 0x71A6, []() { gameInfo.scratchPad.eventBits[0x22] |= 0x20;/*Got Ilia's scent*/ gameInfo.localAreaNodes.unk_0[0x16] |= 0x20;/*Midna text after getting Ilia's scent*/ gameInfo.localAreaNodes.unk_0[0x17] |= 0x80;/*got Ilia's scent cs*/ }, []() { return true; } },
 		/*Poe Scent*/
 		{"D_MN10", 0xFF, 0, 0x3C, 0xB2, 0xC1571A39, 0xC1200000, 0x4355109A, 0x0000, nullptr, []() { return true; } },
 		/*Reekfish Scent*/

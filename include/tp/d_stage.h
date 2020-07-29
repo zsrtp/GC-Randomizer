@@ -12,6 +12,20 @@
 
 namespace tp::d_stage
 {
+	struct Item
+	{
+		char objectName[8];
+		u8 paramOne;
+		u8 paramTwo;
+		u8 membitFlag;
+		u8 item;
+		float pos[3];
+		s16 rot[3];
+		u16 enemyNum;
+	} __attribute__((__packed__));
+
+	static_assert(sizeof(Item) == 0x20);
+
 	extern "C"
 	{
 		extern void* mStatus_roomControl;
@@ -25,5 +39,6 @@ namespace tp::d_stage
 		 *  @param unk4 unknown
 		 */
 		bool actorCommonLayerInit(void* mStatus_roomControl, dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4);
+		bool actorInit(void* mStatus_roomControl, dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4);
 	}
 }  // namespace tp::d_stage

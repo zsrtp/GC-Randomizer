@@ -7,6 +7,7 @@
 #include "eventListener.h"
 #include "chestRando.h"
 #include "HUDConsole.h"
+#include <string>
 
 namespace mod
 {
@@ -124,6 +125,7 @@ namespace mod
 			u8 bombBag1Ammo;
 			u8 bombBag2Ammo;
 			u8 bombBag3Ammo;
+			u8 lastGoodSpawn;
 
 			u8 yetaTrickOn = 0;
 
@@ -133,6 +135,15 @@ namespace mod
 			u8 eventFlagToEdit = 0;
 			u8 newValueForEventFlag = 0;
 			u8 triggerEventFlagEdit = 0;
+			u8 innerRed = 0x50;
+			u8 innerGreen = 0x28;
+			u8 innerBlue = 0x14;
+			u8 outerRed = 0x28;
+			u8 outerGreen = 0x1E;
+			u8 outerBlue = 0x0A;
+
+			char itemName[10];
+			//u8 newItemId;
 
 		// Functions
 		private:
@@ -154,6 +165,10 @@ namespace mod
 			bool procDoLink(tp::dynamic_link::DynamicModuleControl* dmc);
 
 			void procItem_func_UTUWA_HEART();
+
+			bool canQuickTransform();
+
+			bool canChangeToD();
 
 			/**
 			 * gives the unlocked scent that can be seen in the current area (defaults to most advanced one obtained)
@@ -202,7 +217,13 @@ namespace mod
 			 */
 			void doCustomTRESActor(void* mStatus_roomControl);
 
+			void changeLanternColor();
 
+			void fixFTTotemMonkey();
+
+			//void setFieldModels();
+
+			//bool procActorCommonLayerInit(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, s32 unk3, void* unk4);
 		// Private members
 		//private:
 			
@@ -221,7 +242,9 @@ namespace mod
 
 			void (*item_func_UTUWA_HEART_trampoline)() = nullptr;
 
-			bool(*actorCommonLayerInit_trampoline)(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4) = nullptr;
+			bool (*actorCommonLayerInit_trampoline)(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4) = nullptr;
+
+			void (*putSave_trampoline)(tp::d_com_inf_game::GameInfo* gameInfoPtr, s32 areaID) = nullptr;
 
 			// Item functions
 			s32 (*createItemForPresentDemo_trampoline)(const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3]) = nullptr;

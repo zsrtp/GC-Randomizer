@@ -47,6 +47,7 @@ namespace mod::game_patch
 	 */
 	void removeIBLimit();
 
+
 	/**
 	 * Changes the max rupee amounts for each
 	 * of the wallets
@@ -188,4 +189,40 @@ namespace mod::game_patch
 	 * set MDH skip after Lanayru Twilight
 	 */
 	void skipMDH();
+
+	/**
+	 * unset the story flag and boss flag when re-entering a dungeon
+	 */
+	void setLanternFlag();
+
+	void breakBarrier();
+
+	/**
+	 * unset the story flag and boss flag when re-entering a dungeon
+	 */
+	void fixFTState();
+	void fixGMState();
+	void fixLBTState();
+	void fixAGState();
+	void fixSPRState();
+	void fixToTState();
+	void fixCiTSState();
+	
+	/**
+	 * reset the flags for a dungeon if it has been beaten or if a skip is active
+	 */
+	void setFTDungeonFlag();
+	void setFTBossFlag();
+	void setGMDungeonFlag();
+	void setGMBossFlag();
+	void setLakeDungeonFlags();
+	void setLBTBossFlag();
+	void setAGDungeonFlag();
+	void setAGBossFlag();
+	void setSPRDungeonFlag();
+	void setSPRBossFlag();
+	void setToTDungeonFlag();
+	void setToTBossFlag();
+	void setCiTSDungeonFlag();
+	void setCiTSBossFlag();
 }

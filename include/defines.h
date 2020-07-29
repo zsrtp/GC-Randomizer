@@ -34,12 +34,12 @@ union typeTransform {
 };
 
 // Array modification
-#define MAX_LOAD_EVENTS 20 // eventListener
+#define MAX_LOAD_EVENTS 40 // eventListener
 #define MAX_HUDCONSOLE_PAGES 12 // HUDConsole
 
 // Mnemonics
 #define AUTHOR				"ZTPR"
-#define VERSION				"v0.15.2a"
+#define VERSION				"v0.16.1b"
 #define RAND_SEED			mod::tools::randomSeed
 #define gameInfo 			tp::d_com_inf_game::dComIfG_gameInfo
 #define getPlayerPos 		tp::d_map_path_dmap::getMapPlayerPos

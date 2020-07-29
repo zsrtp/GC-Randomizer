@@ -836,7 +836,9 @@ namespace tp::d_com_inf_game
 		u16 immediateControl; // 4edb - 4edc
 		u8 unk_00[0x4]; // 4edd - 4EE0
 		u8 nextEventID; // 4EE1
-		u8 unk1A[0xCB];
+		u8 unk1A[0xC5];
+		u8 actionStatus;
+		u8 unkDF[0x5];
 		u8 eventFlag;
 		u8 unkE7[0x5];
 		u8 currentEventID;
@@ -854,6 +856,8 @@ namespace tp::d_com_inf_game
 		float pos[3];
 		u8 unk_4DC[0x94];
 		u32 isTargeting;//570    at 0x400000 link is targeting
+		u8 unk_574[0x2A68];
+		u16 equippedItem;
 	} __attribute__((__packed__));
 
 	struct TunicColor
@@ -946,9 +950,8 @@ namespace tp::d_com_inf_game
 		extern u8 current_state;
 		extern void setItemBombNumCount(u32 unk1, u8 bagNb, short amout);//amount will be the og (ex: if you can only have 5 more bombs and buy 10, it'll still ahow 10)
 		extern u8 next_state;
-		//extern char wallet_text[13];
+		extern char izaBoatSignText[100];
 		//extern char wallet_description[96];
 		extern u8 can_warp;
-		
 	}
 }
