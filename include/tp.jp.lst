@@ -15,6 +15,7 @@
 
 // d_stage.o
 8002586C:actorCommonLayerInit
+80025A38:actorInit
 // data
 803F01D4:mStatus_roomControl
 
@@ -33,6 +34,7 @@
 // f_op_actor_mng.o
 8001BBE8:createItemForPresentDemo
 8001BC74:createItemForTrBoxDemo
+8001c078:createDemoItem
 8001C0D4:createItemForBoss
 8001C174:createItemForMidBoss
 8001C1B8:createItemForDirectGet
@@ -53,6 +55,15 @@
 800BB4F0:checkHeavyStateOn
 800C782C:procCoMetamorphoseInit
 8011A734:checkTreasureRupeeReturn
+803D6F94:linkStatus
+803887fC:lanternVariables
+80115C58:checkEventRun
+800CF2A8:checkCanoeRide
+800CF294:checkBoardRide
+800CF2bC:checkHorseRide
+800CF300:checkSpinnerRide
+800CF2EC:checkBoarRide
+
 // data
 80388C0C:ladderVars
 
@@ -160,3 +171,12 @@
 // JFWSystem.o
 // data
 8044B2F8:systemConsole
+
+//currentState
+803B8000:current_state
+
+//canWarp
+80400AF6:can_warp
+
+//d_meter2_info.o
+8042A2E4:wZButtonPtr

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "defines.h"
+#include <tp/d_com_inf_game.h>
+
+
 
 /**
  * Contains functions that fix certain cutscenes
@@ -9,10 +12,10 @@
  */
 namespace mod::cutscene_skip
 {
-    /**
-     * Runs when master sword CS is skipped
-     */
-    s32 onMasterSwordSkip(void* unk, s32 unk2);
+	/**
+	 * Runs when master sword CS is skipped
+	 */
+	s32 onMasterSwordSkip(void* unk, s32 unk2);
 }
 
 /**
@@ -20,158 +23,206 @@ namespace mod::cutscene_skip
  * and immediately perfom the described action
  */
 namespace mod::game_patch
-{    
-    
-    /**
-     * Enables the debug screen without
-     * active debug mode; It triggers
-     * automatically when crashing
-     */
-    void assemblyOverwrites();
+{
+	/**
+	 * Enables the debug screen without
+	 * active debug mode; It triggers
+	 * automatically when crashing
+	 */
+	void assemblyOverwrites();
 
-    /**
-     * Kills spider at links house
-     */
-    void killLinkHouseSpider();
+	/**
+	 * Kills spider at links house
+	 */
+	void killLinkHouseSpider();
 
-    /**
-     * Increasees Links climbing speed
-     */
-    void increaseClimbSpeed();
+	/**
+	 * Increasees Links climbing speed
+	 */
+	void increaseClimbSpeed();
 
-    /**
-     * Removes the movementspeed limit
-     * when wearing IB
-     */
-    void removeIBLimit();
+	/**
+	 * Removes the movementspeed limit
+	 * when wearing IB
+	 */
+	void removeIBLimit();
 
-    /**
-     * Changes the max rupee amounts for each
-     * of the wallets
-     */
-    void increaseWalletSize();
 
-    /**
-     * Skips sewers immediately
-     * triggers the load to Ordon Spring
-     * and sets the flags accordingly
-     */
-    void skipSewers();
-    
-    /**
-     * Skips Midna's Desperate Hour
-     * triggers the load to zelda's tower
-     */
-    void skipMDH();
+	/**
+	 * Changes the max rupee amounts for each
+	 * of the wallets
+	 */
+	void increaseWalletSize();
 
-    /**
-    * Adds the chests that disappear after KB3
-    * changes the state of faron from 1 to 3
-    */
-    void setBublinState();
+	/**
+	 * Skips sewers immediately
+	 * triggers the load to Ordon Spring
+	 * and sets the flags accordingly
+	 */
+	void skipSewers();
 
-    /**
-     * Sets the flag after Ilia CS
-     * which tells the game that you started
-     * with sewers
-     */
-    void setFirstTimeWolf();
+	/**
+	* Adds the chests that disappear after KB3
+	* changes the state of faron from 1 to 3
+	*/
+	void setBublinState();
 
-    /**
-     * Sets form to human
-     */
-    void setHuman();
+	/**
+	 * Sets the flag after Ilia CS
+	 * which tells the game that you started
+	 * with sewers
+	 */
+	void setFirstTimeWolf();
 
-    /**
-     * Sets form to wolf
-     */
-    void setWolf();
+	/**
+	 * Sets form to human
+	 */
+	void setHuman();
 
-    /**
-     * Activates the sense button (X)
-     * for Wolf Link
-     */
-    void giveSense();
+	/**
+	 * Sets form to wolf
+	 */
+	void setWolf();
 
-    /**
-     * Tames Epona
-     */
-    void giveEpona();
 
-    /**
-     * Gives Master Sword and equips it
-     */
-    void giveMasterSword();
+	/**
+	 * Activates the sense button (X)
+	 * for Wolf Link
+	 */
+	void giveSense();
 
-    /**
-     * Gives Midna and sets the according sewers flag
-     * Makes her appear on Z
-     */
-    void giveMidna();
+	/**
+	 * Tames Epona
+	 */
+	void giveEpona();
 
-    /**
-     * Gives Midna Text that allows transformation
-     */
-    void giveMidnaTransform();
+	/**
+	 * Gives Master Sword and equips it
+	 */
+	void giveMasterSword();
 
-    /**
-     * Removes the locks from the 2 bulblin gates in HF
-     * change doesn't get saved so set it evry time you load into HF
-     */
-    void unlockHFGates();
+	/**
+	 * Gives Midna and sets the according sewers flag
+	 * Makes her appear on Z
+	 */
+	void giveMidna();
 
-    /**
-     * when spawning in goats 2, will warp you to Illia taking Epona CS
-     */
-    void skipGoats();
+	/**
+	 * Gives Midna Text that allows transformation
+	 */
+	void giveMidnaTransform();
 
-    /**
-     * opens the door the the master sword in sacred grove
-     */
-    void skipGrovePuzzle();
+	/**
+	 * Removes the locks from the 2 bulblin gates in HF
+	 * change doesn't get saved so set it evry time you load into HF
+	 */
+	void setFieldBits();
 
-    /**
-     * when you spawn into the Cart Escort, game will spawn you in Kakariko Afterwards
-     */
-    void skipCartEscort();
+	/**
+	 * when spawning in goats 2, will warp you to Illia taking Epona CS
+	 */
+	void skipGoats();
 
-    /**
-     * warps player to Lanayru twilight gate if they don't have MS
-     */
-    void setLanayruWolf();
+	/**
+	 * opens the door the the master sword in sacred grove
+	 */
+	void setGroveFlags();
 
-    /**
-     * sets Faron state after warping from lanayru
-     */
-    void fixLanayruFaron();
+	/**
+	 * when you spawn into the Cart Escort, game will spawn you in Kakariko Afterwards
+	 */
+	void skipCartEscort();
 
-    /**
-     * Fixes the cannon and puts it at lake hylia
-     */
-    void earlyCiTS();
+	/**
+	 * warps player to Lanayru twilight gate if they don't have MS
+	 */
+	void setLanayruWolf();
 
-    /**
-     * Fyer will let you go to the desert if you have MS
-     */
-    void earlyDesert();
+	/**
+	 * Fixes the cannon and puts it at lake hylia
+	 */
+	void earlyCiTS();
 
-    /**
-     * give boss key to all dungeons
-     */
-    void unlockBossDoors();
+	/**
+	 * Fyer will let you go to the desert if you have MS
+	 */
+	void earlyDesert();
 
-    /**
-     * check wether to show hawkeye and hylian shield in malo mart
-     */
-    void handleMaloShop();
+	/**
+	 * give boss key to all dungeons
+	 */
+	void checkBossKeysey();
 
-    /**
-     * check whether you have MS before being allowed to enter the desert
-     */
-    void accessDesert();
+	/**
+	 * check wether to show hawkeye and hylian shield in malo mart
+	 */
+	void handleMaloShop();
 
-    /**
-     * check whether you have MS before being allowed to enter the desert
-     */
-    void sellWaterBombs();
+	/**
+	 * check whether you have MS before being allowed to enter the desert
+	 */
+	void accessDesert();
+
+	/**
+	 * skips midna text and story CS
+	 */
+	void skipTextAndCS();
+
+	/**
+	 * escort avalable at any time
+	 */
+	void setEscortState();
+
+	/**
+	 * skips the zant CS for MDH
+	 */
+	void skipMDHCS();
+
+	void fixFTBossMusic();
+
+	/**
+	 * won't allow you to leave the forest if Faron escape is disabled until you beat Diababa
+	 */
+	void allowFaronEscape();
+
+	/**
+	 * set MDH skip after Lanayru Twilight
+	 */
+	void skipMDH();
+
+	/**
+	 * unset the story flag and boss flag when re-entering a dungeon
+	 */
+	void setLanternFlag();
+
+	void breakBarrier();
+
+	/**
+	 * unset the story flag and boss flag when re-entering a dungeon
+	 */
+	void fixFTState();
+	void fixGMState();
+	void fixLBTState();
+	void fixAGState();
+	void fixSPRState();
+	void fixToTState();
+	void fixCiTSState();
+	
+	/**
+	 * reset the flags for a dungeon if it has been beaten or if a skip is active
+	 */
+	void setFTDungeonFlag();
+	void setFTBossFlag();
+	void setGMDungeonFlag();
+	void setGMBossFlag();
+	void setLakeDungeonFlags();
+	void setLBTBossFlag();
+	void setAGDungeonFlag();
+	void setAGBossFlag();
+	void setSPRDungeonFlag();
+	void setSPRBossFlag();
+	void setToTDungeonFlag();
+	void setToTBossFlag();
+	void setCiTSDungeonFlag();
+	void setCiTSBossFlag();
 }

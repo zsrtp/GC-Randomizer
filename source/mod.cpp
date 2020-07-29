@@ -33,1950 +33,2054 @@
 #include <tp/d_msg_flow.h>
 #include <tp/DynamicLink.h>
 #include <tp/d_item.h>
+#include <tp/d_item_data.h>
+#include <tp/d_meter2_info.h>
 #include <cstdio>
 #include <cstring>
 
+
+
 namespace mod
 {
-    Mod* global::modPtr = nullptr;
-    ChestRandomizer* global::chestRandoPtr = nullptr;
-    event::EventListener* global::eventListenerPtr = nullptr;
-    mod::HUDConsole* global::hudConsolePtr = nullptr;
-    int num_frames = 120;
-    int frame_counter = 0;
-    
-    void main()
-    {
-        Mod* mod = new Mod();
-        mod->init();
-    }
-
-    Mod::Mod()
-    {
-        eventListener = new event::EventListener();
-        chestRandomizer = new ChestRandomizer();
-        hudConsole = new HUDConsole("Settings", 0x80);
-        global::modPtr = this;
-        global::chestRandoPtr = this->chestRandomizer;
-        global::eventListenerPtr = this->eventListener;
-        global::hudConsolePtr = this->hudConsole;
-    }
-
-    void Mod::init()
-    {
-        // Perform any necessary assembly overwrites
-        game_patch::assemblyOverwrites();
-        game_patch::increaseWalletSize();
-        game_patch::increaseClimbSpeed();
-        /*
-         * Causes issues right now (argarok cannot be beaten)
-         * game_patch::removeIBLimit();
-         */
-
-        // Init rando
-        tools::randomSeed = 0x9e3779b97f4a7c15;
-        randoEnabled = 1;
-        truePause = 1;
-        inputBuffering = 0;
-
-        // Print controls
-        strcpy(sysConsolePtr->consoleLine[20].line, "D-Pad Nav: Up/Down  Left/Right");
-        strcpy(sysConsolePtr->consoleLine[21].line, "+/- Value: A/B/X/Y  Console  :  R + Z");
-        strcpy(sysConsolePtr->consoleLine[22].line, " Generate: R + Start (auto on new file)");
-        strcpy(sysConsolePtr->consoleLine[23].line, "Bring up the console to use commands");
-        strcpy(sysConsolePtr->consoleLine[24].line, "rando.tpspeed.run | Twitter: @ztprandomizer");
-
-        u8 page = 0;
-
-        // General settings
-        hudConsole->addOption(page, "Red:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[0], 0xFF);
-        hudConsole->addOption(page, "Green:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[1], 0xFF);
-        hudConsole->addOption(page, "Blue:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[2], 0xFF);
-        hudConsole->addOption(page, "Alpha:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[3], 0xFF);
-        hudConsole->addOption(page, "True Pause:", &truePause, 0x1);
-        hudConsole->addOption(page, "Input Buffer:", &inputBuffering, 0x1);
-
-        // Seed settings
-        page = hudConsole->addPage("Seed");
-
-        hudConsole->addOption(page, "Rando enabled?", &randoEnabled, 0x1);
-        hudConsole->addOption(page, "Custom Seed?", &customSeed, 0x1);
-        hudConsole->addOption(page, "Seed 1:", &reinterpret_cast<u8*>(&tools::randomSeed)[0], 0xFF);
-        hudConsole->addOption(page, "Seed 2:", &reinterpret_cast<u8*>(&tools::randomSeed)[1], 0xFF);
-        hudConsole->addOption(page, "Seed 3:", &reinterpret_cast<u8*>(&tools::randomSeed)[2], 0xFF);
-        hudConsole->addOption(page, "Seed 4:", &reinterpret_cast<u8*>(&tools::randomSeed)[3], 0xFF);
-
-        hudConsole->addOption(page, "Seed 5:", &reinterpret_cast<u8*>(&tools::randomSeed)[4], 0xFF);
-        hudConsole->addOption(page, "Seed 6:", &reinterpret_cast<u8*>(&tools::randomSeed)[5], 0xFF);
-        hudConsole->addOption(page, "Seed 7:", &reinterpret_cast<u8*>(&tools::randomSeed)[6], 0xFF);
-        hudConsole->addOption(page, "Seed 8:", &reinterpret_cast<u8*>(&tools::randomSeed)[7], 0xFF);
-
-        hudConsole->addWatch(page, "Resulting Seed", &tools::randomSeed, 'x', WatchInterpretation::_u64);
-
-        // Debug
-        page = hudConsole->addPage("Debug Info");
-        
-        hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
-        hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
-        hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);    
-        hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);
-        hudConsole->addOption(page, "Keysanity?", &chestRandomizer->isKeysanityEnabled, 0x1);
-        hudConsole->addOption(page, "Skybooksanity?", &Singleton::getInstance()->shuffledSkybook, 0x1);
-        
-        hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "  Source:", &chestRandomizer->lastSourceInfo, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "    Dest:", &chestRandomizer->lastDestInfo, 's', WatchInterpretation::_str);
-
-        hudConsole->addWatch(page, "Total Checks:", &chestRandomizer->totalChecks, 'u', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "Layer Checks:", &chestRandomizer->layerCheckCount, 'u', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "Empty:", &chestRandomizer->empty, 'u', WatchInterpretation::_u16);
-
-        hudConsole->addWatch(page, "Active Seed:", &chestRandomizer->currentSeed, 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "   Checksum:", &chestRandomizer->checkSum, 'x', WatchInterpretation::_u16);
-
-
-        // Item search
-        page = hudConsole->addPage("Item Search");
-
-        hudConsole->addOption(page, "Search ID:", &itemSearchID, 0xFF);
-        hudConsole->addOption(page, "Reverse ID:", &itemReverseSearchID, 0xFF);
-
-        hudConsole->addWatch(page, "Search Result:", &itemSearchResults, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "Reverse Result:", &itemReverseSearchResults, 's', WatchInterpretation::_str);
-
-        hudConsole->addWatch(page, "MetadataID:", &lastItemDataID, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "MetadataX:", &lastItemDataX, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "MetadataY:", &lastItemDataY, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "MetadataZ:", &lastItemDataZ, 's', WatchInterpretation::_str);
-        
-        // Check search
-        page = hudConsole->addPage("Check Search");
-
-        hudConsole->addOption(page, "Search ID1:", &checkSearchID1, 0xFF);
-        hudConsole->addOption(page, "Search ID2:", &checkSearchID2, 0xFF);
-        hudConsole->addOption(page, "Reverse ID1:", &checkReverseSearchID1, 0xFF);
-        hudConsole->addOption(page, "Reverse ID2:", &checkReverseSearchID2, 0xFF);
-
-        hudConsole->addWatch(page, "Search ID:", &checkSearchID, 'd', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "Reverse ID:", &checkReverseSearchID, 'd', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "Search Result:", &checkSearchResults, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "Reverse Result:", &checkReverseSearchResults, 's', WatchInterpretation::_str);
-        
-        
-        // Game info
-        page = hudConsole->addPage("Game Info");
-        
-        hudConsole->addOption(page, "MDH skip?", &Singleton::getInstance()->isMDHSkipEnabled, 0x1);
-        hudConsole->addOption(page, "Faron Escape?", &Singleton::getInstance()->isForestEscapeEnabled, 0x1);
-        hudConsole->addOption(page, "open HF gates?", &Singleton::getInstance()->isGateUnlockEnabled, 0x1);
-        hudConsole->addOption(page, "Skip Twilight?", &chestRandomizer->isTwilightSkipEnabled, 0x1);
-        hudConsole->addOption(page, "skip goats1&2?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
-        hudConsole->addOption(page, "skip MS puzzle?", &Singleton::getInstance()->isMSPuzzleSkipEnabled, 0x1);
-        hudConsole->addOption(page, "Skip Escort?", &Singleton::getInstance()->isCartEscortSkipEnabled, 0x1);
-        hudConsole->addOption(page, "Skip Sewers?", &Singleton::getInstance()->isSewerSkipEnabled, 0x1);
-        hudConsole->addOption(page, "Coords as hex?", &coordsAreInHex, 0x1);
-        
-        hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "CurrentState:", &tp::d_com_inf_game::current_state, 'x', WatchInterpretation::_u8);
-        
-        hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "CurrentAngle:", &linkAngle, 's', WatchInterpretation::_str);    
-        hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);            
-        
-        //event info
-        page = hudConsole->addPage("Event Info");
-        
-        /*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
-        hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
-        hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
-        hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only
-        hudConsole->addOption(page, "Unused Slot:", &gameInfo.scratchPad.itemWheel.Item_Slot, 0xFF); //for testing only
-        hudConsole->addOption(page, "Form:", &gameInfo.scratchPad.form, 0x1); //for testing only*/
-        hudConsole->addOption(page, "Fast transform?", &enableQuickTransform, 0x1);
-        hudConsole->addOption(page, "no bottle req?", &allowBottleItemsShopAnytime, 0x1);
-        hudConsole->addOption(page, "Early CiTS?", &Singleton::getInstance()->isEarlyCiTSEnabled, 0x1);
-        hudConsole->addOption(page, "Early Desert?", &Singleton::getInstance()->isEarlyDesertEnabled, 0x1);
-        hudConsole->addOption(page, "Boss Keysey?", &Singleton::getInstance()->isBossKeyseyEnabled, 0x1);
-                
-        hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
-        hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
-        
-        //color
-        /*page = hudConsole->addPage("Tunic Color");
-        
-        hudConsole->addOption(page, "Top toggle:", &topToggle, 0x1);
-        hudConsole->addOption(page, "Red top:", &redTop, 0xFF);
-        hudConsole->addOption(page, "Green top:", &greenTop, 0xFF);
-        hudConsole->addOption(page, "Blue top:", &blueTop, 0xFF);
-        hudConsole->addOption(page, "Bottom toggle:", &bottomToggle, 0x1);
-        hudConsole->addOption(page, "Red bottom:", &redBottom, 0xFF);
-        hudConsole->addOption(page, "Green bottom:", &greenBottom, 0xFF);
-        hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF);*/
-        
-        //buttons
-        /*page = hudConsole->addPage("Button texts");
-        
-        hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
-        hudConsole->addOption(page, "Y button:", &gameInfo.yButtonText, 0xFF);
-        hudConsole->addOption(page, "X button:", &gameInfo.xButtonText, 0xFF);
-        hudConsole->addOption(page, "B button:", &gameInfo.bButtonText, 0xFF);
-        hudConsole->addOption(page, "R button:", &gameInfo.rButtonText, 0xFF);
-        hudConsole->addOption(page, "stick button:", &gameInfo.stickButtonText, 0xFF);
-        hudConsole->addOption(page, "start button:", &gameInfo.startButtonText, 0xFF);
-        hudConsole->addOption(page, "C button:", &gameInfo.cButtonText, 0xFF);
-        hudConsole->addOption(page, "X item:", &gameInfo.xItem, 0xFF);
-        hudConsole->addOption(page, "Y item:", &gameInfo.yItem, 0xFF);
-        hudConsole->addWatch(page, "A button:", &gameInfo.aButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "Y button:", &gameInfo.yButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "X button:", &gameInfo.xButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "B button:", &gameInfo.bButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "R button:", &gameInfo.rButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "stick:", &gameInfo.stickButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "start button:", &gameInfo.startButtonText, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "C button:", &gameInfo.cButtonText, 'x', WatchInterpretation::_u8);*/
-
-        //local area
-        /*page = hudConsole->addPage("Local Area 1");
-        hudConsole->addOption(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[0x3], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[0x4], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[0x5], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[0x6], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[0x7], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[0x8], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[0x9], 0xFF); //for testing only        
-        hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0x0], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[0x1], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[0x2], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[0x3], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[0x4], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[0x5], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[0x6], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[0x7], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[0x8], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[0x9], 'x', WatchInterpretation::_u8);
-        page = hudConsole->addPage("Local Area 2");
-        hudConsole->addOption(page, "AreaNodesA:", &gameInfo.localAreaNodes.unk_0[0xA], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodesB:", &gameInfo.localAreaNodes.unk_0[0xB], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodesC:", &gameInfo.localAreaNodes.unk_0[0xC], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodesD:", &gameInfo.localAreaNodes.unk_0[0xD], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodesE:", &gameInfo.localAreaNodes.unk_0[0xE], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodesF:", &gameInfo.localAreaNodes.unk_0[0xF], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[0x10], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[0x11], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[0x12], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[0x13], 0xFF); //for testing only    
-        hudConsole->addWatch(page, "AreaNodesA:", &gameInfo.localAreaNodes.unk_0[0xA], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodesB:", &gameInfo.localAreaNodes.unk_0[0xB], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodesC:", &gameInfo.localAreaNodes.unk_0[0xC], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodesD:", &gameInfo.localAreaNodes.unk_0[0XD], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodesE:", &gameInfo.localAreaNodes.unk_0[0xE], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodesF:", &gameInfo.localAreaNodes.unk_0[0xF], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[0x10], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[0x11], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[0x12], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[0x13], 'x', WatchInterpretation::_u8);
-        page = hudConsole->addPage("Local Area 3");
-        hudConsole->addOption(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[0x14], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[0x15], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[0x16], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[0x17], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[0x18], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[0x19], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes1A:", &gameInfo.localAreaNodes.unk_0[0x1A], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes1B:", &gameInfo.localAreaNodes.unk_0[0x1B], 0xFF); //for testing only
-        hudConsole->addOption(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 0xFF); //for testing only
-        hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes1A:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes1B:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
-        page = hudConsole->addPage("Local Area 4");
-        hudConsole->addOption(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 0xFF); //for testing only
-        hudConsole->addOption(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 0xFF); //for testing only
-        hudConsole->addWatch(page, "AreaNodes1E:", &gameInfo.localAreaNodes.unk_1E[0x0], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes1F:", &gameInfo.localAreaNodes.unk_1E[0x1], 'x', WatchInterpretation::_u8);
-
-        page = hudConsole->addPage("dungeon flags");
-
-        hudConsole->addOption(page, "Dungeon flag8:", &dungeonFlagsView1, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag7:", &dungeonFlagsView2, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag6:", &dungeonFlagsView3, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag5:", &dungeonFlagsView4, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag4:", &dungeonFlagsView5, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag3:", &dungeonFlagsView6, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag2:", &dungeonFlagsView7, 0x1); //for testing only
-        hudConsole->addOption(page, "Dungeon flag1:", &dungeonFlagsView8, 0x1); //for testing only
-        
-        hudConsole->addOption(page, "edit flags:", &dungeonFlagsViewEdit, 0x1); //for testing only
-        
-        
-        hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);*/
-        
-        /*page = hudConsole->addPage("event bits 1");
-        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
-        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
-        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
-        hudConsole->addWatch(page, "bits0to7:", &gameInfo.scratchPad.eventBits[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits8toF:", &gameInfo.scratchPad.eventBits[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits10to17:", &gameInfo.scratchPad.eventBits[0x10], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits18to1F:", &gameInfo.scratchPad.eventBits[0x18], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits20to27:", &gameInfo.scratchPad.eventBits[0x20], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits28to2F:", &gameInfo.scratchPad.eventBits[0x28], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits30to37:", &gameInfo.scratchPad.eventBits[0x30], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits38to3F:", &gameInfo.scratchPad.eventBits[0x38], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits40to47:", &gameInfo.scratchPad.eventBits[0x40], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits48to4F:", &gameInfo.scratchPad.eventBits[0x48], 'x', WatchInterpretation::_u64);
-        page = hudConsole->addPage("event bits 2");
-        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
-        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
-        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
-        hudConsole->addWatch(page, "bits50to57:", &gameInfo.scratchPad.eventBits[0x50], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits58to5F:", &gameInfo.scratchPad.eventBits[0x58], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits60to67:", &gameInfo.scratchPad.eventBits[0x60], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits68to6F:", &gameInfo.scratchPad.eventBits[0x68], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits70to77:", &gameInfo.scratchPad.eventBits[0x70], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits78to7F:", &gameInfo.scratchPad.eventBits[0x78], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits80to87:", &gameInfo.scratchPad.eventBits[0x80], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits88to8F:", &gameInfo.scratchPad.eventBits[0x88], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits90to97:", &gameInfo.scratchPad.eventBits[0x90], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits98to9F:", &gameInfo.scratchPad.eventBits[0x98], 'x', WatchInterpretation::_u64);
-        page = hudConsole->addPage("event bits 3");
-        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
-        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
-        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
-        hudConsole->addWatch(page, "bitsA0toA7:", &gameInfo.scratchPad.eventBits[0xA0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsA8toAF:", &gameInfo.scratchPad.eventBits[0xA8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsB0toB7:", &gameInfo.scratchPad.eventBits[0xB0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsB8toBF:", &gameInfo.scratchPad.eventBits[0xB8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsC0toC7:", &gameInfo.scratchPad.eventBits[0xC0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsC8toCF:", &gameInfo.scratchPad.eventBits[0xC8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsD0toD7:", &gameInfo.scratchPad.eventBits[0xD0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsD8toDF:", &gameInfo.scratchPad.eventBits[0xD8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsE0toE7:", &gameInfo.scratchPad.eventBits[0xE0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsE8toEF:", &gameInfo.scratchPad.eventBits[0xE8], 'x', WatchInterpretation::_u64);
-        page = hudConsole->addPage("event bits 4");
-        hudConsole->addOption(page, "flag to edit:", &eventFlagToEdit, 0xFF); //for testing only
-        hudConsole->addOption(page, "new value:", &newValueForEventFlag, 0xFF); //for testing only
-        hudConsole->addOption(page, "trigger edit:", &triggerEventFlagEdit, 0x1); //for testing only  
-        hudConsole->addWatch(page, "bitsF0toF7:", &gameInfo.scratchPad.eventBits[0xF0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bitsF8toFF:", &gameInfo.scratchPad.eventBits[0xF8], 'x', WatchInterpretation::_u64);  
-        hudConsole->addWatch(page, "bits100to107:", &gameInfo.scratchPad.eventBits[0x100], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits108to10F:", &gameInfo.scratchPad.eventBits[0x108], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits110to117:", &gameInfo.scratchPad.eventBits[0x110], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits118to11F:", &gameInfo.scratchPad.eventBits[0x118], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits120to127:", &gameInfo.scratchPad.eventBits[0x120], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits128to12F:", &gameInfo.scratchPad.eventBits[0x128], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits130to137:", &gameInfo.scratchPad.eventBits[0x130], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits138to13F:", &gameInfo.scratchPad.eventBits[0x138], 'x', WatchInterpretation::_u64);
-        page = hudConsole->addPage("event bits 5");
-        hudConsole->addWatch(page, "bits140to147:", &gameInfo.scratchPad.eventBits[0x140], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "bits148to14F:", &gameInfo.scratchPad.eventBits[0x148], 'x', WatchInterpretation::_u64);  
-        hudConsole->addWatch(page, "minigame0to7:", &gameInfo.scratchPad.miniGameBits[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "minigame8toF:", &gameInfo.scratchPad.miniGameBits[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "minigame10to17:", &gameInfo.scratchPad.miniGameBits[0x10], 'x', WatchInterpretation::_u64);*/
-        
-        // save load
-        /*page = hudConsole->addPage("Save load");
-        
-        hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
-        hudConsole->addOption(page, "room:", &room, 60); //for testing only
-        hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
-        hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-        hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
-        
-        /*page = hudConsole->addPage("testing adr1");
-        
-        
-        hudConsole->addWatch(page, "D:", &gameInfo.scratchPad.equipedItems.unk, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "17:", &gameInfo.scratchPad.unk_17[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "1A:", &gameInfo.scratchPad.unk_1A[0x0], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "1F:", &gameInfo.scratchPad.unk_1F[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "27:", &gameInfo.scratchPad.unk_1F[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "2F:", &gameInfo.scratchPad.unk_1F[0x10], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "32:", &gameInfo.scratchPad.unk_32[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "38:", &gameInfo.scratchPad.unk_38[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "62:", &gameInfo.scratchPad.movingActors.link.unk_62[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "7A:", &gameInfo.scratchPad.movingActors.unk_7A[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
-        
-        page = hudConsole->addPage("testing adr2");
-        
-        hudConsole->addWatch(page, "7E:", &gameInfo.scratchPad.movingActors.unk_7E[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "99:", &gameInfo.scratchPad.unk_99[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
-        hudConsole->addWatch(page, "F0:", &gameInfo.scratchPad.ammo.unk_F0, 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "F5:", &gameInfo.scratchPad.ammo.unk_F5, 'x', WatchInterpretation::_u32);//actual size:0x3
-        hudConsole->addWatch(page, "FC:", &gameInfo.scratchPad.unk_FC[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "104:", &gameInfo.scratchPad.unk_FC[0x8], 'x', WatchInterpretation::_u64);//actual size:0x5
-        hudConsole->addWatch(page, "10B:", &gameInfo.scratchPad.unk_10B, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "10D:", &gameInfo.scratchPad.unk_10D[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
-        hudConsole->addWatch(page, "115:", &gameInfo.scratchPad.unk_115[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
-        hudConsole->addWatch(page, "120:", &gameInfo.scratchPad.unk_120[0x0], 'x', WatchInterpretation::_u64);//actual size:0x6
-        
-        page = hudConsole->addPage("testing adr2");
-        
-        hudConsole->addWatch(page, "128:", &gameInfo.scratchPad.unk_128[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "130:", &gameInfo.scratchPad.unk_128[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "138:", &gameInfo.scratchPad.unk_128[0x10], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "140:", &gameInfo.scratchPad.unk_128[0x18], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "148:", &gameInfo.scratchPad.unk_128[0x20], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "150:", &gameInfo.scratchPad.unk_128[0x28], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "158:", &gameInfo.scratchPad.unk_128[0x30], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "160:", &gameInfo.scratchPad.unk_128[0x38], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "168:", &gameInfo.scratchPad.unk_128[0x40], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "178:", &gameInfo.scratchPad.fishingJournal.unk_178[0x0], 'x', WatchInterpretation::_u64);
-        
-        page = hudConsole->addPage("testing adr3");
-        
-        hudConsole->addWatch(page, "180:", &gameInfo.scratchPad.fishingJournal.unk_178[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "188:", &gameInfo.scratchPad.fishingJournal.unk_178[0x10], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "192:", &gameInfo.scratchPad.unk_192[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "19A:", &gameInfo.scratchPad.unk_192[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1A2:", &gameInfo.scratchPad.unk_192[0x10], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1AA:", &gameInfo.scratchPad.unk_192[0x18], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1B2:", &gameInfo.scratchPad.unk_192[0x20], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "1C4:", &gameInfo.scratchPad.unk_1C4, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "1D5:", &gameInfo.scratchPad.unk_1D5[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1DD:", &gameInfo.scratchPad.unk_1D5[0x8], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "1E4:", &gameInfo.scratchPad.unk_1E4[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1EC:", &gameInfo.scratchPad.unk_1E4[0x8], 'x', WatchInterpretation::_u32);*/
-        
-        // Print
-        hudConsole->draw();
-        system_console::setState(true, 0);
-
-        //   =================
-        //  | Custom events   |
-        //   =================
-
-        // Generate random data when a new game starts
-        eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x1, 0x15, 0xFF, 0xFF, tools::triggerRandomGenerator, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // Skip sewers when the load happens
-        eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x0, 0x18, 0xFF, 0xFF, game_patch::skipSewers, event::LoadEventAccuracy::Stage_Room_Spawn);
-
-        // Fix BiTE
-        eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x0, 0x17, 0xFF, 0xFF, game_patch::giveEpona, event::LoadEventAccuracy::Stage_Room_Spawn);
-
-        // Kill spider at Link's house
-        eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0xFF, 0xFF, 0xFF, game_patch::killLinkHouseSpider, event::LoadEventAccuracy::Stage_Room);
-
-        // Skip MDH when the load happens
-        eventListener->addLoadEvent(stage::allStages[Stage_Castle_Town_Interiors], 0x6, 0xC, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        //unlock HF gates
-        eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::unlockHFGates, event::LoadEventAccuracy::Stage);    
-
-        //skip goats 1 & 2
-        eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x3, 0xFF, 0xFF, game_patch::skipGoats, event::LoadEventAccuracy::Stage_Room_Spawn);    
-
-        // Set Bublin Camp State
-        eventListener->addLoadEvent(stage::allStages[Stage_Bublin_Camp], 0xFF, 0xFF, 0x1, 0xFF, game_patch::setBublinState, event::LoadEventAccuracy::Stage_Room_Spawn);
-
-        //skip MS Puzzle
-        eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::skipGrovePuzzle, event::LoadEventAccuracy::Stage);
-
-        // skip Cart Escort
-        eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xC, 0x2, 0xFF, 0xFF, game_patch::skipCartEscort, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // Fix Lanayru Softlock
-        eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x0, 0x5, 0xE, 0xFF, game_patch::setLanayruWolf, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // Set the state of Faron if the player decides to do lanayru twilight before faron
-        eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0x0, 0xFF, game_patch::fixLanayruFaron, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // Sets the flags to open up the game
-        eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0x15, 0xFF, 0xFF, game_patch::unlockBossDoors, event::LoadEventAccuracy::Stage_Room);
-        
-        // early CiTS
-        eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::earlyCiTS, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // early Desert
-        eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::earlyDesert, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // desert Access
-        eventListener->addLoadEvent(stage::allStages[Stage_Gerudo_Desert], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::accessDesert, event::LoadEventAccuracy::Stage_Room_Spawn);
-        
-        // sell water bombs if you skip the escort
-        eventListener->addLoadEvent(stage::allStages[Stage_Kakariko_Village], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::sellWaterBombs, event::LoadEventAccuracy::Stage_Room_Spawn);
-
-        //   =================
-        //  | Function Hooks  |
-        //   =================
-
-        fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
-            []()
-            {
-                global::modPtr->procNewFrame();
-            }
-        );
-        
-        // Hook actor init function to use as a timing for placing custom chests as this function only creates actors at
-        // specific times
-        actorCommonLayerInit_trampoline = patch::hookFunction(tp::d_stage::actorCommonLayerInit,
-            [](void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4)
-            {
-                global::modPtr->doCustomTRESActor(mStatus_roomControl);
-                return global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, chunkTypeInfo, unk3, unk4);
-            }
-        );
-
-
-        checkTreasureRupeeReturn_trampoline = patch::hookFunction(tp::d_a_alink::checkTreasureRupeeReturn,
-            [](void* unk1, s32 item)
-            {
-                return global::modPtr->procCheckTreasureRupeeReturn(unk1, item);
-            }
-        );
-
-        createItemForPresentDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForPresentDemo,
-            [](const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const s16 rot[3], const float scale[3])
-            {
-                // Call replacement function
-                /*char txt[50];
-                snprintf(txt, 50, "0 = %f 1 = %f 2 = %f", pos[0], pos[1], pos[2]);
-                strcpy(sysConsolePtr->consoleLine[20].line, txt);*/
-                
-                
-                item = global::modPtr->procItemCreateFunc(pos, item, "createItemForPresentDemo");
-
-                return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk3, unk4, unk5, rot, scale);
-            }
-        );
-            
-
-        createItemForTrBoxDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
-            [](const float pos[3], s32 item, s32 itemPickupFlag, s32 roomNo, const s16 rot[3], const float scale[3])
-            {
-                // Call replacement function
-                item = global::modPtr->procItemCreateFunc(pos, item, "createItemForTrBoxDemo");
-
-                return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, itemPickupFlag, roomNo, rot, scale);
-            }
-        );        
-        
-        //this function is called when the heart spawns, not when link gets it        
-        //createItemForTrBoxDemo is called when heart container is gotten
-        createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
-            [](const float pos[3], s32 item, s32 roomNo, const s16 rot[3], const float scale[3], float unk6, float unk7, s32 parameters)
-            {
-                // Call replacement function
-                item = global::modPtr->procItemCreateFunc(pos, item, "createItemForBoss");
-
-                return global::modPtr->createItemForBoss_trampoline(pos, item, roomNo, rot, scale, unk6, unk7, parameters);
-            }
-        );
-
-        createItemForMidBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForMidBoss,
-            [](const float pos[3], s32 item, s32 roomNo, const s16 rot[3], const float scale[3], s32 unk6, s32 itemPickupFlag)
-            {
-                // Call replacement function
-                item = global::modPtr->procItemCreateFunc(pos, item, "createItemForMidBoss");
-
-                return global::modPtr->createItemForMidBoss_trampoline(pos, item, roomNo, rot, scale, unk6, itemPickupFlag);
-            }
-        );
-
-        createItemForDirectGet_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForDirectGet,
-            [](const float pos[3], s32 item, s32 unk3, const s16 rot[3], const float scale[3], float unk6, float unk7)
-            {
-                // Call replacement function
-                item = global::modPtr->procItemCreateFunc(pos, item, "createItemForDirectGet");
-
-                return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, rot, scale, unk6, unk7);
-            }
-        );
-
-        createItemForSimpleDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForSimpleDemo,
-            [](const float pos[3], s32 item, s32 unk3, const s16 rot[3], const float scale[3], float unk6, float unk7)
-            {
-                // Call replacement function
-                item = global::modPtr->procItemCreateFunc(pos, item, "createItemForSimpleDemo");
-
-                return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, rot, scale, unk6, unk7);
-            }
-        );
-
-        evt_control_Skipper_trampoline = patch::hookFunction(tp::evt_control::skipper,
-            [](void* evtPtr)
-            {
-                return global::modPtr->procEvtSkipper(evtPtr);
-            }
-        );
-
-        query022_trampoline = patch::hookFunction(tp::d_msg_flow::query022,
-            [](void* unk1, void* unk2, s32 unk3)
-            {
-                return global::modPtr->proc_query022(unk1, unk2, unk3);
-            }
-        );
-
-        do_link_trampoline = patch::hookFunction(tp::dynamic_link::do_link,
-            [](tp::dynamic_link::DynamicModuleControl* dmc)
-            {
-                return global::modPtr->procDoLink(dmc);
-            }
-        );
-
-        item_func_UTUWA_HEART_trampoline = patch::hookFunction(tp::d_item::item_func_UTUWA_HEART,
-            []()
-            {
-                return global::modPtr->procItem_func_UTUWA_HEART();
-            }
-        );
-        
-        
-        setItemBombNumCount_trampoline = patch::hookFunction(tp::d_com_inf_game::setItemBombNumCount,
-            [](u32 unk1, u8 bagNb, short amount)
-            {
-                u8 bombtype = 0;
-                if (bagNb == 0)
-                {
-                    bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
-                }
-                else if (bagNb == 1)
-                {
-                    bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
-                }
-                else if (bagNb == 2)
-                {
-                    bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
-                }
-                char txt[50];
-                snprintf(txt, 50, "bag = %x amount = %d type = %x", bagNb, amount, bombtype);
-                strcpy(sysConsolePtr->consoleLine[20].line, txt);
-                
-                /*u8 itemID = 0x0;
-                if (bombtype == items::Item::Bomb_Bag_Regular_Bombs)
-                {
-                    if (amount == 5)
-                    {
-                        itemID = items::Item::Bombs_5;
-                    }
-                    else if (amount == 10)
-                    {
-                        itemID = items::Item::Bombs_10;
-                    }
-                    else if (amount == 20)
-                    {
-                        itemID = items::Item::Bombs_20;
-                    }
-                    else if (amount == 30)
-                    {
-                        itemID = items::Item::Bombs_30;
-                    }
-                }
-                else if (bombtype == items::Item::Bomb_Bag_Water_Bombs)
-                {
-                    if (amount == 3)
-                    {
-                        itemID = items::Item::Water_Bombs_3;
-                    }
-                    else if (amount == 5)
-                    {
-                        itemID = items::Item::Water_Bombs_5;
-                    }
-                    else if (amount == 10)
-                    {
-                        itemID = items::Item::Water_Bombs_10;
-                    }
-                    else if (amount == 15)
-                    {
-                        itemID = items::Item::Water_Bombs_15;
-                    }
-                }
-                else if (bombtype == items::Item::Bomb_Bag_Bomblings)
-                {
-                    if (amount == 1)
-                    {
-                        itemID = items::Item::Bombling_1;
-                    }
-                    else if (amount == 3)
-                    {
-                        itemID = items::Item::Bomblings_3;
-                    }
-                    else if (amount == 5)
-                    {
-                        itemID = items::Item::Bomblings_5;
-                    }
-                    else if (amount == 10)
-                    {
-                        itemID = items::Item::Bomblings_10;
-                    }
-                }
-                
-                
-                float linkPos[3];
-                getPlayerPos(linkPos);
-                
-                const float zero[3] = {0.0f,0.0f,0.0f};
-                
-                amount = 0;
-                
-                tp::f_op_actor_mng::createItemForPresentDemo(linkPos, itemID, 0, -1, -1, zero, zero);*/
-                
-                return global::modPtr->setItemBombNumCount_trampoline(unk1, bagNb, amount);
-            }
-        );
-    }
-
-    void Mod::procNewFrame()
-    {
-        float linkPos[3];
-        getPlayerPos(linkPos);
-        
-        if (coordsAreInHex == 1)
-        {
-            typeTransform<float, u32> x = {linkPos[0]};
-            typeTransform<float, u32> y = {linkPos[1]};
-            typeTransform<float, u32> z = {linkPos[2]};
-
-            snprintf(currentPosX, 30, "%04x", x.b);
-            snprintf(currentPosY, 30, "%04x", y.b);
-            snprintf(currentPosZ, 30, "%04x", z.b);
-            
-            snprintf(linkAngle, 30, "%02x", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
-        }
-        else 
-        {
-            snprintf(currentPosX, 30, "%f", linkPos[0]);
-            snprintf(currentPosY, 30, "%f", linkPos[1]);
-            snprintf(currentPosZ, 30, "%f", linkPos[2]);
-            
-            snprintf(linkAngle, 30, "%d", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
-        }
-        
-        snprintf(skyAngle, 30, "%f", gameInfo.scratchPad.skyAngle);
-        
-        
-        if (gameInfo.ColorPtr != nullptr)
-        {
-            if (topToggle == 0)
-            {
-                gameInfo.ColorPtr->redTopToggle = 0x4;
-                gameInfo.ColorPtr->greenTopToggle = 0x4;
-                gameInfo.ColorPtr->blueTopToggle = 0x4;
-            }
-            else
-            {
-                gameInfo.ColorPtr->redTopToggle = 0x0;
-                gameInfo.ColorPtr->greenTopToggle = 0x0;
-                gameInfo.ColorPtr->blueTopToggle = 0x0;
-            }
-            gameInfo.ColorPtr->redTop = redTop;
-            gameInfo.ColorPtr->greenTop = greenTop;
-            gameInfo.ColorPtr->blueTop = blueTop;
-            if (bottomToggle == 0)
-            {
-                gameInfo.ColorPtr->redBottomToggle = 0x4;
-                gameInfo.ColorPtr->greenBottomToggle = 0x4;
-                gameInfo.ColorPtr->blueBottomToggle = 0x4;
-            }
-            else
-            {
-                gameInfo.ColorPtr->redBottomToggle = 0x0;
-                gameInfo.ColorPtr->greenBottomToggle = 0x0;
-                gameInfo.ColorPtr->blueBottomToggle = 0x0;
-            }
-            gameInfo.ColorPtr->redBottom = redBottom;
-            gameInfo.ColorPtr->greenBottom = greenBottom;
-            gameInfo.ColorPtr->blueBottom = blueBottom;
-        }
-        
-        if (triggerEventFlagEdit == 1)
-        {
-            triggerEventFlagEdit = 0;
-            gameInfo.scratchPad.eventBits[eventFlagToEdit] = newValueForEventFlag;
-        }
-        
-        if (trigerLoadSave == 1){
-            trigerLoadSave = 0;
-            tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
-        }
-            
-        
-        if (!tools::checkItemFlag(ItemFlags::Orange_Rupee))
-        {//remove the item get animations for floor pickups (except silver rupee)
-            u32 loopAmount = sizeof(item::itemGetAnimationFlags) / sizeof(item::itemGetAnimationFlags[0]);
-            for (u32 i = 0; i < loopAmount; i++)
-            {
-                tools::setItemFlag(static_cast<ItemFlags>(item::itemGetAnimationFlags[i]));
-            }
-        }
-        
-        if (enableNormalTime == 0 && setDay == 0)
-        {//set night
-            gameInfo.scratchPad.skyAngle = 0;
-        }
-        else if (enableNormalTime == 0 && setDay == 1)
-        {//set day
-            gameInfo.scratchPad.skyAngle = 180;
-        }
-        // Increment seed
-        if(!customSeed)
-        {
-            tools::getRandom(0);
-        }
-        
-        // If loading has started check for LoadEvents
-        if(isLoading)
-        {
-            eventListener->checkLoadEvents();
-        }
-
-        if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
-        {
-            // Toggle console            
-            system_console::setState(!sysConsolePtr->consoleEnabled, 0);
-        }
-        else if(enableQuickTransform == 1 && gameInfo.rButtonText == 0 && gameInfo.eventSystem.eventFlag == 0 && 
-        (gameInfo.aButtonText == 0x79 || gameInfo.aButtonText == 0x0 || gameInfo.aButtonText == 0x4 || gameInfo.aButtonText == 0x9) && 
-        (gameInfo.scratchPad.eventBits[0xD] & 0x4) != 0 && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R))
-        {                
-            // Make sure Link is actually loaded
-            tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
-            if (linkMapPtr)
-            {
-                if (!((linkMapPtr->isTargeting & 0x400000) != 0 && gameInfo.scratchPad.form == 0))
-                {
-                    // Transform
-                    tp::d_a_alink::procCoMetamorphoseInit(linkMapPtr);
-                }
-            }
-        }
-
-        if(sysConsolePtr->consoleEnabled)
-        {
-            if(controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Start)))
-            {
-                if (customSeed == 0)
-                {    
-                    u16 lastCheckSum = chestRandomizer->checkSum;
-                    do
-                    {
-                        chestRandomizer->generate();
-                    }
-                    while (chestRandomizer->checkSum == lastCheckSum);
-                }
-                else
-                {
-                    chestRandomizer->generate();
-                }
-            }
-
-            // Parse inputs of this frame
-            switch(tp::m_do_controller_pad::cpadInfo.buttonInputTrg)
-            {
-                case controller::PadInputs::Button_A:
-                    hudConsole->performAction(ConsoleActions::Option_Increase);
-                break;
-
-                case controller::PadInputs::Button_X:
-                    hudConsole->performAction(ConsoleActions::Option_Increase, 0x10);
-                break;
-
-                case controller::PadInputs::Button_B:
-                    hudConsole->performAction(ConsoleActions::Option_Decrease);
-                break;
-
-                case controller::PadInputs::Button_Y:
-                    hudConsole->performAction(ConsoleActions::Option_Decrease, 0x10);
-                break;
-
-                case controller::PadInputs::Button_DPad_Up:
-                    hudConsole->performAction(ConsoleActions::Move_Up);
-                break;
-
-                case controller::PadInputs::Button_DPad_Down:
-                    hudConsole->performAction(ConsoleActions::Move_Down);
-                break;
-
-                case controller::PadInputs::Button_DPad_Left:
-                    hudConsole->performAction(ConsoleActions::Move_Left);
-                break;
-
-                case controller::PadInputs::Button_DPad_Right:
-                    hudConsole->performAction(ConsoleActions::Move_Right);
-                break;
-            }
-            hudConsole->draw();
-        }
-
-        if(truePause && sysConsolePtr->consoleEnabled)
-        {
-            // Inputs handled, don't pass onto the game
-            tp::f_op_scene_req::freezeActors = 1;
-            tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
-            tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
-        }
-        else
-        {
-            tp::f_op_scene_req::freezeActors = 0;
-        }
-
-        if(itemSearchID != lastItemSearchID)
-        {
-            lastItemSearchID = itemSearchID;
-
-            strcpy(itemSearchResults, "404");
-
-            for(u16 i = 0; i < chestRandomizer->totalChecks; i++)
-            {
-                item::ItemCheck* check = &item::checks[i];
-                if (check->destination)
-                {
-                    if(check->destination->itemID == itemSearchID)
-                    {
-                        // Found the source
-                        snprintf(itemSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
-                    }
-                }
-            }
-        }
-        else if(itemReverseSearchID != lastItemReverseSearchID)
-        {
-            lastItemReverseSearchID = itemReverseSearchID;
-
-            strcpy(itemReverseSearchResults, "404");
-
-            for(u16 i = 0; i < chestRandomizer->totalChecks; i++)
-            {
-                item::ItemCheck* check = &item::checks[i];
-                if (check->source)
-                {
-                    if(check->source->itemID == itemReverseSearchID)
-                    {
-                        // Found the source
-                        snprintf(itemReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
-                    }
-                }
-            }
-        }
-        
-        
-        checkSearchID = (checkSearchID2 * 0x100) + checkSearchID1;
-        checkReverseSearchID = (checkReverseSearchID2 * 0x100) + checkReverseSearchID1;
-        if(checkSearchID != lastCheckSearchID)
-        {
-            lastCheckSearchID = checkSearchID;
-
-            strcpy(checkSearchResults, "404");
-            if (checkSearchID < chestRandomizer->totalChecks)
-            {
-                item::ItemCheck* check = &item::checks[checkSearchID];
-                if (check->source)
-                {
-                    snprintf(checkSearchResults, 40, "ID: %x Stage: %s Room: %d", check->source->itemID, check->source->stage, check->source->room);
-                }
-            }
-        }
-        else if(checkReverseSearchID != lastCheckReverseSearchID)
-        {
-            lastCheckReverseSearchID = checkReverseSearchID;
-
-            strcpy(checkReverseSearchResults, "404");
-
-            if (checkReverseSearchID < chestRandomizer->totalChecks)
-            {
-                item::ItemCheck* check = &item::checks[checkReverseSearchID];
-                if (check->destination)
-                {
-                    snprintf(checkReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->destination->itemID, check->destination->stage, check->destination->room);
-                }
-            }
-        }
-        
-        if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Faron_Woods]))
-        {
-            if (gameInfo.eventSystem.currentEventID == 0xB)
-            {
-                tools::setCutscene(false, false);
-                if (frame_counter == num_frames)
-                {
-                    tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);  // set flag for vessel since we'll skip it by reloading
-                    gameInfo.scratchPad.movingActors.exploredRegions.Eldin = 0b1;  // Set Eldin Map Unlocked so we can warp there
-                    tools::setCutscene(true, false);
-                }
-                else
-                {
-                    frame_counter++;
-                }
-            }
-            else
-            {
-                frame_counter = 0;
-            }
-        }
-
-        if(inputBuffering)
-        {
-            tp::m_do_controller_pad::cpadInfo.buttonInputTrg = tp::m_do_controller_pad::cpadInfo.buttonInput;
-        }
-        
-        if (dungeonFlagsViewEdit == 0)
-        {
-            tp::d_com_inf_game::DungeonFlags* dungeon = &gameInfo.localAreaNodes.dungeon;
-            if (dungeon->miniBossBeaten == 0b0)
-            {
-                dungeonFlagsView1 = 0;
-            }
-            else
-            {
-                dungeonFlagsView1 = 1;
-            }
-            if (dungeon->ooccooGotten == 0b0)
-            {
-                dungeonFlagsView2 = 0;
-            }
-            else
-            {
-                dungeonFlagsView2 = 1;
-            }
-            if (dungeon->bitSix == 0b0)
-            {
-                dungeonFlagsView3 = 0;
-            }
-            else
-            {
-                dungeonFlagsView3 = 1;
-            }
-            if (dungeon->containerGotten == 0b0)
-            {
-                dungeonFlagsView4 = 0;
-            }
-            else
-            {
-                dungeonFlagsView4 = 1;
-            }
-            if (dungeon->bossBeaten == 0b0)
-            {
-                dungeonFlagsView5 = 0;
-            }
-            else
-            {
-                dungeonFlagsView5 = 1;
-            }
-            if (dungeon->bigKeyGotten == 0b0)
-            {
-                dungeonFlagsView6 = 0;
-            }
-            else
-            {
-                dungeonFlagsView6 = 1;
-            }
-            if (dungeon->compassGotten == 0b0)
-            {
-                dungeonFlagsView7 = 0;
-            }
-            else
-            {
-                dungeonFlagsView7 = 1;
-            }
-            if (dungeon->mapGotten == 0b0)
-            {
-                dungeonFlagsView8 = 0;
-            }
-            else
-            {
-                dungeonFlagsView8 = 1;
-            }
-        }
-        else if (dungeonFlagsViewEdit == 1)
-        {
-            tp::d_com_inf_game::DungeonFlags* dungeon = &gameInfo.localAreaNodes.dungeon;
-            if (dungeonFlagsView1 == 0)
-            {
-                dungeon->miniBossBeaten = 0b0;
-            }
-            else
-            {
-                dungeon->miniBossBeaten = 0b1;
-            }
-            if (dungeonFlagsView2 == 0)
-            {
-                dungeon->ooccooGotten = 0b0;
-            }
-            else
-            {
-                dungeon->ooccooGotten = 0b1;
-            }
-            if (dungeonFlagsView3 == 0)
-            {
-                dungeon->bitSix = 0b0;
-            }
-            else
-            {
-                dungeon->bitSix = 0b1;
-            }
-            if (dungeonFlagsView4 == 0)
-            {
-                dungeon->containerGotten = 0b0;
-            }
-            else
-            {
-                dungeon->containerGotten = 0b1;
-            }
-            if (dungeonFlagsView5 == 0)
-            {
-                dungeon->bossBeaten = 0b0;
-            }
-            else
-            {
-                dungeon->bossBeaten = 0b1;
-            }
-            if (dungeonFlagsView6 == 0)
-            {
-                dungeon->bigKeyGotten = 0b0;
-            }
-            else
-            {
-                dungeon->bigKeyGotten = 0b1;
-            }
-            if (dungeonFlagsView7 == 0)
-            {
-                dungeon->compassGotten = 0b0;
-            }
-            else
-            {
-                dungeon->compassGotten = 0b1;
-            }
-            if (dungeonFlagsView8 == 0)
-            {
-                dungeon->mapGotten = 0b0;
-            }
-            else
-            {
-                dungeon->mapGotten = 0b1;
-            }
-        }
-        
-        giveAllScents();
-        
-        giveAllStoryItems();
-        
-        reorderItemWheel();
-        
-        allowShopItemsAnytime();
-        
-        fixYetaAndYeto();
-        
-        fixLBTBossDoor();
-        
-        preventPoweringUpDomRod();
-        
-        // Call original function
-        fapGm_Execute_trampoline();
-    }
-
-    s32 Mod::procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32])
-    {
-        strcpy(lastItemFunc, funcIdentifier);
-        snprintf(lastItemDataID, 5, "0x%02x", item);
-        snprintf(lastItemDataX, 30, "%f", pos[0]);
-        snprintf(lastItemDataY, 30, "%f", pos[1]);
-        snprintf(lastItemDataZ, 30, "%f", pos[2]);
-        // Runs once when Link picks up an item with text and is holding it towards the camera
-        if(randoEnabled && strcmp(funcIdentifier, "createItemForDirectGet") != 0 && strcmp(funcIdentifier, "createItemForBoss") != 0 &&
-        strcmp(funcIdentifier, "createItemForMidBoss") != 0 && strcmp(funcIdentifier, "createItemForSimpleDemo") != 0 )
-        {
-            item = chestRandomizer->getItemReplacement(pos, item);
-        }
-
-        return item;
-    }
-    
-    bool Mod::procCheckTreasureRupeeReturn(void* unk1, s32 item)
-    {
-        // Allow to open
-        return false;
-    }
-
-    s32 Mod::procEvtSkipper(void* evtPtr)
-    {
-        // Runs when the user tries to skip a Cutscene        
-        if(tp::d_a_alink::checkStageName(stage::allStages[Stage_Sacred_Grove]))
-        {
-            // We're at sacred grove
-            if(0x2 == gameInfo.eventSystem.currentEventID)
-            {
-                // Master Sword cutscene
-                tools::setCutscene(true, false, cutscene_skip::onMasterSwordSkip);
-            }
-        }
-        // Call original function
-        return evt_control_Skipper_trampoline(evtPtr);
-    }
-
-    bool Mod::proc_query022(void* unk1, void* unk2, s32 unk3)
-    {
-        // Check to see if currently in one of the Ordon interiors
-        if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Ordon_Interiors]))
-        {
-            // Check to see if ckecking for the Iron Boots
-            u16 item = *reinterpret_cast<u16*>(reinterpret_cast<u32>(unk2) + 0x4);
-
-            if (item == items::Item::Iron_Boots)
-            {
-                // Return false so that the door in Bo's house can be opened without having the Iron Boots
-                return false;
-            }
-        }
-
-        // Call original function
-        return query022_trampoline(unk1, unk2, unk3);
-    }
-    
-    bool Mod::procDoLink(tp::dynamic_link::DynamicModuleControl* dmc)
-    {
-        // Call the original function immediately, as the REL file needs to be linked before applying patches
-        const bool result = do_link_trampoline(dmc);
-
-        // Get the pointer to the current REL file
-        gc::OSModule::OSModuleInfo* moduleInfo = dmc->moduleInfo;
-
-        // Make sure a REL file is actually loaded, as do_link will clear the pointer if something goes wrong
-        if (!moduleInfo)
-        {
-            return result;
-        }
-
-        // Get the REL pointer as a raw u32, to use for overwrites
-        u32 relPtrRaw = reinterpret_cast<u32>(moduleInfo);
-
-        // Modify the current REL file
-        switch (moduleInfo->id) // May want to set up enums or defines for the module ids
-        {
-            case 0x121: // d_a_npc_bouS.rel - Inside Bo's house
-            {
-                // Prevent Bo from talking after the chest has been opened
-                *reinterpret_cast<u32*>(relPtrRaw + 0x1A44) = 0x48000028; // b 0x28
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    void Mod::procItem_func_UTUWA_HEART()
-    {
-        /* Call the original function immediately, as the heart container flag 
-            for the current area needs to be set before making any adjustments */
-        item_func_UTUWA_HEART_trampoline();
-        
-        // Clear the heart container flag if not currently in a boss room
-        if (!chestRandomizer->isStageBoss())
-        {
-            gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
-        }
-    }
-    
-    void Mod::giveAllScents()
-    {
-        u8* scent = &gameInfo.scratchPad.equipedItems.scent;
-        
-        //code to have all scents at once you need to unlock them tho
-        if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Youths_Scent) && tp::d_kankyo::env_light.currentRoom == 3)
-            {
-                *scent = items::Item::Youths_Scent;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Ilias_Scent) && 
-            (tp::d_kankyo::env_light.currentRoom == 9 || tp::d_kankyo::env_light.currentRoom == 10))
-            {
-                *scent = items::Item::Ilias_Scent;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Village]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Youths_Scent))
-            {
-                *scent = items::Item::Youths_Scent;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Ilias_Scent) && tp::d_kankyo::env_light.currentRoom == 8)
-            {
-                *scent = items::Item::Ilias_Scent;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Medicine_Scent))
-            {
-                *scent = items::Item::Medicine_Scent;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Ilias_Scent))
-            {
-                *scent = items::Item::Ilias_Scent;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Reekfish_Scent))
-            {
-                *scent = items::Item::Reekfish_Scent;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Arbiters_Grounds]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Poe_Scent))
-            {
-                *scent = items::Item::Poe_Scent;
-            }
-        }
-        else
-        {
-            if (tools::checkItemFlag(ItemFlags::Medicine_Scent))
-            {
-                *scent = items::Item::Medicine_Scent;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Reekfish_Scent))
-            {
-                *scent = items::Item::Reekfish_Scent;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Poe_Scent))
-            {
-                *scent = items::Item::Poe_Scent;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Ilias_Scent))
-            {
-                *scent = items::Item::Ilias_Scent;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Youths_Scent))
-            {
-                *scent = items::Item::Youths_Scent;
-            }
-            
-        }
-    }
-    
-    void Mod::giveAllStoryItems()
-    {
-        tp::d_com_inf_game::ItemSlots* itemWheel = &gameInfo.scratchPad.itemWheel;
-        
-        if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Lake_Hylia]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Aurus_Memo))
-            {
-                itemWheel->Story = items::Item::Aurus_Memo;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Graveyard]) || 
-        tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
-            {
-                itemWheel->Story = items::Item::Asheis_Sketch;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Interiors]) && tp::d_kankyo::env_light.currentRoom == 0)
-        {
-            if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
-            {
-                itemWheel->Story = items::Item::Ilias_Charm;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
-            {
-                itemWheel->Story = items::Item::Wooden_Statue;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
-            {
-                itemWheel->Story = items::Item::Renardos_Letter;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]) && tp::d_kankyo::env_light.currentRoom == 3)
-        {
-            if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
-            {
-                itemWheel->Story = items::Item::Wooden_Statue;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Shops]) && tp::d_kankyo::env_light.currentRoom == 2)
-        {
-            if (tools::checkItemFlag(ItemFlags::Invoice))
-            {
-                itemWheel->Story = items::Item::Invoice;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Interiors]) && tp::d_kankyo::env_light.currentRoom == 5)
-        {
-            if (tools::checkItemFlag(ItemFlags::Invoice))
-            {
-                itemWheel->Story = items::Item::Invoice;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
-            {
-                itemWheel->Story = items::Item::Renardos_Letter;
-            }
-        }
-        else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hidden_Village]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Impaz_House]))
-        {
-            if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
-            {
-                itemWheel->Story = items::Item::Ilias_Charm;
-            }
-        }
-        else
-        {
-            if (tools::checkItemFlag(ItemFlags::Horse_Call))
-            {//finished Ilia Quest
-                itemWheel->Story = items::Item::NullItem;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
-            {
-                itemWheel->Story = items::Item::Ilias_Charm;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
-            {
-                itemWheel->Story = items::Item::Wooden_Statue;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Invoice))
-            {
-                itemWheel->Story = items::Item::Invoice;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
-            {
-                itemWheel->Story = items::Item::Renardos_Letter;
-            }
-            
-            if (tools::checkItemFlag(ItemFlags::Coral_Earring))
-            {//given sketch
-                itemWheel->Story = items::Item::NullItem;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
-            {
-                itemWheel->Story = items::Item::Asheis_Sketch;
-            }
-            
-            if (gameInfo.scratchPad.movingActors.exploredRegions.Desert == 0b1)
-            {//given memo
-                itemWheel->Story = items::Item::NullItem;
-            }
-            else if (tools::checkItemFlag(ItemFlags::Aurus_Memo))
-            {
-                itemWheel->Story = items::Item::Aurus_Memo;
-            }
-            
-        }
-    }
-    
-    void Mod::allowShopItemsAnytime()
-    {    
-        tp::d_com_inf_game::ItemSlots* itemWheel = &gameInfo.scratchPad.itemWheel;
-        
-        tp::d_com_inf_game::Ammo* ammo = &gameInfo.scratchPad.ammo;
-    
-        float linkPos[3];
-        getPlayerPos(linkPos);
-    
-        u8 hasEmptyBottleAlready = 1;
-        if (itemWheel->Bottle_1 != items::Item::Empty_Bottle && itemWheel->Bottle_2 != items::Item::Empty_Bottle && 
-        itemWheel->Bottle_3 != items::Item::Empty_Bottle && itemWheel->Bottle_4 != items::Item::Empty_Bottle)
-        {
-            hasEmptyBottleAlready = 0;
-        }
-    
-        if (tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 3)
-        {
-            game_patch::handleMaloShop();
-        }
-    
-        if (isStageShop())
-        {
-            if ((tp::d_a_alink::checkStageName("R_SP160") && tp::d_kankyo::env_light.currentRoom == 4) || 
-            (tp::d_a_alink::checkStageName("F_SP108") && tp::d_kankyo::env_light.currentRoom == 4) || 
-            (tp::d_a_alink::checkStageName("F_SP116") && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 3)))
-            {//Coro shop/castle goron shop
-                if (gameInfo.aButtonText == 0x1C)
-                {//about to speak to merchant
-                    if (allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0)
-                    {
-                        if (itemWheel->Bottle_4 != items::Item::Empty_Bottle)
-                        {
-                            bottle4Contents = itemWheel->Bottle_4;
-                        }
-                        itemWheel->Bottle_4 = items::Item::Empty_Bottle;
-                        bottleTrickOn = 1;
-                    }
-                    if (tools::checkItemFlag(ItemFlags::Hylian_Shield))
-                    {
-                        hadHShield = 1;
-                        tools::clearItemFlag(ItemFlags::Hylian_Shield);
-                        shieldTrickOn = 1;
-                    }
-                }
-                if (gameInfo.aButtonText == 0x22)
-                {//selecting if you wanna buy or not
-                    if (bottleTrickOn == 1)
-                    {
-                        bottleTrickOn = 2;
-                    }
-                    if (shieldTrickOn == 1)
-                    {
-                        shieldTrickOn = 2;
-                    }
-                }
-                if (gameInfo.aButtonText == 0x23)
-                {
-                    if (bottleTrickOn == 2)
-                    {
-                        itemWheel->Bottle_4 = bottle4Contents;
-                        bottleTrickOn = 0;
-                    }
-                    if (shieldTrickOn == 2)
-                    {
-                        if (hadHShield == 1)
-                        {
-                            tools::setItemFlag(ItemFlags::Hylian_Shield);
-                        }
-                        shieldTrickOn = 0;
-                    }
-                }
-                if (gameInfo.aButtonText == 0x6 || gameInfo.aButtonText == 0x79)
-                {//leaving
-                    if (bottleTrickOn >= 1)
-                    {
-                        itemWheel->Bottle_4 = bottle4Contents;
-                        bottleTrickOn = 0;
-                    }
-                    if (shieldTrickOn >= 1)
-                    {
-                        if (hadHShield == 1)
-                        {
-                            tools::setItemFlag(ItemFlags::Hylian_Shield);
-                        }
-                        shieldTrickOn = 0;
-                    }
-                }
-            }
-            else
-            {//normal shops
-                if (gameInfo.bButtonText == 0x2A)
-                {//is in shop and is selecting an item
-                    if (allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0)
-                    {
-                        if (itemWheel->Bottle_4 != items::Item::Empty_Bottle)
-                        {
-                            bottle4Contents = itemWheel->Bottle_4;
-                        }
-                        itemWheel->Bottle_4 = items::Item::Empty_Bottle;
-                        bottleTrickOn = 1;
-                    }
-                    if (tools::checkItemFlag(ItemFlags::Hylian_Shield))
-                    {
-                        hadHShield = 1;
-                        tools::clearItemFlag(ItemFlags::Hylian_Shield);
-                        shieldTrickOn = 1;
-                    }
-                    if (tools::checkItemFlag(ItemFlags::Wooden_Shield))
-                    {
-                        hadWShield = 1;
-                        tools::clearItemFlag(ItemFlags::Wooden_Shield);
-                        shieldTrickOn = 1;
-                    }
-                    if (tools::checkItemFlag(ItemFlags::Ordon_Shield))
-                    {
-                        hadOShield = 1;
-                        tools::clearItemFlag(ItemFlags::Ordon_Shield);
-                        shieldTrickOn = 1;
-                    }
-                    if ((gameInfo.scratchPad.eventBits[0x9] & 0x8) == 0/*didn't buy bomb bag yet*/ && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1 &&
-                    linkPos[2] > -600)
-                    {
-                        bombBag1Contents = itemWheel->Bomb_Bag_1;
-                        bombBag2Contents = itemWheel->Bomb_Bag_2;
-                        bombBag3Contents = itemWheel->Bomb_Bag_3;
-                        bombBag1Ammo = ammo->bombs1;
-                        bombBag2Ammo = ammo->bombs2;
-                        bombBag3Ammo = ammo->bombs3;
-                        itemWheel->Bomb_Bag_1 = 0xFF;
-                        itemWheel->Bomb_Bag_2 = 0xFF;
-                        itemWheel->Bomb_Bag_3 = 0xFF;
-                        bombBagTrickOn = 1;
-                    }
-                }
-                else if (gameInfo.aButtonText == 0x23)
-                {//is in shop and is exiting the item select mode
-                    if (bottleTrickOn == 1)
-                    {
-                        itemWheel->Bottle_4 = bottle4Contents;
-                        bottleTrickOn = 0;
-                    }
-                    if (shieldTrickOn == 1)
-                    {
-                        if (hadHShield == 1)
-                        {
-                            tools::setItemFlag(ItemFlags::Hylian_Shield);
-                        }
-                        if (hadWShield == 1)
-                        {
-                            tools::setItemFlag(ItemFlags::Wooden_Shield);
-                        }
-                        if (hadOShield == 1)
-                        {
-                            tools::setItemFlag(ItemFlags::Ordon_Shield);
-                        }
-                        shieldTrickOn = 0;
-                    }
-                    if (bombBagTrickOn == 1)
-                    {
-                        itemWheel->Bomb_Bag_1 = bombBag1Contents;
-                        itemWheel->Bomb_Bag_2 = bombBag2Contents;
-                        itemWheel->Bomb_Bag_3 = bombBag3Contents;
-                        ammo->bombs1 = bombBag1Ammo;
-                        ammo->bombs2 = bombBag2Ammo;
-                        ammo->bombs3 = bombBag3Ammo;
-                        bombBagTrickOn = 0;
-                    }
-                }
-                if ((gameInfo.scratchPad.eventBits[0x9] & 0x8) != 0/*bought bomb bag*/ && bombBagTrickOn == 1)
-                {//bought bomb bag check
-                    itemWheel->Bomb_Bag_1 = bombBag1Contents;
-                    itemWheel->Bomb_Bag_2 = bombBag2Contents;
-                    itemWheel->Bomb_Bag_3 = bombBag3Contents;
-                    ammo->bombs1 = bombBag1Ammo;
-                    ammo->bombs2 = bombBag2Ammo;
-                    ammo->bombs3 = bombBag3Ammo;
-                    bombBagTrickOn = 0;
-                }
-            }
-        }
-        else
-        {
-            if (bottleTrickOn >= 1)
-            {
-                itemWheel->Bottle_4 = bottle4Contents;
-                bottleTrickOn = 0;
-            }
-            if (shieldTrickOn >= 1)
-            {
-                if (hadHShield == 1)
-                {
-                    tools::setItemFlag(ItemFlags::Hylian_Shield);
-                }
-                if (hadWShield == 1)
-                {
-                    tools::setItemFlag(ItemFlags::Wooden_Shield);
-                }
-                if (hadOShield == 1)
-                {
-                    tools::setItemFlag(ItemFlags::Ordon_Shield);
-                }
-                shieldTrickOn = 0;
-            }
-            if (bombBagTrickOn >= 1)
-            {
-                itemWheel->Bomb_Bag_1 = bombBag1Contents;
-                itemWheel->Bomb_Bag_2 = bombBag2Contents;
-                itemWheel->Bomb_Bag_3 = bombBag3Contents;
-                ammo->bombs1 = bombBag1Ammo;
-                ammo->bombs2 = bombBag2Ammo;
-                ammo->bombs3 = bombBag3Ammo;
-                bombBagTrickOn = 0;
-            }
-        }
-    }
-    
-    void Mod::reorderItemWheel()
-    {
-        u8 currentSlot = 0x0;
-        u8* itemSlotsOrder = gameInfo.scratchPad.itemSlotsOrder;
-        tp::d_com_inf_game::ItemSlots* itemWheel = &gameInfo.scratchPad.itemWheel;
-        if (tools::checkItemFlag(ItemFlags::Clawshots))
-        {
-            itemWheel->Double_Clawshot = items::Item::Clawshots;
-            *(itemSlotsOrder + currentSlot) = 0xA;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Dominion_Rod))
-        {
-            itemWheel->Dominion_Rod = items::Item::Dominion_Rod;
-            *(itemSlotsOrder + currentSlot) = 0x8;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Ball_and_Chain))
-        {
-            itemWheel->Ball_and_Chain = items::Item::Ball_and_Chain;
-            *(itemSlotsOrder + currentSlot) = 0x6;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Spinner))
-        {
-            itemWheel->Spinner = items::Item::Spinner;
-            *(itemSlotsOrder + currentSlot) = 0x2;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Clawshot))
-        {
-            itemWheel->Clawshot = items::Item::Clawshot;
-            *(itemSlotsOrder + currentSlot) = 0x9;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Heros_Bow))
-        {
-            itemWheel->Bow = items::Item::Heros_Bow;
-            *(itemSlotsOrder + currentSlot) = 0x4;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Iron_Boots))
-        {
-            itemWheel->Iron_Boots = items::Item::Iron_Boots;
-            *(itemSlotsOrder + currentSlot) = 0x3;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Boomerang))
-        {
-            itemWheel->Boomerang = items::Item::Boomerang;
-            *(itemSlotsOrder + currentSlot) = 0x0;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Lantern))
-        {
-            itemWheel->Lantern = items::Item::Lantern;
-            *(itemSlotsOrder + currentSlot) = 0x1;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Slingshot))
-        {
-            itemWheel->Slingshot = items::Item::Slingshot;
-            *(itemSlotsOrder + currentSlot) = 0x17;
-            currentSlot++;
-        }
-        if (itemWheel->Fishing_Rod != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x14;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Hawkeye))
-        {
-            itemWheel->Hawkeye = items::Item::Hawkeye;
-            *(itemSlotsOrder + currentSlot) = 0x5;
-            currentSlot++;
-        }
-        if (itemWheel->Bomb_Bag_1 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0xF;
-            currentSlot++;
-        }
-        if (itemWheel->Bomb_Bag_2 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x10;
-            currentSlot++;
-        }
-        if (itemWheel->Bomb_Bag_3 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x11;
-            currentSlot++;
-        }
-        if (itemWheel->Bottle_1 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0xB;
-            currentSlot++;
-        }
-        if (itemWheel->Bottle_2 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0xC;
-            currentSlot++;
-        }
-        if (itemWheel->Bottle_3 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0xD;
-            currentSlot++;
-        }
-        if (itemWheel->Bottle_4 != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0xE;
-            currentSlot++;
-        }
-        if (itemWheel->Story != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x13;
-            currentSlot++;
-        }
-        if (itemWheel->Ooccoo != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x12;
-            currentSlot++;
-        }
-        if (itemWheel->Sky_Book != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x16;
-            currentSlot++;
-        }
-        if (tools::checkItemFlag(ItemFlags::Horse_Call))
-        {
-            itemWheel->Horse_Call = items::Item::Horse_Call;
-            *(itemSlotsOrder + currentSlot) = 0x15;
-            currentSlot++;
-        }
-        if (itemWheel->Item_Slot != 0xFF)
-        {
-            *(itemSlotsOrder + currentSlot) = 0x7;
-            currentSlot++;
-        }
-        
-        for(u16 i = currentSlot; i < sizeof(gameInfo.scratchPad.itemSlotsOrder)/sizeof(u8); i++)
-        {
-            *(itemSlotsOrder + i) = 0xFF;
-        }
-    }
-    
-    void Mod::fixYetaAndYeto()
-    {
-        if (tools::checkItemFlag(ItemFlags::Bed_Key) && tp::d_a_alink::checkStageName("D_MN11"))
-        {
-            float linkPos[3];
-            getPlayerPos(linkPos);
-            
-            if (gameInfo.aButtonText == 0x6 && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 1 ||
-            tp::d_kankyo::env_light.currentRoom == 2 || tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 4 ||
-            tp::d_kankyo::env_light.currentRoom == 7) && linkPos[1] == 0)
-            {
-                gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b0;
-                yetaTrickOn = 1;
-            }
-            if (gameInfo.aButtonText == 0x79 && yetaTrickOn == 1)
-            {
-                gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
-                yetaTrickOn = 0;
-            }
-        }
-    }
-    
-    void Mod::fixLBTBossDoor()
-    {
-        if (tp::d_a_alink::checkStageName("D_MN01") && tp::d_kankyo::env_light.currentRoom == 3)
-        {
-            float linkPos[3];
-            getPlayerPos(linkPos);
-            if (gameInfo.aButtonText == 0x6 && linkPos[1] >= -340 && linkPos[1] <= -320)
-            {
-                nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
-                LBTBossDoorTrickOn = 1;
-            }
-            if (gameInfo.aButtonText == 0x79 && LBTBossDoorTrickOn == 1)
-            {
-                gameInfo.localAreaNodes.nbKeys = nbLBTKeys;
-                LBTBossDoorTrickOn = 0;
-            }
-        }
-    }
-    
-    void Mod::preventPoweringUpDomRod()
-    {    
-        if (gameInfo.scratchPad.itemWheel.Sky_Book == 0xFF && tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty) && !tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_partly_filled))
-        {
-            gameInfo.scratchPad.itemWheel.Sky_Book = items::Item::Ancient_Sky_Book_empty;
-        }
-        if (tp::d_a_alink::checkStageName("R_SP209"))
-        {
-            if (gameInfo.scratchPad.itemWheel.Sky_Book == items::Item::Ancient_Sky_Book_empty)
-            {
-                gameInfo.scratchPad.itemWheel.Sky_Book = 0xFF;
-            }
-        }
-    }
-    
-    bool Mod::isStageShop()
-    {
-        u8 totalShopStages = sizeof(stage::shopStages) / sizeof(stage::shopStages[0]);
-        for (u8 i = 0; i < totalShopStages; i++)
-        {
-            if (tp::d_a_alink::checkStageName(stage::shopStages[i]))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    void Mod::doCustomTRESActor(void* mStatus_roomControl)
-    {
-        tp::d_com_inf_game::GameInfo* pGameInfo = &tp::d_com_inf_game::dComIfG_gameInfo;
-
-        u32 numChecks = sizeof(customChecks) / sizeof(customChecks[0]);
-
-        // Count and temp array for the checks for this stage+room
-        u32 checkCount = 0;
-        customCheck* checks = new customCheck[5];  // Assume there's never more than 5 custom checks per stage+room
-
-        // Loop through checks and place if correct room and stage
-        for (u32 i = 0; i < numChecks; i++)
-        {
-            customCheck* check = &customChecks[i];
-
-            if (0 == strcmp(pGameInfo->nextStageVars.nextStage, check->stage) &&
-                (0xFF == check->room || pGameInfo->nextStageVars.nextRoom == check->room) && // 0xFF = no need to check for room
-                check->requirement())
-            {
-                checks[checkCount] = *check;
-                checkCount++;
-            }
-        }
-
-        if (checkCount > 0)
-        {
-            // Create required structs
-            tp::d_stage::TRES* TRES = new tp::d_stage::TRES[checkCount];
-            tp::d_stage::dzxChunkTypeInfo chunkInfo;
-            strcpy(chunkInfo.tag, "ACTR");  // has to be ACTR for the function we use
-            chunkInfo.numChunks = checkCount;
-            chunkInfo.chunkDataPtr = TRES;
-
-            // Populate TRES array with data
-            for (u32 i = 0; i < checkCount; i++)
-            {
-                customCheck check = checks[i];
-                
-                if (check.overrides != nullptr)
-                {
-                    check.overrides();
-                }
-
-                strcpy(TRES[i].actorName, "tboxA0");
-                TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);
-
-                // Translate hex to float (1:1)
-                typeTransform<u32, float> X, Y, Z;
-                X.a = check.X;
-                Y.a = check.Y;
-                Z.a = check.Z;
-
-                TRES[i].X = X.b;
-                TRES[i].Y = Y.b;
-                TRES[i].Z = Z.b;
-
-                TRES[i].angle = check.Angle;
-
-                TRES[i].item = check.itemID;
-            }
-
-            // Create the actors
-            global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, &chunkInfo, 0, nullptr);
-
-            delete[] TRES;
-        }
-
-        delete[] checks;
-        return;
-    }    
-} // namespace mo
+	Mod* global::modPtr = nullptr;
+	ChestRandomizer* global::chestRandoPtr = nullptr;
+	event::EventListener* global::eventListenerPtr = nullptr;
+	mod::HUDConsole* global::hudConsolePtr = nullptr;
+	int num_frames = 120;
+	int frame_counter = 0;
+
+	void main()
+	{
+		Mod* mod = new Mod();
+		mod->init();
+	}
+
+	Mod::Mod()
+	{
+		eventListener = new event::EventListener();
+		chestRandomizer = new ChestRandomizer();
+		hudConsole = new HUDConsole("Settings", 0x80);
+		global::modPtr = this;
+		global::chestRandoPtr = this->chestRandomizer;
+		global::eventListenerPtr = this->eventListener;
+		global::hudConsolePtr = this->hudConsole;
+	}
+
+	void Mod::init()
+	{
+		// Perform any necessary assembly overwrites
+		game_patch::assemblyOverwrites();
+		game_patch::increaseWalletSize();
+		game_patch::increaseClimbSpeed();
+		
+		
+		// Causes issues right now (argarok cannot be beaten)
+		//game_patch::removeIBLimit();
+		
+		 
+
+		// Init rando
+		tools::randomSeed = 0x9e3779b97f4a7c15;
+		randoEnabled = 1;
+		truePause = 1;
+		inputBuffering = 0;
+
+		// Print controls
+		strcpy(sysConsolePtr->consoleLine[20].line, "D-Pad Nav: Up/Down  Left/Right");
+		strcpy(sysConsolePtr->consoleLine[21].line, "+/- Value: A/B/X/Y  Console  :  R + Z");
+		strcpy(sysConsolePtr->consoleLine[22].line, " Generate: R + Start (auto on new file)");
+		strcpy(sysConsolePtr->consoleLine[23].line, "Bring up the console to use commands");
+		strcpy(sysConsolePtr->consoleLine[24].line, "rando.tpspeed.run | Twitter: @ztprandomizer");
+
+		u8 page = 0;
+
+		// General settings
+		hudConsole->addOption(page, "Red:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[0], 0xFF);
+		hudConsole->addOption(page, "Green:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[1], 0xFF);
+		hudConsole->addOption(page, "Blue:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[2], 0xFF);
+		hudConsole->addOption(page, "Alpha:", &reinterpret_cast<u8*>(&sysConsolePtr->consoleColor)[3], 0xFF);
+		hudConsole->addOption(page, "True Pause:", &truePause, 0x1);
+		hudConsole->addOption(page, "Input Buffer:", &inputBuffering, 0x1);
+
+
+		// Seed settings
+		page = hudConsole->addPage("Seed");
+
+		hudConsole->addOption(page, "Rando enabled?", &randoEnabled, 0x1);
+		hudConsole->addOption(page, "Custom Seed?", &customSeed, 0x1);
+		hudConsole->addOption(page, "Seed 1:", &reinterpret_cast<u8*>(&tools::randomSeed)[0], 0xFF);
+		hudConsole->addOption(page, "Seed 2:", &reinterpret_cast<u8*>(&tools::randomSeed)[1], 0xFF);
+		hudConsole->addOption(page, "Seed 3:", &reinterpret_cast<u8*>(&tools::randomSeed)[2], 0xFF);
+		hudConsole->addOption(page, "Seed 4:", &reinterpret_cast<u8*>(&tools::randomSeed)[3], 0xFF);
+
+		hudConsole->addOption(page, "Seed 5:", &reinterpret_cast<u8*>(&tools::randomSeed)[4], 0xFF);
+		hudConsole->addOption(page, "Seed 6:", &reinterpret_cast<u8*>(&tools::randomSeed)[5], 0xFF);
+		hudConsole->addOption(page, "Seed 7:", &reinterpret_cast<u8*>(&tools::randomSeed)[6], 0xFF);
+		hudConsole->addOption(page, "Seed 8:", &reinterpret_cast<u8*>(&tools::randomSeed)[7], 0xFF);
+
+		hudConsole->addWatch(page, "Resulting Seed", &tools::randomSeed, 'x', WatchInterpretation::_u64);
+
+		// Debug
+		page = hudConsole->addPage("Debug Info");
+		
+		
+		
+		hudConsole->addWatch(page, "Function:", &lastItemFunc, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "  Source:", &chestRandomizer->lastSourceInfo, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "    Dest:", &chestRandomizer->lastDestInfo, 's', WatchInterpretation::_str);
+
+		hudConsole->addWatch(page, "Total Checks:", &chestRandomizer->totalChecks, 'u', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Layer Checks:", &chestRandomizer->layerCheckCount, 'u', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Empty:", &chestRandomizer->empty, 'u', WatchInterpretation::_u16);
+
+		hudConsole->addWatch(page, "Active Seed:", &chestRandomizer->currentSeed, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "   Checksum:", &chestRandomizer->checkSum, 'x', WatchInterpretation::_u16);
+
+
+		// Item search
+		page = hudConsole->addPage("Item Search");
+
+		hudConsole->addOption(page, "Search ID:", &itemSearchID, 0xFF);
+		hudConsole->addOption(page, "Reverse ID:", &itemReverseSearchID, 0xFF);
+
+		hudConsole->addWatch(page, "Search Result:", &itemSearchResults, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Reverse Result:", &itemReverseSearchResults, 's', WatchInterpretation::_str);
+
+		hudConsole->addWatch(page, "MetadataID:", &lastItemDataID, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "MetadataX:", &lastItemDataX, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "MetadataY:", &lastItemDataY, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "MetadataZ:", &lastItemDataZ, 's', WatchInterpretation::_str);
+
+		// Check search
+		page = hudConsole->addPage("Check Search");
+
+		hudConsole->addOption(page, "Search ID1:", &checkSearchID1, 0xFF);
+		hudConsole->addOption(page, "Search ID2:", &checkSearchID2, 0xFF);
+		hudConsole->addOption(page, "Reverse ID1:", &checkReverseSearchID1, 0xFF);
+		hudConsole->addOption(page, "Reverse ID2:", &checkReverseSearchID2, 0xFF);
+
+		hudConsole->addWatch(page, "Search ID:", &checkSearchID, 'd', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Reverse ID:", &checkReverseSearchID, 'd', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "Search Result:", &checkSearchResults, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Reverse Result:", &checkReverseSearchResults, 's', WatchInterpretation::_str);
+
+		//Shuffled Checks
+		page = hudConsole->addPage("Shuffled Checks");
+		
+		hudConsole->addOption(page, "Bugsanity?", &chestRandomizer->isBugsanityEnabled, 0x1);
+		hudConsole->addOption(page, "Poesanity?", &chestRandomizer->isPoesanityEnabled, 0x1);
+		hudConsole->addOption(page, "Shopsanity?", &chestRandomizer->isShopsanityEnabled, 0x1);	
+		hudConsole->addOption(page, "Dungeon Items?", &chestRandomizer->areDungeonItemsRandomized, 0x1);
+		hudConsole->addOption(page, "Key Shuffle?", &chestRandomizer->isKeysanityEnabled, 0x1);
+		hudConsole->addOption(page, "Sky Character?", &Singleton::getInstance()->shuffledSkybook, 0x1);
+		
+		// Game info 1
+		page = hudConsole->addPage("Skips 1");
+
+		hudConsole->addOption(page, "MDH Skip?", &Singleton::getInstance()->isMDHSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Faron Escape?", &Singleton::getInstance()->isForestEscapeEnabled, 0x1);
+		hudConsole->addOption(page, "Open HF gates?", &Singleton::getInstance()->isGateUnlockEnabled, 0x1);
+		hudConsole->addOption(page, "Skip Twilight?", &Singleton::getInstance()->isTwilightSkipped, 0x1);
+		hudConsole->addOption(page, "Skip Goats?", &Singleton::getInstance()->isGoatSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Skip MS Puzzle?", &Singleton::getInstance()->isMSPuzzleSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Skip Escort?", &Singleton::getInstance()->isCartEscortSkipEnabled, 0x1);
+		hudConsole->addOption(page, "Skip Sewers?", &Singleton::getInstance()->isSewerSkipEnabled, 0x1);
+
+
+		
+		/*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
+		hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
+		hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
+		hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/		
+		
+		hudConsole->addWatch(page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "CurrentState:", &tp::d_com_inf_game::current_state, 'x', WatchInterpretation::_u8);
+
+		hudConsole->addWatch(page, "CurrentPosX:", &currentPosX, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentPosY:", &currentPosY, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentPosZ:", &currentPosZ, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "CurrentAngle:", &linkAngle, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "Sky Angle:", &skyAngle, 's', WatchInterpretation::_str);
+
+		//Game info 2
+		page = hudConsole->addPage("Skips 2");
+		hudConsole->addOption(page, "Early CiTS?", &Singleton::getInstance()->isEarlyCiTSEnabled, 0x1);
+		hudConsole->addOption(page, "Early Desert?", &Singleton::getInstance()->isEarlyDesertEnabled, 0x1);
+		hudConsole->addOption(page, "Boss Keysey?", &Singleton::getInstance()->isBossKeyseyEnabled, 0x1);
+		hudConsole->addOption(page, "No Shop Bottl?", &allowBottleItemsShopAnytime, 0x1);
+		hudConsole->addOption(page, "Fast transform?", &enableQuickTransform, 0x1);
+		hudConsole->addOption(page, "Skip Intro?", &Singleton::getInstance()->isIntroSkipped, 0x1);
+		hudConsole->addOption(page, "Midna ToD Skip?", &Singleton::getInstance()->midnaTimeControl, 0x1);
+		hudConsole->addOption(page, "Early ToT?", &Singleton::getInstance()->isEarlyToTEnabled, 0x1);
+		hudConsole->addOption(page, "Early PoT?", &Singleton::getInstance()->isEarlyPoTEnabled, 0x1);
+		hudConsole->addOption(page, "Open HC?", &Singleton::getInstance()->isEarlyHCEnabled, 0x1);
+		//color
+		/*page = hudConsole->addPage("Tunic Color1");
+
+		hudConsole->addOption(page, "Top toggle:", &topToggle, 0x1);
+		hudConsole->addOption(page, "Red top:", &redTop, 0xFF);
+		hudConsole->addOption(page, "Green top:", &greenTop, 0xFF);
+		hudConsole->addOption(page, "Blue top:", &blueTop, 0xFF);
+		hudConsole->addOption(page, "Bottom toggle:", &bottomToggle, 0x1);
+		hudConsole->addOption(page, "Red bottom:", &redBottom, 0xFF);
+		hudConsole->addOption(page, "Green bottom:", &greenBottom, 0xFF);
+		hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF); */
+
+			//buttons
+			/*page = hudConsole->addPage("Button texts");
+
+			hudConsole->addOption(page, "A button:", &gameInfo.aButtonText, 0xFF);
+			hudConsole->addOption(page, "Y button:", &gameInfo.yButtonText, 0xFF);
+			hudConsole->addOption(page, "X button:", &gameInfo.xButtonText, 0xFF);
+			hudConsole->addOption(page, "B button:", &gameInfo.bButtonText, 0xFF);
+			hudConsole->addOption(page, "R button:", &gameInfo.rButtonText, 0xFF);
+			hudConsole->addOption(page, "stick button:", &gameInfo.stickButtonText, 0xFF);
+			hudConsole->addOption(page, "start button:", &gameInfo.startButtonText, 0xFF);
+			hudConsole->addOption(page, "C button:", &gameInfo.cButtonText, 0xFF);
+			hudConsole->addOption(page, "X item:", &gameInfo.xItem, 0xFF);
+			hudConsole->addOption(page, "Y item:", &gameInfo.yItem, 0xFF);
+			hudConsole->addWatch(page, "A button:", &gameInfo.aButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "Y button:", &gameInfo.yButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "X button:", &gameInfo.xButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "B button:", &gameInfo.bButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "R button:", &gameInfo.rButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "stick:", &gameInfo.stickButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "start button:", &gameInfo.startButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "C button:", &gameInfo.cButtonText, 'x', WatchInterpretation::_u8);
+			hudConsole->addWatch(page, "scoop:", &scoopResult, 'x', WatchInterpretation::_u16);
+			hudConsole->addWatch(page, "check:", &checkResult, 'x', WatchInterpretation::_u16);
+			hudConsole->addWatch(page, "items:", &itemsResult, 'x', WatchInterpretation::_u16);
+			hudConsole->addWatch(page, "map:", &mapResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "equip:", &equipResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "back:", &backResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "zoom in:", &zoomInResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "zoom out:", &zoomOutResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "move:", &moveResult, 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u16);*/
+
+
+		
+		//event info
+		page = hudConsole->addPage("Skips 3/ Event");
+		//hudConsole->addOption(page, "Coords as hex?", &coordsAreInHex, 0x1);
+		hudConsole->addOption(page, "GM Story Flag?", &Singleton::getInstance()->isGMStoryPatch, 0x1);
+		hudConsole->addOption(page, "Start w/ Crstl?", &Singleton::getInstance()->startWithCrystal, 0x1);
+				
+		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextStage:", &gameInfo.nextStageVars.nextStage, 's', WatchInterpretation::_str);
+		hudConsole->addWatch(page, "NextRoom:", &gameInfo.nextStageVars.nextRoom, 'd', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextSpawnPoint:", &gameInfo.nextStageVars.nextSpawnPoint, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NextSate:", &gameInfo.nextStageVars.nextState, 'x', WatchInterpretation::_u8);
+
+		//Cosmetic Changes
+		page = hudConsole->addPage("Cosmetic");
+		hudConsole->addOption(page, "LTN In Rd:", &innerRed, 0xFF);
+		hudConsole->addOption(page, "LTN In Green:", &innerGreen, 0xFF);
+		hudConsole->addOption(page, "LTN In Blue:", &innerBlue, 0xFF);
+		hudConsole->addOption(page, "LTN Ot Red:", &outerRed, 0xFF);
+		hudConsole->addOption(page, "LTN Ot Green:", &outerGreen, 0xFF);
+		hudConsole->addOption(page, "LTN Ot Blue:", &outerBlue, 0xFF);
+		
+		//local area
+		/*page = hudConsole->addPage("Local Area 1");		
+		hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[1], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[2], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[3], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[4], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[5], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[6], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[7], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[8], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[9], 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Local Area 2");
+		hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[10], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[11], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[12], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[13], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[14], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[15], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[16], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[17], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[18], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[19], 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Local Area 3");
+		hudConsole->addWatch(page, "AreaNodes20:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes21:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes22:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes23:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes24:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes25:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes26:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes27:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
+		page = hudConsole->addPage("Local Area 4");
+		hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
+
+		//item slots
+		/*page = hudConsole->addPage("Item slots 1");		
+		hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWeel.Boomerang, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.itemSlots[0x1], 'x', WatchInterpretation::_u8);
+		
+		hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
+		
+		/*page = hudConsole->addPage("Warps 1");
+		hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 0xFF);
+		hudConsole->addOption(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 0xFF);
+		hudConsole->addOption(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 0xFF);
+		hudConsole->addOption(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 0xFF);
+		hudConsole->addOption(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 0xFF);
+		hudConsole->addOption(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 0xFF);
+		hudConsole->addOption(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 0xFF);
+		
+		hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 'x', WatchInterpretation::_u8);//1
+		hudConsole->addWatch(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 'x', WatchInterpretation::_u8);//16
+		hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 'x', WatchInterpretation::_u8);//8
+		hudConsole->addWatch(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 'x', WatchInterpretation::_u8);//8
+		hudConsole->addWatch(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		page = hudConsole->addPage("Warps 2");
+		hudConsole->addOption(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 0xFF);
+		hudConsole->addOption(page, "Kakariko:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 0xFF);
+		hudConsole->addOption(page, "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 0xFF);
+		hudConsole->addOption(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 0xFF);
+		hudConsole->addOption(page, "Ordon Spring:", &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 0xFF);
+		
+		hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
+		hudConsole->addWatch(page, "Kakariko:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 'x', WatchInterpretation::_u8);//128
+		hudConsole->addWatch(page, "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 'x', WatchInterpretation::_u8);//128
+		hudConsole->addWatch(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 'x', WatchInterpretation::_u8);//4
+		hudConsole->addWatch(page, "Ordon Spring:", &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 'x', WatchInterpretation::_u8);//16*/
+		
+		
+		// save load
+		/*page = hudConsole->addPage("Save load");
+		
+		hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
+		hudConsole->addOption(page, "room:", &room, 60); //for testing only
+		hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
+		hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
+		hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
+
+		/*page = hudConsole->addPage("testing adr1");
+
+
+		hudConsole->addWatch(page, "D:", &gameInfo.scratchPad.equipedItems.unk, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "17:", &gameInfo.scratchPad.unk_17[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "1A:", &gameInfo.scratchPad.unk_1A[0x0], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "1F:", &gameInfo.scratchPad.unk_1F[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "27:", &gameInfo.scratchPad.unk_1F[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "2F:", &gameInfo.scratchPad.unk_1F[0x10], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "32:", &gameInfo.scratchPad.unk_32[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "38:", &gameInfo.scratchPad.unk_38[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "62:", &gameInfo.scratchPad.movingActors.link.unk_62[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "7A:", &gameInfo.scratchPad.movingActors.unk_7A[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
+
+		page = hudConsole->addPage("testing adr2");
+
+		hudConsole->addWatch(page, "7E:", &gameInfo.scratchPad.movingActors.unk_7E[0x0], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "99:", &gameInfo.scratchPad.unk_99[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
+		hudConsole->addWatch(page, "F0:", &gameInfo.scratchPad.ammo.unk_F0, 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "F5:", &gameInfo.scratchPad.ammo.unk_F5, 'x', WatchInterpretation::_u32);//actual size:0x3
+		hudConsole->addWatch(page, "FC:", &gameInfo.scratchPad.unk_FC[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "104:", &gameInfo.scratchPad.unk_FC[0x8], 'x', WatchInterpretation::_u64);//actual size:0x5
+		hudConsole->addWatch(page, "10B:", &gameInfo.scratchPad.unk_10B, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "10D:", &gameInfo.scratchPad.unk_10D[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
+		hudConsole->addWatch(page, "115:", &gameInfo.scratchPad.unk_115[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
+		hudConsole->addWatch(page, "120:", &gameInfo.scratchPad.unk_120[0x0], 'x', WatchInterpretation::_u64);//actual size:0x6
+
+		page = hudConsole->addPage("testing adr2");
+
+		hudConsole->addWatch(page, "128:", &gameInfo.scratchPad.unk_128[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "130:", &gameInfo.scratchPad.unk_128[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "138:", &gameInfo.scratchPad.unk_128[0x10], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "140:", &gameInfo.scratchPad.unk_128[0x18], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "148:", &gameInfo.scratchPad.unk_128[0x20], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "150:", &gameInfo.scratchPad.unk_128[0x28], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "158:", &gameInfo.scratchPad.unk_128[0x30], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "160:", &gameInfo.scratchPad.unk_128[0x38], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "168:", &gameInfo.scratchPad.unk_128[0x40], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "178:", &gameInfo.scratchPad.fishingJournal.unk_178[0x0], 'x', WatchInterpretation::_u64);
+
+		page = hudConsole->addPage("testing adr3");
+
+		hudConsole->addWatch(page, "180:", &gameInfo.scratchPad.fishingJournal.unk_178[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "188:", &gameInfo.scratchPad.fishingJournal.unk_178[0x10], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "192:", &gameInfo.scratchPad.unk_192[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "19A:", &gameInfo.scratchPad.unk_192[0x8], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1A2:", &gameInfo.scratchPad.unk_192[0x10], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1AA:", &gameInfo.scratchPad.unk_192[0x18], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1B2:", &gameInfo.scratchPad.unk_192[0x20], 'x', WatchInterpretation::_u16);
+		hudConsole->addWatch(page, "1C4:", &gameInfo.scratchPad.unk_1C4, 'x', WatchInterpretation::_u8);
+		hudConsole->addWatch(page, "1D5:", &gameInfo.scratchPad.unk_1D5[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1DD:", &gameInfo.scratchPad.unk_1D5[0x8], 'x', WatchInterpretation::_u32);
+		hudConsole->addWatch(page, "1E4:", &gameInfo.scratchPad.unk_1E4[0x0], 'x', WatchInterpretation::_u64);
+		hudConsole->addWatch(page, "1EC:", &gameInfo.scratchPad.unk_1E4[0x8], 'x', WatchInterpretation::_u32);*/
+		
+		
+		// Print
+		hudConsole->draw();
+		system_console::setState(true, 0);
+
+		//   =================
+		//  | Custom events   |
+		//   =================
+
+		// Generate random data when a new game starts
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x1, 0x15, 0xFF, 0xFF, tools::triggerRandomGenerator, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		// Skip sewers when the load happens
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Castle_Sewers], 0x0, 0x18, 0xFF, 0xFF, game_patch::skipSewers, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		// Fix BiTE
+		//eventListener->addLoadEvent(stage::allStages[Stage_Title_Screen], 0x0, 0x17, 0xFF, 0xFF, game_patch::giveEpona, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		// Kill spider at Link's house
+		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Village], 0x1, 0xFF, 0xFF, 0xFF, game_patch::killLinkHouseSpider, event::LoadEventAccuracy::Stage_Room);
+
+		//Set Bublin Camp State
+		eventListener->addLoadEvent(stage::allStages[Stage_Bublin_Camp], 0xFF, 0xFF, 0x1, 0xFF, game_patch::setBublinState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		//unlock HF gates and check for MDH
+		eventListener->addLoadEvent(stage::allStages[Stage_Hyrule_Field], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setFieldBits, event::LoadEventAccuracy::Stage);
+
+		//skip goats 2
+		eventListener->addLoadEvent(stage::allStages[Stage_Ordon_Ranch], 0x0, 0x3, 0xFF, 0xFF, game_patch::skipGoats, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		//skip MS Puzzle
+		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGroveFlags, event::LoadEventAccuracy::Stage);
+		
+		//Fix Lanayru Softlock
+		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x0, 0x5, 0xE, 0xFF, game_patch::setLanayruWolf, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//desert Access
+		eventListener->addLoadEvent(stage::allStages[Stage_Gerudo_Desert], 0x0, 0x0, 0xFF, 0xFF, game_patch::accessDesert, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		//Skip Midna Text and CS's
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0x1, 0x15, 0xFF, 0xFF, game_patch::skipTextAndCS, event::LoadEventAccuracy::Stage_Room_Spawn_State);
+		
+		//Allow Escort Any Time
+		eventListener->addLoadEvent(stage::allStages[Stage_Castle_Town_Interiors], 0x5, 0xFF, 0xFF, 0xFF, game_patch::setEscortState, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//Skip MDH Trigger
+		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x1, 0x16, 0xFF, 0xFF, game_patch::skipMDHCS, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//Fix FT Boss Music
+		eventListener->addLoadEvent(stage::allStages[Stage_Diababa], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixFTBossMusic, event::LoadEventAccuracy::Stage);
+
+		// Allow Faron Escape
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::allowFaronEscape, event::LoadEventAccuracy::Stage);
+
+		//Skip MDH After Lanayru
+		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0x1, 0x14, 0xFF, 0xFF, game_patch::skipMDH, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//set Coro Lantern Flag
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setLanternFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//unset dungeon flags after beating dungeon
+		eventListener->addLoadEvent(stage::allStages[Stage_Forest_Temple], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixFTState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Goron_Mines], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixGMState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Lakebed_Temple], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixLBTState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Arbiters_Grounds], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixAGState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Snowpeak_Ruins], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixSPRState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Temple_of_Time], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixToTState, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_City_in_the_Sky], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::fixCiTSState, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//set dungeon and boss flags
+		eventListener->addLoadEvent(stage::allStages[Stage_Faron_Woods], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setFTDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		eventListener->addLoadEvent(stage::allStages[Stage_Death_Mountain_Sumo_Hall], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGMDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Kakariko_Village], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGMDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Fyrus], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setGMBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		
+		eventListener->addLoadEvent(stage::allStages[Stage_Lake_Hylia], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setLakeDungeonFlags, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Morpheel], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setLBTBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Bublin_Camp], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setAGDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Mirror_Chamber], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setAGDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Stallord], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setAGBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Snowpeak], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setSPRDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Blizzeta], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setSPRBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Sacred_Grove], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setToTDungeonFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+		eventListener->addLoadEvent(stage::allStages[Stage_Armogohma], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setToTBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		eventListener->addLoadEvent(stage::allStages[Stage_Argorok], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::setCiTSBossFlag, event::LoadEventAccuracy::Stage_Room_Spawn);
+
+		//Break Barrier
+		eventListener->addLoadEvent(stage::allStages[Stage_Castle_Town], 0xFF, 0xFF, 0xFF, 0xFF, game_patch::breakBarrier, event::LoadEventAccuracy::Stage_Room_Spawn);
+		//   =================
+		//  | Function Hooks  |
+		//   =================
+
+		fapGm_Execute_trampoline = patch::hookFunction(tp::f_ap_game::fapGm_Execute,
+			[]()
+			{
+				global::modPtr->procNewFrame();
+			}
+		);
+
+		// Hook actor init function to use as a timing for placing custom chests as this function only creates actors at
+		// specific times
+		actorCommonLayerInit_trampoline = patch::hookFunction(tp::d_stage::actorCommonLayerInit,
+			[](void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4)
+		{
+			if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Faron_Woods]))
+			{
+				if (Singleton::getInstance()->hasActorCommonLayerRan <= 4)
+				{
+					global::modPtr->doCustomTRESActor(mStatus_roomControl);
+				}
+			}
+			else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]) && gameInfo.nextStageVars.nextSpawnPoint == 0xFC)
+			{
+				if (Singleton::getInstance()->hasActorCommonLayerRan <= 2)
+				{
+					global::modPtr->doCustomTRESActor(mStatus_roomControl);
+				}
+			}
+			else
+			{
+				global::modPtr->doCustomTRESActor(mStatus_roomControl);
+			}
+			return global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, chunkTypeInfo, unk3, unk4);
+		}
+		);
+
+
+		putSave_trampoline = patch::hookFunction(tp::d_save::putSave,
+			[](tp::d_com_inf_game::GameInfo* gameInfoPtr, s32 areaID)
+		{
+			Singleton::getInstance()->hasActorCommonLayerRan = 0;
+			return global::modPtr->putSave_trampoline(gameInfoPtr, areaID);
+		}
+		);
+
+		checkTreasureRupeeReturn_trampoline = patch::hookFunction(tp::d_a_alink::checkTreasureRupeeReturn,
+			[](void* unk1, s32 item)
+			{
+				return global::modPtr->procCheckTreasureRupeeReturn(unk1, item);
+			}
+		);
+
+		createItemForPresentDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForPresentDemo,
+			[](const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3])
+			{
+				// Call replacement function
+				/*char txt[50];
+				snprintf(txt, 50, "0 = %f 1 = %f 2 = %f", pos[0], pos[1], pos[2]);
+				strcpy(sysConsolePtr->consoleLine[20].line, txt);*/
+
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForPresentDemo");
+
+				return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+			}
+		);
+			
+
+		createItemForTrBoxDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
+			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForTrBoxDemo");
+
+				return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, unk3, unk4, unk5, unk6);
+			}
+		);
+		//this function is called when the heart spawns, not when link gets it		
+		//createItemForTrBoxDemo is called when heart container is gotten
+		createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
+			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7, s32 unk8)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForBoss");
+
+				return global::modPtr->createItemForBoss_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7, unk8);
+			}
+		);
+
+		createItemForMidBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForMidBoss,
+			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForMidBoss");
+
+				return global::modPtr->createItemForMidBoss_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+			}
+		);
+
+		createItemForDirectGet_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForDirectGet,
+			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForDirectGet");
+
+				return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+			}
+		);
+
+		createItemForSimpleDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForSimpleDemo,
+			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+			{
+				// Call replacement function
+				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForSimpleDemo");
+
+				return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+			}
+		);
+
+
+		evt_control_Skipper_trampoline = patch::hookFunction(tp::evt_control::skipper,
+			[](void* evtPtr)
+			{
+				return global::modPtr->procEvtSkipper(evtPtr);
+			}
+		);
+
+		query022_trampoline = patch::hookFunction(tp::d_msg_flow::query022,
+			[](void* unk1, void* unk2, s32 unk3)
+			{
+				return global::modPtr->proc_query022(unk1, unk2, unk3);
+			}
+		);
+
+		do_link_trampoline = patch::hookFunction(tp::dynamic_link::do_link,
+			[](tp::dynamic_link::DynamicModuleControl* dmc)
+			{
+				return global::modPtr->procDoLink(dmc);
+			}
+		);
+
+		item_func_UTUWA_HEART_trampoline = patch::hookFunction(tp::d_item::item_func_UTUWA_HEART,
+			[]()
+			{
+				return global::modPtr->procItem_func_UTUWA_HEART();
+			}
+		);
+
+		setItemBombNumCount_trampoline = patch::hookFunction(tp::d_com_inf_game::setItemBombNumCount,
+			[](u32 unk1, u8 bagNb, short amount)
+		{
+			u8 bombtype = 0;
+			if (bagNb == 0)
+			{
+				bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
+			}
+			else if (bagNb == 1)
+			{
+				bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
+			}
+			else if (bagNb == 2)
+			{
+				bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
+			}
+			char txt[50];
+			snprintf(txt, 50, "bag = %x amount = %d type = %x", bagNb, amount, bombtype);
+			strcpy(sysConsolePtr->consoleLine[20].line, txt);
+
+			/*u8 itemID = 0x0;
+			if (bombtype == items::Item::Bomb_Bag_Regular_Bombs)
+			{
+				if (amount == 5)
+				{
+					itemID = items::Item::Bombs_5;
+				}
+				else if (amount == 10)
+				{
+					itemID = items::Item::Bombs_10;
+				}
+				else if (amount == 20)
+				{
+					itemID = items::Item::Bombs_20;
+				}
+				else if (amount == 30)
+				{
+					itemID = items::Item::Bombs_30;
+				}
+			}
+			else if (bombtype == items::Item::Bomb_Bag_Water_Bombs)
+			{
+				if (amount == 3)
+				{
+					itemID = items::Item::Water_Bombs_3;
+				}
+				else if (amount == 5)
+				{
+					itemID = items::Item::Water_Bombs_5;
+				}
+				else if (amount == 10)
+				{
+					itemID = items::Item::Water_Bombs_10;
+				}
+				else if (amount == 15)
+				{
+					itemID = items::Item::Water_Bombs_15;
+				}
+			}
+			else if (bombtype == items::Item::Bomb_Bag_Bomblings)
+			{
+				if (amount == 1)
+				{
+					itemID = items::Item::Bombling_1;
+				}
+				else if (amount == 3)
+				{
+					itemID = items::Item::Bomblings_3;
+				}
+				else if (amount == 5)
+				{
+					itemID = items::Item::Bomblings_5;
+				}
+				else if (amount == 10)
+				{
+					itemID = items::Item::Bomblings_10;
+				}
+			}
+
+
+			float linkPos[3];
+			getPlayerPos(linkPos);
+
+			const float zero[3] = {0.0f,0.0f,0.0f};
+
+			amount = 0;
+
+			tp::f_op_actor_mng::createItemForPresentDemo(linkPos, itemID, 0, -1, -1, zero, zero);*/
+
+			return global::modPtr->setItemBombNumCount_trampoline(unk1, bagNb, amount);
+		}
+		);
+	}
+
+	void Mod::procNewFrame()
+	{
+		float linkPos[3];
+		getPlayerPos(linkPos);
+
+		if (coordsAreInHex == 1)
+		{
+			typeTransform<float, u32> x = { linkPos[0] };
+			typeTransform<float, u32> y = { linkPos[1] };
+			typeTransform<float, u32> z = { linkPos[2] };
+
+			snprintf(currentPosX, 30, "%04x", x.b);
+			snprintf(currentPosY, 30, "%04x", y.b);
+			snprintf(currentPosZ, 30, "%04x", z.b);
+
+			snprintf(linkAngle, 30, "%02x", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
+		}
+		else
+		{
+			snprintf(currentPosX, 30, "%f", linkPos[0]);
+			snprintf(currentPosY, 30, "%f", linkPos[1]);
+			snprintf(currentPosZ, 30, "%f", linkPos[2]);
+
+			snprintf(linkAngle, 30, "%d", static_cast<u16>(tp::d_map_path_dmap::getMapPlayerAngleY()));
+		}
+
+		if (gameInfo.nextStageVars.nextSpawnPoint != 0xFF)
+		{
+			lastGoodSpawn = gameInfo.nextStageVars.nextSpawnPoint;
+		}
+
+
+		if (gameInfo.ColorPtr != nullptr)
+		{
+			if (topToggle == 0)
+			{
+				gameInfo.ColorPtr->redTopToggle = 0x4;
+				gameInfo.ColorPtr->greenTopToggle = 0x4;
+				gameInfo.ColorPtr->blueTopToggle = 0x4;
+			}
+			else
+			{
+				gameInfo.ColorPtr->redTopToggle = 0x0;
+				gameInfo.ColorPtr->greenTopToggle = 0x0;
+				gameInfo.ColorPtr->blueTopToggle = 0x0;
+			}
+			gameInfo.ColorPtr->redTop = redTop;
+			gameInfo.ColorPtr->greenTop = greenTop;
+			gameInfo.ColorPtr->blueTop = blueTop;
+			if (bottomToggle == 0)
+			{
+				gameInfo.ColorPtr->redBottomToggle = 0x4;
+				gameInfo.ColorPtr->greenBottomToggle = 0x4;
+				gameInfo.ColorPtr->blueBottomToggle = 0x4;
+			}
+			else
+			{
+				gameInfo.ColorPtr->redBottomToggle = 0x0;
+				gameInfo.ColorPtr->greenBottomToggle = 0x0;
+				gameInfo.ColorPtr->blueBottomToggle = 0x0;
+			}
+			gameInfo.ColorPtr->redBottom = redBottom;
+			gameInfo.ColorPtr->greenBottom = greenBottom;
+			gameInfo.ColorPtr->blueBottom = blueBottom;
+			/*u16 last14 = 0;
+			for(colorResult = 0x0; colorResult < 0x6000; colorResult++)
+			{
+
+				if (gameInfo.ColorPtr->unk_0[colorResult] == 0x14)
+				{
+					if (colorResult - last14 == 8)
+					{
+						break;
+					}
+					else
+					{
+						last14 = colorResult;
+					}
+				}
+			}*/
+		}
+
+		if (trigerLoadSave == 1) {
+			trigerLoadSave = 0;
+			tools::triggerSaveLoad(stage::allStages[stage], room, spawn, state);
+		}
+
+		if (!tools::checkItemFlag(ItemFlags::Orange_Rupee))
+		{//remove the item get animations for floor pickups (except silver rupee)
+			u32 loopAmount = sizeof(item::itemGetAnimationFlags) / sizeof(item::itemGetAnimationFlags[0]);
+			for (u32 i = 0; i < loopAmount; i++)
+			{
+				tools::setItemFlag(static_cast<ItemFlags>(item::itemGetAnimationFlags[i]));
+			}
+		}
+
+		if (enableNormalTime == 0 && setDay == 0)
+		{//set night
+			gameInfo.scratchPad.skyAngle = 0;
+		}
+		else if (enableNormalTime == 0 && setDay == 1)
+		{//set day
+			gameInfo.scratchPad.skyAngle = 180;
+		}
+		// Increment seed
+		if (!customSeed)
+		{
+			tools::getRandom(0);
+		}
+
+		// If loading has started check for LoadEvents
+		if (isLoading)
+		{
+			eventListener->checkLoadEvents();
+		}
+
+		if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
+		{
+			// Toggle console			
+			system_console::setState(!sysConsolePtr->consoleEnabled, 0);
+		}
+
+		if (controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R | controller::PadInputs::Button_Y))
+		{
+			if (canQuickTransform())
+			{
+				// Transform
+					tp::d_a_alink::procCoMetamorphoseInit(gameInfo.linkMapPtr);
+			}
+		}
+		
+		if (canChangeToD() && controller::checkForButtonInputSingleFrame(controller::PadInputs::Button_R | controller::PadInputs::Button_Y))
+		{
+			if (gameInfo.scratchPad.skyAngle >= 105 && gameInfo.scratchPad.skyAngle <= 284)
+			{
+				gameInfo.scratchPad.skyAngle = 285;
+				if (gameInfo.nextStageVars.nextSpawnPoint == 0xFF)
+				{
+					gameInfo.nextStageVars.nextSpawnPoint = lastGoodSpawn;
+				}
+				gameInfo.nextStageVars.triggerLoad |= 1;
+			}
+			else if (gameInfo.scratchPad.skyAngle >= 285 || gameInfo.scratchPad.skyAngle <= 104)
+			{
+				gameInfo.scratchPad.skyAngle = 105;
+				if (gameInfo.nextStageVars.nextSpawnPoint == 0xFF)
+				{
+					gameInfo.nextStageVars.nextSpawnPoint = lastGoodSpawn;
+				}
+				gameInfo.nextStageVars.triggerLoad |= 1;
+			}
+		}
+		
+
+		if (sysConsolePtr->consoleEnabled)
+		{
+			if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Start)))
+			{
+				chestRandomizer->generate();
+			}
+
+			// Parse inputs of this frame
+			switch (tp::m_do_controller_pad::cpadInfo.buttonInputTrg)
+			{
+			case controller::PadInputs::Button_A:
+				hudConsole->performAction(ConsoleActions::Option_Increase);
+				break;
+
+			case controller::PadInputs::Button_X:
+				hudConsole->performAction(ConsoleActions::Option_Increase, 0x10);
+				break;
+
+			case controller::PadInputs::Button_B:
+				hudConsole->performAction(ConsoleActions::Option_Decrease);
+				break;
+
+			case controller::PadInputs::Button_Y:
+				hudConsole->performAction(ConsoleActions::Option_Decrease, 0x10);
+				break;
+
+			case controller::PadInputs::Button_DPad_Up:
+				hudConsole->performAction(ConsoleActions::Move_Up);
+				break;
+
+			case controller::PadInputs::Button_DPad_Down:
+				hudConsole->performAction(ConsoleActions::Move_Down);
+				break;
+
+			case controller::PadInputs::Button_DPad_Left:
+				hudConsole->performAction(ConsoleActions::Move_Left);
+				break;
+
+			case controller::PadInputs::Button_DPad_Right:
+				hudConsole->performAction(ConsoleActions::Move_Right);
+				break;
+			}
+			hudConsole->draw();
+		}
+
+		if (truePause && sysConsolePtr->consoleEnabled)
+		{
+			// Inputs handled, don't pass onto the game
+			tp::f_op_scene_req::freezeActors = 1;
+			tp::m_do_controller_pad::cpadInfo.buttonInputTrg = 0;
+			tp::m_do_controller_pad::cpadInfo.buttonInput = 0;
+		}
+		else
+		{
+			tp::f_op_scene_req::freezeActors = 0;
+		}
+
+		if (itemSearchID != lastItemSearchID)
+		{
+			lastItemSearchID = itemSearchID;
+
+			strcpy(itemSearchResults, "404");
+
+			for (u16 i = 0; i < chestRandomizer->totalChecks; i++)
+			{
+				item::ItemCheck* check = &item::checks[i];
+				if (check->destination)
+				{
+					if (check->destination->itemID == itemSearchID)
+					{
+						// Found the source
+						snprintf(itemSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
+					}
+				}
+			}
+		}
+		else if (itemReverseSearchID != lastItemReverseSearchID)
+		{
+			lastItemReverseSearchID = itemReverseSearchID;
+
+			strcpy(itemReverseSearchResults, "404");
+
+			for (u16 i = 0; i < chestRandomizer->totalChecks; i++)
+			{
+				item::ItemCheck* check = &item::checks[i];
+				if (check->source)
+				{
+					if (check->source->itemID == itemReverseSearchID)
+					{
+						// Found the source
+						snprintf(itemReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->itemID, check->stage, check->room);
+					}
+				}
+			}
+		}
+
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Faron_Woods]))
+		{
+			if (0xB == gameInfo.eventSystem.currentEventID)
+			{
+				tools::setCutscene(false, false);
+				if (frame_counter == num_frames)
+				{
+					tools::setItemFlag(ItemFlags::Vessel_Of_Light_Faron);//set flag for vessel since we'll skip it by reloading
+					gameInfo.scratchPad.movingActors.exploredRegions.Eldin = 0b1; // Set Eldin Map Unlocked so we can warp there
+					tools::setCutscene(true, false);
+				}
+				else
+				{
+					frame_counter++;
+				}
+			}
+			else
+			{
+				frame_counter = 0;
+			}
+		}
+		checkSearchID = (checkSearchID2 * 0x100) + checkSearchID1;
+		checkReverseSearchID = (checkReverseSearchID2 * 0x100) + checkReverseSearchID1;
+		if (checkSearchID != lastCheckSearchID)
+		{
+			lastCheckSearchID = checkSearchID;
+
+			strcpy(checkSearchResults, "404");
+			if (checkSearchID < chestRandomizer->totalChecks)
+			{
+				item::ItemCheck* check = &item::checks[checkSearchID];
+				if (check->source)
+				{
+					snprintf(checkSearchResults, 40, "ID: %x Stage: %s Room: %d", check->source->itemID, check->source->stage, check->source->room);
+				}
+			}
+		}
+		else if (checkReverseSearchID != lastCheckReverseSearchID)
+		{
+			lastCheckReverseSearchID = checkReverseSearchID;
+
+			strcpy(checkReverseSearchResults, "404");
+
+			if (checkReverseSearchID < chestRandomizer->totalChecks)
+			{
+				item::ItemCheck* check = &item::checks[checkReverseSearchID];
+				if (check->destination)
+				{
+					snprintf(checkReverseSearchResults, 40, "ID: %x Stage: %s Room: %d", check->destination->itemID, check->destination->stage, check->destination->room);
+				}
+			}
+		}
+
+
+		/*if (gameInfo.scratchPad.unk_0[0x019] == 0)
+		{
+			const char* walletText = "Wallet";
+			strncpy(tp::d_com_inf_game::wallet_text, walletText, sizeof(tp::d_com_inf_game::wallet_text) - 1);
+
+			const char* walletDescription = "A wallet from your childhood. It holds up to 1,000 Rupees.";
+			strncpy(tp::d_com_inf_game::wallet_description, walletDescription, sizeof(tp::d_com_inf_game::wallet_description) - 1);
+		}
+		else if (gameInfo.scratchPad.unk_0[0x019] == 1)
+		{
+			const char* walletText = "Big Wallet";
+			strncpy(tp::d_com_inf_game::wallet_text, walletText, sizeof(tp::d_com_inf_game::wallet_text) - 1);
+
+			const char* walletDescription = "A wallet given to you by Agitha, princess of the insect kingdom. It can hold 5,000 Rupees.";
+			strncpy(tp::d_com_inf_game::wallet_description, walletDescription, sizeof(tp::d_com_inf_game::wallet_description) - 1);
+		}
+		else if (gameInfo.scratchPad.unk_0[0x019] == 2)
+		{
+			const char* walletText = "Giant Wallet";
+			strncpy(tp::d_com_inf_game::wallet_text, walletText, sizeof(tp::d_com_inf_game::wallet_text) - 1);
+
+			const char* walletDescription = "The wallet given by Agitha to benefactors of the insect kingdom. It can hold up to 9,999 Rupees.";
+			strncpy(tp::d_com_inf_game::wallet_description, walletDescription, sizeof(tp::d_com_inf_game::wallet_description) - 1);
+		}*/
+
+
+		if(inputBuffering)
+		{
+			tp::m_do_controller_pad::cpadInfo.buttonInputTrg = tp::m_do_controller_pad::cpadInfo.buttonInput;
+		}
+
+		giveAllStoryItems();
+
+		reorderItemWheel();
+
+		allowShopItemsAnytime();
+
+		giveAllScents();
+
+		fixYetaAndYeto();
+
+		fixLBTBossDoor();
+
+		preventPoweringUpDomRod();
+
+		// Call original function
+		fapGm_Execute_trampoline();
+
+		changeLanternColor();
+		//setFieldModels();
+		fixFTTotemMonkey();
+
+	}
+
+	s32 Mod::procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32])
+	{
+		strcpy(lastItemFunc, funcIdentifier);
+		snprintf(lastItemDataID, 5, "0x%02x", item);
+		snprintf(lastItemDataX, 30, "%f", pos[0]);
+		snprintf(lastItemDataY, 30, "%f", pos[1]);
+		snprintf(lastItemDataZ, 30, "%f", pos[2]);
+		// Runs once when Link picks up an item with text and is holding it towards the camera
+		if (randoEnabled && strcmp(funcIdentifier, "createItemForDirectGet") != 0 && strcmp(funcIdentifier, "createItemForBoss") != 0 &&
+			strcmp(funcIdentifier, "createItemForMidBoss") != 0 && strcmp(funcIdentifier, "createItemForSimpleDemo") != 0)
+		{
+			item = chestRandomizer->getItemReplacement(pos, item);
+		}
+
+		return item;
+	}
+	
+	bool Mod::procCheckTreasureRupeeReturn(void* unk1, s32 item)
+	{
+		// Allow to open
+		return false;
+	}
+
+	s32 Mod::procEvtSkipper(void* evtPtr)
+	{
+		// Runs when the user tries to skip a Cutscene		
+		if(tp::d_a_alink::checkStageName(stage::allStages[Stage_Sacred_Grove]))
+		{
+			// We're at sacred grove
+			if(0x2 == gameInfo.eventSystem.currentEventID)
+			{
+				// Master Sword cutscene
+				tools::setCutscene(true, false, cutscene_skip::onMasterSwordSkip);
+			}
+		}
+
+		
+		// Call original function
+		return evt_control_Skipper_trampoline(evtPtr);
+	}
+
+	bool Mod::proc_query022(void* unk1, void* unk2, s32 unk3)
+	{
+		// Check to see if currently in one of the Ordon interiors
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Ordon_Interiors]))
+		{
+			// Check to see if ckecking for the Iron Boots
+			u16 item = *reinterpret_cast<u16*>(reinterpret_cast<u32>(unk2) + 0x4);
+
+			if (item == items::Item::Iron_Boots)
+			{
+				// Return false so that the door in Bo's house can be opened without having the Iron Boots
+				return false;
+			}
+		}
+
+		// Call original function
+		return query022_trampoline(unk1, unk2, unk3);
+	}
+	
+	bool Mod::procDoLink(tp::dynamic_link::DynamicModuleControl* dmc)
+	{
+		// Call the original function immediately, as the REL file needs to be linked before applying patches
+		const bool result = do_link_trampoline(dmc);
+
+		// Get the pointer to the current REL file
+		gc::OSModule::OSModuleInfo* moduleInfo = dmc->moduleInfo;
+
+		// Make sure a REL file is actually loaded, as do_link will clear the pointer if something goes wrong
+		if (!moduleInfo)
+		{
+			return result;
+		}
+
+		// Get the REL pointer as a raw u32, to use for overwrites
+		u32 relPtrRaw = reinterpret_cast<u32>(moduleInfo);
+
+		// Modify the current REL file
+		switch (moduleInfo->id) // May want to set up enums or defines for the module ids
+		{
+			case 0x121: // d_a_npc_bouS.rel - Inside Bo's house
+			{
+				// Prevent Bo from talking after the chest has been opened
+				*reinterpret_cast<u32*>(relPtrRaw + 0x1A44) = 0x48000028; // b 0x28
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	void Mod::procItem_func_UTUWA_HEART()
+	{
+		/* Call the original function immediately, as the heart container flag 
+			for the current area needs to be set before making any adjustments */
+		item_func_UTUWA_HEART_trampoline();
+		
+		// Clear the heart container flag if not currently in a boss room
+		if (!chestRandomizer->isStageBoss())
+		{
+			gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
+		}
+	}
+
+	void Mod::giveAllScents()
+	{
+		//code to have all scents at once you need to unlock them tho
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hyrule_Field]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Youths_Scent) && tp::d_kankyo::env_light.currentRoom == 3)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Scent) &&
+				(tp::d_kankyo::env_light.currentRoom == 9 || tp::d_kankyo::env_light.currentRoom == 10))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Village]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Youths_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Ilias_Scent) && tp::d_kankyo::env_light.currentRoom == 8)
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Medicine_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Medicine_Scent;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Reekfish_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Reekfish_Scent;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Arbiters_Grounds]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Poe_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Poe_Scent;
+			}
+		}
+		else
+		{
+			if (tools::checkItemFlag(ItemFlags::Medicine_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Medicine_Scent;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Reekfish_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Reekfish_Scent;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Poe_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Poe_Scent;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Ilias_Scent;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Youths_Scent))
+			{
+				gameInfo.scratchPad.equipedItems.scent = items::Item::Youths_Scent;
+			}
+		}
+	}
+
+	void Mod::giveAllStoryItems()
+	{
+		if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Lake_Hylia]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Aurus_Memo))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Snowpeak]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Zoras_Domain]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Graveyard]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Kakariko_Interiors]) && tp::d_kankyo::env_light.currentRoom == 0)
+		{
+			if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Outside_Castle_Town]) && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Shops]) && tp::d_kankyo::env_light.currentRoom == 2)
+		{
+			if (tools::checkItemFlag(ItemFlags::Invoice))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Castle_Town_Interiors]) && tp::d_kankyo::env_light.currentRoom == 5)
+		{
+			if (tools::checkItemFlag(ItemFlags::Invoice))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
+			}
+		}
+		else if (tp::d_a_alink::checkStageName(stage::allStages[Stage_Hidden_Village]) || tp::d_a_alink::checkStageName(stage::allStages[Stage_Impaz_House]))
+		{
+			if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
+			}
+		}
+		else
+		{
+			if (tools::checkItemFlag(ItemFlags::Horse_Call))
+			{//finished Ilia Quest
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Ilias_Charm))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Ilias_Charm;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Wooden_Statue))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Wooden_Statue;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Invoice))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Invoice;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Renardos_Letter))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Renardos_Letter;
+			}
+
+			if (tools::checkItemFlag(ItemFlags::Coral_Earring))
+			{//given sketch
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Asheis_Sketch))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Asheis_Sketch;
+			}
+
+			if (gameInfo.scratchPad.movingActors.exploredRegions.Desert == 0b1)
+			{//given memo
+				gameInfo.scratchPad.itemWheel.Story = items::Item::NullItem;
+			}
+			else if (tools::checkItemFlag(ItemFlags::Aurus_Memo))
+			{
+				gameInfo.scratchPad.itemWheel.Story = items::Item::Aurus_Memo;
+			}
+
+		}
+	}
+
+	void Mod::allowShopItemsAnytime()
+	{
+		float linkPos[3];
+		getPlayerPos(linkPos);
+		
+		u8 hasEmptyBottleAlready = 1;
+		if (gameInfo.scratchPad.itemWheel.Bottle_1 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_2 != items::Item::Empty_Bottle &&
+			gameInfo.scratchPad.itemWheel.Bottle_3 != items::Item::Empty_Bottle && gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
+		{
+			hasEmptyBottleAlready = 0;
+		}
+
+		if (tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			game_patch::handleMaloShop();
+		}
+
+		if (isStageShop())
+		{
+			if ((tp::d_a_alink::checkStageName("R_SP160") && tp::d_kankyo::env_light.currentRoom == 4) ||
+				(tp::d_a_alink::checkStageName("F_SP108") && tp::d_kankyo::env_light.currentRoom == 4) ||
+				(tp::d_a_alink::checkStageName("F_SP116") && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 3)))
+			{//Coro shop/castle goron shop
+				if (gameInfo.aButtonText == 0x1C)
+				{//about to speak to merchant
+					if (allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0)
+					{
+						if (gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
+						{
+							bottle4Contents = gameInfo.scratchPad.itemWheel.Bottle_4;
+						}
+						gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
+						bottleTrickOn = 1;
+					}
+					if (tools::checkItemFlag(ItemFlags::Hylian_Shield))
+					{
+						hadHShield = 1;
+						tools::clearItemFlag(ItemFlags::Hylian_Shield);
+						shieldTrickOn = 1;
+					}
+				}
+				if (gameInfo.aButtonText == 0x22)
+				{//selecting if you wanna buy or not
+					if (bottleTrickOn == 1)
+					{
+						bottleTrickOn = 2;
+					}
+					if (shieldTrickOn == 1)
+					{
+						shieldTrickOn = 2;
+					}
+				}
+				if (gameInfo.aButtonText == 0x23)
+				{
+					if (bottleTrickOn == 2)
+					{
+						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+						bottleTrickOn = 0;
+					}
+					if (shieldTrickOn == 2)
+					{
+						if (hadHShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Hylian_Shield);
+						}
+						shieldTrickOn = 0;
+					}
+				}
+				if (gameInfo.aButtonText == 0x6 || gameInfo.aButtonText == 0x79)
+				{//leaving
+					if (bottleTrickOn >= 1)
+					{
+						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+						bottleTrickOn = 0;
+					}
+					if (shieldTrickOn >= 1)
+					{
+						if (hadHShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Hylian_Shield);
+						}
+						shieldTrickOn = 0;
+					}
+				}
+			}
+			else
+			{//normal shops
+				if (gameInfo.bButtonText == 0x2A)
+				{//is in shop and is selecting an item
+					if (allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0)
+					{
+						if (gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle)
+						{
+							bottle4Contents = gameInfo.scratchPad.itemWheel.Bottle_4;
+						}
+						gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
+						bottleTrickOn = 1;
+					}
+					if (tools::checkItemFlag(ItemFlags::Hylian_Shield))
+					{
+						hadHShield = 1;
+						tools::clearItemFlag(ItemFlags::Hylian_Shield);
+						shieldTrickOn = 1;
+					}
+					if (tools::checkItemFlag(ItemFlags::Wooden_Shield))
+					{
+						hadWShield = 1;
+						tools::clearItemFlag(ItemFlags::Wooden_Shield);
+						shieldTrickOn = 1;
+					}
+					if (tools::checkItemFlag(ItemFlags::Ordon_Shield))
+					{
+						hadOShield = 1;
+						tools::clearItemFlag(ItemFlags::Ordon_Shield);
+						shieldTrickOn = 1;
+					}
+
+					if ((gameInfo.scratchPad.eventBits[0x9] & 0x8) == 0/*didn't buy bomb bag yet*/ && bombBagTrickOn == 0 && tp::d_a_alink::checkStageName("R_SP109") && tp::d_kankyo::env_light.currentRoom == 1 &&
+						linkPos[2] > -600)
+					{
+						bombBag1Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
+						bombBag2Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
+						bombBag3Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
+						bombBag1Ammo = gameInfo.scratchPad.ammo.bombs1;
+						bombBag2Ammo = gameInfo.scratchPad.ammo.bombs2;
+						bombBag3Ammo = gameInfo.scratchPad.ammo.bombs3;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = 0xFF;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = 0xFF;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = 0xFF;
+						bombBagTrickOn = 1;
+					}
+
+				}
+				else if (gameInfo.aButtonText == 0x23)
+				{//is in shop and is exiting the item select mode
+					if (bottleTrickOn == 1)
+					{
+						gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+						bottleTrickOn = 0;
+					}
+					if (shieldTrickOn == 1)
+					{
+						if (hadHShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Hylian_Shield);
+						}
+						if (hadWShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Wooden_Shield);
+						}
+						if (hadOShield == 1)
+						{
+							tools::setItemFlag(ItemFlags::Ordon_Shield);
+						}
+						shieldTrickOn = 0;
+					}
+					if (bombBagTrickOn == 1)
+					{
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
+						gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
+						gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
+						gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
+						gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
+						bombBagTrickOn = 0;
+					}
+				}
+				if ((gameInfo.scratchPad.eventBits[0x9] & 0x8) != 0/*bought bomb bag*/ && bombBagTrickOn == 1)
+				{//bought bomb bag check
+					gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
+					gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
+					gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
+					gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
+					gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
+					gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
+					bombBagTrickOn = 0;
+				}
+			}
+		}
+		else
+		{
+		if (bottleTrickOn >= 1)
+		{
+			gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
+			bottleTrickOn = 0;
+		}
+		if (shieldTrickOn >= 1)
+		{
+			if (hadHShield == 1)
+			{
+				tools::setItemFlag(ItemFlags::Hylian_Shield);
+			}
+			if (hadWShield == 1)
+			{
+				tools::setItemFlag(ItemFlags::Wooden_Shield);
+			}
+			if (hadOShield == 1)
+			{
+				tools::setItemFlag(ItemFlags::Ordon_Shield);
+			}
+			shieldTrickOn = 0;
+		}
+		if (bombBagTrickOn >= 1)
+		{
+			gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
+			gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
+			gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
+			gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
+			gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
+			gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
+			bombBagTrickOn = 0;
+		}
+		}
+	}
+
+
+	void Mod::reorderItemWheel()
+	{
+		u8 currentSlot = 0x0;
+		if (tools::checkItemFlag(ItemFlags::Clawshots))
+		{
+			gameInfo.scratchPad.itemWheel.Double_Clawshot = items::Item::Clawshots;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xA;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Dominion_Rod))
+		{
+			gameInfo.scratchPad.itemWheel.Dominion_Rod = items::Item::Dominion_Rod;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x8;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Ball_and_Chain))
+		{
+			gameInfo.scratchPad.itemWheel.Ball_and_Chain = items::Item::Ball_and_Chain;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x6;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Spinner))
+		{
+			gameInfo.scratchPad.itemWheel.Spinner = items::Item::Spinner;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x2;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Clawshot))
+		{
+			gameInfo.scratchPad.itemWheel.Clawshot = items::Item::Clawshot;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x9;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Heros_Bow))
+		{
+			gameInfo.scratchPad.itemWheel.Bow = items::Item::Heros_Bow;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x4;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Iron_Boots))
+		{
+			gameInfo.scratchPad.itemWheel.Iron_Boots = items::Item::Iron_Boots;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x3;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Boomerang))
+		{
+			gameInfo.scratchPad.itemWheel.Boomerang = items::Item::Boomerang;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x0;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Lantern))
+		{
+			gameInfo.scratchPad.itemWheel.Lantern = items::Item::Lantern;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x1;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Slingshot))
+		{
+			gameInfo.scratchPad.itemWheel.Slingshot = items::Item::Slingshot;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x17;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Fishing_Rod != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x14;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Hawkeye))
+		{
+			gameInfo.scratchPad.itemWheel.Hawkeye = items::Item::Hawkeye;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x5;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bomb_Bag_1 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xF;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bomb_Bag_2 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x10;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bomb_Bag_3 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x11;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_1 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xB;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_2 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xC;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_3 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xD;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Bottle_4 != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xE;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Story != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x13;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Ooccoo != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x12;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Sky_Book != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x16;
+			currentSlot++;
+		}
+		if (tools::checkItemFlag(ItemFlags::Horse_Call))
+		{
+			gameInfo.scratchPad.itemWheel.Horse_Call = items::Item::Horse_Call;
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x15;
+			currentSlot++;
+		}
+		if (gameInfo.scratchPad.itemWheel.Item_Slot != 0xFF)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0x7;
+			currentSlot++;
+		}
+
+		for (u16 i = currentSlot; i < sizeof(gameInfo.scratchPad.itemSlotsOrder) / sizeof(u8); i++)
+		{
+			gameInfo.scratchPad.itemSlotsOrder[currentSlot] = 0xFF;
+		}
+	}
+
+	void Mod::fixYetaAndYeto()
+	{
+		if (tools::checkItemFlag(ItemFlags::Bed_Key) && tp::d_a_alink::checkStageName("D_MN11"))
+		{
+			float linkPos[3];
+			getPlayerPos(linkPos);
+
+			if (gameInfo.aButtonText == 0x6 && (tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 1 ||
+				tp::d_kankyo::env_light.currentRoom == 2 || tp::d_kankyo::env_light.currentRoom == 3 || tp::d_kankyo::env_light.currentRoom == 4 ||
+				tp::d_kankyo::env_light.currentRoom == 7) && linkPos[1] == 0)
+			{
+				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b0;
+				yetaTrickOn = 1;
+			}
+			if (gameInfo.aButtonText == 0x79 && yetaTrickOn == 1)
+			{
+				gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
+				yetaTrickOn = 0;
+			}
+		}
+	}
+
+	void Mod::fixLBTBossDoor()
+	{
+		if (tp::d_a_alink::checkStageName("D_MN01") && tp::d_kankyo::env_light.currentRoom == 3)
+		{
+			float linkPos[3];
+			getPlayerPos(linkPos);
+			if (gameInfo.aButtonText == 0x6 && linkPos[1] >= -340 && linkPos[1] <= -320)
+			{
+				nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
+				LBTBossDoorTrickOn = 1;
+			}
+			if (gameInfo.aButtonText == 0x79 && LBTBossDoorTrickOn == 1)
+			{
+				gameInfo.localAreaNodes.nbKeys = nbLBTKeys;
+				LBTBossDoorTrickOn = 0;
+			}
+		}
+	}
+
+	void Mod::fixFTTotemMonkey()
+	{
+		if (tp::d_a_alink::checkStageName("D_MN05") && tp::d_kankyo::env_light.currentRoom == 12)
+		{
+			if ((gameInfo.localAreaNodes.unk_0[0xA] & 0x4) != 0)
+			{
+				gameInfo.localAreaNodes.unk_0[0x12] |= 0x1;
+			}
+		}
+	}
+
+	void Mod::preventPoweringUpDomRod()
+	{
+		if (gameInfo.scratchPad.itemWheel.Sky_Book == 0xFF && tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_empty) && !tools::checkItemFlag(ItemFlags::Ancient_Sky_Book_partly_filled))
+		{
+			gameInfo.scratchPad.itemWheel.Sky_Book = items::Item::Ancient_Sky_Book_empty;
+		}
+		if (tp::d_a_alink::checkStageName("R_SP209"))
+		{
+			if (gameInfo.scratchPad.itemWheel.Sky_Book == items::Item::Ancient_Sky_Book_empty)
+			{
+				gameInfo.scratchPad.itemWheel.Sky_Book = 0xFF;
+			}
+		}
+	}
+
+	bool Mod::isStageShop()
+	{
+		u8 totalShopStages = sizeof(stage::shopStages) / sizeof(stage::shopStages[0]);
+		for (u8 i = 0; i < totalShopStages; i++)
+		{
+			if (tp::d_a_alink::checkStageName(stage::shopStages[i]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Mod::doCustomTRESActor(void* mStatus_roomControl)
+	{
+		tp::d_com_inf_game::GameInfo* pGameInfo = &tp::d_com_inf_game::dComIfG_gameInfo;
+
+		u32 numChecks = sizeof(customChecks) / sizeof(customChecks[0]);
+
+		// Count and temp array for the checks for this stage+room
+		u32 checkCount = 0;
+		customCheck* checks = new customCheck[5];  // Assume there's never more than 5 custom checks per stage+room
+
+		// Loop through checks and place if correct room and stage
+		for (u32 i = 0; i < numChecks; i++)
+		{
+			customCheck* check = &customChecks[i];
+
+			if (0 == strcmp(pGameInfo->nextStageVars.nextStage, check->stage) &&
+				(0xFF == check->room || pGameInfo->nextStageVars.nextRoom == check->room) && // 0xFF = no need to check for room
+				check->requirement())
+			{
+				checks[checkCount] = *check;
+				checkCount++;
+			}
+		}
+
+		if (checkCount > 0)
+		{
+			// Create required structs
+			tp::d_stage::TRES* TRES = new tp::d_stage::TRES[checkCount];
+			tp::d_stage::dzxChunkTypeInfo chunkInfo;
+			strcpy(chunkInfo.tag, "ACTR");  // has to be ACTR for the function we use
+			chunkInfo.numChunks = checkCount;
+			chunkInfo.chunkDataPtr = TRES;
+
+			// Populate TRES array with data
+			for (u32 i = 0; i < checkCount; i++)
+			{
+				customCheck check = checks[i];
+
+				if (check.overrides != nullptr)
+				{
+					check.overrides();
+				}
+
+				strcpy(TRES[i].actorName, "tboxA0");
+				TRES[i].flags = 0xFF0FF000 | (check.chestType << 20) | (check.saveFlag << 4);
+
+				// Translate hex to float (1:1)
+				typeTransform<u32, float> X, Y, Z;
+				X.a = check.X;
+				Y.a = check.Y;
+				Z.a = check.Z;
+
+				TRES[i].X = X.b;
+				TRES[i].Y = Y.b;
+				TRES[i].Z = Z.b;
+
+				TRES[i].angle = check.Angle;
+
+				TRES[i].item = check.itemID;
+			}
+
+			/// Create the actors
+			global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, &chunkInfo, 0, nullptr);	
+			delete[] TRES;
+			Singleton::getInstance()->hasActorCommonLayerRan++;
+		}
+
+		delete[] checks;
+		return;
+	}
+
+	void Mod::changeLanternColor()
+	{
+		
+		// set lantern variables
+		u32 lanternVariableAddress = reinterpret_cast<u32>(&tp::d_a_alink::lanternVariables);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x3D) = reinterpret_cast<u8>(innerRed);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x3F) = reinterpret_cast<u8>(innerGreen);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x41) = reinterpret_cast<u8>(innerBlue);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x43) = reinterpret_cast<u8>(outerRed);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x45) = reinterpret_cast<u8>(outerGreen);
+		*reinterpret_cast<u8*>(lanternVariableAddress + 0x47) = reinterpret_cast<u8>(outerBlue);
+	}
+
+	bool Mod::canQuickTransform()
+	{
+		// Make sure Link is actually loaded
+		tp::d_com_inf_game::LinkMapVars* linkMapPtr = gameInfo.linkMapPtr;
+		//check to make sure that the quick transform variable is enabled
+		if (enableQuickTransform == 0)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> option disabled");
+			return false;
+		}
+		
+		if (!linkMapPtr)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> no valid spot");
+			return false;
+		}
+
+		// Make sure Link currently isnt in an event
+		if (tp::d_a_alink::checkEventRun(linkMapPtr))
+		{
+			return false;
+		}
+
+		// Get the value for the alpha of the Z button
+		// Pointer path is not currently defined yet
+		u32 zButtonAlphaPtr = reinterpret_cast<u32>(tp::d_meter2_info::wZButtonPtr);
+		if (!zButtonAlphaPtr)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> alpha ptr 1 failed");
+			return false;
+		}
+
+		zButtonAlphaPtr = *reinterpret_cast<u32*>(zButtonAlphaPtr + 0x10C);
+		if (!zButtonAlphaPtr)
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> alpha ptr 2 failed");
+			return false;
+		}
+
+		float zButtonAlpha = *reinterpret_cast<float*>(zButtonAlphaPtr + 0x720);
+
+		// Check if the Z button is dimmed
+		if (zButtonAlpha != 1.f)
+		{
+			// Z button is currently dimmed, so don't allow transforming
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> z button dimmed");
+			return false;
+		}
+
+		//make sure link is not underwater, or talking to anyone
+		if (tp::d_a_alink::linkStatus->status != 0x1)
+		{
+			//link is in an invalid state
+			return false;
+		} 
+
+		// Make sure you have the ability to warp
+		if ((gameInfo.scratchPad.eventBits[0xD] & 0x4) == 0) 
+		{
+			return false;
+		}
+
+		//Check to see if link is riding a snowboard
+		if (tp::d_a_alink::checkBoardRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on board");
+			return false;
+		}
+		
+		//Check to see if link is riding the canoe
+		if (tp::d_a_alink::checkCanoeRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on canoe");
+			return false;
+		}
+		
+		//Check to see if link is riding Epona
+		if (tp::d_a_alink::checkHorseRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on horse");
+			return false;
+		}
+		
+		//Check to see if link is riding a boar
+		if (tp::d_a_alink::checkBoarRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on boar");
+			return false;
+		}
+		
+		//Check to see if link is riding the spinner
+		if (tp::d_a_alink::checkSpinnerRide(linkMapPtr))
+		{
+			strcpy(sysConsolePtr->consoleLine[20].line, "-> on spinner");
+			return false;
+		}
+
+		if (gameInfo.linkMapPtr->equippedItem == items::Ball_and_Chain)
+		{
+			return false;
+		}
+
+		strcpy(sysConsolePtr->consoleLine[20].line, "-> Can Transform");
+		return true;
+	}
+
+	bool Mod::canChangeToD()
+	{
+		if ((gameInfo.scratchPad.eventBits[0xD] & 0x4) == 0)
+		{
+			return false;
+		}
+		
+		if (gameInfo.aButtonText != 0x23)
+		{
+			return false;
+		}
+		
+		if (gameInfo.eventSystem.actionStatus != 0x29)
+		{
+			return false;
+		}
+		
+		if (Singleton::getInstance()->midnaTimeControl == 0)
+		{
+			return false;
+		}
+			
+		if (!chestRandomizer->isStageTOD())
+		{
+			return false;
+		}
+		return true;
+	}
+
+} // namespace mod

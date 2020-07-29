@@ -4,9 +4,9 @@
 
 namespace tp::d_map_path_dmap
 {
-    extern "C"
-    {
-        void getMapPlayerPos(float posOut[3]);
-        s32 getMapPlayerAngleY();
-    }
+	extern "C"
+	{
+		void getMapPlayerPos(float posOut[3]);
+		u32 getMapPlayerAngleY();
+	}
 }
