@@ -35,6 +35,7 @@
 #include <tp/d_item.h>
 #include <tp/d_item_data.h>
 #include <tp/d_meter2_info.h>
+#include <tp/Z2SeqMgr.h>
 #include <cstdio>
 #include <cstring>
 
@@ -72,6 +73,7 @@ namespace mod
 		game_patch::assemblyOverwrites();
 		game_patch::increaseWalletSize();
 		game_patch::increaseClimbSpeed();
+		game_patch::changeFieldModels();
 		
 		
 		// Causes issues right now (argarok cannot be beaten)
@@ -216,7 +218,7 @@ namespace mod
 		hudConsole->addOption(page, "Early PoT?", &Singleton::getInstance()->isEarlyPoTEnabled, 0x1);
 		hudConsole->addOption(page, "Open HC?", &Singleton::getInstance()->isEarlyHCEnabled, 0x1);
 		//color
-		/*page = hudConsole->addPage("Tunic Color1");
+		page = hudConsole->addPage("Tunic Color1");
 
 		hudConsole->addOption(page, "Top toggle:", &topToggle, 0x1);
 		hudConsole->addOption(page, "Red top:", &redTop, 0xFF);
@@ -225,7 +227,7 @@ namespace mod
 		hudConsole->addOption(page, "Bottom toggle:", &bottomToggle, 0x1);
 		hudConsole->addOption(page, "Red bottom:", &redBottom, 0xFF);
 		hudConsole->addOption(page, "Green bottom:", &greenBottom, 0xFF);
-		hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF); */
+		hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF); 
 
 			//buttons
 			/*page = hudConsole->addPage("Button texts");
@@ -266,6 +268,7 @@ namespace mod
 		//hudConsole->addOption(page, "Coords as hex?", &coordsAreInHex, 0x1);
 		hudConsole->addOption(page, "GM Story Flag?", &Singleton::getInstance()->isGMStoryPatch, 0x1);
 		hudConsole->addOption(page, "Start w/ Crstl?", &Singleton::getInstance()->startWithCrystal, 0x1);
+		hudConsole->addOption(page, "Shuffle BGM?", &Singleton::getInstance()->isCustomMusicEnabled, 0x1);
 				
 		hudConsole->addWatch(page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8);
 		hudConsole->addWatch(page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8);
@@ -276,6 +279,7 @@ namespace mod
 
 		//Cosmetic Changes
 		page = hudConsole->addPage("Cosmetic");
+		hudConsole->addOption(page, "Rainbow Lantern?", &Singleton::getInstance()->isRainbowLanternEnabled, 0x1);
 		hudConsole->addOption(page, "LTN In Rd:", &innerRed, 0xFF);
 		hudConsole->addOption(page, "LTN In Green:", &innerGreen, 0xFF);
 		hudConsole->addOption(page, "LTN In Blue:", &innerBlue, 0xFF);
@@ -558,9 +562,22 @@ namespace mod
 			{
 				global::modPtr->doCustomTRESActor(mStatus_roomControl);
 			}
+
+			game_patch::modifyFieldItems(chunkTypeInfo);
+
 			return global::modPtr->actorCommonLayerInit_trampoline(mStatus_roomControl, chunkTypeInfo, unk3, unk4);
 		}
 		);
+
+		actorInit_trampoline = patch::hookFunction(tp::d_stage::actorInit,
+			[](void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4)
+		{
+			// Modify field items in certain rooms
+			game_patch::modifyFieldItems(chunkTypeInfo);
+
+			// Call original function
+			return global::modPtr->actorInit_trampoline(mStatus_roomControl, chunkTypeInfo, unk3, unk4);
+		});
 
 
 		putSave_trampoline = patch::hookFunction(tp::d_save::putSave,
@@ -579,7 +596,7 @@ namespace mod
 		);
 
 		createItemForPresentDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForPresentDemo,
-			[](const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3])
+			[](const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const s16 rot[3], const float scale[3])
 			{
 				// Call replacement function
 				/*char txt[50];
@@ -588,59 +605,59 @@ namespace mod
 
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForPresentDemo");
 
-				return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+				return global::modPtr->createItemForPresentDemo_trampoline(pos, item, unk3, unk4, unk5, rot, scale);
 			}
 		);
 			
 
 		createItemForTrBoxDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForTrBoxDemo,
-			[](const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3])
+			[](const float pos[3], s32 item, s32 itemPickupFlag, s32 roomNo, const s16 rot[3], const float scale[3])
 			{
 				// Call replacement function
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForTrBoxDemo");
 
-				return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, unk3, unk4, unk5, unk6);
+				return global::modPtr->createItemForTrBoxDemo_trampoline(pos, item, itemPickupFlag, roomNo, rot, scale);
 			}
 		);
 		//this function is called when the heart spawns, not when link gets it		
 		//createItemForTrBoxDemo is called when heart container is gotten
 		createItemForBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForBoss,
-			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7, s32 unk8)
+			[](const float pos[3], s32 item, s32 roomNo, const s16 rot[3], const float scale[3], float unk6, float unk7, s32 parameters)
 			{
 				// Call replacement function
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForBoss");
 
-				return global::modPtr->createItemForBoss_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7, unk8);
+				return global::modPtr->createItemForBoss_trampoline(pos, item, roomNo, rot, scale, unk6, unk7, parameters);
 			}
 		);
 
 		createItemForMidBoss_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForMidBoss,
-			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7)
+			[](const float pos[3], s32 item, s32 roomNo, const s16 rot[3], const float scale[3], s32 unk6, s32 itemPickupFlag)
 			{
 				// Call replacement function
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForMidBoss");
 
-				return global::modPtr->createItemForMidBoss_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+				return global::modPtr->createItemForMidBoss_trampoline(pos, item, roomNo, rot, scale, unk6, itemPickupFlag);
 			}
 		);
 
 		createItemForDirectGet_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForDirectGet,
-			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+			[](const float pos[3], s32 item, s32 unk3, const s16 rot[3], const float scale[3], float unk6, float unk7)
 			{
 				// Call replacement function
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForDirectGet");
 
-				return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+				return global::modPtr->createItemForDirectGet_trampoline(pos, item, unk3, rot, scale, unk6, unk7);
 			}
 		);
 
 		createItemForSimpleDemo_trampoline = patch::hookFunction(tp::f_op_actor_mng::createItemForSimpleDemo,
-			[](const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7)
+			[](const float pos[3], s32 item, s32 unk3, const s16 rot[3], const float scale[3], float unk6, float unk7)
 			{
 				// Call replacement function
 				item = global::modPtr->procItemCreateFunc(pos, item, "createItemForSimpleDemo");
 
-				return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, unk4, unk5, unk6, unk7);
+				return global::modPtr->createItemForSimpleDemo_trampoline(pos, item, unk3, rot, scale, unk6, unk7);
 			}
 		);
 
@@ -765,6 +782,41 @@ namespace mod
 			return global::modPtr->setItemBombNumCount_trampoline(unk1, bagNb, amount);
 		}
 		);
+
+		bgmStart_trampoline = patch::hookFunction(tp::z2seqmgr::bgmStart,
+			[](void* Z2SeqMgr, u32 bgmId, u32 unk3, s32 unk4)
+		{
+			// Get the new bgmId
+			bgmId = array::getRandomBgmId(bgmId);
+			return global::modPtr->bgmStart_trampoline(Z2SeqMgr, bgmId, unk3, unk4);
+		}
+		);
+
+		subBgmStart_trampoline = patch::hookFunction(tp::z2seqmgr::subBgmStart,
+			[](void* Z2SeqMgr, u32 bgmId)
+		{
+			// Get the new bgmId
+			bgmId = array::getRandomBgmId(bgmId);
+			return global::modPtr->subBgmStart_trampoline(Z2SeqMgr, bgmId);
+		}
+		);
+
+		bgmStreamPrepare_trampoline = patch::hookFunction(tp::z2seqmgr::bgmStreamPrepare,
+			[](void* Z2SeqMgr, u32 audioStreamingId)
+		{
+			// Get the new audioStreamingId
+			audioStreamingId = array::getRandomAudioStreamId(audioStreamingId);
+			return global::modPtr->bgmStreamPrepare_trampoline(Z2SeqMgr, audioStreamingId);
+		}
+		);
+
+		// Initialize bgmIndexArray
+		u32 bgmIndexArrayTotalElements = sizeof(array::bgmIndexArray) / sizeof(array::bgmIndexArray[0]);
+		tools::fillArrayIncrement(array::bgmIndexArray, bgmIndexArrayTotalElements, 1);
+
+		// Initialize audioStreamingIndexArray
+		u32 audioStreamingIndexArrayTotalElements = sizeof(array::audioStreamingIndexArray) / sizeof(array::audioStreamingIndexArray[0]);
+		tools::fillArrayIncrement(array::audioStreamingIndexArray, audioStreamingIndexArrayTotalElements, 1);
 	}
 
 	void Mod::procNewFrame()
@@ -1038,6 +1090,7 @@ namespace mod
 				frame_counter = 0;
 			}
 		}
+
 		checkSearchID = (checkSearchID2 * 0x100) + checkSearchID1;
 		checkReverseSearchID = (checkReverseSearchID2 * 0x100) + checkReverseSearchID1;
 		if (checkSearchID != lastCheckSearchID)
@@ -1895,7 +1948,7 @@ namespace mod
 			tp::d_stage::dzxChunkTypeInfo chunkInfo;
 			strcpy(chunkInfo.tag, "ACTR");  // has to be ACTR for the function we use
 			chunkInfo.numChunks = checkCount;
-			chunkInfo.chunkDataPtr = TRES;
+			chunkInfo.chunkDataPtr = reinterpret_cast<tp::d_stage::Actr*>(TRES);
 
 			// Populate TRES array with data
 			for (u32 i = 0; i < checkCount; i++)
@@ -1937,7 +1990,80 @@ namespace mod
 
 	void Mod::changeLanternColor()
 	{
-		
+		if (Singleton::getInstance()->isRainbowLanternEnabled == 0x1)
+		{
+			
+			if (innerRed != 0xFF && innerRed != 0x0)
+			{
+				innerRed = innerRed + 0xD;
+			}
+			if (innerRed == 0xFF || innerRed == 0x0)
+			{
+				innerRed = 0x0;
+				if (innerGreen != 0xFF && innerGreen != 0x0)
+				{
+					innerGreen = innerGreen + 0xD;
+				}
+			}
+			if (innerRed == 0xFF || innerRed == 0x0)
+			{
+				if (innerGreen == 0xFF || innerGreen == 0x0)
+				{
+					innerGreen = 0x0;
+					if (innerBlue != 0xFF)
+					{
+						innerBlue = innerBlue + 0xD;
+					}
+				}
+			}
+			if (innerRed == 0xFF || innerRed == 0x0)
+			{
+				if (innerGreen == 0xFF || innerGreen == 0x0)
+				{
+					if (innerBlue == 0xFF)
+					{
+						innerRed = 0x1;
+						innerGreen = 0x1;
+						innerBlue = 0x1;
+					}
+				}
+			}
+			if (outerRed != 0xFF && outerRed != 0x0)
+			{
+				outerRed = outerRed + 0xD;
+			}
+			if (outerRed == 0xFF || outerRed == 0x0)
+			{
+				outerRed = 0x0;
+				if (outerGreen != 0xFF && outerGreen != 0x0)
+				{
+					outerGreen = outerGreen + 0xD;
+				}
+			}
+			if (outerRed == 0xFF || outerRed == 0x0)
+			{
+				if (outerGreen == 0xFF || outerGreen == 0x0)
+				{
+					outerGreen = 0x0;
+						if (outerBlue != 0xFF)
+						{
+							outerBlue = outerBlue + 0xD;
+						}
+				}
+			}
+			if (outerRed == 0xFF || outerRed == 0x0)
+			{
+				if (outerGreen == 0xFF || outerGreen == 0x0)
+				{
+					if (outerBlue == 0xFF)
+					{
+						outerRed = 0x1;
+						outerGreen = 0x1;
+						outerBlue = 0x1;
+					}
+				}
+			}
+		}
 		// set lantern variables
 		u32 lanternVariableAddress = reinterpret_cast<u32>(&tp::d_a_alink::lanternVariables);
 		*reinterpret_cast<u8*>(lanternVariableAddress + 0x3D) = reinterpret_cast<u8>(innerRed);
@@ -2082,5 +2208,4 @@ namespace mod
 		}
 		return true;
 	}
-
 } // namespace mod

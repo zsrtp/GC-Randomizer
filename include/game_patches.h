@@ -2,6 +2,7 @@
 
 #include "defines.h"
 #include <tp/d_com_inf_game.h>
+#include <tp/d_stage.h>
 
 
 
@@ -225,4 +226,8 @@ namespace mod::game_patch
 	void setToTBossFlag();
 	void setCiTSDungeonFlag();
 	void setCiTSBossFlag();
+
+	void changeFieldModels();
+	void modifyFieldItems(tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo);
+
 }

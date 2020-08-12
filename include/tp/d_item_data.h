@@ -39,6 +39,10 @@ namespace tp::d_item_data
 		u8 mFlags;
 	} __attribute__((__packed__));
 
+	
+
+	
+
 	static_assert(sizeof(ItemResource) == 0x18);
 	static_assert(sizeof(FieldItemRes) == 0x10);
 	static_assert(sizeof(ItemInfo) == 0x4);

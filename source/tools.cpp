@@ -12,13 +12,25 @@ namespace mod::tools
 {
 	u64 randomSeed = 0x9e3779b97f4a7c15;
 
-	u32 getRandom(u32 max)
+	u64 bgmSeed = randomSeed;
+
+	u32 getRandomMain(u32 max, u64* seed)
 	{
-		u64 z = (randomSeed += 0x9e3779b97f4a7c15);
+		u64 z = (*seed += 0x9e3779b97f4a7c15);
 		z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9;
 		z = (z ^ (z >> 27)) * 0x94d049bb133111eb;
 
 		return (z % max);
+	}
+
+	u32 getRandom(u32 max)
+	{
+		return getRandomMain(max, &randomSeed);
+	}
+
+	u32 getRandomBgm(u32 max)
+	{
+		return getRandomMain(max, &bgmSeed);
 	}
 
 	void triggerRandomGenerator()
@@ -109,4 +121,29 @@ namespace mod::tools
 		u32* tempItemFlagsArray = gameInfo.scratchPad.itemFlags;
 		return tempItemFlagsArray[tempFlagVar / flagsPerVar] & (1 << (tempFlagVar % flagsPerVar));
 	}
+
+	void shuffleByteArray(u8* array, u32 numItems) // Fisher–Yates shuffle
+	{
+		for (s32 i = numItems - 1; i > 0; i--)
+		{
+			// Get a random index
+			u32 tempIndex = getRandom(numItems) % (i + 1);
+
+			// Swap array[i] with array[tempIndex]
+			u8 tempByte = array[i];
+			array[i] = array[tempIndex];
+			array[tempIndex] = tempByte;
+		}
+	}
+
+	void fillArrayIncrement(u8* array, u32 numItems, u8 incrementAmount)
+	{
+		u8 val = 0;
+		for (u32 i = 0; i < numItems; i++)
+		{
+			array[i] = val;
+			val += incrementAmount;
+		}
+	}
+
 }

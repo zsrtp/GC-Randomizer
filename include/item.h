@@ -82,5 +82,5 @@ namespace mod::item
 	 * Contains the values for the flags to be set to skip the animations of first getting specific items
 	 */
 	extern u8 itemGetAnimationFlags[10];
-	extern u8 itemsWithNoFieldModel[2];
+	extern u8 itemsWithNoFieldModel[0x69];
 }

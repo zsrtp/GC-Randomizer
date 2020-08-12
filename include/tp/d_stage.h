@@ -24,6 +24,8 @@ namespace tp::d_stage
 		u16 enemyNum;
 	} __attribute__((__packed__));
 
+	
+
 	static_assert(sizeof(Item) == 0x20);
 
 	extern "C"

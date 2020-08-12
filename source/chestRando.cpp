@@ -211,8 +211,12 @@ namespace mod
 
 		delete[] itemOrder;
 
+		setAudioArrayValues();
+
 		// Reset seed if the player wanted to lock it (otherwise it advances anyways)
 		tools::randomSeed = currentSeed;
+
+		
 	}
 
 	void ChestRandomizer::placeCheck(item::ItemCheck* sourceCheck, item::ItemCheck* destCheck)
@@ -2293,6 +2297,57 @@ namespace mod
 		else
 		{
 			return true;
+		}
+	}
+
+	void ChestRandomizer::setAudioArrayValues()
+	{
+		// Reinitialize bgmIndexArray
+		u8* tempBgmIndexArray = array::bgmIndexArray;
+		u32 bgmIndexArrayTotalElements = sizeof(array::bgmIndexArray) / sizeof(array::bgmIndexArray[0]);
+		tools::fillArrayIncrement(tempBgmIndexArray, bgmIndexArrayTotalElements, 1);
+
+		// Reinitialize audioStreamingIndexArray
+		u8* tempAudioStreamingIndexArray = array::audioStreamingIndexArray;
+		u32 audioStreamingIndexArrayTotalElements = sizeof(array::audioStreamingIndexArray) / sizeof(array::audioStreamingIndexArray[0]);
+		tools::fillArrayIncrement(tempAudioStreamingIndexArray, audioStreamingIndexArrayTotalElements, 1);
+
+		// Reinitialize bgmFanfareArray
+		u8* tempBgmFanfareArray = array::bgmFanfareArray;
+		u32 bgmFanfareArrayTotalElements = sizeof(array::bgmFanfareArray) / sizeof(array::bgmFanfareArray[0]);
+		tools::fillArrayIncrement(tempBgmFanfareArray, bgmFanfareArrayTotalElements, 1);
+
+		if (Singleton::getInstance()->isCustomMusicEnabled == 0x1)
+		{
+			// Shuffle bgmIndexArray
+			tools::shuffleByteArray(tempBgmIndexArray, bgmIndexArrayTotalElements);
+
+			// Since we are shuffling bgm, we will shuffle bgmFanfareArray as well
+			tools::shuffleByteArray(tempBgmFanfareArray, bgmFanfareArrayTotalElements);
+
+			int j = 0;
+			for (u32 i = 0; i < bgmIndexArrayTotalElements; i++)
+			{
+				if (!array::checkIfBgmIdIsValid(array::bgmIndexArray[i]))
+				{
+					u8 tempId;
+					u8 const maxId = 0xAA;
+					do
+					{
+						tempId = tools::getRandomBgm(maxId);
+					} while (!array::checkIfBgmIdIsValid(tempId));
+
+					array::bgmIndexArray[i] = tempId;
+				}
+
+				if (array::checkIfBgmIdIsFanfare(i))
+				{
+					array::bgmIndexArray[i] = array::bgmFanfareArray[j];
+					j++;
+				}
+			}
+			// Shuffle audioStreamingIndexArray
+			tools::shuffleByteArray(tempAudioStreamingIndexArray, audioStreamingIndexArrayTotalElements);
 		}
 	}
 }

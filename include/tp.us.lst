@@ -151,6 +151,7 @@
 80368994:strcmp
 80368B2C:strcpy
 80368AE8:strncpy
+80368954:strncmp
 
 //currentState
 803A66B3:current_state
@@ -194,3 +195,8 @@
 
 //d_meter2_info.o
 804301A4:wZButtonPtr
+
+//Z2SeqMgr.o
+802af010:bgmStart
+802af49c:subBgmStart
+802afb94:bgmStreamPrepare

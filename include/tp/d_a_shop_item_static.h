@@ -33,7 +33,7 @@ namespace tp::d_a_shop_item_static
 	
 	struct ShopItemData
 	{
-		char* arcName;
+		const char* arcName;
 		s16 modelResIdx;
 		s16 wBtkResIdx;
 		s16 unk_8;

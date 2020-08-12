@@ -144,5 +144,7 @@ namespace mod
 			 * check if the check gotten in a grotto is the right one
 			 */
 			bool isGrottoCheckOk(u16 checkID);
+
+			void setAudioArrayValues();
 	};
 }

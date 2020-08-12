@@ -19,23 +19,6 @@ namespace tp::d_stage
 	 *  0001
 	 *  80401234 = 1 TRES Chunk at this address
 	 */
-	
-	struct Actr
-	{
-		char objectName[8];
-		u32 parameters;
-		float pos[3];
-		s16 rot[3];
-		u16 enemyNum;
-	} __attribute__((__packed__));
-	static_assert(sizeof(Actr) == 0x20);
-
-	struct dzxChunkTypeInfo
-	{
-		char tag[4];
-		u32 numChunks;
-		void* chunkDataPtr;
-	} __attribute__((__packed__));
 
 	struct TRES
 	{
@@ -53,6 +36,25 @@ namespace tp::d_stage
 
 		TRES() { memset(this, 0xFF, sizeof(TRES)); }
 	} __attribute__((__packed__));
+
+	struct Actr
+	{
+		char objectName[8];
+		u32 parameters;
+		float pos[3];
+		s16 rot[3];
+		u16 enemyNum;
+	} __attribute__((__packed__));
+
+	struct dzxChunkTypeInfo
+	{
+		char tag[4];
+		u32 numChunks;
+		Actr* chunkDataPtr;
+	} __attribute__((__packed__));
+
 	static_assert(sizeof(TRES) == 0x20);
+	static_assert(sizeof(Actr) == 0x20);
+	static_assert(sizeof(dzxChunkTypeInfo) == 0xC);
 
 }  // namespace tp
