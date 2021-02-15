@@ -23,7 +23,11 @@ namespace mod::tools
 
 	void triggerRandomGenerator()
 	{
-		sprintf(sysConsolePtr->consoleLine[12].line, "New rando");
+		// This function runs when the user starts a new file (intro cs is running)
+		// We do it the dirty way and store the seed behind Epona's name (hehe xd)
+		// With 1.0 this will change anyway so I really don't care and it improves QoL for players!
+
+		*global::seedInSaveFile =  tools::randomSeed;
 		global::chestRandoPtr->generate();
 	}
 
