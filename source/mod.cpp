@@ -884,6 +884,14 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         if (isLoading)
         {
             eventListener->checkLoadEvents();
+
+            // Check if there's a random seed in the current save data
+            if (*global::seedInSaveFile > 0 && *global::seedInSaveFile != tools::randomSeed)
+            {
+                customSeed = true;
+                tools::randomSeed = *global::seedInSaveFile;
+                chestRandomizer->generate();
+            }
         }
 
         if (controller::checkForButtonInputSingleFrame((controller::PadInputs::Button_R | controller::PadInputs::Button_Z)))
