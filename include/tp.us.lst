@@ -194,3 +194,6 @@
 
 //d_meter2_info.o
 804301A4:wZButtonPtr
+
+//Z2SceneMgr
+802B9B68:sceneChange
