@@ -113,7 +113,9 @@ void (*sceneChange_trampoline)(Z2SceneMgr* sceneMgr, JAISoundID id,u8 SeWave1,u8
 
 void sceneChangeHook(Z2SceneMgr* sceneMgr, JAISoundID BGMId,u8 SeWave1,u8 SeWave2,u8 BgmWave1,u8 BgmWave2,u8 DemoWave,bool param_7) {
     u32 id = BGMId.id;
-    if (id>=0x1000000 && id<0x2000000 && mod::musicrando::musicRandoEnabled == 0x1) { //Only Sequences are applied here
+    if (mod::musicrando::musicRandoEnabled && id>=0x1000000 && id<0x2000000)
+    {
+         //Only Sequences are applied here
         id = id-0x1000000;
         u8 index_of_id = 0;
         bool found = false;
