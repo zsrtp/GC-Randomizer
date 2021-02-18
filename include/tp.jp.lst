@@ -180,3 +180,6 @@
 
 //d_meter2_info.o
 8042A2E4:wZButtonPtr
+
+//Z2SceneMgr
+802BBFA8:sceneChange

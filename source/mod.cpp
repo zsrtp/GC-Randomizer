@@ -38,6 +38,7 @@
 #include "stage.h"
 #include "systemConsole.h"
 #include "tools.h"
+#include "musicRando.h"
 
 namespace mod
 {
@@ -276,6 +277,10 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         hudConsole->addOption(page, "LTN Ot Red:", &outerRed, 0xFF);
         hudConsole->addOption(page, "LTN Ot Green:", &outerGreen, 0xFF);
         hudConsole->addOption(page, "LTN Ot Blue:", &outerBlue, 0xFF);
+
+        //Bgm Options
+        page = hudConsole->addPage("BGM");
+        hudConsole->addOption(page, "BGM Rando: ",&musicrando::musicRandoEnabled,0x1);
 
         // local area
         /*page = hudConsole->addPage("Local Area 1");
@@ -891,6 +896,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                 customSeed = true;
                 tools::randomSeed = *global::seedInSaveFile;
                 chestRandomizer->generate();
+                musicrando::initMusicRando();
             }
         }
 
@@ -949,6 +955,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                 // manually in the save data
                 *global::seedInSaveFile = tools::randomSeed;
                 chestRandomizer->generate();
+                musicrando::initMusicRando();
             }
 
             // Parse inputs of this frame
