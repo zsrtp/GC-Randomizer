@@ -281,6 +281,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         //Bgm Options
         page = hudConsole->addPage("BGM");
         hudConsole->addOption(page, "BGM Rando: ",&musicrando::musicRandoEnabled,0x1);
+        hudConsole->addOption(page, "Enemy BGM: ",&musicrando::enemyBgmEnabled,0x1);
 
         // local area
         /*page = hudConsole->addPage("Local Area 1");

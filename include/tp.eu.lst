@@ -182,3 +182,6 @@
 
 //Z2SceneMgr
 802BA968:sceneChange
+
+//Z2SeqMgr
+802B5CB0:startBattleBgm

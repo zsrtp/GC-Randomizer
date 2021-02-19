@@ -2,6 +2,7 @@
 #include "tools.h"
 #include "patch.h"
 #include "tp/Z2SceneMgr.h"
+#include "tp/Z2SeqMgr.h"
 
 struct BGM { //Struct to store info about the source of BGM and the waves required to play correctly. Not using full Ids here to save memory
     u8 id = 0x0;
@@ -110,6 +111,7 @@ const u8 bgmSource_length = sizeof(bgmSource)/sizeof(BGM);
 static u8 randomizedBGMs[bgmSource_length];
 
 void (*sceneChange_trampoline)(Z2SceneMgr* sceneMgr, JAISoundID id,u8 SeWave1,u8 SeWave2,u8 BgmWave1,u8 BgmWave2,u8 DemoWave,bool param_7) = nullptr;
+void (*startBattleBgm_trampoline)(Z2SeqMgr* seqMgr, bool param_1) = nullptr;
 
 void sceneChangeHook(Z2SceneMgr* sceneMgr, JAISoundID BGMId,u8 SeWave1,u8 SeWave2,u8 BgmWave1,u8 BgmWave2,u8 DemoWave,bool param_7) {
     u32 id = BGMId.id;
@@ -138,8 +140,15 @@ void sceneChangeHook(Z2SceneMgr* sceneMgr, JAISoundID BGMId,u8 SeWave1,u8 SeWave
     }
 }
 
+void startBattleBgmHook(Z2SeqMgr* seqMgr, bool param_1) {
+    if (mod::musicrando::enemyBgmEnabled) {
+        startBattleBgm_trampoline(seqMgr,param_1);
+    }
+}
+
 namespace mod::musicrando {
     u8 musicRandoEnabled = 0;
+    u8 enemyBgmEnabled = 1;
     void initMusicRando() {
         for(u8 i = 0; i<bgmSource_length; i++){ //Fills in the randomizedBGMs array with random ids
             bool gotUnique = false;
@@ -160,6 +169,9 @@ namespace mod::musicrando {
         } 
         if (sceneChange_trampoline == nullptr) {
             sceneChange_trampoline = mod::patch::hookFunction(tp::Z2AudioLib::SceneMgr::sceneChange,sceneChangeHook);
+        }
+        if (startBattleBgm_trampoline == nullptr) {
+            startBattleBgm_trampoline = mod::patch::hookFunction(tp::Z2AudioLib::SeqMgr::startBattleBgm,startBattleBgmHook);
         }
     }
 } //namespace mod::musicrando
