@@ -677,6 +677,11 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
             return global::modPtr->proc_query022(unk1, unk2, unk3);
         });
 
+        // Always allow to buy arrows
+        query024_trampoline = patch::hookFunction(tp::d_msg_flow::query024, [](void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused) {
+            return true;
+        });
+
         do_link_trampoline = patch::hookFunction(tp::dynamic_link::do_link, [](tp::dynamic_link::DynamicModuleControl* dmc) {
             return global::modPtr->procDoLink(dmc);
         });

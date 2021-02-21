@@ -65,7 +65,7 @@ namespace mod
 			char lastItemDataX[30];
 			char lastItemDataY[30];
 			char lastItemDataZ[30];
-			
+
 			char currentPosX[30];
 			char currentPosY[30];
 			char currentPosZ[30];
@@ -76,14 +76,14 @@ namespace mod
 
 			// Replacment handler
 			s32 procItemCreateFunc(const float pos[3], s32 item, const char funcIdentifier[32]);
-			
-			u8 enableNormalTime = 1;			
+
+			u8 enableNormalTime = 1;
 			u8 setDay = 1;
 
 			u32 skyAngle;
 
 			u8 enableQuickTransform = 1;
-			
+
 			u8 stage = 0;
 			u8 room = 0;
 			u8 spawn = 0;
@@ -151,7 +151,7 @@ namespace mod
 			 * Runs once each frame
 			 */
 			void procNewFrame();
-			
+
 			/**
 			 * Runs when checking if the treasure chest content
 			 * should be returned or can be obtained
@@ -226,15 +226,17 @@ namespace mod
 			//bool procActorCommonLayerInit(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, s32 unk3, void* unk4);
 		// Private members
 		//private:
-			
+
 
 		// Hook trampolines
 		private:
 			void (*fapGm_Execute_trampoline)() = nullptr;
-			
+
 			s32 (*evt_control_Skipper_trampoline)(void* eventPtr) = nullptr;
 
 			bool (*query022_trampoline)(void* unk1, void* unk2, s32 unk3) = nullptr;
+			// Used in MsgFlow "Can buy arrows?" checks
+			bool (*query024_trampoline)(void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused) = nullptr;
 
 			bool (*do_link_trampoline)(tp::dynamic_link::DynamicModuleControl* dmc) = nullptr;
 
