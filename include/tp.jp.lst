@@ -72,6 +72,7 @@
 
 // d_msg_flow.o
 8024D24C:query022
+8024D2BC:query024
 
 // DynamicLink.o
 8026508C:do_link
