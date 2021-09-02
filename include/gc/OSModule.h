@@ -2,18 +2,18 @@
 
 #include "defines.h"
 
-namespace gc::OSModule {
-
-struct OSModuleInfo
+namespace gc::OSModule
 {
-	u32 id;
-	OSModuleInfo* next;
-	OSModuleInfo* prev;
-	u32 numSections;
-	u32 sectionInfoOffset;
-	u32 nameOffset;
-	u32 nameSize;
-	u32 version;
-} __attribute__((__packed__));
+    struct OSModuleInfo
+    {
+        u32 id;
+        OSModuleInfo* next;
+        OSModuleInfo* prev;
+        u32 numSections;
+        u32 sectionInfoOffset;
+        u32 nameOffset;
+        u32 nameSize;
+        u32 version;
+    } __attribute__( ( __packed__ ) );
 
-}
+}     // namespace gc::OSModule

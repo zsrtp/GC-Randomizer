@@ -4,8 +4,8 @@
 
 namespace tp::resource
 {
-	extern "C"
-	{
-		extern void* parseCharacter_1Byte(const char** text);
-	}
-}
+    extern "C"
+    {
+        extern void* parseCharacter_1Byte( const char** text );
+    }
+}     // namespace tp::resource

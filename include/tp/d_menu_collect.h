@@ -4,8 +4,8 @@
 
 namespace tp::d_menu_collect
 {
-	extern "C"
-	{
-		void setWalletMaxNum();
-	}
-}
+    extern "C"
+    {
+        void setWalletMaxNum();
+    }
+}     // namespace tp::d_menu_collect
