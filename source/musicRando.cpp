@@ -104,14 +104,38 @@ static const BGM bgmSource[] = {
 {0xa9,0x59}
 };
 
-const u8 bgmSource_length = sizeof(bgmSource)/sizeof(BGM);
+//Some fanfares can't be played using the current method as when subStartBgm is called it includes additional logic on some, such as stopping the main music track
+static const u8 fanfareSrc[] = {
+    0x0a,
+    0x0b,
+    0x12,
+    0x14,
+    0x1c,
+    0x43,
+    0x44,
+    0x45,
+    0x46,
+    0x81,
+    0x82,
+    0x83,
+    0x9c,
+    0x9d,
+    0xa0
+};
+
+static const u8 bgmSource_length = sizeof(bgmSource)/sizeof(BGM);
 
 static u8 randomizedBGMs[bgmSource_length];
 
+static const u8 fanfareSourceLength = sizeof(fanfareSrc);
+
+static u8 randomizedFanfares[fanfareSourceLength];
+
 void (*sceneChange_trampoline)(Z2SceneMgr* sceneMgr, JAISoundID id,u8 SeWave1,u8 SeWave2,u8 BgmWave1,u8 BgmWave2,u8 DemoWave,bool param_7) = nullptr;
 void (*startBattleBgm_trampoline)(Z2SeqMgr* seqMgr, bool param_1) = nullptr;
+void (*subBgmStart_trampoline)(Z2SeqMgr* seqMgr,u32 id) = nullptr;
 
-void sceneChangeHook(Z2SceneMgr* sceneMgr, JAISoundID BGMId,u8 SeWave1,u8 SeWave2,u8 BgmWave1,u8 BgmWave2,u8 DemoWave,bool param_7) {
+static void sceneChangeHook(Z2SceneMgr* sceneMgr, JAISoundID BGMId,u8 SeWave1,u8 SeWave2,u8 BgmWave1,u8 BgmWave2,u8 DemoWave,bool param_7) {
     u32 id = BGMId.id;
     if (mod::musicrando::musicRandoEnabled && id>=0x1000000 && id<0x2000000)
     {
@@ -142,40 +166,63 @@ void sceneChangeHook(Z2SceneMgr* sceneMgr, JAISoundID BGMId,u8 SeWave1,u8 SeWave
     }
 }
 
-void startBattleBgmHook(Z2SeqMgr* seqMgr, bool param_1) {
+static void subBgmStartHook(Z2SeqMgr* seqMgr, u32 id) {
+    id = id - 0x1000000;
+    u8 index = 0;
+    bool found = false;
+    for (u8 i = 0; i < fanfareSourceLength; i++) {
+        if (randomizedFanfares[i] == id) {
+            index = i;
+            found = true;
+            break;
+        }
+    }
+    if (found) {
+        u32 newId = fanfareSrc[index]+0x1000000;
+        subBgmStart_trampoline(seqMgr,newId);
+    }else{
+        subBgmStart_trampoline(seqMgr,id);
+    }
+}
+
+static void startBattleBgmHook(Z2SeqMgr* seqMgr, bool param_1) {
     if (mod::musicrando::enemyBgmEnabled) {
         startBattleBgm_trampoline(seqMgr,param_1);
     }
 }
 
+static void randomizeTable(void* srcTable,u8 destTable[],size_t srcTableElementSize, size_t tableSize) {
+    for(u8 i = 0; i<tableSize; i++){ //Fills in the array with random ids
+        bool gotUnique = false;
+        while (!gotUnique) { //Depends on randomness to shuffle the original array; needs a better method
+            u8 random = mod::tools::getRandom(tableSize);
+            u8 idGot = *((u8*)srcTable+(random*srcTableElementSize));
+            bool valueExists = false;
+            for (u8 j = 0; j<i; j++) {
+                if (destTable[j] == idGot){
+                    valueExists = true;
+                    break;
+                }
+            }
+            if (valueExists == false){
+                destTable[i] = *(((u8*)srcTable)+(random*srcTableElementSize));
+                gotUnique = true;
+                break;
+            }
+        }
+    } 
+}
+
+#define HookTrampoline(trampoline,origin,hook) if (trampoline == nullptr) { trampoline = mod::patch::hookFunction(origin,hook); }
+
 namespace mod::musicrando {
     u8 musicRandoEnabled = 0;
     u8 enemyBgmEnabled = 1;
     void initMusicRando() {
-        for(u8 i = 0; i<bgmSource_length; i++){ //Fills in the randomizedBGMs array with random ids
-            bool gotUnique = false;
-            while (!gotUnique) { //Depends on randomness to shuffle the original array; needs a better method
-                u8 random = tools::getRandom(bgmSource_length);
-                u8 idGot = bgmSource[random].id;
-                bool valueExists = false;
-                for (u8 j = 0; j<i; j++) {
-                    if (randomizedBGMs[j] == idGot){
-                        valueExists = true;
-                        break;
-                    }
-                }
-                if (valueExists == false){
-                    randomizedBGMs[i] = bgmSource[random].id;
-                    gotUnique = true;
-                    break;
-                }
-            }
-        } 
-        if (sceneChange_trampoline == nullptr) {
-            sceneChange_trampoline = mod::patch::hookFunction(tp::Z2AudioLib::SceneMgr::sceneChange,sceneChangeHook);
-        }
-        if (startBattleBgm_trampoline == nullptr) {
-            startBattleBgm_trampoline = mod::patch::hookFunction(tp::Z2AudioLib::SeqMgr::startBattleBgm,startBattleBgmHook);
-        }
+        randomizeTable((void*)&bgmSource,randomizedBGMs,sizeof(BGM),bgmSource_length);
+        randomizeTable((void*)&fanfareSrc,randomizedFanfares,sizeof(u8),fanfareSourceLength);
+        HookTrampoline(sceneChange_trampoline,tp::Z2AudioLib::SceneMgr::sceneChange,sceneChangeHook);
+        HookTrampoline(startBattleBgm_trampoline,tp::Z2AudioLib::SeqMgr::startBattleBgm,startBattleBgmHook);
+        HookTrampoline(subBgmStart_trampoline,tp::Z2AudioLib::SeqMgr::subBgmStart,subBgmStartHook);
     }
 } //namespace mod::musicrando
