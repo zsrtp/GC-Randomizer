@@ -13,4 +13,4 @@ namespace mod::global
     extern mod::event::EventListener* eventListenerPtr;
     extern mod::HUDConsole* hudConsolePtr;
     extern uint64_t* seedInSaveFile;
-}  // namespace mod::global
+}     // namespace mod::global
