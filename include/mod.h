@@ -237,6 +237,9 @@ namespace mod
         s32 ( *evt_control_Skipper_trampoline )( void* eventPtr ) = nullptr;
 
         bool ( *query022_trampoline )( void* unk1, void* unk2, s32 unk3 ) = nullptr;
+      
+        // Used in MsgFlow "Can buy arrows?" checks
+			  bool (*query024_trampoline)(void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused) = nullptr;
 
         bool ( *do_link_trampoline )( tp::dynamic_link::DynamicModuleControl* dmc ) = nullptr;
 
