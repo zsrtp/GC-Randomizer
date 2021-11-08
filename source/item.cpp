@@ -117,5 +117,50 @@ namespace mod::item
         return flags;
     }
 
-    u8 itemsWithNoFieldModel[2] = { 0x32, 0x40 };
+    u8 customSmallKeyItemIDs[10] = { items::Forest_Temple_Small_Key,
+                                     items::Goron_Mines_Small_Key,
+                                     items::Lakebed_Temple_Small_Key,
+                                     items::Arbiters_Grounds_Small_Key,
+                                     items::Snowpeak_Ruins_Small_Key,
+                                     items::Temple_of_Time_Small_Key,
+                                     items::City_in_The_Sky_Small_Key,
+                                     items::Palace_of_Twilight_Small_Key,
+                                     items::Hyrule_Castle_Small_Key,
+                                     items::Bublin_Camp_Key };
+
+    u8 customBigKeyItemIDs[7] = { items::Forest_Temple_Big_Key,
+                                  items::Lakebed_Temple_Big_Key,
+                                  items::Arbiters_Grounds_Big_Key,
+                                  items::Temple_of_Time_Big_Key,
+                                  items::City_in_The_Sky_Big_Key,
+                                  items::Palace_of_Twilight_Big_Key,
+                                  items::Hyrule_Castle_Big_Key };
+
+    u8 customDungeonMapItemIDs[9] = { items::Forest_Temple_Dungeon_Map,
+                                      items::Goron_Mines_Dungeon_Map,
+                                      items::Lakebed_Temple_Dungeon_Map,
+                                      items::Arbiters_Grounds_Dungeon_Map,
+                                      items::Snowpeak_Ruins_Dungeon_Map,
+                                      items::Temple_of_Time_Dungeon_Map,
+                                      items::City_in_The_Sky_Dungeon_Map,
+                                      items::Palace_of_Twilight_Dungeon_Map,
+                                      items::Hyrule_Castle_Dungeon_Map };
+
+    u8 customCompassItemIDs[9] = { items::Forest_Temple_Compass,
+                                   items::Goron_Mines_Compass,
+                                   items::Lakebed_Temple_Compass,
+                                   items::Arbiters_Grounds_Compass,
+                                   items::Snowpeak_Ruins_Compass,
+                                   items::Temple_of_Time_Compass,
+                                   items::City_in_The_Sky_Compass,
+                                   items::Palace_of_Twilight_Compass,
+                                   items::Hyrule_Castle_Compass };
+
+    u8 customHiddenSkillItemIDs[7] = { items::Ending_Blow,
+                                       items::Shield_Attack,
+                                       items::Back_Slice,
+                                       items::Helm_Splitter,
+                                       items::Mortal_Draw,
+                                       items::Jump_Strike,
+                                       items::Great_Spin };
 }     // namespace mod::item

@@ -15,6 +15,7 @@
 #include <cstring>
 
 #include "defines.h"
+#include "item.h"
 #include "itemChecks.h"
 #include "items.h"
 #include "singleton.h"
@@ -64,6 +65,10 @@ namespace mod::game_patch
 
         // Enable the crash screen
         *enableCrashScreen = 0x48000014;     // b 0x14
+
+        // Modify dComIfGs_Wolf_Change_Check to return true when checking to see if mdh is complete
+        u32 wolfChangeCheckAddress = reinterpret_cast<u32>( &tp::d_com_inf_game::dComIfGs_Wolf_Change_Check );
+        *reinterpret_cast<u32*>( wolfChangeCheckAddress + 0x108 ) = 0x3be00000;     // Previous 0x3be00001
     }
 
     void killLinkHouseSpider()
@@ -196,273 +201,6 @@ namespace mod::game_patch
         }
     }
 
-    void fixFTState()
-    {
-        if ( Singleton::getInstance()->hasFTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x6] &= ~0x2;                                  // unset story flag
-            if ( ( gameInfo.scratchPad.allAreaNodes.Forest_Temple.unk_0[0x12] & 0x10 ) == 0 )
-            {
-                gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.ooccooGotten = 0b0;
-            }
-        }
-    }
-
-    void fixGMState()
-    {
-        if ( Singleton::getInstance()->hasGMBeenBeaten == 1 || Singleton::getInstance()->isGMStoryPatch == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Goron_Mines.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x7] &= ~0x1;                                // unset story flag
-            if ( ( gameInfo.scratchPad.allAreaNodes.Goron_Mines.unk_0[0xE] & 0x2 ) == 0 )
-            {
-                gameInfo.scratchPad.allAreaNodes.Goron_Mines.dungeon.ooccooGotten = 0b0;
-            }
-        }
-    }
-
-    void fixLBTState()
-    {
-        if ( Singleton::getInstance()->hasLBTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x9] &= ~0x4;                                   // unset story flag
-            if ( ( gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.unk_0[0x11] & 0x80 ) == 0 )
-            {
-                gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.ooccooGotten = 0b0;
-            }
-        }
-    }
-
-    void fixAGState()
-    {
-        if ( Singleton::getInstance()->hasAGBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x20] &= ~0x10;                                   // unset story flag
-            if ( ( gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.unk_0[0x17] & 0x20 ) == 0 )
-            {
-                gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.ooccooGotten = 0b0;
-            }
-        }
-    }
-
-    void fixSPRState()
-    {
-        if ( Singleton::getInstance()->hasSPRBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x20] &= ~0x8;                                  // unset story flag
-            if ( ( gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.unk_0[0x1] & 0x1 ) == 0 )
-            {
-                gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.ooccooGotten = 0b0;
-            }
-        }
-    }
-
-    void fixToTState()
-    {
-        if ( Singleton::getInstance()->hasToTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x20] &= ~0x4;                                  // unset story flag
-            if ( ( gameInfo.scratchPad.allAreaNodes.Temple_of_Time.unk_0[0x4] & 0x80 ) == 0 )
-            {
-                gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.ooccooGotten = 0b0;
-            }
-        }
-    }
-
-    void fixCiTSState()
-    {
-        if ( Singleton::getInstance()->hasCiTSBeenBeaten == 1 || Singleton::getInstance()->isEarlyPoTEnabled == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.City_in_the_Sky.dungeon.bossBeaten = 0b0;     // unset boss flag
-            gameInfo.scratchPad.eventBits[0x20] &= ~0x2;                                   // unset story flag
-        }
-        if ( Singleton::getInstance()->hasCiTSOoccoo == 0 )
-        {
-            gameInfo.scratchPad.allAreaNodes.City_in_the_Sky.dungeon.ooccooGotten = 0b0;
-        }
-    }
-
-    void setFTDungeonFlag()
-    {
-        if ( Singleton::getInstance()->hasFTBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasFTBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasFTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x6] |= 0x2;                                   // set story flag
-        }
-    }
-
-    void setGMDungeonFlag()
-    {
-        if ( Singleton::getInstance()->hasGMBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.Goron_Mines.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasGMBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasGMBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Goron_Mines.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x7] |= 0x1;                                 // set story flag
-        }
-        else if ( Singleton::getInstance()->isGMStoryPatch == 1 )
-        {
-            gameInfo.scratchPad.eventBits[0x7] |= 0x1;     // set story flag
-        }
-    }
-
-    void setGMBossFlag()
-    {
-        if ( Singleton::getInstance()->hasGMBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Goron_Mines.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
-    void setLakeDungeonFlags()
-    {
-        if ( Singleton::getInstance()->hasLBTBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasLBTBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasLBTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x9] |= 0x4;                                    // set story flag
-        }
-
-        if ( Singleton::getInstance()->hasCiTSBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.City_in_the_Sky.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasCiTSBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasCiTSBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.City_in_the_Sky.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x20] |= 0x2;                                    // set story flag
-        }
-        else if ( Singleton::getInstance()->isEarlyPoTEnabled == 1 )
-        {
-            gameInfo.scratchPad.eventBits[0x20] |= 0x2;     // set story flag
-        }
-    }
-
-    void setLBTBossFlag()
-    {
-        if ( Singleton::getInstance()->hasLBTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Lakebed_Temple.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
-    void setAGDungeonFlag()
-    {
-        if ( Singleton::getInstance()->hasAGBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasAGBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasAGBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x20] |= 0x10;                                    // set story flag
-        }
-    }
-
-    void setAGBossFlag()
-    {
-        if ( Singleton::getInstance()->hasAGBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Arbiters_Grounds.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
-    void setSPRDungeonFlag()
-    {
-        if ( Singleton::getInstance()->hasSPRBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasSPRBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasSPRBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x20] |= 0x8;                                   // set story flag
-        }
-    }
-
-    void setSPRBossFlag()
-    {
-        if ( Singleton::getInstance()->hasSPRBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Snowpeak_Ruins.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
-    void setToTDungeonFlag()
-    {
-        if ( Singleton::getInstance()->hasToTBeenBeaten == 0 &&
-             gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bossBeaten == 0b1 )
-        {
-            Singleton::getInstance()->hasToTBeenBeaten = 1;
-        }
-        else if ( Singleton::getInstance()->hasToTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bossBeaten = 0b1;     // set boss flag
-            gameInfo.scratchPad.eventBits[0x20] |= 0x4;                                   // set story flag
-        }
-
-        if ( Singleton::getInstance()->isEarlyToTEnabled == 1 )
-        {
-            gameInfo.nextStageVars.nextState = 0x2;
-        }
-    }
-
-    void setToTBossFlag()
-    {
-        if ( Singleton::getInstance()->hasToTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Temple_of_Time.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
-    void setCiTSBossFlag()
-    {
-        if ( Singleton::getInstance()->hasCiTSBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.City_in_the_Sky.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
-    void setBublinState()
-    {
-        strcpy( sysConsolePtr->consoleLine[20].line, "state was not 1" );
-        if ( gameInfo.nextStageVars.nextRoom != 3 )
-        {
-            if ( ( gameInfo.scratchPad.eventBits[0xB] & 0x40 ) != 0 )
-            {
-                strcpy( sysConsolePtr->consoleLine[20].line, "-> Setting Bublin State" );
-                // reload bublin camp as state 3
-                // tools::triggerSaveLoad(gameInfo.nextStageVars.nextStage, gameInfo.nextStageVars.nextRoom,
-                // gameInfo.nextStageVars.nextSpawnPoint, a);
-                gameInfo.nextStageVars.nextState = 0x3;
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
-
     void setGroveFlags()
     {
         if ( Singleton::getInstance()->isMSPuzzleSkipEnabled == 1 && ( gameInfo.localAreaNodes.unk_0[0xB] & 0x4 ) == 0 )
@@ -556,13 +294,21 @@ namespace mod::game_patch
         {
             gameInfo.scratchPad.eventBits[0x42] |= 0x8;
         }
+        else if ( Singleton::getInstance()->isEarlyHCEnabled == 0 && ( ( gameInfo.scratchPad.eventBits[0x1E] & 0x8 ) != 0 ) &&
+                  ( ( gameInfo.scratchPad.allAreaNodes.Palace_of_Twilight.dungeon.bossBeaten != 0 ) ) )
+        {
+            gameInfo.scratchPad.eventBits[0x42] |= 0x8;
+        }
     }
 
     void setEscortState()
     {
-        if ( ( gameInfo.scratchPad.eventBits[0x8] & 0x40 ) == 0 && Singleton::getInstance()->isCartEscortSkipEnabled == 0 &&
-             tools::checkItemFlag( ItemFlags::Heros_Bow ) && tools::checkItemFlag( ItemFlags::Boomerang ) &&
-             gameInfo.scratchPad.clearedTwilights.Lanayru == 0b1 )
+        if ( ( ( gameInfo.scratchPad.eventBits[0x8] & 0x40 ) == 0 ) &&
+             ( Singleton::getInstance()->isCartEscortSkipEnabled == 0 ) && tools::checkItemFlag( ItemFlags::Heros_Bow ) &&
+             tools::checkItemFlag( ItemFlags::Boomerang ) && gameInfo.scratchPad.clearedTwilights.Lanayru == 0b1 &&
+             ( ( Singleton::getInstance()->isMDHSkipEnabled == 1 ) ||
+               ( !tp::d_a_alink::dComIfGs_isEventBit( 0xC1 ) ||
+                 ( tp::d_a_alink::dComIfGs_isEventBit( 0xC1 ) && tp::d_a_alink::dComIfGs_isEventBit( 0x1E08 ) ) ) ) )
         {
             gameInfo.nextStageVars.nextState = 0x8;
             gameInfo.nextStageVars.nextSpawnPoint = 0x14;
@@ -652,57 +398,6 @@ namespace mod::game_patch
         gameInfo.scratchPad.eventBits[0xD] |= 0x4;
     }
 
-    void handleMaloShop()
-    {
-        tp::d_com_inf_game::AreaNodes* maloLocalAreaNodesPtr = &gameInfo.localAreaNodes;
-        // hylian shield check
-        if ( ( gameInfo.scratchPad.eventBits[0xA] & 0x8 ) != 0 )     // KB1 done
-        {
-            if ( !tools::checkItemFlag( ItemFlags::Null_D9 ) )
-            {
-                strcpy( sysConsolePtr->consoleLine[20].line, "-> selling hylian shield" );
-                maloLocalAreaNodesPtr->unk_0[0xC] &= ~0x2;       // unset flag for hylian shield bought
-                maloLocalAreaNodesPtr->unk_0[0x13] |= 0x40;      // set flag for hylian shield on counter
-                maloLocalAreaNodesPtr->unk_0[0x15] &= ~0x40;     // unset flag for red potion on right
-            }
-            else
-            {
-                maloLocalAreaNodesPtr->unk_0[0xC] |= 0x2;        // set flag for hylian shield bought
-                maloLocalAreaNodesPtr->unk_0[0x13] &= ~0x40;     // unset flag for hylian shield on counter
-            }
-        }
-
-        // hawkeye check
-        if ( ( gameInfo.scratchPad.eventBits[0x9] & 0x40 ) != 0 )     // Bow mini-game started
-        {
-            if ( !tools::checkItemFlag( ItemFlags::Null_D8 ) )
-            {
-                maloLocalAreaNodesPtr->unk_0[0xC] |= 0x40;       // set flag for hawkeye on counter
-                maloLocalAreaNodesPtr->unk_0[0xC] &= ~0x20;      // unset flag for arrows on counter (else causes crash)
-                maloLocalAreaNodesPtr->unk_0[0xD] &= ~0x8;       // unset flag for hawkeye sold out
-                maloLocalAreaNodesPtr->unk_0[0x15] &= ~0x10;     // unset flag for red potion on left
-            }
-            else
-            {
-                maloLocalAreaNodesPtr->unk_0[0xC] &= ~0x40;     // unset flag for hawkeye on counter
-                if ( tools::checkItemFlag( ItemFlags::Null_D9 ) )
-                {
-                    maloLocalAreaNodesPtr->unk_0[0xC] |= 0x20;       // set flag for arrows on counter
-                    maloLocalAreaNodesPtr->unk_0[0x15] |= 0x40;      // set flag for red potion on right
-                    maloLocalAreaNodesPtr->unk_0[0x15] &= ~0x10;     // unset flag for red potion on left
-                    maloLocalAreaNodesPtr->unk_0[0xD] |= 0x8;        // set flag for hawkeye sold out
-                }
-                else
-                {
-                    maloLocalAreaNodesPtr->unk_0[0xC] &= ~0x20;      // unset flag for arrows on counter
-                    maloLocalAreaNodesPtr->unk_0[0x15] &= ~0x40;     // unset flag for red potion on right
-                    maloLocalAreaNodesPtr->unk_0[0x15] |= 0x10;      // set flag for red potion on left
-                    maloLocalAreaNodesPtr->unk_0[0xD] &= ~0x8;       // unset flag for hawkeye sold out
-                }
-            }
-        }
-    }
-
     void allowFaronEscape()
     {
         if ( Singleton::getInstance()->isForestEscapeEnabled == 0 )
@@ -742,22 +437,6 @@ namespace mod::game_patch
         }
     }
 
-    void fixFTBossMusic()
-    {
-        if ( Singleton::getInstance()->isForestEscapeEnabled == 1 &&
-             gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten == 0b0 &&
-             Singleton::getInstance()->diababaMusicFixed == 0 )
-        {
-            gameInfo.scratchPad.eventBits[0x6] &= ~0x2;
-            Singleton::getInstance()->diababaMusicFixed = 1;
-        }
-
-        if ( Singleton::getInstance()->hasFTBeenBeaten == 1 )
-        {
-            gameInfo.scratchPad.allAreaNodes.Forest_Temple.dungeon.bossBeaten = 0b1;     // set boss flag
-        }
-    }
-
     void skipTextAndCS()
     {
         // Set Scratchpad Pointer
@@ -791,22 +470,26 @@ namespace mod::game_patch
         eventBitsPtr[0x7] |= 0x20;      // Talked to Bo outside his house
         eventBitsPtr[0xB] |= 0x20;      // Talked to Yeta First Time
         eventBitsPtr[0x10] |= 0x2;      // Talked to Jaggle after climbing vines
+        eventBitsPtr[0xF] |= 0x40;      // Talked to Doctor for the first time
         eventBitsPtr[0x5E] |= 0x10;     // Midna Text After Beating Forest Temple
-        eventBitsPtr[0x40] |= 0x8;      // have been to desert (prevents cannon warp crash)
+        eventBitsPtr[0x40] |= 0x88;     // have been to desert (prevents cannon warp crash) saved monkey from puppets
         eventBitsPtr[0x1B] |= 0x78;     // skip the monkey escort
         eventBitsPtr[0x1D] = 0x40;      // fight bublin after Fyer
         eventBitsPtr[0x22] |= 0x1;      // Plumm initial CS watched
         eventBitsPtr[0x26] |= 0x2;      // Talked to Yeto on Snowpeak
+        eventBitsPtr[0x2C] |= 0x10;     // Mirror Rose
         eventBitsPtr[0x28] |= 0x40;     // Used Ooccoo for the First Time
         eventBitsPtr[0x37] |= 0x4;      // Postman Twilight Text
         eventBitsPtr[0x38] |= 0x6;      // Enter Hena Cabin CS
         eventBitsPtr[0x3A] |= 0x1;      // Talked to Ralis
-        eventBitsPtr[0x42] |= 0x1;      // Watched post ToT Ooccoo CS
+        eventBitsPtr[0x40] |= 0x2;      // Agreed to help Rusl after snowpeak
+        eventBitsPtr[0x42] |= 0x3;      // Watched post ToT Ooccoo CS and triggered monkey puppet CS
         eventBitsPtr[0x45] |= 0x8;      // Postman Letters Text
         eventBitsPtr[0x4A] |= 0x10;     // Talo Cage CS
         eventBitsPtr[0x3E] |= 0x2;      // city OoCCoo CS watched
         eventBitsPtr[0x59] |= 0x40;     // Postman Met
         eventBitsPtr[0x5D] |= 0x40;     // Midna text after Kagorok FLight
+        eventBitsPtr[0x54] |= 0x10;     // PoT story flag
 
         // Set Area Node Flags
         tp::d_com_inf_game::AllAreaNodes* allAreaNodesPtr = &scratchPadPtr->allAreaNodes;
@@ -826,11 +509,13 @@ namespace mod::game_patch
         allAreaNodesPtr->Sewers.unk_0[0xF] |=
             0x11;     // midna cs after digging out watched, midna text when approaching first rooftop guard
 
+        allAreaNodesPtr->Faron.unk_0[0x9] |= 0x2;       // Saved monkey from puppets
         allAreaNodesPtr->Eldin.unk_0[0x9] |= 0x40;      // goron mines DM cs
         allAreaNodesPtr->Eldin.unk_0[0x14] |= 1;        // give midna jumps for top of sanctuary
         allAreaNodesPtr->Eldin.unk_0[0x10] |= 0x10;     // skip Graveyard CS
         allAreaNodesPtr->Eldin.unk_0[0x11] |= 0x8;      // midna text after meteor
         allAreaNodesPtr->Eldin.unk_0[0x13] |= 0x20;     // skip Kak CS
+        allAreaNodesPtr->Eldin.unk_0[0x16] |= 0x10;     // Watched Colin saved CS
 
         allAreaNodesPtr->Lanayru.unk_0[0xB] |= 0x81;      // Zora domain frozen CS, talked to reluta
         allAreaNodesPtr->Lanayru.unk_0[0xC] |= 0x1;       // midna text after jumping to lake from bridge
@@ -917,7 +602,7 @@ namespace mod::game_patch
 
         allAreaNodesPtr->Palace_of_Twilight.unk_0[0x9] |= 0x4;      // Phantom zant 1 cs watched
         allAreaNodesPtr->Palace_of_Twilight.unk_0[0xB] |= 0x2;      // Entrance CS watched
-        allAreaNodesPtr->Palace_of_Twilight.unk_0[0xC] |= 0x82;     // Midna Text when west hand seals sol, Light Sword CS
+        allAreaNodesPtr->Palace_of_Twilight.unk_0[0xC] |= 0x2;      // Midna Text when west hand seals sol
         allAreaNodesPtr->Palace_of_Twilight.unk_0[0xD] |= 0x1;      // Midna text after forced transform
         allAreaNodesPtr->Palace_of_Twilight.unk_0[0xE] |= 0xB0;     // Midna text after west hand drops sol, midna text about
                                                                     // transformed twili, midna text after post zant save
@@ -947,7 +632,6 @@ namespace mod::game_patch
         allAreaNodesPtr->Faron.unk_0[0x17] |= 0xC0;     // kill bugs in Coro's House
 
         // Apply Overrides for custom chests
-        gameInfo.scratchPad.eventBits[0x22] |= 0x4; /*Got Ilia's Charm from Impaz*/
         gameInfo.scratchPad.eventBits[0x49] |= 0x2; /*Bought Slingshot from Sera*/
 
         // Apply Randomizer Options
@@ -994,14 +678,6 @@ namespace mod::game_patch
             }
         }
 
-        Singleton::getInstance()->hasFTBeenBeaten = 0;
-        Singleton::getInstance()->hasGMBeenBeaten = 0;
-        Singleton::getInstance()->hasLBTBeenBeaten = 0;
-        Singleton::getInstance()->hasAGBeenBeaten = 0;
-        Singleton::getInstance()->hasSPRBeenBeaten = 0;
-        Singleton::getInstance()->hasToTBeenBeaten = 0;
-        Singleton::getInstance()->hasCiTSBeenBeaten = 0;
-
         if ( Singleton::getInstance()->isIntroSkipped == 1 )
         {
             // set Ordon Days 1,2, and 3 Flags
@@ -1043,7 +719,8 @@ namespace mod::game_patch
                     scratchPadPtr->clearedTwilights.Faron = 0b1;     // Clear Faron Twilight
                     tools::setItemFlag( ItemFlags::Vessel_Of_Light_Faron );
                     scratchPadPtr->tearCounters.Faron = 16;
-                    eventBitsPtr[0x5] |= 0xFF;     // Ensure Epona is Stolen, give Midna Charge
+                    eventBitsPtr[0x5] |= 0xFF;     // Ensure Epona is Stolen, give Midna Charge, finished sewers, midna text for
+                                                   // entering Faron Twilight, Met zelda in sewers
                     eventBitsPtr[0x6] |= 0x10;     // Faron Twilight Progression flag
                     eventBitsPtr[0xC] |= 0x8;      // Set Sword and Shield to not be on back
                     tools::setItemFlag( ItemFlags::Heros_Clothes );
@@ -1111,7 +788,7 @@ namespace mod::game_patch
             // Set Other Flags
             u16* secondTempAddress = reinterpret_cast<u16*>( &eventBitsPtr[0xF7] );
             *secondTempAddress |= 0x1F4;     // make it so you only have to donate 500 Rupees to Charlo
-            eventBitsPtr[0x20] |= 0x20;      // MS Story Progression Flag
+            eventBitsPtr[0x20] |= 0x24;      // MS Story Progression Flag and ToT flag
             eventBitsPtr[0x1E] |= 0x80;      // Gor Ebizo at Malo Mart
             eventBitsPtr[0xA] |= 0x20;       // Steal Eldin Bridge
             eventBitsPtr[0xF] |= 0x8;        // Put Eldin BRidge Back
@@ -1139,100 +816,448 @@ namespace mod::game_patch
             // Set Other Flags
             u16* secondTempAddress = reinterpret_cast<u16*>( &eventBitsPtr[0xF7] );
             *secondTempAddress |= 0x1F4;     // make it so you only have to donate 500 Rupees to Charlo
-            eventBitsPtr[0x20] |= 0x20;      // MS Story Progression Flag
+            eventBitsPtr[0x20] |= 0x24;      // MS Story Progression Flag and ToT Flag
             eventBitsPtr[0x1E] |= 0x80;      // Gor Ebizo at Malo Mart
             eventBitsPtr[0xA] |= 0x20;       // Steal Eldin Bridge
             eventBitsPtr[0xF] |= 0x8;        // Put Eldin BRidge Back
         }
     }
 
-    /*void setFieldModels()
+    void setCustomItemData()
     {
-        tp::d_item_data::ItemResource* itemResPtr = &tp::d_item_data::item_resource[0];
-        tp::d_item_data::FieldItemRes* fieldItemResPtr = &tp::d_item_data::field_item_res[0];
-
-        u32 loopCount = sizeof(item::itemsWithNoFieldModel) / sizeof(item::itemsWithNoFieldModel[0]);
-        for (u32 i = 0; i < loopCount; i++)
-        {
-            u32 item = item::itemsWithNoFieldModel[i]; // Retrieve as u32 to prevent rlwinm shenanigans
-            fieldItemResPtr[item].arcName = itemResPtr[item].arcName;
-            fieldItemResPtr[item].modelResIdx = itemResPtr[item].modelResIdx;
-        }
-
-        // For items that dont have a field model, use rupee item info to allow the item to be collected and whatnot
-        // Using the yellow rupee because thats what i used in testing
+        // Generic item variables
+        tp::d_item_data::ItemResource* itemResourcePtr = &tp::d_item_data::item_resource[0];
         tp::d_item_data::ItemInfo* itemInfoPtr = &tp::d_item_data::item_info[0];
-        tp::d_item_data::ItemInfo* yellowRupeeInfoPtr = &tp::d_item_data::item_info[items::Yellow_Rupee];
+        u8* getSeTypePtr = &tp::d_a_alink::getSeType[0];
 
-        loopCount = sizeof(item::itemsWithNoFieldModel) / sizeof(item::itemsWithNoFieldModel[0]);
-        for (u32 i = 0; i < loopCount; i++)
+        // Vanilla Small Key variables
+        tp::d_item_data::ItemResource* smallKeyItemResourcePtr = &itemResourcePtr[items::Small_Key];
+        u32 smallKeyItemInfo = *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[items::Small_Key] ) );
+        u8 smallKeySeType = getSeTypePtr[items::Small_Key];
+
+        // Vanilla Big Key variables
+        tp::d_item_data::ItemResource* bigKeyItemResourcePtr = &itemResourcePtr[items::Big_Key];
+        u32 bigKeyItemInfo = *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[items::Big_Key] ) );
+        u8 bigKeySeType = getSeTypePtr[items::Big_Key];
+
+        // Vanilla Dungeon Map variables
+        tp::d_item_data::ItemResource* dungeonMapItemResourcePtr = &itemResourcePtr[items::Dungeon_Map];
+        u32 dungeonMapItemInfo = *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[items::Dungeon_Map] ) );
+        u8 dungeonMapSeType = getSeTypePtr[items::Dungeon_Map];
+
+        // Vanilla Compass variables
+        tp::d_item_data::ItemResource* compassItemResourcePtr = &itemResourcePtr[items::Compass];
+        u32 compassItemInfo = *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[items::Compass] ) );
+        u8 compassSeType = getSeTypePtr[items::Compass];
+
+        // Set the item info for the custom small keys to that of the current Small Key
+        for ( u32 i = 0; i < sizeof( item::customSmallKeyItemIDs ) / sizeof( item::customSmallKeyItemIDs[0] ); i++ )
         {
-            u32 item = item::itemsWithNoFieldModel[i]; // Retrieve as u32 to prevent rlwinm shenanigans
-            itemInfoPtr[item].mShadowSize = yellowRupeeInfoPtr->mShadowSize;
-            itemInfoPtr[item].mCollisionH = yellowRupeeInfoPtr->mCollisionH;
-            itemInfoPtr[item].mCollisionR = yellowRupeeInfoPtr->mCollisionR;
-            itemInfoPtr[item].mFlags = yellowRupeeInfoPtr->mFlags;
+            *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[item::customSmallKeyItemIDs[i]] ) ) = smallKeyItemInfo;
+
+            getSeTypePtr[item::customSmallKeyItemIDs[i]] = smallKeySeType;
+
+            memcpy( &itemResourcePtr[item::customSmallKeyItemIDs[i]],
+                    smallKeyItemResourcePtr,
+                    sizeof( tp::d_item_data::ItemResource ) );
         }
 
-        // Modify a branch in itemGetNextExecute to allow the item get cutscene to play with items past 0x40
-        // If you already have the item it gives you, then itll act like a rupee and appear over your head. This could be
-    changed though. u32 address_US = 0x8015CF64; *reinterpret_cast<u32*>(address_US) = 0x48000018; // b 0x18
-
-        // Hook dStage_actorCommonLayerInit to search for field items (probably only rupees) to replace based on object name
-        bool procActorCommonLayerInit(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, s32 unk3, void*
-    unk4)
+        // Set the item info for the custom big keys to that of the current Big Key
+        for ( u32 i = 0; i < sizeof( item::customBigKeyItemIDs ) / sizeof( item::customBigKeyItemIDs[0] ); i++ )
         {
-            Actr* actrPtr = chunkTypeInfo->chunkDataPtr;
-            u32 numChunks = chunkTypeInfo->numChunks;
-            for (u32 i = 0; i < numChunks; i++)
-            {
-                // Check for "item", as that seems to be whats used for rupees
-                // Would check for chests and whatnot as well when changing the contents of those
-                if (strncmp(actrPtr->objectName, "item", sizeof(Actr.objectName)))
-                {
-                    // Change the item id
-                    u8* tempParamBytes = reinterpret_cast<u8*>(&actrPtr->parameters);
-                    tempParamBytes[3] = newItemId;
+            *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[item::customBigKeyItemIDs[i]] ) ) = bigKeyItemInfo;
 
-                    // Changing the parameters probably isnt necessary for "item", but I'll add them anyway
-                    // Refer to Winditor for what the parameters do
-                    tempParamBytes[0] = 0xF3;
-                    tempParamBytes[1] = 0xFF;
-                    tempParamBytes[2] = 0x80;
-                    actrPtr->rot[2] = 0x3F;
-                }
+            getSeTypePtr[item::customBigKeyItemIDs[i]] = bigKeySeType;
+
+            memcpy( &itemResourcePtr[item::customBigKeyItemIDs[i]],
+                    bigKeyItemResourcePtr,
+                    sizeof( tp::d_item_data::ItemResource ) );
+        }
+
+        // Set the item info for the custom dungeon map to that of the current Dungeon Map
+        for ( u32 i = 0; i < sizeof( item::customDungeonMapItemIDs ) / sizeof( item::customDungeonMapItemIDs[0] ); i++ )
+        {
+            *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[item::customDungeonMapItemIDs[i]] ) ) =
+                dungeonMapItemInfo;
+
+            getSeTypePtr[item::customDungeonMapItemIDs[i]] = dungeonMapSeType;
+
+            memcpy( &itemResourcePtr[item::customDungeonMapItemIDs[i]],
+                    dungeonMapItemResourcePtr,
+                    sizeof( tp::d_item_data::ItemResource ) );
+        }
+
+        // Set the item info for the custom compass to that of the current compass
+        for ( u32 i = 0; i < sizeof( item::customCompassItemIDs ) / sizeof( item::customCompassItemIDs[0] ); i++ )
+        {
+            *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[item::customCompassItemIDs[i]] ) ) = compassItemInfo;
+
+            getSeTypePtr[item::customCompassItemIDs[i]] = compassSeType;
+
+            memcpy( &itemResourcePtr[item::customCompassItemIDs[i]],
+                    compassItemResourcePtr,
+                    sizeof( tp::d_item_data::ItemResource ) );
+        }
+
+        // Set the item info for the custom hidden skill items
+        // Set the item info for the custom compass to that of the current compass
+        for ( u32 i = 0; i < sizeof( item::customHiddenSkillItemIDs ) / sizeof( item::customHiddenSkillItemIDs[0] ); i++ )
+        {
+            itemResourcePtr[item::customHiddenSkillItemIDs[i]].arcName = "O_gD_memo";
+            itemResourcePtr[item::customHiddenSkillItemIDs[i]].ringTexResIdx = 0x003D;
+            itemResourcePtr[item::customHiddenSkillItemIDs[i]].modelResIdx = 0x0003;
+            itemResourcePtr[item::customHiddenSkillItemIDs[i]].brkResIdx = 0xFFFF;
+            itemResourcePtr[item::customHiddenSkillItemIDs[i]].tevFrm = 0x00;
+            getSeTypePtr[item::customHiddenSkillItemIDs[i]] = 0x2;
+        }
+
+        // Set the Model and SeType for the Master/Light Swords. We will use the Ordon Sword for now.
+        memcpy( &itemResourcePtr[items::Master_Sword],
+                &itemResourcePtr[items::Ordon_Sword],
+                sizeof( tp::d_item_data::ItemResource ) );
+        itemResourcePtr[items::Master_Sword].ringTexResIdx = 0x0042;
+        getSeTypePtr[items::Master_Sword] = getSeTypePtr[items::Clawshot];
+
+        memcpy( &itemResourcePtr[items::Master_Sword_Light],
+                &itemResourcePtr[items::Ordon_Sword],
+                sizeof( tp::d_item_data::ItemResource ) );
+        itemResourcePtr[items::Master_Sword_Light].ringTexResIdx = 0x0042;
+        getSeTypePtr[items::Master_Sword_Light] = getSeTypePtr[items::Clawshot];
+
+        // Set the model and SeType for all other items that need it.
+
+        itemResourcePtr[items::Shadow_Crystal].ringTexResIdx = 0x002E;
+        getSeTypePtr[items::Shadow_Crystal] = getSeTypePtr[items::Clawshot];
+
+        itemResourcePtr[items::Bomb_Bag_Regular_Bombs].arcName = itemResourcePtr[items::Goron_Bomb_Bag].arcName;
+        itemResourcePtr[items::Bomb_Bag_Regular_Bombs].modelResIdx = itemResourcePtr[items::Goron_Bomb_Bag].modelResIdx;
+        itemResourcePtr[items::Bomb_Bag_Regular_Bombs].brkResIdx = 0xFFFF;
+        itemResourcePtr[items::Bomb_Bag_Regular_Bombs].tevFrm = 0x00;
+        getSeTypePtr[items::Bomb_Bag_Regular_Bombs] = getSeTypePtr[items::Goron_Bomb_Bag];
+
+        memcpy( &itemResourcePtr[items::Horse_Call],
+                &itemResourcePtr[items::Ilias_Charm],
+                sizeof( tp::d_item_data::ItemResource ) );
+        getSeTypePtr[items::Horse_Call] = getSeTypePtr[items::Clawshot];
+
+        *reinterpret_cast<u32*>( reinterpret_cast<u32>( &itemInfoPtr[items::Bublin_Camp_Key] ) ) = smallKeyItemInfo;
+        getSeTypePtr[items::Bublin_Camp_Key] = smallKeySeType;
+        memcpy( &itemResourcePtr[items::Bublin_Camp_Key], smallKeyItemResourcePtr, sizeof( tp::d_item_data::ItemResource ) );
+    }
+
+    void giveNodeDungeonItems( const tp::d_com_inf_game::AreaNodesID nodeId,
+                               const char* stage,
+                               const item::NodeDungeonItemType type )
+    {
+        tp::d_com_inf_game::GameInfo* gameInfoPtr = &gameInfo;
+
+        // If the key is for the current area, then update the local node
+        // Only check the first 4 characters, since those are what determine each area
+        if ( strncmp( gameInfoPtr->currentStage, stage, 4 ) == 0 )
+        {
+            switch ( type )
+            {
+                case item::NodeDungeonItemType::Small_Key:
+                    gameInfoPtr->localAreaNodes.nbKeys++;
+                    break;
+                case item::NodeDungeonItemType::Dungeon_Map:
+                    gameInfoPtr->localAreaNodes.dungeon.mapGotten = 0b1;
+                    break;
+                case item::NodeDungeonItemType::Compass:
+                    gameInfoPtr->localAreaNodes.dungeon.compassGotten = 0b1;
+                    break;
+                case item::NodeDungeonItemType::Big_Key:
+                    gameInfoPtr->localAreaNodes.dungeon.bigKeyGotten = 0b1;
+                    break;
+
+                default:
+                    break;
             }
         }
-
-        // hook dStage_actorInit to search for field items (probably only heart containers) to replace based on object name
-        // Not sure what is passed into dStage_actorInit, but r4 seems to be the same as dStage_actorCommonLayerInit
-        bool procActorCommonLayerInit(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, s32 unk3, void*
-    unk4)
+        else     // Key is not for the current area, so update the appropriate node
         {
-            Actr* actrPtr = chunkTypeInfo->chunkDataPtr;
-            u32 numChunks = chunkTypeInfo->numChunks;
-            for (u32 i = 0; i < numChunks; i++)
+            tp::d_com_inf_game::AreaNodes* node =
+                reinterpret_cast<tp::d_com_inf_game::AreaNodes*>( &gameInfoPtr->scratchPad.allAreaNodes.Ordon );
+
+            switch ( type )
             {
-                // Check for "htPiece", as that seems to be whats used for heart pieces
-                // Not sure what name heart containers use
-                if (strncmp(actrPtr->objectName, "htPiece", sizeof(Actr.objectName)))
-                {
-                    // Change the object name to "item"
-                    strncpy(actrPtr->objectName, "item", sizeof(Actr.objectName));
-
-                    // Change the item id
-                    u8* tempParamBytes = reinterpret_cast<u8*>(&actrPtr->parameters);
-                    tempParamBytes[3] = newItemId;
-
-                    // Changing the parameters is necessary for this, as its being changed to use rupee parameters
-                    // Currently allows the item to respawn, so need to look into what handles that
-                    // Refer to Winditor for what the parameters do
-                    tempParamBytes[0] = 0xF3;
-                    tempParamBytes[1] = 0xFF;
-                    tempParamBytes[2] = 0x80;
-                    actrPtr->rot[2] = 0x3F;
-                }
+                case item::NodeDungeonItemType::Small_Key:
+                    node[static_cast<u32>( nodeId )].nbKeys++;
+                    break;
+                case item::NodeDungeonItemType::Dungeon_Map:
+                    node[static_cast<u32>( nodeId )].dungeon.mapGotten = 0b1;
+                    break;
+                case item::NodeDungeonItemType::Compass:
+                    node[static_cast<u32>( nodeId )].dungeon.compassGotten = 0b1;
+                    break;
+                case item::NodeDungeonItemType::Big_Key:
+                    node[static_cast<u32>( nodeId )].dungeon.bigKeyGotten = 0b1;
+                    break;
+                default:
+                    break;
             }
         }
-    }*/
+    }
+
+    void setCustomItemFunctions()
+    {
+        tp::d_item::ItemFunc* itemFuncPtr = &tp::d_item::item_func_ptr[0];
+
+        // Forest Temple
+        tp::d_item::ItemFunc onGetForestTempleSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Forest_Temple;
+            const char* stage = stage::allStages[Stage_Forest_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Forest_Temple_Small_Key] = onGetForestTempleSmallKey;
+
+        tp::d_item::ItemFunc onGetForestTempleDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Forest_Temple;
+            const char* stage = stage::allStages[Stage_Forest_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Forest_Temple_Dungeon_Map] = onGetForestTempleDungeonMap;
+
+        tp::d_item::ItemFunc onGetForestTempleCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Forest_Temple;
+            const char* stage = stage::allStages[Stage_Forest_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Forest_Temple_Compass] = onGetForestTempleCompass;
+
+        tp::d_item::ItemFunc onGetForestTempleBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Forest_Temple;
+            const char* stage = stage::allStages[Stage_Forest_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::Forest_Temple_Big_Key] = onGetForestTempleBigKey;
+
+        // Goron Mines
+        tp::d_item::ItemFunc onGetGoronMinesSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Goron_Mines;
+            const char* stage = stage::allStages[Stage_Goron_Mines];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Goron_Mines_Small_Key] = onGetGoronMinesSmallKey;
+
+        tp::d_item::ItemFunc onGetGoronMinesDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Goron_Mines;
+            const char* stage = stage::allStages[Stage_Goron_Mines];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Goron_Mines_Dungeon_Map] = onGetGoronMinesDungeonMap;
+
+        tp::d_item::ItemFunc onGetGoronMinesCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Goron_Mines;
+            const char* stage = stage::allStages[Stage_Goron_Mines];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Goron_Mines_Compass] = onGetGoronMinesCompass;
+
+        // Lakebed Temple
+        tp::d_item::ItemFunc onGetLakebedTempleSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Lakebed_Temple;
+            const char* stage = stage::allStages[Stage_Lakebed_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Lakebed_Temple_Small_Key] = onGetLakebedTempleSmallKey;
+
+        tp::d_item::ItemFunc onGetLakebedTempleDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Lakebed_Temple;
+            const char* stage = stage::allStages[Stage_Lakebed_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Lakebed_Temple_Dungeon_Map] = onGetLakebedTempleDungeonMap;
+
+        tp::d_item::ItemFunc onGetLakebedTempleCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Lakebed_Temple;
+            const char* stage = stage::allStages[Stage_Lakebed_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Lakebed_Temple_Compass] = onGetLakebedTempleCompass;
+
+        tp::d_item::ItemFunc onGetLakebedTempleBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Lakebed_Temple;
+            const char* stage = stage::allStages[Stage_Lakebed_Temple];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::Lakebed_Temple_Big_Key] = onGetLakebedTempleBigKey;
+
+        // Arbiters Grounds
+        tp::d_item::ItemFunc onGetArbitersGroundsSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Arbiters_Grounds;
+            const char* stage = stage::allStages[Stage_Arbiters_Grounds];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Arbiters_Grounds_Small_Key] = onGetArbitersGroundsSmallKey;
+
+        tp::d_item::ItemFunc onGetArbitersGroundsDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Arbiters_Grounds;
+            const char* stage = stage::allStages[Stage_Arbiters_Grounds];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Arbiters_Grounds_Dungeon_Map] = onGetArbitersGroundsDungeonMap;
+
+        tp::d_item::ItemFunc onGetArbitersGroundsCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Arbiters_Grounds;
+            const char* stage = stage::allStages[Stage_Arbiters_Grounds];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Arbiters_Grounds_Compass] = onGetArbitersGroundsCompass;
+
+        tp::d_item::ItemFunc onGetArbitersGroundsBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Arbiters_Grounds;
+            const char* stage = stage::allStages[Stage_Arbiters_Grounds];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::Arbiters_Grounds_Big_Key] = onGetArbitersGroundsBigKey;
+
+        // Snowpeak Ruins
+        tp::d_item::ItemFunc onGetSnowpeakRuinsSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Snowpeak_Ruins;
+            const char* stage = stage::allStages[Stage_Snowpeak_Ruins];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Snowpeak_Ruins_Small_Key] = onGetSnowpeakRuinsSmallKey;
+
+        tp::d_item::ItemFunc onGetSnowpeakRuinsDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Snowpeak_Ruins;
+            const char* stage = stage::allStages[Stage_Snowpeak_Ruins];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Snowpeak_Ruins_Dungeon_Map] = onGetSnowpeakRuinsDungeonMap;
+
+        tp::d_item::ItemFunc onGetSnowpeakRuinsCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Snowpeak_Ruins;
+            const char* stage = stage::allStages[Stage_Snowpeak_Ruins];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Snowpeak_Ruins_Compass] = onGetSnowpeakRuinsCompass;
+
+        // Temple of Time
+        tp::d_item::ItemFunc onGetTempleofTimeSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Temple_of_Time;
+            const char* stage = stage::allStages[Stage_Temple_of_Time];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Temple_of_Time_Small_Key] = onGetTempleofTimeSmallKey;
+
+        tp::d_item::ItemFunc onGetTempleofTimeDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Temple_of_Time;
+            const char* stage = stage::allStages[Stage_Temple_of_Time];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Temple_of_Time_Dungeon_Map] = onGetTempleofTimeDungeonMap;
+
+        tp::d_item::ItemFunc onGetTempleofTimeCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Temple_of_Time;
+            const char* stage = stage::allStages[Stage_Temple_of_Time];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Temple_of_Time_Compass] = onGetTempleofTimeCompass;
+
+        tp::d_item::ItemFunc onGetTempleofTimeBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Temple_of_Time;
+            const char* stage = stage::allStages[Stage_Temple_of_Time];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::Temple_of_Time_Big_Key] = onGetTempleofTimeBigKey;
+
+        // City in The Sky
+        tp::d_item::ItemFunc onGetCityinTheSkySmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::City_in_the_Sky;
+            const char* stage = stage::allStages[Stage_City_in_the_Sky];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::City_in_The_Sky_Small_Key] = onGetCityinTheSkySmallKey;
+
+        tp::d_item::ItemFunc onGetCityinTheSkyDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::City_in_the_Sky;
+            const char* stage = stage::allStages[Stage_City_in_the_Sky];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::City_in_The_Sky_Dungeon_Map] = onGetCityinTheSkyDungeonMap;
+
+        tp::d_item::ItemFunc onGetCityinTheSkyCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::City_in_the_Sky;
+            const char* stage = stage::allStages[Stage_City_in_the_Sky];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::City_in_The_Sky_Compass] = onGetCityinTheSkyCompass;
+
+        tp::d_item::ItemFunc onGetCityinTheSkyBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::City_in_the_Sky;
+            const char* stage = stage::allStages[Stage_City_in_the_Sky];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::City_in_The_Sky_Big_Key] = onGetCityinTheSkyBigKey;
+
+        // Palace of Twilight
+        tp::d_item::ItemFunc onGetPalaceofTwilightSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Palace_of_Twilight;
+            const char* stage = stage::allStages[Stage_Palace_of_Twilight];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Palace_of_Twilight_Small_Key] = onGetPalaceofTwilightSmallKey;
+
+        tp::d_item::ItemFunc onGetPalaceofTwilightDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Palace_of_Twilight;
+            const char* stage = stage::allStages[Stage_Palace_of_Twilight];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Palace_of_Twilight_Dungeon_Map] = onGetPalaceofTwilightDungeonMap;
+
+        tp::d_item::ItemFunc onGetPalaceofTwilightCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Palace_of_Twilight;
+            const char* stage = stage::allStages[Stage_Palace_of_Twilight];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Palace_of_Twilight_Compass] = onGetPalaceofTwilightCompass;
+
+        tp::d_item::ItemFunc onGetPalaceofTwilightBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Palace_of_Twilight;
+            const char* stage = stage::allStages[Stage_Palace_of_Twilight];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::Palace_of_Twilight_Big_Key] = onGetPalaceofTwilightBigKey;
+
+        // Hyrule Castle
+        tp::d_item::ItemFunc onGetHyruleCastleSmallKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Hyrule_Castle;
+            const char* stage = stage::allStages[Stage_Hyrule_Castle];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Hyrule_Castle_Small_Key] = onGetHyruleCastleSmallKey;
+
+        tp::d_item::ItemFunc onGetHyruleCastleDungeonMap = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Hyrule_Castle;
+            const char* stage = stage::allStages[Stage_Hyrule_Castle];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Dungeon_Map );
+        };
+        itemFuncPtr[items::Hyrule_Castle_Dungeon_Map] = onGetHyruleCastleDungeonMap;
+
+        tp::d_item::ItemFunc onGetHyruleCastleCompass = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Hyrule_Castle;
+            const char* stage = stage::allStages[Stage_Hyrule_Castle];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Compass );
+        };
+        itemFuncPtr[items::Hyrule_Castle_Compass] = onGetHyruleCastleCompass;
+
+        tp::d_item::ItemFunc onGetHyruleCastleBigKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Hyrule_Castle;
+            const char* stage = stage::allStages[Stage_Hyrule_Castle];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Big_Key );
+        };
+        itemFuncPtr[items::Hyrule_Castle_Big_Key] = onGetHyruleCastleBigKey;
+
+        // Bublin Camp
+        tp::d_item::ItemFunc onGetBublinCampKey = []() {
+            const tp::d_com_inf_game::AreaNodesID nodeId = tp::d_com_inf_game::AreaNodesID::Gerudo_Desert;
+            const char* stage = stage::allStages[Stage_Bublin_Camp];
+            giveNodeDungeonItems( nodeId, stage, item::NodeDungeonItemType::Small_Key );
+        };
+        itemFuncPtr[items::Bublin_Camp_Key] = onGetBublinCampKey;
+    }
+
+    u16 dungeonStoryFlags[8] = { 0x602, 0x701, 0x904, 0x2010, 0x2008, 0x2004, 0x2002, 0x5410 };
 }     // namespace mod::game_patch

@@ -777,6 +777,42 @@ namespace tp::d_com_inf_game
         u8 blueBottom;
     } __attribute__( ( __packed__ ) );
 
+    enum class AreaNodesID : u32
+    {
+        Ordon = 0,
+        Sewers,
+        Faron,
+        Eldin,
+        Lanayru,
+        Unk_5,
+        Hyrule_Field,
+        Sacred_Grove,
+        Snowpeak,
+        Castle_Town,
+        Gerudo_Desert,
+        Fishing_Pond,
+        Unk_C,
+        Unk_D,
+        Unk_E,
+        Unk_F,
+        Forest_Temple,
+        Goron_Mines,
+        Lakebed_Temple,
+        Arbiters_Grounds,
+        Snowpeak_Ruins,
+        Temple_of_Time,
+        City_in_the_Sky,
+        Palace_of_Twilight,
+        Hyrule_Castle,
+        Cave_of_Ordeals,     // Includes Gorge Cave and Ice Block Cave
+        Lake_Hylia_Cave,     // Includes Goron Stockcave
+        Grottos,
+        Unk_1C,
+        Unk_1D,
+        Unk_1E,
+        Unk_1F,
+    };
+
     // Should try to fill in the missing variables at some point
     struct GameInfo
     {
@@ -850,8 +886,10 @@ namespace tp::d_com_inf_game
             u8 bagNb,
             short amout );     // amount will be the og (ex: if you can only have 5 more bombs and buy 10, it'll still ahow 10)
         extern u8 next_state;
-        extern char izaBoatSignText[100];
         // extern char wallet_description[96];
         extern u8 can_warp;
+        int getLayerNo_common_common( const char* stageName, int roomId, int layerOverride );
+
+        void dComIfGs_Wolf_Change_Check();
     }
 }     // namespace tp::d_com_inf_game

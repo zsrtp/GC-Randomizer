@@ -6,7 +6,7 @@
 
 namespace mod::item
 {
-    ItemCheck checks[505] = {
+    ItemCheck checks[503] = {
         /* 0 */ { 0x3F,
                   1,
                   stage::allStages[65],
@@ -111,7 +111,7 @@ namespace mod::item
           nullptr,
           nullptr },     // FT Central Chest Behind Stairs
         /* 8 */
-        { 0x23,
+        { 0xB6,
           2,
           stage::allStages[6],
           0,
@@ -124,7 +124,7 @@ namespace mod::item
           nullptr,
           nullptr },     // FT Map Chest
         /* 9 */
-        { 0x20,
+        { 0x85,
           8,
           stage::allStages[6],
           9,
@@ -150,7 +150,7 @@ namespace mod::item
           nullptr,
           nullptr },     // FT Second Monkey Under Bridge Chest
         /* 11 */
-        { 0x20,
+        { 0x85,
           8,
           stage::allStages[6],
           5,
@@ -202,7 +202,7 @@ namespace mod::item
           nullptr,
           nullptr },     // FT West Tile Worm Heart Piece Chest
         /* 15 */
-        { 0x24,
+        { 0x99,
           2,
           stage::allStages[6],
           0,
@@ -215,7 +215,7 @@ namespace mod::item
           nullptr,
           nullptr },     // FT Compass Chest
         /* 16 */
-        { 0x26,
+        { 0x92,
           2,
           stage::allStages[6],
           1,
@@ -241,7 +241,7 @@ namespace mod::item
           nullptr,
           nullptr },     // FT East Water Cave Chest
         /* 18 */
-        { 0x20,
+        { 0x85,
           8,
           stage::allStages[6],
           10,
@@ -306,7 +306,7 @@ namespace mod::item
           nullptr,
           nullptr },     // GM Entrance Small Chest
         /* 23 */
-        { 0x20,
+        { 0x86,
           8,
           stage::allStages[3],
           3,
@@ -319,7 +319,7 @@ namespace mod::item
           nullptr,
           nullptr },     // GM Main Magnet Room Bottom Chest
         /* 24 */
-        { 0x23,
+        { 0xB7,
           2,
           stage::allStages[3],
           14,
@@ -358,7 +358,7 @@ namespace mod::item
           nullptr,
           nullptr },     // GM Magnet Maze Heart Piece Chest
         /* 27 */
-        { 0x20,
+        { 0x86,
           8,
           stage::allStages[3],
           6,
@@ -397,7 +397,7 @@ namespace mod::item
           nullptr,
           nullptr },     // GM After Switch Room Heart Piece Chest
         /* 30 */
-        { 0x20,
+        { 0x86,
           8,
           stage::allStages[3],
           7,
@@ -449,7 +449,7 @@ namespace mod::item
           nullptr,
           nullptr },     // GM Bow Chest
         /* 34 */
-        { 0x24,
+        { 0x9A,
           2,
           stage::allStages[3],
           11,
@@ -657,7 +657,7 @@ namespace mod::item
           nullptr,
           nullptr },     // LBT Central Room Small Chest
         /* 50 */
-        { 0x23,
+        { 0xB8,
           2,
           stage::allStages[0],
           3,
@@ -670,7 +670,7 @@ namespace mod::item
           nullptr,
           nullptr },     // LBT Map Chest
         /* 51 */
-        { 0x20,
+        { 0x87,
           8,
           stage::allStages[0],
           8,
@@ -696,7 +696,7 @@ namespace mod::item
           nullptr,
           nullptr },     // LBT East Second Floor Southwest Chest
         /* 53 */
-        { 0x20,
+        { 0x87,
           8,
           stage::allStages[0],
           7,
@@ -722,7 +722,7 @@ namespace mod::item
           nullptr,
           nullptr },     // LBT East Water Supply Small Chest
         /* 55 */
-        { 0x20,
+        { 0x87,
           8,
           stage::allStages[0],
           9,
@@ -839,7 +839,7 @@ namespace mod::item
           nullptr,
           nullptr },     // LBT West Water Supply Small Chest
         /* 64 */
-        { 0x24,
+        { 0x9B,
           2,
           stage::allStages[0],
           13,
@@ -904,7 +904,7 @@ namespace mod::item
           nullptr,
           nullptr },     // LBT West Second Floor Southeast Chest
         /* 69 */
-        { 0x26,
+        { 0x93,
           2,
           stage::allStages[0],
           6,
@@ -1866,7 +1866,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 143 */
-        { 0x20,
+        { 0x88,
           8,
           stage::allStages[24],
           0,
@@ -1879,7 +1879,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 144 */
-        { 0x20,
+        { 0x88,
           8,
           stage::allStages[24],
           15,
@@ -1905,7 +1905,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 146 */
-        { 0x23,
+        { 0xB9,
           2,
           stage::allStages[24],
           2,
@@ -1918,7 +1918,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 147 */
-        { 0x24,
+        { 0xA8,
           2,
           stage::allStages[24],
           4,
@@ -1931,7 +1931,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 148 */
-        { 0x20,
+        { 0x88,
           8,
           stage::allStages[24],
           4,
@@ -1944,7 +1944,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 149 */
-        { 0x20,
+        { 0x88,
           8,
           stage::allStages[24],
           14,
@@ -2009,7 +2009,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 154 */
-        { 0x20,
+        { 0x88,
           8,
           stage::allStages[24],
           16,
@@ -2100,7 +2100,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 161 */
-        { 0x26,
+        { 0x94,
           2,
           stage::allStages[24],
           9,
@@ -2230,7 +2230,7 @@ namespace mod::item
           nullptr,
           nullptr },     // Faron Mist East Chest
         /* 171 */
-        { 0x20,
+        { 0x89,
           8,
           stage::allStages[27],
           4,
@@ -2269,7 +2269,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 174 */
-        { 0x20,
+        { 0x89,
           8,
           stage::allStages[27],
           4,
@@ -2295,7 +2295,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 176 */
-        { 0x24,
+        { 0xA9,
           2,
           stage::allStages[27],
           8,
@@ -2347,7 +2347,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 180 */
-        { 0x20,
+        { 0x89,
           8,
           stage::allStages[27],
           8,
@@ -2399,7 +2399,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 184 */
-        { 0x20,
+        { 0x89,
           8,
           stage::allStages[27],
           5,
@@ -2516,7 +2516,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 193 */
-        { 0x20,
+        { 0x8A,
           8,
           stage::allStages[9],
           0,
@@ -2555,7 +2555,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 196 */
-        { 0x23,
+        { 0xBB,
           2,
           stage::allStages[9],
           1,
@@ -2568,7 +2568,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 197 */
-        { 0x20,
+        { 0x8A,
           8,
           stage::allStages[9],
           3,
@@ -2581,7 +2581,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 198 */
-        { 0x24,
+        { 0xAA,
           2,
           stage::allStages[9],
           4,
@@ -2607,7 +2607,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 200 */
-        { 0x20,
+        { 0x8A,
           8,
           stage::allStages[9],
           7,
@@ -2672,7 +2672,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 205 */
-        { 0x26,
+        { 0x95,
           2,
           stage::allStages[9],
           6,
@@ -2854,7 +2854,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 219 */
-        { 0x20,
+        { 0x8B,
           8,
           stage::allStages[12],
           10,
@@ -2867,7 +2867,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 220 */
-        { 0x23,
+        { 0xBC,
           2,
           stage::allStages[12],
           5,
@@ -2932,7 +2932,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 225 */
-        { 0x24,
+        { 0xAB,
           2,
           stage::allStages[12],
           4,
@@ -3101,7 +3101,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 238 */
-        { 0x26,
+        { 0x96,
           2,
           stage::allStages[12],
           2,
@@ -3192,7 +3192,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 245 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           1,
@@ -3205,7 +3205,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 246 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           2,
@@ -3218,7 +3218,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 247 */
-        { 0x24,
+        { 0xAC,
           2,
           stage::allStages[15],
           2,
@@ -3270,7 +3270,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 251 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           4,
@@ -3309,7 +3309,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 254 */
-        { 0x23,
+        { 0xBD,
           2,
           stage::allStages[15],
           5,
@@ -3322,7 +3322,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 255 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           5,
@@ -3361,7 +3361,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 258 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           7,
@@ -3374,7 +3374,7 @@ namespace mod::item
           nullptr,
           nullptr },     // PoT Central First Room Chest
         /* 259 */
-        { 0x26,
+        { 0x97,
           2,
           stage::allStages[15],
           11,
@@ -3387,7 +3387,7 @@ namespace mod::item
           nullptr,
           nullptr },     // PoT Big Key Chest
         /* 260 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           11,
@@ -3400,7 +3400,7 @@ namespace mod::item
           nullptr,
           nullptr },     // PoT Central Outdoor Chest
         /* 261 */
-        { 0x20,
+        { 0x8C,
           8,
           stage::allStages[15],
           8,
@@ -3452,7 +3452,7 @@ namespace mod::item
           nullptr,
           nullptr },     // HC Graveyard Grave Switch Room Back Left Small Chest
         /* 265 */
-        { 0x20,
+        { 0x8D,
           8,
           stage::allStages[20],
           9,
@@ -3465,7 +3465,7 @@ namespace mod::item
           nullptr,
           nullptr },     // HC Graveyard Owl Statue Chest
         /* 266 */
-        { 0x23,
+        { 0xBE,
           2,
           stage::allStages[20],
           14,
@@ -3517,7 +3517,7 @@ namespace mod::item
           nullptr,
           nullptr },     // HC West Courtyard Central Small Chest
         /* 270 */
-        { 0x24,
+        { 0xAD,
           2,
           stage::allStages[20],
           1,
@@ -3569,7 +3569,7 @@ namespace mod::item
           nullptr,
           nullptr },     // HC Main Hall Northwest Chest
         /* 274 */
-        { 0x20,
+        { 0x8D,
           8,
           stage::allStages[20],
           15,
@@ -3582,7 +3582,7 @@ namespace mod::item
           nullptr,
           nullptr },     // HC Southeast Balcony Tower Chest
         /* 275 */
-        { 0x26,
+        { 0x98,
           2,
           stage::allStages[20],
           15,
@@ -4414,7 +4414,7 @@ namespace mod::item
           nullptr,
           nullptr },     // camp HP
         /* 339 */
-        { 0x23,
+        { 0xBA,
           2,
           stage::allStages[27],
           1,
@@ -4453,7 +4453,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 342 */
-        { 0x20,
+        { 0x8D,
           8,
           stage::allStages[20],
           13,
@@ -4466,7 +4466,7 @@ namespace mod::item
           nullptr,
           nullptr },     //
                          /* 343 */
-        { 0x20,
+        { 0x85,
           8,
           stage::allStages[6],
           7,
@@ -4599,7 +4599,7 @@ namespace mod::item
           nullptr,
           nullptr },
         /* 353 */
-        { 0x20,
+        { 0x8E,
           8,
           stage::allStages[55],
           1,
@@ -6457,7 +6457,7 @@ namespace mod::item
           0,
           stage::allStages[54],
           1,
-          0x6,
+          0x7,
           0x6,
           0b000000000000000000000,
           -235.256332,
@@ -6514,8 +6514,8 @@ namespace mod::item
           13,
           stage::allStages[45],
           6,
-          0xFF,
-          0xFF,
+          0x1,
+          0x15,
           0b000000000000000000000,
           -39511.792969,
           1100.000000,
@@ -6528,7 +6528,7 @@ namespace mod::item
           13,
           stage::allStages[44],
           1,
-          0xFF,
+          0x3,
           0xFF,
           0b000000000000000000000,
           -1385.184692,
@@ -6542,7 +6542,7 @@ namespace mod::item
           13,
           stage::allStages[57],
           8,
-          0xFF,
+          0x5,
           0xFF,
           0b000000000000000000000,
           -68497.195312,
@@ -6556,7 +6556,7 @@ namespace mod::item
           13,
           stage::allStages[57],
           16,
-          0xFF,
+          0x7,
           0xFF,
           0b000000000000000000000,
           -55693.375000,
@@ -6570,7 +6570,7 @@ namespace mod::item
           13,
           stage::allStages[59],
           0,
-          0xFF,
+          0x9,
           0xFF,
           0b000000000000000000000,
           -2930.295898,
@@ -6584,7 +6584,7 @@ namespace mod::item
           13,
           stage::allStages[48],
           0,
-          0xFF,
+          0x11,
           0xFF,
           0b000000000000000000000,
           16308.677734,
@@ -6598,43 +6598,16 @@ namespace mod::item
           13,
           stage::allStages[53],
           1,
-          0xFF,
+          0x13,
           0xFF,
           0b000000000000000000000,
           43.525406,
           800.000000,
           -10109.346680,
           nullptr,
-          nullptr },
+          nullptr }
 
-        // Reekfish Scent
-        /*504*/
-        { 0xB3,
-          14,
-          stage::allStages[50],
-          1,
-          0xFF,
-          0xFF,
-          0b000000000000000000000,
-          3673.396973,
-          -5986.576172,
-          13185.018555,
-          nullptr,
-          nullptr },
-        // Medicine Scent
-        /*505*/
-        { 0xB5,
-          14,
-          stage::allStages[73],
-          2,
-          0xFF,
-          0xFF,
-          0b000000000000000000000,
-          7454.945801,
-          -190.000000,
-          -1734.022095,
-          nullptr,
-          nullptr } };
+    };
 
     u16 checkPriorityOrder[24] = {
         293,     // fishing rod

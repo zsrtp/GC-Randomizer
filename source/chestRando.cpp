@@ -12,12 +12,12 @@
 
 #include "array.h"
 #include "defines.h"
-#include "game_patches.h"
 #include "grottoChecks.h"
 #include "item.h"
 #include "itemChecks.h"
 #include "items.h"
 #include "keyPlacement.h"
+#include "musicRando.h"
 #include "singleton.h"
 #include "stage.h"
 #include "tools.h"
@@ -387,7 +387,10 @@ namespace mod
                 break;
 
             case item::ItemType::Skill:
-                result = true;
+                if ( Singleton::getInstance()->shuffleHiddenSkills == 0x0 )
+                {
+                    result = true;
+                }
                 break;
 
             case item::ItemType::Scent:
@@ -397,22 +400,12 @@ namespace mod
 
         switch ( check->itemID )
         {
-                /*case items::Item::Iron_Boots:
-                    result = true;
-                break;*/
-            case items::Item::Shadow_Crystal:
-                if ( Singleton::getInstance()->isMDHSkipEnabled == 0 )
-                {
-                    result = true;
-                }
-                break;
-
             case items::Item::Fishing_Rod:
                 result = true;
                 break;
 
             case items::Item::Ancient_Sky_Book_empty:
-                if ( isProgressiveEnabled == 0 )
+                if ( Singleton::getInstance()->shuffledSkybook == 0 )
                 {
                     result = true;
                 }
@@ -620,6 +613,164 @@ namespace mod
             gameInfo.localAreaNodes.unk_0[0x10] |= 0x20;
         }
 
+        else if ( item == items::Small_Key )
+        {
+            if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Forest_Temple] ) )
+            {
+                item = items::Forest_Temple_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Goron_Mines] ) )
+            {
+                item = items::Goron_Mines_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Lakebed_Temple] ) )
+            {
+                item = items::Lakebed_Temple_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Arbiters_Grounds] ) )
+            {
+                item = items::Arbiters_Grounds_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Snowpeak_Ruins] ) )
+            {
+                item = items::Snowpeak_Ruins_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Temple_of_Time] ) )
+            {
+                item = items::Temple_of_Time_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_City_in_the_Sky] ) )
+            {
+                item = items::City_in_The_Sky_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Palace_of_Twilight] ) )
+            {
+                item = items::Palace_of_Twilight_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Hyrule_Castle] ) )
+            {
+                item = items::Hyrule_Castle_Small_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Bublin_Camp] ) )
+            {
+                item = items::Bublin_Camp_Key;
+            }
+        }
+        else if ( item == items::Compass )
+        {
+            if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Forest_Temple] ) )
+            {
+                item = items::Forest_Temple_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Goron_Mines] ) )
+            {
+                item = items::Goron_Mines_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Lakebed_Temple] ) )
+            {
+                item = items::Lakebed_Temple_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Arbiters_Grounds] ) )
+            {
+                item = items::Arbiters_Grounds_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Snowpeak_Ruins] ) )
+            {
+                item = items::Snowpeak_Ruins_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Temple_of_Time] ) )
+            {
+                item = items::Temple_of_Time_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_City_in_the_Sky] ) )
+            {
+                item = items::City_in_The_Sky_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Palace_of_Twilight] ) )
+            {
+                item = items::Palace_of_Twilight_Compass;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Hyrule_Castle] ) )
+            {
+                item = items::Hyrule_Castle_Compass;
+            }
+        }
+        else if ( item == items::Dungeon_Map )
+        {
+            if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Forest_Temple] ) )
+            {
+                item = items::Forest_Temple_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Goron_Mines] ) )
+            {
+                item = items::Goron_Mines_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Lakebed_Temple] ) )
+            {
+                item = items::Lakebed_Temple_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Arbiters_Grounds] ) )
+            {
+                item = items::Arbiters_Grounds_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Snowpeak_Ruins] ) )
+            {
+                item = items::Snowpeak_Ruins_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Temple_of_Time] ) )
+            {
+                item = items::Temple_of_Time_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_City_in_the_Sky] ) )
+            {
+                item = items::City_in_The_Sky_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Palace_of_Twilight] ) )
+            {
+                item = items::Palace_of_Twilight_Dungeon_Map;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Hyrule_Castle] ) )
+            {
+                item = items::Hyrule_Castle_Dungeon_Map;
+            }
+        }
+        else if ( item == items::Big_Key )
+        {
+            if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Forest_Temple] ) )
+            {
+                item = items::Forest_Temple_Big_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Lakebed_Temple] ) )
+            {
+                item = items::Lakebed_Temple_Big_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Arbiters_Grounds] ) )
+            {
+                item = items::Arbiters_Grounds_Big_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Temple_of_Time] ) )
+            {
+                item = items::Temple_of_Time_Big_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_City_in_the_Sky] ) )
+            {
+                item = items::City_in_The_Sky_Big_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Palace_of_Twilight] ) )
+            {
+                item = items::Palace_of_Twilight_Big_Key;
+            }
+            else if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Hyrule_Castle] ) )
+            {
+                item = items::Hyrule_Castle_Big_Key;
+            }
+
+            if ( Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+            {
+                item = items::Item::Red_Rupee;
+            }
+        }
+
         for ( u16 i = 0; i < totalChecks; i++ )
         {
             sourceCheck = &item::checks[i];
@@ -745,28 +896,121 @@ namespace mod
                                 // progressive checks (doesn't work if you already have items when generating seed)
                                 if ( isProgressiveEnabled == 1 )
                                 {
-                                    if ( item == items::Item::Wooden_Sword && tools::checkItemFlag( ItemFlags::Wooden_Sword ) )
+                                    if ( item == items::Item::Wooden_Sword )
                                     {
-                                        item = items::Item::Ordon_Sword;
-                                        gameInfo.scratchPad.equipedItems.sword = 0x28;
+                                        if ( tools::checkItemFlag( ItemFlags::Wooden_Sword ) )
+                                        {
+                                            if ( tools::checkItemFlag( ItemFlags::Ordon_Sword ) )
+                                            {
+                                                if ( tools::checkItemFlag( ItemFlags::Master_Sword ) )
+                                                {
+                                                    item = items::Item::Master_Sword_Light;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x49;
+                                                }
+                                                else
+                                                {
+                                                    item = items::Item::Master_Sword;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x29;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                item = items::Item::Ordon_Sword;
+                                                gameInfo.scratchPad.equipedItems.sword = 0x28;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            item = items::Item::Wooden_Sword;
+                                            gameInfo.scratchPad.equipedItems.sword = 0x3F;
+                                        }
                                     }
-                                    else if ( item == items::Item::Ordon_Sword &&
-                                              !tools::checkItemFlag( ItemFlags::Wooden_Sword ) )
+                                    else if ( item == items::Item::Ordon_Sword )
                                     {
-                                        item = items::Item::Wooden_Sword;
-                                        gameInfo.scratchPad.equipedItems.sword = 0x3F;
+                                        if ( tools::checkItemFlag( ItemFlags::Wooden_Sword ) )
+                                        {
+                                            if ( tools::checkItemFlag( ItemFlags::Ordon_Sword ) )
+                                            {
+                                                if ( tools::checkItemFlag( ItemFlags::Master_Sword ) )
+                                                {
+                                                    item = items::Item::Master_Sword_Light;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x49;
+                                                }
+                                                else
+                                                {
+                                                    item = items::Item::Master_Sword;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x29;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                item = items::Item::Ordon_Sword;
+                                                gameInfo.scratchPad.equipedItems.sword = 0x28;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            item = items::Item::Wooden_Sword;
+                                            gameInfo.scratchPad.equipedItems.sword = 0x3F;
+                                        }
                                     }
-                                    else if ( item == items::Item::Master_Sword &&
-                                              tools::checkItemFlag( ItemFlags::Master_Sword ) )
-                                    {     // for when MS and light Ms are implemented
-                                        item = items::Item::Master_Sword_Light;
-                                        gameInfo.scratchPad.equipedItems.sword = 0x49;
+                                    else if ( item == items::Item::Master_Sword )
+                                    {
+                                        if ( tools::checkItemFlag( ItemFlags::Wooden_Sword ) )
+                                        {
+                                            if ( tools::checkItemFlag( ItemFlags::Ordon_Sword ) )
+                                            {
+                                                if ( tools::checkItemFlag( ItemFlags::Master_Sword ) )
+                                                {
+                                                    item = items::Item::Master_Sword_Light;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x49;
+                                                }
+                                                else
+                                                {
+                                                    item = items::Item::Master_Sword;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x29;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                item = items::Item::Ordon_Sword;
+                                                gameInfo.scratchPad.equipedItems.sword = 0x28;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            item = items::Item::Wooden_Sword;
+                                            gameInfo.scratchPad.equipedItems.sword = 0x3F;
+                                        }
                                     }
-                                    else if ( item == items::Item::Master_Sword_Light &&
-                                              !tools::checkItemFlag( ItemFlags::Master_Sword ) )
-                                    {     // for when MS and light Ms are implemented
-                                        item = items::Item::Master_Sword;
-                                        gameInfo.scratchPad.equipedItems.sword = 0x29;
+                                    else if ( item == items::Item::Master_Sword_Light )
+                                    {
+                                        if ( tools::checkItemFlag( ItemFlags::Wooden_Sword ) )
+                                        {
+                                            if ( tools::checkItemFlag( ItemFlags::Ordon_Sword ) )
+                                            {
+                                                if ( tools::checkItemFlag( ItemFlags::Master_Sword ) )
+                                                {
+                                                    item = items::Item::Master_Sword_Light;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x49;
+                                                }
+                                                else
+                                                {
+                                                    item = items::Item::Master_Sword;
+                                                    gameInfo.scratchPad.equipedItems.sword = 0x29;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                item = items::Item::Ordon_Sword;
+                                                gameInfo.scratchPad.equipedItems.sword = 0x28;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            item = items::Item::Wooden_Sword;
+                                            gameInfo.scratchPad.equipedItems.sword = 0x3F;
+                                        }
                                     }
                                     else if ( item == items::Item::Clawshot && tools::checkItemFlag( ItemFlags::Clawshot ) )
                                     {
@@ -775,6 +1019,17 @@ namespace mod
                                     else if ( item == items::Item::Clawshots && !tools::checkItemFlag( ItemFlags::Clawshot ) )
                                     {
                                         item = items::Item::Clawshot;
+                                    }
+
+                                    else if ( item == items::Item::Fishing_Rod &&
+                                              tools::checkItemFlag( ItemFlags::Fishing_Rod ) )
+                                    {
+                                        item = items::Item::Coral_Earring;
+                                    }
+                                    else if ( item == items::Item::Coral_Earring &&
+                                              !tools::checkItemFlag( ItemFlags::Fishing_Rod ) )
+                                    {
+                                        item = items::Item::Fishing_Rod;
                                     }
                                     else if ( item == items::Item::Heros_Bow )
                                     {
@@ -1044,7 +1299,7 @@ namespace mod
                                     }
                                     else
                                     {
-                                        game_patch::giveMidnaTransform();
+                                        gameInfo.scratchPad.eventBits[0xD] |= 0x4;
                                         if ( Singleton::getInstance()->isMDHSkipEnabled == 1 )
                                         {
                                             gameInfo.scratchPad.unk_1F[0x11] |= 0x8;     // Midna on Back
@@ -1089,38 +1344,45 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
+                                                item = items::Shield_Attack;     // give shield attack
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == 0xE2 )
@@ -1139,38 +1401,43 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
-                                            {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
-                                            }
+                                            item = items::Shield_Attack;     // give shield attack
+                                            gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == 0xE3 )
@@ -1189,38 +1456,43 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
-                                            {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
-                                            }
+                                            item = items::Shield_Attack;     // give shield attack
+                                            gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == 0xE4 )
@@ -1239,38 +1511,45 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
+                                                item = items::Shield_Attack;     // give shield attack
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == 0xE5 )
@@ -1289,38 +1568,45 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
+                                                item = items::Shield_Attack;     // give shield attack
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == 0xE6 )
@@ -1339,38 +1625,45 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
+                                                item = items::Shield_Attack;     // give shield attack
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == 0xE7 )
@@ -1389,38 +1682,45 @@ namespace mod
                                                         if ( ( gameInfo.scratchPad.eventBits[0x2A] & 0x40 ) !=
                                                              0 ) /*have jump strike*/
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;     // give great spin
+                                                            item = items::Great_Spin;     // give great spin
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x20;
                                                         }
                                                         else
                                                         {
-                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;     // give jumpstrike
+                                                            item = items::Jump_Strike;     // give jumpstrike
+                                                            gameInfo.scratchPad.eventBits[0x2A] |= 0x40;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;     // give mortal draw
+                                                        item = items::Mortal_Draw;     // give mortal draw
+                                                        gameInfo.scratchPad.eventBits[0x2A] |= 0x80;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;     // give helm splitter
+                                                    item = items::Helm_Splitter;     // give helm splitter
+                                                    gameInfo.scratchPad.eventBits[0x29] |= 0x1;
                                                 }
                                             }
                                             else
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;     // give back slice
+                                                item = items::Back_Slice;     // give back slice
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x2;
                                             }
                                         }
                                         else
                                         {
                                             {
-                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;     // give shield attack
+                                                item = items::Shield_Attack;     // give shield attack
+                                                gameInfo.scratchPad.eventBits[0x29] |= 0x8;
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;     // give ending blow
+                                        item = items::Ending_Blow;     // give ending blow
+                                        gameInfo.scratchPad.eventBits[0x29] |= 0x4;
                                     }
                                 }
                                 else if ( item == items::Item::Reekfish_Scent )
@@ -1441,6 +1741,41 @@ namespace mod
                                     }
                                 }
                                 else if ( item == items::Item::Big_Key && Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::Forest_Temple_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::Lakebed_Temple_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::Arbiters_Grounds_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::Temple_of_Time_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::City_in_The_Sky_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::Palace_of_Twilight_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
+                                {
+                                    item = items::Item::Red_Rupee;
+                                }
+                                else if ( item == items::Item::Hyrule_Castle_Big_Key &&
+                                          Singleton::getInstance()->isBossKeyseyEnabled == 1 )
                                 {
                                     item = items::Item::Red_Rupee;
                                 }
@@ -1490,10 +1825,6 @@ namespace mod
                                         item = items::Item::Blue_Rupee;
                                     }
                                 }
-                                /*if (item == items::Item::Blue_Rupee)
-                                {//somehow the blue rupee item get don't work normally
-                                    tp::d_item::execItemGet(items::Item::Blue_Rupee);
-                                }*/
                                 return item;
                             }
                             else

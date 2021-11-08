@@ -47,6 +47,9 @@ namespace tp::d_a_alink
         bool checkHorseRide( tp::d_com_inf_game::LinkMapVars* linkMapPtr );
         bool checkBoarRide( tp::d_com_inf_game::LinkMapVars* linkMapPtr );
         bool checkSpinnerRide( tp::d_com_inf_game::LinkMapVars* linkMapPtr );
+        bool dComIfGs_isEventBit( u16 flag );
+        void setGetItemFace( void* daAlink_c, u16 itemId );
+        extern u8 getSeType[0x100];
 
         // Variables
         extern LadderVars ladderVars;

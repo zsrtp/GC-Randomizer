@@ -34,15 +34,8 @@ namespace mod
         u8 isGMStoryPatch;
         u8 isEarlyHCEnabled;
         u8 startWithCrystal;
+        u8 shuffleHiddenSkills;
 
-        // dungeon flags
-        u8 hasFTBeenBeaten;
-        u8 hasGMBeenBeaten;
-        u8 hasLBTBeenBeaten;
-        u8 hasAGBeenBeaten;
-        u8 hasSPRBeenBeaten;
-        u8 hasToTBeenBeaten;
-        u8 hasCiTSBeenBeaten;
         u8 hasCiTSOoccoo;
 
        private:

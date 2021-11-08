@@ -39,15 +39,7 @@ namespace mod
         isGMStoryPatch = 0;
         isEarlyHCEnabled = 0;
         startWithCrystal = 0;
-
-        // dungeon fixes
-        hasFTBeenBeaten = 0;
-        hasGMBeenBeaten = 0;
-        hasLBTBeenBeaten = 0;
-        hasAGBeenBeaten = 0;
-        hasSPRBeenBeaten = 0;
-        hasToTBeenBeaten = 0;
-        hasCiTSBeenBeaten = 0;
+        shuffleHiddenSkills = 0;
         hasCiTSOoccoo = 0;
     }
 

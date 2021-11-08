@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tp/DynamicLink.h>
+#include <tp/control.h>
 #include <tp/d_com_inf_game.h>
 #include <tp/dzx.h>
 
@@ -113,8 +114,6 @@ namespace mod
         u8 greenBottom = 0;
         u8 blueBottom = 0;
 
-        u8 bottle4Contents;
-        u8 bottleTrickOn = 0;
         u8 allowBottleItemsShopAnytime = 1;
         u8 shieldTrickOn = 0;
         u8 hadHShield;
@@ -130,9 +129,6 @@ namespace mod
         u8 lastGoodSpawn;
 
         u8 yetaTrickOn = 0;
-
-        u8 LBTBossDoorTrickOn = 0;
-        u8 nbLBTKeys = 0;
 
         u8 eventFlagToEdit = 0;
         u8 newValueForEventFlag = 0;
@@ -164,6 +160,14 @@ namespace mod
 
         bool proc_query022( void* unk1, void* unk2, s32 unk3 );
 
+        bool proc_query023( void* unk1, void* unk2, s32 unk3 );
+
+        bool proc_query024( void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused );
+
+        bool proc_query025( void* unk1, void* unk2, s32 unk3 );
+
+        bool proc_isDungeonItem( void* memBitPtr, const int param_1 );
+
         bool procDoLink( tp::dynamic_link::DynamicModuleControl* dmc );
 
         void procItem_func_UTUWA_HEART();
@@ -171,6 +175,18 @@ namespace mod
         bool canQuickTransform();
 
         bool canChangeToD();
+
+        s32 getMsgIndex( const void* TProcessor, u16 unk2, u32 msgId );
+
+        s32 getItemMsgIndex( const void* TProcessor, u16 unk2, u32 itemId );
+
+        s32 getItemIdFromMsgId( const void* TProcessor, u16 unk3, u32 msgId );
+
+        u32 getCustomMsgColor( u8 colorId );
+
+        s32 proc_checkItemGet( u8 item, s32 defaultValue );
+
+        bool proc_isEventBit( u8* eventSystem, u16 indexNumber );
 
         /**
          * gives the unlocked scent that can be seen in the current area (defaults to most advanced one obtained)
@@ -189,11 +205,6 @@ namespace mod
         void fixYetaAndYeto();
 
         /**
-         * fix problem where opening LBT boss door removes a key
-         */
-        void fixLBTBossDoor();
-
-        /**
          * removes the empty skybook if you are in the sanctuary basement
          */
         void preventPoweringUpDomRod();
@@ -202,12 +213,6 @@ namespace mod
          * gives the unlocked scent that can be seen in the current area (defaults to most advanced one obtained)
          */
         void giveAllScents();
-
-        /**
-         * renders all shop items buyable no matter what you have in you inv
-         * only works for bottle items for now
-         */
-        void allowShopItemsAnytime();
 
         /**
          * checks if the current stage contains a shop
@@ -221,12 +226,6 @@ namespace mod
 
         void changeLanternColor();
 
-        void fixFTTotemMonkey();
-
-        // void setFieldModels();
-
-        // bool procActorCommonLayerInit(void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, s32 unk3,
-        // void* unk4);
         // Private members
         // private:
 
@@ -237,9 +236,15 @@ namespace mod
         s32 ( *evt_control_Skipper_trampoline )( void* eventPtr ) = nullptr;
 
         bool ( *query022_trampoline )( void* unk1, void* unk2, s32 unk3 ) = nullptr;
-      
-        // Used in MsgFlow "Can buy arrows?" checks
-			  bool (*query024_trampoline)(void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused) = nullptr;
+
+        bool ( *query023_trampoline )( void* unk1, void* unk2, s32 unk3 ) = nullptr;
+
+        bool ( *query024_trampoline )( void* dMsgFlow_cPtr,
+                                       void* mesg_flow_node_branchPtr,
+                                       void* fopAc_ac_cPtr,
+                                       int unused ) = nullptr;
+
+        bool ( *query025_trampoline )( void* unk1, void* unk2, s32 unk3 ) = nullptr;
 
         bool ( *do_link_trampoline )( tp::dynamic_link::DynamicModuleControl* dmc ) = nullptr;
 
@@ -251,6 +256,11 @@ namespace mod
                                                    tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo,
                                                    int unk3,
                                                    void* unk4 ) = nullptr;
+
+        bool ( *actorInit_always_trampoline )( void* mStatus_roomControl,
+                                               tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo,
+                                               int unk3,
+                                               void* unk4 ) = nullptr;
 
         void ( *putSave_trampoline )( tp::d_com_inf_game::GameInfo* gameInfoPtr, s32 areaID ) = nullptr;
 
@@ -306,5 +316,27 @@ namespace mod
                                         s32 unk7 ) = nullptr;
 
         void ( *setItemBombNumCount_trampoline )( u32 unk1, u8 bagNb, short amount ) = nullptr;
+
+        bool ( *isDungeonItem_trampoline )( void* memBitPtr, int param_1 ) = nullptr;
+
+        int ( *getLayerNo_common_common_trampoline )( const char* stageName, int roomId, int layerOverride ) = nullptr;
+
+        bool ( *setMessageCode_inSequence_trampoline )( tp::control::TControl* control,
+                                                        const void* TProcessor,
+                                                        u16 unk3,
+                                                        u16 msgId ) = nullptr;
+
+        u32 ( *getFontCCColorTable_trampoline )( u8 colorId, u8 unk ) = nullptr;
+        u32 ( *getFontGCColorTable_trampoline )( u8 colorId, u8 unk ) = nullptr;
+
+        s32 ( *checkItemGet_trampoline )( u8 item, s32 defaultValue ) = nullptr;
+
+        char ( *parseCharacter1Byte_trampoline )( const char** text ) = nullptr;
+
+        bool ( *isEventBit_trampoline )( u8* eventSystem, u16 indexNumber ) = nullptr;
+
+        void ( *onEventBit_trampoline )( u8* eventSystem, u16 indexNumber ) = nullptr;
+
+        void ( *setGetItemFace_trampoline )( void* daAlink_c, u16 itemId ) = nullptr;
     };
 }     // namespace mod

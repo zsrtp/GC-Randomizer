@@ -77,9 +77,22 @@ namespace mod::item
         ItemCheck* destination;
     };
 
+    enum class NodeDungeonItemType : u8
+    {
+        Small_Key,
+        Dungeon_Map,
+        Compass,
+        Big_Key
+    };
+
     /**
      * Contains the values for the flags to be set to skip the animations of first getting specific items
      */
     extern u8 itemGetAnimationFlags[10];
-    extern u8 itemsWithNoFieldModel[2];
+
+    extern u8 customSmallKeyItemIDs[10];
+    extern u8 customBigKeyItemIDs[7];
+    extern u8 customDungeonMapItemIDs[9];
+    extern u8 customCompassItemIDs[9];
+    extern u8 customHiddenSkillItemIDs[7];
 }     // namespace mod::item

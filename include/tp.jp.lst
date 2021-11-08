@@ -12,10 +12,14 @@
 80032AA8:getRupeeMax
 800350BC:getSave
 800350F0:putSave
+800349bc:isEventBit
+8003498c:onEventBit
+80034934:isDungeonItem
 
 // d_stage.o
 8002586C:actorCommonLayerInit
 80025A38:actorInit
+80025b24:actorInit_always
 // data
 803F01D4:mStatus_roomControl
 
@@ -48,6 +52,9 @@
 80097ECC:execItemGet
 80097F20:checkItemGet
 800982F4:item_func_UTUWA_HEART
+803a8ed8:item_info
+803a6700:item_resource
+803a92d8:item_func_ptr
 
 // d_a_alink.h
 8009DA98:checkStageName
@@ -63,6 +70,9 @@
 800CF2bC:checkHorseRide
 800CF300:checkSpinnerRide
 800CF2EC:checkBoarRide
+8038badC:getSeType
+801413e8:dComIfGs_isEventBit
+801181d8:setGetItemFace
 
 // data
 80388C0C:ladderVars
@@ -72,7 +82,9 @@
 
 // d_msg_flow.o
 8024D24C:query022
-8024D2BC:query024
+8024d280:query023
+8024d2bc:query024
+8024d2dc:query025
 
 // DynamicLink.o
 8026508C:do_link
@@ -152,6 +164,8 @@
 8036AE30:strcmp
 8036AFC8:strcpy
 8036AF84:strncpy
+8036adf0:strncmp
+8036b080:strlen
 
 //currentState
 803B8000:current_state
@@ -164,6 +178,8 @@
 // data
 80400300:dComIfG_gameInfo
 8002B36C:setItemBombNumCount
+8002f810:dComIfGs_Wolf_Change_Check
+8002b434:getLayerNo_common_common
 
 // d_kankyo.o
 // data
@@ -188,3 +204,17 @@
 //Z2SeqMgr
 802B72F0:startBattleBgm
 802B18DC:subBgmStart
+802AC328:startSound
+
+//control.o
+802a9e60:setMessageCode_inSequence
+
+//d_msg_class.o
+80229048:getFontCCColorTable
+802290f4:getFontGCColorTable
+
+//resource.o
+802ab8d0:parseCharacter_1Byte
+
+//processor.o
+802aa094:getResource_groupID

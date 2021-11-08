@@ -8,7 +8,7 @@ namespace tp::d_item_data
 {
     struct ItemResource     // d_item_data.h
     {
-        char* arcName;
+        const char* arcName;
         s16 modelResIdx;
         s16 btkResIdx;
         s16 bckResIdx;
@@ -16,13 +16,13 @@ namespace tp::d_item_data
         s16 btpResIdx;
         u8 tevFrm;
         u8 btpFrm;
-        s16 ringTexResIdx;
+        s16 ringTexResIdx;     // The icon displayed next to the text shown when you get an item.
         s16 unk_12[3];
     } __attribute__( ( __packed__ ) );
 
     struct FieldItemRes     // d_item_data.h
     {
-        char* arcName;
+        const char* arcName;
         s16 modelResIdx;
         s16 bckAnmResIdx;
         s16 brkAnmResIdx;
@@ -45,8 +45,8 @@ namespace tp::d_item_data
 
     extern "C"
     {
-        extern ItemResource item_resource[255];      // 0x803AC5A0 in US
-        extern FieldItemRes field_item_res[255];     // 0x803ADD88 in US
-        extern ItemInfo item_info[255];              // 0x803AED78 in US
+        extern ItemResource item_resource[255];
+        extern FieldItemRes field_item_res[255];
+        extern ItemInfo item_info[255];
     }
 }     // namespace tp::d_item_data

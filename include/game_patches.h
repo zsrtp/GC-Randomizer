@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tp/d_com_inf_game.h>
+#include <tp/d_stage.h>
 
 #include "defines.h"
 
@@ -151,11 +152,6 @@ namespace mod::game_patch
     void checkBossKeysey();
 
     /**
-     * check wether to show hawkeye and hylian shield in malo mart
-     */
-    void handleMaloShop();
-
-    /**
      * check whether you have MS before being allowed to enter the desert
      */
     void accessDesert();
@@ -175,8 +171,6 @@ namespace mod::game_patch
      */
     void skipMDHCS();
 
-    void fixFTBossMusic();
-
     /**
      * won't allow you to leave the forest if Faron escape is disabled until you beat Diababa
      */
@@ -194,32 +188,10 @@ namespace mod::game_patch
 
     void breakBarrier();
 
-    /**
-     * unset the story flag and boss flag when re-entering a dungeon
-     */
-    void fixFTState();
-    void fixGMState();
-    void fixLBTState();
-    void fixAGState();
-    void fixSPRState();
-    void fixToTState();
-    void fixCiTSState();
+    void setCustomItemData();
 
-    /**
-     * reset the flags for a dungeon if it has been beaten or if a skip is active
-     */
-    void setFTDungeonFlag();
-    void setFTBossFlag();
-    void setGMDungeonFlag();
-    void setGMBossFlag();
-    void setLakeDungeonFlags();
-    void setLBTBossFlag();
-    void setAGDungeonFlag();
-    void setAGBossFlag();
-    void setSPRDungeonFlag();
-    void setSPRBossFlag();
-    void setToTDungeonFlag();
-    void setToTBossFlag();
-    void setCiTSDungeonFlag();
-    void setCiTSBossFlag();
+    void setCustomItemFunctions();
+
+    extern u16 dungeonStoryFlags[8];
+
 }     // namespace mod::game_patch

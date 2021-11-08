@@ -4,6 +4,7 @@
 namespace mod::musicrando
 {
     extern u8 musicRandoEnabled;
-    extern u8 enemyBgmEnabled;
+    extern u8 enemyBgmDisabled;
+    extern u8 fanfareRandoEnabled;
     void initMusicRando();
 }     // namespace mod::musicrando

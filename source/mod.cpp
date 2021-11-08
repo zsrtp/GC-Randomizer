@@ -9,6 +9,7 @@
 #include <tp/d_kankyo.h>
 #include <tp/d_map_path_dmap.h>
 #include <tp/d_meter2_info.h>
+#include <tp/d_msg_class.h>
 #include <tp/d_msg_flow.h>
 #include <tp/d_save.h>
 #include <tp/d_stage.h>
@@ -18,6 +19,8 @@
 #include <tp/f_op_actor_mng.h>
 #include <tp/f_op_scene_req.h>
 #include <tp/m_Do_controller_pad.h>
+#include <tp/processor.h>
+#include <tp/resource.h>
 
 #include <cstdio>
 #include <cstring>
@@ -27,6 +30,7 @@
 #include "chestRando.h"
 #include "controller.h"
 #include "customChecks.h"
+#include "customMessage.h"
 #include "defines.h"
 #include "eventListener.h"
 #include "game_patches.h"
@@ -51,6 +55,8 @@ namespace mod
     int num_frames = 120;
     int frame_counter = 0;
 
+    tp::d_stage::Actr EponaActr = { "Horse", 0x00000F0D, 0.f, 0.f, 0.f, 0, -180, 0, 0xFFFF };
+
     void main()
     {
         Mod* mod = new Mod();
@@ -74,6 +80,8 @@ namespace mod
         game_patch::assemblyOverwrites();
         game_patch::increaseWalletSize();
         game_patch::increaseClimbSpeed();
+        game_patch::setCustomItemData();
+        game_patch::setCustomItemFunctions();
 
         // Causes issues right now (argarok cannot be beaten)
         // game_patch::removeIBLimit();
@@ -185,11 +193,6 @@ namespace mod
         hudConsole->addOption( page, "Skip Escort?", &Singleton::getInstance()->isCartEscortSkipEnabled, 0x1 );
         hudConsole->addOption( page, "Skip Sewers?", &Singleton::getInstance()->isSewerSkipEnabled, 0x1 );
 
-        /*hudConsole->addOption(page, "Item half milk", &chestRandomizer->itemThatReplacesHalfMilk, 0xFF); //for testing only
-        hudConsole->addOption(page, "Item slingshot", &chestRandomizer->itemThatReplacesSlingShot, 0xFF); //for testing only
-        hudConsole->addOption(page, "Normal Time:", &enableNormalTime, 0x1); //for testing only
-        hudConsole->addOption(page, "Set Day:", &setDay, 0x1); //for testing only*/
-
         hudConsole->addWatch( page, "CurrentStage:", &gameInfo.currentStage, 's', WatchInterpretation::_str );
         hudConsole->addWatch( page, "CurrentRoom:", &tp::d_kankyo::env_light.currentRoom, 'd', WatchInterpretation::_u8 );
         hudConsole->addWatch( page, "CurrentState:", &tp::d_com_inf_game::current_state, 'x', WatchInterpretation::_u8 );
@@ -212,17 +215,6 @@ namespace mod
         hudConsole->addOption( page, "Early ToT?", &Singleton::getInstance()->isEarlyToTEnabled, 0x1 );
         hudConsole->addOption( page, "Early PoT?", &Singleton::getInstance()->isEarlyPoTEnabled, 0x1 );
         hudConsole->addOption( page, "Open HC?", &Singleton::getInstance()->isEarlyHCEnabled, 0x1 );
-        // color
-        /*page = hudConsole->addPage("Tunic Color1");
-
-        hudConsole->addOption(page, "Top toggle:", &topToggle, 0x1);
-        hudConsole->addOption(page, "Red top:", &redTop, 0xFF);
-        hudConsole->addOption(page, "Green top:", &greenTop, 0xFF);
-        hudConsole->addOption(page, "Blue top:", &blueTop, 0xFF);
-        hudConsole->addOption(page, "Bottom toggle:", &bottomToggle, 0x1);
-        hudConsole->addOption(page, "Red bottom:", &redBottom, 0xFF);
-        hudConsole->addOption(page, "Green bottom:", &greenBottom, 0xFF);
-        hudConsole->addOption(page, "Blue bottom:", &blueBottom, 0xFF); */
 
         // buttons
         /*page = hudConsole->addPage("Button texts");
@@ -261,6 +253,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         // hudConsole->addOption(page, "Coords as hex?", &coordsAreInHex, 0x1);
         hudConsole->addOption( page, "GM Story Flag?", &Singleton::getInstance()->isGMStoryPatch, 0x1 );
         hudConsole->addOption( page, "Start w/ Crstl?", &Singleton::getInstance()->startWithCrystal, 0x1 );
+        hudConsole->addOption( page, "Hidden Skills?", &Singleton::getInstance()->shuffleHiddenSkills, 0x1 );
 
         hudConsole->addWatch( page, "CurrentEventID:", &gameInfo.eventSystem.currentEventID, 'x', WatchInterpretation::_u8 );
         hudConsole->addWatch( page, "NextEventID:", &gameInfo.eventSystem.nextEventID, 'x', WatchInterpretation::_u8 );
@@ -281,161 +274,8 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         // Bgm Options
         page = hudConsole->addPage( "BGM" );
         hudConsole->addOption( page, "BGM Rando: ", &musicrando::musicRandoEnabled, 0x1 );
-        hudConsole->addOption( page, "Enemy BGM: ", &musicrando::enemyBgmEnabled, 0x1 );
-
-        // local area
-        /*page = hudConsole->addPage("Local Area 1");
-        hudConsole->addWatch(page, "AreaNodes0:", &gameInfo.localAreaNodes.unk_0[0], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes1:", &gameInfo.localAreaNodes.unk_0[1], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes2:", &gameInfo.localAreaNodes.unk_0[2], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes3:", &gameInfo.localAreaNodes.unk_0[3], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes4:", &gameInfo.localAreaNodes.unk_0[4], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes5:", &gameInfo.localAreaNodes.unk_0[5], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes6:", &gameInfo.localAreaNodes.unk_0[6], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes7:", &gameInfo.localAreaNodes.unk_0[7], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes8:", &gameInfo.localAreaNodes.unk_0[8], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes9:", &gameInfo.localAreaNodes.unk_0[9], 'x', WatchInterpretation::_u8);
-        page = hudConsole->addPage("Local Area 2");
-        hudConsole->addWatch(page, "AreaNodes10:", &gameInfo.localAreaNodes.unk_0[10], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes11:", &gameInfo.localAreaNodes.unk_0[11], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes12:", &gameInfo.localAreaNodes.unk_0[12], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes13:", &gameInfo.localAreaNodes.unk_0[13], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes14:", &gameInfo.localAreaNodes.unk_0[14], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes15:", &gameInfo.localAreaNodes.unk_0[15], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes16:", &gameInfo.localAreaNodes.unk_0[16], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes17:", &gameInfo.localAreaNodes.unk_0[17], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes18:", &gameInfo.localAreaNodes.unk_0[18], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes19:", &gameInfo.localAreaNodes.unk_0[19], 'x', WatchInterpretation::_u8);
-        page = hudConsole->addPage("Local Area 3");
-        hudConsole->addWatch(page, "AreaNodes20:", &gameInfo.localAreaNodes.unk_0[20], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes21:", &gameInfo.localAreaNodes.unk_0[21], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes22:", &gameInfo.localAreaNodes.unk_0[22], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes23:", &gameInfo.localAreaNodes.unk_0[23], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes24:", &gameInfo.localAreaNodes.unk_0[24], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes25:", &gameInfo.localAreaNodes.unk_0[25], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes26:", &gameInfo.localAreaNodes.unk_0[26], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes27:", &gameInfo.localAreaNodes.unk_0[27], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "NbKeys:", &gameInfo.localAreaNodes.nbKeys, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "Dungeon flags:", &gameInfo.localAreaNodes.dungeon, 'x', WatchInterpretation::_u8);
-        page = hudConsole->addPage("Local Area 4");
-        hudConsole->addWatch(page, "AreaNodes30:", &gameInfo.localAreaNodes.unk_1E[0], 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "AreaNodes31:", &gameInfo.localAreaNodes.unk_1E[1], 'x', WatchInterpretation::_u8);*/
-
-        // item slots
-        /*page = hudConsole->addPage("Item slots 1");
-        hudConsole->addWatch(page, "Boomerang:", &gameInfo.scratchPad.itemWeel.Boomerang, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "Slot 1:", &gameInfo.scratchPad.itemSlots[0x1], 'x', WatchInterpretation::_u8);
-
-        hudConsole->addWatch(page, "flags1:", &gameInfo.scratchPad.itemFlags.itemFlags1, 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "flags2:", &gameInfo.scratchPad.itemFlags.itemFlags2, 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "flags3:", &gameInfo.scratchPad.itemFlags.itemFlags3, 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "falgs4:", &gameInfo.scratchPad.itemFlags.itemFlags4, 'x', WatchInterpretation::_u64);*/
-
-        /*page = hudConsole->addPage("Warps 1");
-        hudConsole->addOption(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 0xFF);
-        hudConsole->addOption(page, "Gerudo Mesa:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 0xFF);
-        hudConsole->addOption(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 0xFF);
-        hudConsole->addOption(page, "Sacred Grove:", &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 0xFF);
-        hudConsole->addOption(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 0xFF);
-        hudConsole->addOption(page, "Castle Town:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 0xFF);
-        hudConsole->addOption(page, "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 0xFF);
-        hudConsole->addOption(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 0xFF);
-        hudConsole->addOption(page, "Lake Hylia:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 0xFF);
-        hudConsole->addOption(page, "Zora River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 0xFF);
-
-        hudConsole->addWatch(page, "Mirror Chamber:", &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0xE], 'x',
-        WatchInterpretation::_u8);//1 hudConsole->addWatch(page, "Gerudo Mesa:",
-        &gameInfo.scratchPad.allAreaNodes.Gerudo_Desert.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-        hudConsole->addWatch(page, "Snowpeak Top:", &gameInfo.scratchPad.allAreaNodes.Snowpeak.unk_0[0x9], 'x',
-        WatchInterpretation::_u8);//32 hudConsole->addWatch(page, "Sacred Grove:",
-        &gameInfo.scratchPad.allAreaNodes.Sacred_Grove.unk_0[0x17], 'x', WatchInterpretation::_u8);//16
-        hudConsole->addWatch(page, "Eldin Bridge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x17], 'x',
-        WatchInterpretation::_u8);//8 hudConsole->addWatch(page, "Castle Town:",
-        &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0xB], 'x', WatchInterpretation::_u8);//8 hudConsole->addWatch(page,
-        "Kakariko Gorge:", &gameInfo.scratchPad.allAreaNodes.Hyrule_Field.unk_0[0x9], 'x', WatchInterpretation::_u8);//32
-        hudConsole->addWatch(page, "Zoras Domain:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xB], 'x',
-        WatchInterpretation::_u8);//4 hudConsole->addWatch(page, "Lake Hylia:",
-        &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0xA], 'x', WatchInterpretation::_u8);//4 hudConsole->addWatch(page, "Zora
-        River:", &gameInfo.scratchPad.allAreaNodes.Lanyru.unk_0[0x9], 'x', WatchInterpretation::_u8);//32 page =
-        hudConsole->addPage("Warps 2"); hudConsole->addOption(page, "Death Mountain:",
-        &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 0xFF); hudConsole->addOption(page, "Kakariko:",
-        &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 0xFF); hudConsole->addOption(page, "South Faron:",
-        &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 0xFF); hudConsole->addOption(page, "North Faron:",
-        &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 0xFF); hudConsole->addOption(page, "Ordon Spring:",
-        &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 0xFF);
-
-        hudConsole->addWatch(page, "Death Mountain:", &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x9], 'x',
-        WatchInterpretation::_u8);//32 hudConsole->addWatch(page, "Kakariko:",
-        &gameInfo.scratchPad.allAreaNodes.Eldin.unk_0[0x8], 'x', WatchInterpretation::_u8);//128 hudConsole->addWatch(page,
-        "South Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0x13], 'x', WatchInterpretation::_u8);//128
-        hudConsole->addWatch(page, "North Faron:", &gameInfo.scratchPad.allAreaNodes.Faron.unk_0[0xB], 'x',
-        WatchInterpretation::_u8);//4 hudConsole->addWatch(page, "Ordon Spring:",
-        &gameInfo.scratchPad.allAreaNodes.Ordon.unk_0[0xD], 'x', WatchInterpretation::_u8);//16*/
-
-        // save load
-        /*page = hudConsole->addPage("Save load");
-
-        hudConsole->addOption(page, "stage:", &stage, 78); //for testing only
-        hudConsole->addOption(page, "room:", &room, 60); //for testing only
-        hudConsole->addOption(page, "spawn:", &spawn, 0xFF); //for testing only
-        hudConsole->addOption(page, "state:", &state, 0xFF); //for testing only
-        hudConsole->addOption(page, "trigger:", &trigerLoadSave, 0x1); //for testing only*/
-
-        /*page = hudConsole->addPage("testing adr1");
-
-
-        hudConsole->addWatch(page, "D:", &gameInfo.scratchPad.equipedItems.unk, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "17:", &gameInfo.scratchPad.unk_17[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "1A:", &gameInfo.scratchPad.unk_1A[0x0], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "1F:", &gameInfo.scratchPad.unk_1F[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "27:", &gameInfo.scratchPad.unk_1F[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "2F:", &gameInfo.scratchPad.unk_1F[0x10], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "32:", &gameInfo.scratchPad.unk_32[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "38:", &gameInfo.scratchPad.unk_38[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "62:", &gameInfo.scratchPad.movingActors.link.unk_62[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "7A:", &gameInfo.scratchPad.movingActors.unk_7A[0x0], 'x',
-        WatchInterpretation::_u32);//actual size:0x3
-
-        page = hudConsole->addPage("testing adr2");
-
-        hudConsole->addWatch(page, "7E:", &gameInfo.scratchPad.movingActors.unk_7E[0x0], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "99:", &gameInfo.scratchPad.unk_99[0x0], 'x', WatchInterpretation::_u32);//actual size:0x3
-        hudConsole->addWatch(page, "F0:", &gameInfo.scratchPad.ammo.unk_F0, 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "F5:", &gameInfo.scratchPad.ammo.unk_F5, 'x', WatchInterpretation::_u32);//actual size:0x3
-        hudConsole->addWatch(page, "FC:", &gameInfo.scratchPad.unk_FC[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "104:", &gameInfo.scratchPad.unk_FC[0x8], 'x', WatchInterpretation::_u64);//actual size:0x5
-        hudConsole->addWatch(page, "10B:", &gameInfo.scratchPad.unk_10B, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "10D:", &gameInfo.scratchPad.unk_10D[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
-        hudConsole->addWatch(page, "115:", &gameInfo.scratchPad.unk_115[0x0], 'x', WatchInterpretation::_u64);//actual size:0x7
-        hudConsole->addWatch(page, "120:", &gameInfo.scratchPad.unk_120[0x0], 'x', WatchInterpretation::_u64);//actual size:0x6
-
-        page = hudConsole->addPage("testing adr2");
-
-        hudConsole->addWatch(page, "128:", &gameInfo.scratchPad.unk_128[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "130:", &gameInfo.scratchPad.unk_128[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "138:", &gameInfo.scratchPad.unk_128[0x10], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "140:", &gameInfo.scratchPad.unk_128[0x18], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "148:", &gameInfo.scratchPad.unk_128[0x20], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "150:", &gameInfo.scratchPad.unk_128[0x28], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "158:", &gameInfo.scratchPad.unk_128[0x30], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "160:", &gameInfo.scratchPad.unk_128[0x38], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "168:", &gameInfo.scratchPad.unk_128[0x40], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "178:", &gameInfo.scratchPad.fishingJournal.unk_178[0x0], 'x', WatchInterpretation::_u64);
-
-        page = hudConsole->addPage("testing adr3");
-
-        hudConsole->addWatch(page, "180:", &gameInfo.scratchPad.fishingJournal.unk_178[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "188:", &gameInfo.scratchPad.fishingJournal.unk_178[0x10], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "192:", &gameInfo.scratchPad.unk_192[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "19A:", &gameInfo.scratchPad.unk_192[0x8], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1A2:", &gameInfo.scratchPad.unk_192[0x10], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1AA:", &gameInfo.scratchPad.unk_192[0x18], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1B2:", &gameInfo.scratchPad.unk_192[0x20], 'x', WatchInterpretation::_u16);
-        hudConsole->addWatch(page, "1C4:", &gameInfo.scratchPad.unk_1C4, 'x', WatchInterpretation::_u8);
-        hudConsole->addWatch(page, "1D5:", &gameInfo.scratchPad.unk_1D5[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1DD:", &gameInfo.scratchPad.unk_1D5[0x8], 'x', WatchInterpretation::_u32);
-        hudConsole->addWatch(page, "1E4:", &gameInfo.scratchPad.unk_1E4[0x0], 'x', WatchInterpretation::_u64);
-        hudConsole->addWatch(page, "1EC:", &gameInfo.scratchPad.unk_1E4[0x8], 'x', WatchInterpretation::_u32);*/
+        hudConsole->addOption( page, "No Enemy BGM?: ", &musicrando::enemyBgmDisabled, 0x1 );
+        hudConsole->addOption( page, "Item Fanfares: ", &musicrando::fanfareRandoEnabled, 0x1 );
 
         // Print
         hudConsole->draw();
@@ -475,15 +315,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                                      0xFF,
                                      game_patch::killLinkHouseSpider,
                                      event::LoadEventAccuracy::Stage_Room );
-
-        // Set Bublin Camp State
-        eventListener->addLoadEvent( stage::allStages[Stage_Bublin_Camp],
-                                     0xFF,
-                                     0xFF,
-                                     0x1,
-                                     0xFF,
-                                     game_patch::setBublinState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
 
         // unlock HF gates and check for MDH
         eventListener->addLoadEvent( stage::allStages[Stage_Hyrule_Field],
@@ -557,15 +388,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                                      game_patch::skipMDHCS,
                                      event::LoadEventAccuracy::Stage_Room_Spawn );
 
-        // Fix FT Boss Music
-        eventListener->addLoadEvent( stage::allStages[Stage_Diababa],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixFTBossMusic,
-                                     event::LoadEventAccuracy::Stage );
-
         // Allow Faron Escape
         eventListener->addLoadEvent( stage::allStages[Stage_Faron_Woods],
                                      0xFF,
@@ -593,163 +415,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                                      game_patch::setLanternFlag,
                                      event::LoadEventAccuracy::Stage_Room_Spawn );
 
-        // unset dungeon flags after beating dungeon
-        eventListener->addLoadEvent( stage::allStages[Stage_Forest_Temple],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixFTState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Goron_Mines],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixGMState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Lakebed_Temple],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixLBTState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Arbiters_Grounds],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixAGState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Snowpeak_Ruins],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixSPRState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Temple_of_Time],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixToTState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_City_in_the_Sky],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::fixCiTSState,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        // set dungeon and boss flags
-        eventListener->addLoadEvent( stage::allStages[Stage_Faron_Woods],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setFTDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        eventListener->addLoadEvent( stage::allStages[Stage_Death_Mountain_Sumo_Hall],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setGMDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Kakariko_Village],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setGMDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Fyrus],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setGMBossFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        eventListener->addLoadEvent( stage::allStages[Stage_Lake_Hylia],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setLakeDungeonFlags,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Morpheel],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setLBTBossFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        eventListener->addLoadEvent( stage::allStages[Stage_Bublin_Camp],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setAGDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Mirror_Chamber],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setAGDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Stallord],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setAGBossFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        eventListener->addLoadEvent( stage::allStages[Stage_Snowpeak],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setSPRDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Blizzeta],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setSPRBossFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        eventListener->addLoadEvent( stage::allStages[Stage_Sacred_Grove],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setToTDungeonFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-        eventListener->addLoadEvent( stage::allStages[Stage_Armogohma],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setToTBossFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
-        eventListener->addLoadEvent( stage::allStages[Stage_Argorok],
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     0xFF,
-                                     game_patch::setCiTSBossFlag,
-                                     event::LoadEventAccuracy::Stage_Room_Spawn );
-
         // Break Barrier
         eventListener->addLoadEvent( stage::allStages[Stage_Castle_Town],
                                      0xFF,
@@ -769,8 +434,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         // specific times
         actorCommonLayerInit_trampoline = patch::hookFunction(
             tp::d_stage::actorCommonLayerInit,
-            []( void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4 )
-            {
+            []( void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4 ) {
                 if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Faron_Woods] ) )
                 {
                     if ( Singleton::getInstance()->hasActorCommonLayerRan <= 4 )
@@ -793,12 +457,36 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                 return global::modPtr->actorCommonLayerInit_trampoline( mStatus_roomControl, chunkTypeInfo, unk3, unk4 );
             } );
 
-        putSave_trampoline = patch::hookFunction( tp::d_save::putSave,
-                                                  []( tp::d_com_inf_game::GameInfo* gameInfoPtr, s32 areaID )
-                                                  {
-                                                      Singleton::getInstance()->hasActorCommonLayerRan = 0;
-                                                      return global::modPtr->putSave_trampoline( gameInfoPtr, areaID );
-                                                  } );
+        actorInit_always_trampoline = patch::hookFunction(
+            tp::d_stage::actorInit_always,
+            []( void* mStatus_roomControl, tp::d_stage::dzxChunkTypeInfo* chunkTypeInfo, int unk3, void* unk4 ) {
+                if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Faron_Woods] ) )
+                {
+                    // Add Epona to the global Actor list
+                    tp::d_stage::Actr* EponaActrPtr = &EponaActr;
+                    tp::d_stage::dzxChunkTypeInfo chunkInfo;
+                    strcpy( chunkInfo.tag, "ACTR" );
+                    chunkInfo.numChunks = 0x1;
+                    typeTransform<u32, float> X, Y, Z;
+                    X.a = 0x0;
+                    Y.a = 0x0;
+                    Z.a = 0x0;
+                    EponaActrPtr->pos[0] = X.b;
+                    EponaActrPtr->pos[1] = Y.b;
+                    EponaActrPtr->pos[2] = Z.b;
+                    chunkInfo.chunkDataPtr = EponaActrPtr;
+                    // Add the actor to the actor list
+                    global::modPtr->actorInit_always_trampoline( mStatus_roomControl, &chunkInfo, 0, nullptr );
+                }
+
+                return global::modPtr->actorCommonLayerInit_trampoline( mStatus_roomControl, chunkTypeInfo, unk3, unk4 );
+            } );
+
+        putSave_trampoline =
+            patch::hookFunction( tp::d_save::putSave, []( tp::d_com_inf_game::GameInfo* gameInfoPtr, s32 areaID ) {
+                Singleton::getInstance()->hasActorCommonLayerRan = 0;
+                return global::modPtr->putSave_trampoline( gameInfoPtr, areaID );
+            } );
 
         checkTreasureRupeeReturn_trampoline = patch::hookFunction(
             tp::d_a_alink::checkTreasureRupeeReturn,
@@ -806,8 +494,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
         createItemForPresentDemo_trampoline = patch::hookFunction(
             tp::f_op_actor_mng::createItemForPresentDemo,
-            []( const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3] )
-            {
+            []( const float pos[3], s32 item, u8 unk3, s32 unk4, s32 unk5, const float unk6[3], const float unk7[3] ) {
                 // Call replacement function
                 /*char txt[50];
                 snprintf(txt, 50, "0 = %f 1 = %f 2 = %f", pos[0], pos[1], pos[2]);
@@ -820,8 +507,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
         createItemForTrBoxDemo_trampoline = patch::hookFunction(
             tp::f_op_actor_mng::createItemForTrBoxDemo,
-            []( const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3] )
-            {
+            []( const float pos[3], s32 item, s32 unk3, s32 unk4, const float unk5[3], const float unk6[3] ) {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc( pos, item, "createItemForTrBoxDemo" );
 
@@ -838,8 +524,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                 const float unk5[3],
                 float unk6,
                 float unk7,
-                s32 unk8 )
-            {
+                s32 unk8 ) {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc( pos, item, "createItemForBoss" );
 
@@ -848,8 +533,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
         createItemForMidBoss_trampoline = patch::hookFunction(
             tp::f_op_actor_mng::createItemForMidBoss,
-            []( const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7 )
-            {
+            []( const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], s32 unk6, s32 unk7 ) {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc( pos, item, "createItemForMidBoss" );
 
@@ -858,8 +542,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
         createItemForDirectGet_trampoline = patch::hookFunction(
             tp::f_op_actor_mng::createItemForDirectGet,
-            []( const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7 )
-            {
+            []( const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7 ) {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc( pos, item, "createItemForDirectGet" );
 
@@ -868,127 +551,558 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
         createItemForSimpleDemo_trampoline = patch::hookFunction(
             tp::f_op_actor_mng::createItemForSimpleDemo,
-            []( const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7 )
-            {
+            []( const float pos[3], s32 item, s32 unk3, const float unk4[3], const float unk5[3], float unk6, float unk7 ) {
                 // Call replacement function
                 item = global::modPtr->procItemCreateFunc( pos, item, "createItemForSimpleDemo" );
 
                 return global::modPtr->createItemForSimpleDemo_trampoline( pos, item, unk3, unk4, unk5, unk6, unk7 );
             } );
 
-        evt_control_Skipper_trampoline =
-            patch::hookFunction( tp::evt_control::skipper,
-                                 []( void* evtPtr ) { return global::modPtr->procEvtSkipper( evtPtr ); } );
+        evt_control_Skipper_trampoline = patch::hookFunction( tp::evt_control::skipper, []( void* evtPtr ) {
+            return global::modPtr->procEvtSkipper( evtPtr );
+        } );
 
-        query022_trampoline = patch::hookFunction( tp::d_msg_flow::query022,
-                                                   []( void* unk1, void* unk2, s32 unk3 )
-                                                   { return global::modPtr->proc_query022( unk1, unk2, unk3 ); } );
+        query022_trampoline = patch::hookFunction( tp::d_msg_flow::query022, []( void* unk1, void* unk2, s32 unk3 ) {
+            return global::modPtr->proc_query022( unk1, unk2, unk3 );
+        } );
 
+        query023_trampoline = patch::hookFunction( tp::d_msg_flow::query023, []( void* unk1, void* unk2, s32 unk3 ) {
+            return global::modPtr->proc_query023( unk1, unk2, unk3 );
+        } );
 
-         // Always allow to buy arrows
-        query024_trampoline = patch::hookFunction(tp::d_msg_flow::query024, [](void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused) {
-            return true;
-        });
+        query024_trampoline = patch::hookFunction(
+            tp::d_msg_flow::query024,
+            []( void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused ) {
+                return global::modPtr->proc_query024( dMsgFlow_cPtr, mesg_flow_node_branchPtr, fopAc_ac_cPtr, unused );
+            } );
 
-        do_link_trampoline = patch::hookFunction( tp::dynamic_link::do_link,
-                                                  []( tp::dynamic_link::DynamicModuleControl* dmc )
-                                                  { return global::modPtr->procDoLink( dmc ); } );
+        query025_trampoline = patch::hookFunction( tp::d_msg_flow::query025, []( void* unk1, void* unk2, s32 unk3 ) {
+            return global::modPtr->proc_query025( unk1, unk2, unk3 );
+        } );
+
+        isEventBit_trampoline = patch::hookFunction( tp::d_save::isEventBit, []( u8* eventSystem, u16 indexNumber ) {
+            return global::modPtr->proc_isEventBit( eventSystem, indexNumber );
+        } );
+
+        onEventBit_trampoline = patch::hookFunction( tp::d_save::onEventBit, []( u8* eventSystem, u16 indexNumber ) {
+            if ( indexNumber == 0x1E08 && ( gameInfo.scratchPad.form == 1 ) )
+            {
+                gameInfo.scratchPad.form = 0;
+            }
+            return global::modPtr->onEventBit_trampoline( eventSystem, indexNumber );
+        } );
+
+        setGetItemFace_trampoline = patch::hookFunction( tp::d_a_alink::setGetItemFace, []( void* daAlink_c, u16 itemId ) {
+            switch ( itemId )
+            {
+                case items::Shadow_Crystal:
+                {
+                    itemId = items::Clawshot;
+                    break;
+                }
+                case items::Master_Sword:
+                {
+                    itemId = items::Clawshot;
+                    break;
+                }
+                case items::Master_Sword_Light:
+                {
+                    itemId = items::Clawshot;
+                    break;
+                }
+                default:
+                {
+                    return global::modPtr->setGetItemFace_trampoline( daAlink_c, itemId );
+                }
+            }
+            return global::modPtr->setGetItemFace_trampoline( daAlink_c, itemId );
+        } );
+
+        do_link_trampoline = patch::hookFunction( tp::dynamic_link::do_link, []( tp::dynamic_link::DynamicModuleControl* dmc ) {
+            return global::modPtr->procDoLink( dmc );
+        } );
 
         item_func_UTUWA_HEART_trampoline = patch::hookFunction( tp::d_item::item_func_UTUWA_HEART,
                                                                 []() { return global::modPtr->procItem_func_UTUWA_HEART(); } );
 
         setItemBombNumCount_trampoline =
-            patch::hookFunction( tp::d_com_inf_game::setItemBombNumCount,
-                                 []( u32 unk1, u8 bagNb, short amount )
-                                 {
-                                     u8 bombtype = 0;
-                                     if ( bagNb == 0 )
-                                     {
-                                         bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
-                                     }
-                                     else if ( bagNb == 1 )
-                                     {
-                                         bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
-                                     }
-                                     else if ( bagNb == 2 )
-                                     {
-                                         bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
-                                     }
-                                     char txt[50];
-                                     snprintf( txt, 50, "bag = %x amount = %d type = %x", bagNb, amount, bombtype );
-                                     strcpy( sysConsolePtr->consoleLine[20].line, txt );
+            patch::hookFunction( tp::d_com_inf_game::setItemBombNumCount, []( u32 unk1, u8 bagNb, short amount ) {
+                u8 bombtype = 0;
+                if ( bagNb == 0 )
+                {
+                    bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
+                }
+                else if ( bagNb == 1 )
+                {
+                    bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
+                }
+                else if ( bagNb == 2 )
+                {
+                    bombtype = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
+                }
+                char txt[50];
+                snprintf( txt, 50, "bag = %x amount = %d type = %x", bagNb, amount, bombtype );
+                strcpy( sysConsolePtr->consoleLine[20].line, txt );
+                return global::modPtr->setItemBombNumCount_trampoline( unk1, bagNb, amount );
+            } );
+        isDungeonItem_trampoline = patch::hookFunction( tp::d_save::isDungeonItem, []( void* memBitPtr, const int param_1 ) {
+            return global::modPtr->proc_isDungeonItem( memBitPtr, param_1 );
+        } );
 
-                                     /*u8 itemID = 0x0;
-                                     if (bombtype == items::Item::Bomb_Bag_Regular_Bombs)
-                                     {
-                                             if (amount == 5)
-                                             {
-                                                     itemID = items::Item::Bombs_5;
-                                             }
-                                             else if (amount == 10)
-                                             {
-                                                     itemID = items::Item::Bombs_10;
-                                             }
-                                             else if (amount == 20)
-                                             {
-                                                     itemID = items::Item::Bombs_20;
-                                             }
-                                             else if (amount == 30)
-                                             {
-                                                     itemID = items::Item::Bombs_30;
-                                             }
-                                     }
-                                     else if (bombtype == items::Item::Bomb_Bag_Water_Bombs)
-                                     {
-                                             if (amount == 3)
-                                             {
-                                                     itemID = items::Item::Water_Bombs_3;
-                                             }
-                                             else if (amount == 5)
-                                             {
-                                                     itemID = items::Item::Water_Bombs_5;
-                                             }
-                                             else if (amount == 10)
-                                             {
-                                                     itemID = items::Item::Water_Bombs_10;
-                                             }
-                                             else if (amount == 15)
-                                             {
-                                                     itemID = items::Item::Water_Bombs_15;
-                                             }
-                                     }
-                                     else if (bombtype == items::Item::Bomb_Bag_Bomblings)
-                                     {
-                                             if (amount == 1)
-                                             {
-                                                     itemID = items::Item::Bombling_1;
-                                             }
-                                             else if (amount == 3)
-                                             {
-                                                     itemID = items::Item::Bomblings_3;
-                                             }
-                                             else if (amount == 5)
-                                             {
-                                                     itemID = items::Item::Bomblings_5;
-                                             }
-                                             else if (amount == 10)
-                                             {
-                                                     itemID = items::Item::Bomblings_10;
-                                             }
-                                     }
+        getLayerNo_common_common_trampoline = patch::hookFunction(
+            tp::d_com_inf_game::getLayerNo_common_common,
+            []( const char* stageName, int roomId, int layerOverride ) {
+                int chosenLayer;
+                bool condition;
+                // Bublin Camp
+                bool stageComparison = strcmp( stageName, "F_SP118" );
+                if ( stageComparison == 0 )
+                {
+                    condition = tp::d_a_alink::dComIfGs_isEventBit( 0xb40 );     // Escaped Burning Tent in Bublin Camp
+                    if ( condition != false )
+                    {
+                        if ( ( gameInfo.localAreaNodes.unk_0[0xB] & 0x10 ) == 0 )
+                        {
+                            chosenLayer = 0x1;
+                        }
+                        else
+                        {
+                            chosenLayer = 0x3;
+                        }
+                    }
+                    else
+                    {
+                        chosenLayer = 0x0;
+                    }
+                    return chosenLayer;
+                }
+                stageComparison = strcmp( stageName, "F_SP117" );
+                if ( ( stageComparison == 0 ) && ( Singleton::getInstance()->isEarlyToTEnabled == 1 ) )
+                {
+                    chosenLayer = 0x2;
+                    return chosenLayer;
+                }
+                return global::modPtr->getLayerNo_common_common_trampoline( stageName, roomId, layerOverride );
+            } );
 
+        setMessageCode_inSequence_trampoline = patch::hookFunction(
+            tp::control::setMessageCode_inSequence,
+            []( tp::control::TControl* control, const void* TProcessor, u16 unk3, u16 msgId ) {
+                // Call the original function immediately, as a lot of stuff needs to be set before our code runs
+                const bool ret = global::modPtr->setMessageCode_inSequence_trampoline( control, TProcessor, unk3, msgId );
 
-                                     float linkPos[3];
-                                     getPlayerPos(linkPos);
+                // Make sure the function ran successfully
+                if ( !ret )
+                {
+                    return ret;
+                }
 
-                                     const float zero[3] = {0.0f,0.0f,0.0f};
+                // Check if the current text is for an item
+                s32 index = global::modPtr->getItemIdFromMsgId( TProcessor, unk3, msgId );
+                // The current text is for an item
+                switch ( static_cast<u32>( index ) )
+                {
+                    const char* replacementText;
+                    case items::Forest_Temple_Small_Key:
+                    {
+                        replacementText = customMessage::customForestSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Forest_Temple_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customForestMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Forest_Temple_Compass:
+                    {
+                        replacementText = customMessage::customForestCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Forest_Temple_Big_Key:
+                    {
+                        replacementText = customMessage::customForestBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
 
-                                     amount = 0;
+                    case items::Goron_Mines_Small_Key:
+                    {
+                        replacementText = customMessage::customMinesSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Goron_Mines_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customMinesMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Goron_Mines_Compass:
+                    {
+                        replacementText = customMessage::customMinesCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
 
-                                     tp::f_op_actor_mng::createItemForPresentDemo(linkPos, itemID, 0, -1, -1, zero, zero);*/
+                    case items::Lakebed_Temple_Small_Key:
+                    {
+                        replacementText = customMessage::customLakebedSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Lakebed_Temple_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customLakebedMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Lakebed_Temple_Compass:
+                    {
+                        replacementText = customMessage::customLakebedCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Lakebed_Temple_Big_Key:
+                    {
+                        replacementText = customMessage::customLakebedBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
 
-                                     return global::modPtr->setItemBombNumCount_trampoline( unk1, bagNb, amount );
-                                 } );
+                    case items::Arbiters_Grounds_Small_Key:
+                    {
+                        replacementText = customMessage::customArbitersSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Arbiters_Grounds_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customArbitersMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Arbiters_Grounds_Compass:
+                    {
+                        replacementText = customMessage::customArbitersCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Arbiters_Grounds_Big_Key:
+                    {
+                        replacementText = customMessage::customArbitersBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Snowpeak_Ruins_Small_Key:
+                    {
+                        replacementText = customMessage::customSnowpeakSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Snowpeak_Ruins_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customSnowpeakMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Snowpeak_Ruins_Compass:
+                    {
+                        replacementText = customMessage::customSnowpeakCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Temple_of_Time_Small_Key:
+                    {
+                        replacementText = customMessage::customToTSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Temple_of_Time_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customToTMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Temple_of_Time_Compass:
+                    {
+                        replacementText = customMessage::customToTCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Temple_of_Time_Big_Key:
+                    {
+                        replacementText = customMessage::customToTBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::City_in_The_Sky_Small_Key:
+                    {
+                        replacementText = customMessage::customCitySKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::City_in_The_Sky_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customCityMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::City_in_The_Sky_Compass:
+                    {
+                        replacementText = customMessage::customCityCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::City_in_The_Sky_Big_Key:
+                    {
+                        replacementText = customMessage::customCityBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Palace_of_Twilight_Small_Key:
+                    {
+                        replacementText = customMessage::customPalaceSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Palace_of_Twilight_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customPalaceMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Palace_of_Twilight_Compass:
+                    {
+                        replacementText = customMessage::customPalaceCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Palace_of_Twilight_Big_Key:
+                    {
+                        replacementText = customMessage::customPalaceBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Hyrule_Castle_Small_Key:
+                    {
+                        replacementText = customMessage::customCastleSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Hyrule_Castle_Dungeon_Map:
+                    {
+                        replacementText = customMessage::customCastleMapText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Hyrule_Castle_Compass:
+                    {
+                        replacementText = customMessage::customCastleCompassText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Hyrule_Castle_Big_Key:
+                    {
+                        replacementText = customMessage::customCastleBigKeyText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Shadow_Crystal:
+                    {
+                        replacementText = customMessage::customCrystalText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Ending_Blow:
+                    {
+                        replacementText = customMessage::endingBlowText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Shield_Attack:
+                    {
+                        replacementText = customMessage::shieldAttackText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Back_Slice:
+                    {
+                        replacementText = customMessage::backSliceText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Helm_Splitter:
+                    {
+                        replacementText = customMessage::helmSplitterText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Mortal_Draw:
+                    {
+                        replacementText = customMessage::mortalDrawText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Jump_Strike:
+                    {
+                        replacementText = customMessage::jumpStrikeText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+                    case items::Great_Spin:
+                    {
+                        replacementText = customMessage::greatSpinText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Item::Bublin_Camp_Key:
+                    {
+                        replacementText = customMessage::customBublinSKText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    case items::Dominion_Rod_Uncharged:
+                    {
+                        replacementText = customMessage::customPoweredRodText;
+                        control->msg = replacementText;
+                        control->wMsgRender = replacementText;
+                        break;
+                    }
+
+                    default:
+                    {
+                        break;
+                    }
+                }
+
+                return ret;
+            } );
+
+        getFontCCColorTable_trampoline = patch::hookFunction( tp::d_msg_class::getFontCCColorTable, []( u8 colorId, u8 unk ) {
+            if ( colorId >= 0x9 )
+            {
+                return global::modPtr->getCustomMsgColor( colorId );
+            }
+            else
+            {
+                return global::modPtr->getFontCCColorTable_trampoline( colorId, unk );
+            }
+        } );
+
+        getFontGCColorTable_trampoline = patch::hookFunction( tp::d_msg_class::getFontGCColorTable, []( u8 colorId, u8 unk ) {
+            if ( colorId >= 0x9 )
+            {
+                return global::modPtr->getCustomMsgColor( colorId );
+            }
+            else
+            {
+                return global::modPtr->getFontGCColorTable_trampoline( colorId, unk );
+            }
+        } );
+
+        checkItemGet_trampoline = patch::hookFunction( tp::d_item::checkItemGet, []( u8 item, s32 defaultValue ) {
+            return global::modPtr->proc_checkItemGet( item, defaultValue );
+        } );
+
+        parseCharacter1Byte_trampoline = patch::hookFunction( tp::resource::parseCharacter_1Byte, []( const char** text ) {
+            const char* bigWalletRupeeText = { "600 Rupees" MSG_COLOR( MSG_COLOR_WHITE ) "!" };
+            const char* giantWalletRupeeText = { "1,000 Rupees" MSG_COLOR( MSG_COLOR_WHITE ) "!" };
+            const char* pauseWalletRupeeText = { "1,000 Rupees." };
+
+            if ( strncmp( *text, bigWalletRupeeText, strlen( bigWalletRupeeText ) ) == 0 )
+            {
+                // Replacement text
+                const char* replacementText = { "5,000 Rupees" MSG_COLOR( MSG_COLOR_WHITE ) "!" };
+                *text = replacementText;
+            }
+            if ( strncmp( *text, giantWalletRupeeText, strlen( giantWalletRupeeText ) ) == 0 )
+            {
+                // Replacement text
+                const char* replacementText = { "9,999 Rupees" MSG_COLOR( MSG_COLOR_WHITE ) "!" };
+                *text = replacementText;
+            }
+            else if ( strncmp( *text, pauseWalletRupeeText, strlen( pauseWalletRupeeText ) ) == 0 )
+            {
+                // Replacement text
+                switch ( gameInfo.scratchPad.equippedWallet )
+                {
+                    case 0x0:
+                    {
+                        const char* replacementText = { "1,000 Rupees." };
+                        *text = replacementText;
+                        break;
+                    }
+                    case 0x1:
+                    {
+                        const char* replacementText = { "5,000 Rupees." };
+                        *text = replacementText;
+                        break;
+                    }
+                    case 0x2:
+                    {
+                        const char* replacementText = { "9,999 Rupees." };
+                        *text = replacementText;
+                        break;
+                    }
+                }
+            }
+
+            return global::modPtr->parseCharacter1Byte_trampoline( text );
+        } );
     }
 
     void Mod::procNewFrame()
@@ -1107,9 +1221,9 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
             eventListener->checkLoadEvents();
 
             // Check if there's a random seed in the current save data
-            if ( *global::seedInSaveFile > 0 && *global::seedInSaveFile != tools::randomSeed )
+            if ( ( *global::seedInSaveFile > 0 ) && ( *global::seedInSaveFile != tools::randomSeed ) )
             {
-                customSeed = true;
+                customSeed = 1;
                 tools::randomSeed = *global::seedInSaveFile;
                 chestRandomizer->generate();
                 musicrando::initMusicRando();
@@ -1163,7 +1277,8 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                 // Check if we have a seed sitting in our save file somewhere and if so, apply this automatically (unless custom
                 // seed is turned on)
 
-                if ( !customSeed && *global::seedInSaveFile > 0 )
+                if ( !customSeed && ( *global::seedInSaveFile > 0 ) &&
+                     !tp::d_a_alink::checkStageName( stage::allStages[Stage_Title_Screen] ) )
                 {
                     tools::randomSeed = *global::seedInSaveFile;
                 }
@@ -1376,13 +1491,9 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
 
         reorderItemWheel();
 
-        allowShopItemsAnytime();
-
         giveAllScents();
 
         fixYetaAndYeto();
-
-        fixLBTBossDoor();
 
         preventPoweringUpDomRod();
 
@@ -1390,8 +1501,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         fapGm_Execute_trampoline();
 
         changeLanternColor();
-        // setFieldModels();
-        fixFTTotemMonkey();
     }
 
     s32 Mod::procItemCreateFunc( const float pos[3], s32 item, const char funcIdentifier[32] )
@@ -1454,6 +1563,116 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         return query022_trampoline( unk1, unk2, unk3 );
     }
 
+    bool Mod::proc_query023( void* unk1, void* unk2, s32 unk3 )
+    {
+        // Check to see if currently in the Kakariko Interiors. Specifically in Barnes' Bomb Shop
+        if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Kakariko_Interiors] ) &&
+             tp::d_kankyo::env_light.currentRoom == 1 )
+        {
+            // If player has not bought Barnes' Bomb Bag, we want to allow them to be able to get the check.
+            if ( ( !tp::d_a_alink::dComIfGs_isEventBit( 0x908 ) ) )
+            {
+                return false;
+            }
+            // If the player has bought the bomb bag check, we won't allow them to get the check, regardless of if they have
+            // bombs or not
+            else
+            {
+                return true;
+            }
+        }
+
+        // Call original function if the conditions aren't met.
+        return query023_trampoline( unk1, unk2, unk3 );
+    }
+
+    bool Mod::proc_query024( void* dMsgFlow_cPtr, void* mesg_flow_node_branchPtr, void* fopAc_ac_cPtr, int unused )
+    {
+        // Check to see if currently in the Castle Town. Specifically in the central square
+        if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Castle_Town] ) && tp::d_kankyo::env_light.currentRoom == 0 )
+        {
+            return true;     // Allow the player to buy arrows, even if the quiver is full
+        }
+        // Call original function if the conditions aren't met.
+        return query024_trampoline( dMsgFlow_cPtr, mesg_flow_node_branchPtr, fopAc_ac_cPtr, unused );
+    }
+
+    bool Mod::proc_query025( void* unk1, void* unk2, s32 unk3 )
+    {
+        // Check to see if currently in a shop and that we have the bottle requirement enabled
+        if ( isStageShop() && ( allowBottleItemsShopAnytime == 1 ) )
+        {
+            // Tell the game that we have an empty bottle, even if we don't
+            return false;
+        }
+        // Call original function if the conditions aren't met.
+        return query025_trampoline( unk1, unk2, unk3 );
+    }
+
+    bool Mod::proc_isDungeonItem( void* memBitPtr, const int param_1 )
+    {
+        u32 totalMainDungeonStages = sizeof( stage::mainDungeonStages ) / sizeof( stage::mainDungeonStages[0] );
+        for ( u32 i = 0; i < totalMainDungeonStages; i++ )
+        {
+            if ( tp::d_a_alink::checkStageName( stage::mainDungeonStages[i] ) && ( param_1 == 3 ) )
+            {
+                if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Forest_Temple] ) && ( param_1 == 7 ) &&
+                     ( ( tp::d_kankyo::env_light.currentRoom == 3 ) || ( tp::d_kankyo::env_light.currentRoom == 1 ) ) )
+                {
+                    return false;
+                }
+                return false;
+            }
+        }
+
+        // Call original function
+        return isDungeonItem_trampoline( memBitPtr, param_1 );
+    }
+
+    bool Mod::proc_isEventBit( u8* eventSystem, u16 indexNumber )
+    {
+        if ( ( ( indexNumber == 0x2280 ) || ( indexNumber == 0x2320 ) || ( indexNumber == 0x3E02 ) ) &&
+             tp::d_a_alink::checkStageName( stage::allStages[Stage_Hidden_Village] ) )
+        {
+            if ( ( ( gameInfo.scratchPad.eventBits[0x22] & 0x80 ) == 0 ) )
+            {
+                return false;
+            }
+        }
+        else if ( Singleton::getInstance()->isEarlyHCEnabled == 0 && ( indexNumber == 0x5410 ) &&
+                  ( ( gameInfo.scratchPad.allAreaNodes.Palace_of_Twilight.dungeon.bossBeaten == 0 ) ) )
+        {
+            return false;
+        }
+
+        else
+        {
+            u32 totalAllDungeonStages = sizeof( stage::allDungeonStages ) / sizeof( stage::allDungeonStages[0] );
+            u32 totalStageFlags = sizeof( game_patch::dungeonStoryFlags ) / sizeof( game_patch::dungeonStoryFlags[0] );
+            for ( u32 i = 0; i < totalAllDungeonStages; i++ )
+            {
+                if ( tp::d_a_alink::checkStageName( stage::allDungeonStages[i] ) )
+                {
+                    for ( u32 j = 0; j < totalStageFlags; j++ )
+                    {
+                        if ( indexNumber == game_patch::dungeonStoryFlags[j] )
+                        {
+                            if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Zant_Main] ) &&
+                                 ( gameInfo.localAreaNodes.dungeon.bossBeaten != 0 ) )
+                            {
+                                return isEventBit_trampoline( eventSystem, indexNumber );
+                            }
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Call original function
+        return isEventBit_trampoline( eventSystem, indexNumber );
+    }
+
     bool Mod::procDoLink( tp::dynamic_link::DynamicModuleControl* dmc )
     {
         // Call the original function immediately, as the REL file needs to be linked before applying patches
@@ -1480,6 +1699,48 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                 *reinterpret_cast<u32*>( relPtrRaw + 0x1A44 ) = 0x48000028;     // b 0x28
                 break;
             }
+            case 0x280:     // d_a_obj_swBallC.rel - Light Sword Cutscene
+            {
+                item::ItemCheck* itemCheck = &item::checks[495];     // Light Sword Item
+                // Check if the item has a replacement
+                if ( itemCheck->destination )
+                {
+                    // Replace Item given
+                    *reinterpret_cast<u32*>( relPtrRaw + 0xC10 ) =
+                        SET_LOAD_IMMEDIATE( 3, itemCheck->destination->itemID );     // 38600000 + item ID
+                    // Replace Item Get text
+                    *reinterpret_cast<u32*>( relPtrRaw + 0xCD8 ) = SET_LOAD_IMMEDIATE(
+                        3,
+                        ( itemCheck->destination->itemID + 0x65 ) );     // 38600000 + item index (item ID + 0x65)
+                }
+
+                // The cutscene gives link the MS during the cutscene by default, so we just nop out the link to the function.
+                *reinterpret_cast<u32*>( relPtrRaw + 0xB50 ) = 0x60000000;
+                break;
+            }
+            case 0x1FA:     // d_a_obj_kshutter.rel - Doors that do not cause a cutscene after opened
+            {
+                if ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Lakebed_Temple] ) &&
+                     ( tp::d_kankyo::env_light.currentRoom == 3 ) )
+                {
+                    // Set it to not remove a small key from the inventory when opening the boss door
+                    *reinterpret_cast<u32*>( relPtrRaw + 0x1198 ) = 0x60000000;     // Previous: 0x3803ffff
+                }
+                break;
+            }
+            case 0x13F:     // d_a_npc_impal.rel - Impaz
+            {
+                item::ItemCheck* itemCheck1 = &item::checks[327];     // Ilia's Charm Item
+                item::ItemCheck* itemCheck2 = &item::checks[466];     // Empty Skybook Item
+                // Replace the Ilias Charm item
+                *reinterpret_cast<u32*>( relPtrRaw + 0x2D98 ) =
+                    SET_LOAD_IMMEDIATE( 4, itemCheck1->destination->itemID );     // 38800000 + item ID
+                // Replace the Ancient Skybook Item
+                *reinterpret_cast<u32*>( relPtrRaw + 0x3240 ) =
+                    SET_LOAD_IMMEDIATE( 4, itemCheck2->destination->itemID );     // 38800000 + item ID
+
+                break;
+            }
             default:
             {
                 break;
@@ -1499,6 +1760,82 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         if ( !chestRandomizer->isStageBoss() )
         {
             gameInfo.localAreaNodes.dungeon.containerGotten = 0b0;
+        }
+    }
+
+    s32 Mod::proc_checkItemGet( u8 item, s32 defaultValue )
+    {
+        // Check to see if currently in one of the Ordon interiors
+        switch ( item )
+        {
+            case items::Hylian_Shield:
+            {
+                // Check if we are at Kakariko Malo mart and verify that we have not bought the shield.
+                if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Kakariko_Interiors] ) &&
+                       tp::d_kankyo::env_light.currentRoom == 3 ) &&
+                     ( ( gameInfo.localAreaNodes.unk_0[0xC] & 0x2 ) == 0 ) )
+                {
+                    // Return false so we can buy the shield.
+                    return 0;
+                }
+                // Check if we are at Castle Town Goron Shops and verify that we have not bought the shield.
+                // Since there is not a flag for this, we will just check if the randomizer has set a nullptr for the check.
+                else if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Castle_Town_Shops] ) &&
+                            tp::d_kankyo::env_light.currentRoom == 4 ) )
+                {
+                    // Return false so we can buy the shield.
+                    return 0;
+                }
+            }
+            case items::Hawkeye:
+            {
+                // Check if we are at Kakariko Village and that the hawkeye is currently not for sale.
+                if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Kakariko_Village] ) &&
+                       ( ( gameInfo.localAreaNodes.unk_0[0xC] & 0x40 ) == 0 ) ) )
+                {
+                    // Return false so we can buy the hawkeye.
+                    return 0;
+                }
+            }
+            case items::Ordon_Shield:
+            {
+                // Check if we are at Kakariko Malo mart.
+                if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Kakariko_Interiors] ) &&
+                       tp::d_kankyo::env_light.currentRoom == 3 ) )
+                {
+                    // Return false so we can buy the wooden shield.
+                    return 0;
+                }
+                // Check if we are at the Death Mountain Goron Shop.
+                else if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Death_Mountain] ) &&
+                            tp::d_kankyo::env_light.currentRoom == 3 ) )
+                {
+                    // Return false so we can buy the shield.
+                    return 0;
+                }
+            }
+            case items::Wooden_Shield:
+            {
+                // Check if we are at Kakariko Malo mart.
+                if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Kakariko_Interiors] ) &&
+                       tp::d_kankyo::env_light.currentRoom == 3 ) )
+                {
+                    // Return false so we can buy the wooden shield.
+                    return 0;
+                }
+                // Check if we are at the Death Mountain Goron Shop.
+                else if ( ( tp::d_a_alink::checkStageName( stage::allStages[Stage_Death_Mountain] ) &&
+                            tp::d_kankyo::env_light.currentRoom == 3 ) )
+                {
+                    // Return false so we can buy the shield.
+                    return 0;
+                }
+            }
+            default:
+            {
+                // Call original function if the conditions are not met.
+                return global::modPtr->checkItemGet_trampoline( item, defaultValue );
+            }
         }
     }
 
@@ -1701,224 +2038,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         }
     }
 
-    void Mod::allowShopItemsAnytime()
-    {
-        float linkPos[3];
-        getPlayerPos( linkPos );
-
-        u8 hasEmptyBottleAlready = 1;
-        if ( gameInfo.scratchPad.itemWheel.Bottle_1 != items::Item::Empty_Bottle &&
-             gameInfo.scratchPad.itemWheel.Bottle_2 != items::Item::Empty_Bottle &&
-             gameInfo.scratchPad.itemWheel.Bottle_3 != items::Item::Empty_Bottle &&
-             gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle )
-        {
-            hasEmptyBottleAlready = 0;
-        }
-
-        if ( tp::d_a_alink::checkStageName( "R_SP109" ) && tp::d_kankyo::env_light.currentRoom == 3 )
-        {
-            game_patch::handleMaloShop();
-        }
-
-        if ( isStageShop() )
-        {
-            if ( ( tp::d_a_alink::checkStageName( "R_SP160" ) && tp::d_kankyo::env_light.currentRoom == 4 ) ||
-                 ( tp::d_a_alink::checkStageName( "F_SP108" ) && tp::d_kankyo::env_light.currentRoom == 4 ) ||
-                 ( tp::d_a_alink::checkStageName( "F_SP116" ) &&
-                   ( tp::d_kankyo::env_light.currentRoom == 0 || tp::d_kankyo::env_light.currentRoom == 3 ) ) )
-            {     // Coro shop/castle goron shop
-                if ( gameInfo.aButtonText == 0x1C )
-                {     // about to speak to merchant
-                    if ( allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0 )
-                    {
-                        if ( gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle )
-                        {
-                            bottle4Contents = gameInfo.scratchPad.itemWheel.Bottle_4;
-                        }
-                        gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
-                        bottleTrickOn = 1;
-                    }
-                    if ( tools::checkItemFlag( ItemFlags::Hylian_Shield ) )
-                    {
-                        hadHShield = 1;
-                        tools::clearItemFlag( ItemFlags::Hylian_Shield );
-                        shieldTrickOn = 1;
-                    }
-                }
-                if ( gameInfo.aButtonText == 0x22 )
-                {     // selecting if you wanna buy or not
-                    if ( bottleTrickOn == 1 )
-                    {
-                        bottleTrickOn = 2;
-                    }
-                    if ( shieldTrickOn == 1 )
-                    {
-                        shieldTrickOn = 2;
-                    }
-                }
-                if ( gameInfo.aButtonText == 0x23 )
-                {
-                    if ( bottleTrickOn == 2 )
-                    {
-                        gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
-                        bottleTrickOn = 0;
-                    }
-                    if ( shieldTrickOn == 2 )
-                    {
-                        if ( hadHShield == 1 )
-                        {
-                            tools::setItemFlag( ItemFlags::Hylian_Shield );
-                        }
-                        shieldTrickOn = 0;
-                    }
-                }
-                if ( gameInfo.aButtonText == 0x6 || gameInfo.aButtonText == 0x79 )
-                {     // leaving
-                    if ( bottleTrickOn >= 1 )
-                    {
-                        gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
-                        bottleTrickOn = 0;
-                    }
-                    if ( shieldTrickOn >= 1 )
-                    {
-                        if ( hadHShield == 1 )
-                        {
-                            tools::setItemFlag( ItemFlags::Hylian_Shield );
-                        }
-                        shieldTrickOn = 0;
-                    }
-                }
-            }
-            else
-            {     // normal shops
-                if ( gameInfo.bButtonText == 0x2A )
-                {     // is in shop and is selecting an item
-                    if ( allowBottleItemsShopAnytime == 1 && hasEmptyBottleAlready == 0 )
-                    {
-                        if ( gameInfo.scratchPad.itemWheel.Bottle_4 != items::Item::Empty_Bottle )
-                        {
-                            bottle4Contents = gameInfo.scratchPad.itemWheel.Bottle_4;
-                        }
-                        gameInfo.scratchPad.itemWheel.Bottle_4 = items::Item::Empty_Bottle;
-                        bottleTrickOn = 1;
-                    }
-                    if ( tools::checkItemFlag( ItemFlags::Hylian_Shield ) )
-                    {
-                        hadHShield = 1;
-                        tools::clearItemFlag( ItemFlags::Hylian_Shield );
-                        shieldTrickOn = 1;
-                    }
-                    if ( tools::checkItemFlag( ItemFlags::Wooden_Shield ) )
-                    {
-                        hadWShield = 1;
-                        tools::clearItemFlag( ItemFlags::Wooden_Shield );
-                        shieldTrickOn = 1;
-                    }
-                    if ( tools::checkItemFlag( ItemFlags::Ordon_Shield ) )
-                    {
-                        hadOShield = 1;
-                        tools::clearItemFlag( ItemFlags::Ordon_Shield );
-                        shieldTrickOn = 1;
-                    }
-
-                    if ( ( gameInfo.scratchPad.eventBits[0x9] & 0x8 ) == 0 /*didn't buy bomb bag yet*/ && bombBagTrickOn == 0 &&
-                         tp::d_a_alink::checkStageName( "R_SP109" ) && tp::d_kankyo::env_light.currentRoom == 1 &&
-                         linkPos[2] > -600 )
-                    {
-                        bombBag1Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_1;
-                        bombBag2Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_2;
-                        bombBag3Contents = gameInfo.scratchPad.itemWheel.Bomb_Bag_3;
-                        bombBag1Ammo = gameInfo.scratchPad.ammo.bombs1;
-                        bombBag2Ammo = gameInfo.scratchPad.ammo.bombs2;
-                        bombBag3Ammo = gameInfo.scratchPad.ammo.bombs3;
-                        gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = 0xFF;
-                        gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = 0xFF;
-                        gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = 0xFF;
-                        bombBagTrickOn = 1;
-                    }
-                }
-                else if ( gameInfo.aButtonText == 0x23 )
-                {     // is in shop and is exiting the item select mode
-                    if ( bottleTrickOn == 1 )
-                    {
-                        gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
-                        bottleTrickOn = 0;
-                    }
-                    if ( shieldTrickOn == 1 )
-                    {
-                        if ( hadHShield == 1 )
-                        {
-                            tools::setItemFlag( ItemFlags::Hylian_Shield );
-                        }
-                        if ( hadWShield == 1 )
-                        {
-                            tools::setItemFlag( ItemFlags::Wooden_Shield );
-                        }
-                        if ( hadOShield == 1 )
-                        {
-                            tools::setItemFlag( ItemFlags::Ordon_Shield );
-                        }
-                        shieldTrickOn = 0;
-                    }
-                    if ( bombBagTrickOn == 1 )
-                    {
-                        gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
-                        gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
-                        gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
-                        gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
-                        gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
-                        gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
-                        bombBagTrickOn = 0;
-                    }
-                }
-                if ( ( gameInfo.scratchPad.eventBits[0x9] & 0x8 ) != 0 /*bought bomb bag*/ && bombBagTrickOn == 1 )
-                {     // bought bomb bag check
-                    gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
-                    gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
-                    gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
-                    gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
-                    gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
-                    gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
-                    bombBagTrickOn = 0;
-                }
-            }
-        }
-        else
-        {
-            if ( bottleTrickOn >= 1 )
-            {
-                gameInfo.scratchPad.itemWheel.Bottle_4 = bottle4Contents;
-                bottleTrickOn = 0;
-            }
-            if ( shieldTrickOn >= 1 )
-            {
-                if ( hadHShield == 1 )
-                {
-                    tools::setItemFlag( ItemFlags::Hylian_Shield );
-                }
-                if ( hadWShield == 1 )
-                {
-                    tools::setItemFlag( ItemFlags::Wooden_Shield );
-                }
-                if ( hadOShield == 1 )
-                {
-                    tools::setItemFlag( ItemFlags::Ordon_Shield );
-                }
-                shieldTrickOn = 0;
-            }
-            if ( bombBagTrickOn >= 1 )
-            {
-                gameInfo.scratchPad.itemWheel.Bomb_Bag_1 = bombBag1Contents;
-                gameInfo.scratchPad.itemWheel.Bomb_Bag_2 = bombBag2Contents;
-                gameInfo.scratchPad.itemWheel.Bomb_Bag_3 = bombBag3Contents;
-                gameInfo.scratchPad.ammo.bombs1 = bombBag1Ammo;
-                gameInfo.scratchPad.ammo.bombs2 = bombBag2Ammo;
-                gameInfo.scratchPad.ammo.bombs3 = bombBag3Ammo;
-                bombBagTrickOn = 0;
-            }
-        }
-    }
-
     void Mod::reorderItemWheel()
     {
         u8 currentSlot = 0x0;
@@ -2081,36 +2200,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
             {
                 gameInfo.localAreaNodes.dungeon.bigKeyGotten = 0b1;
                 yetaTrickOn = 0;
-            }
-        }
-    }
-
-    void Mod::fixLBTBossDoor()
-    {
-        if ( tp::d_a_alink::checkStageName( "D_MN01" ) && tp::d_kankyo::env_light.currentRoom == 3 )
-        {
-            float linkPos[3];
-            getPlayerPos( linkPos );
-            if ( gameInfo.aButtonText == 0x6 && linkPos[1] >= -340 && linkPos[1] <= -320 )
-            {
-                nbLBTKeys = gameInfo.localAreaNodes.nbKeys;
-                LBTBossDoorTrickOn = 1;
-            }
-            if ( gameInfo.aButtonText == 0x79 && LBTBossDoorTrickOn == 1 )
-            {
-                gameInfo.localAreaNodes.nbKeys = nbLBTKeys;
-                LBTBossDoorTrickOn = 0;
-            }
-        }
-    }
-
-    void Mod::fixFTTotemMonkey()
-    {
-        if ( tp::d_a_alink::checkStageName( "D_MN05" ) && tp::d_kankyo::env_light.currentRoom == 12 )
-        {
-            if ( ( gameInfo.localAreaNodes.unk_0[0xA] & 0x4 ) != 0 )
-            {
-                gameInfo.localAreaNodes.unk_0[0x12] |= 0x1;
             }
         }
     }
@@ -2293,35 +2382,30 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
         // Check to see if link is riding a snowboard
         if ( tp::d_a_alink::checkBoardRide( linkMapPtr ) )
         {
-            strcpy( sysConsolePtr->consoleLine[20].line, "-> on board" );
             return false;
         }
 
         // Check to see if link is riding the canoe
         if ( tp::d_a_alink::checkCanoeRide( linkMapPtr ) )
         {
-            strcpy( sysConsolePtr->consoleLine[20].line, "-> on canoe" );
             return false;
         }
 
         // Check to see if link is riding Epona
         if ( tp::d_a_alink::checkHorseRide( linkMapPtr ) )
         {
-            strcpy( sysConsolePtr->consoleLine[20].line, "-> on horse" );
             return false;
         }
 
         // Check to see if link is riding a boar
         if ( tp::d_a_alink::checkBoarRide( linkMapPtr ) )
         {
-            strcpy( sysConsolePtr->consoleLine[20].line, "-> on boar" );
             return false;
         }
 
         // Check to see if link is riding the spinner
         if ( tp::d_a_alink::checkSpinnerRide( linkMapPtr ) )
         {
-            strcpy( sysConsolePtr->consoleLine[20].line, "-> on spinner" );
             return false;
         }
 
@@ -2330,7 +2414,6 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
             return false;
         }
 
-        strcpy( sysConsolePtr->consoleLine[20].line, "-> Can Transform" );
         return true;
     }
 
@@ -2361,6 +2444,113 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
             return false;
         }
         return true;
+    }
+
+    s32 Mod::getMsgIndex( const void* TProcessor, u16 unk2, u32 msgId )
+    {
+        void* unk = tp::processor::getResource_groupID( TProcessor, unk2 );
+        if ( !unk )
+        {
+            return -1;
+        }
+
+        gc::bmgres::TextIndexTable* textIndexTable =
+            *reinterpret_cast<gc::bmgres::TextIndexTable**>( reinterpret_cast<u32>( unk ) + 0xC );
+
+        gc::bmgres::MessageEntry* entry = &textIndexTable->entry[0];
+        u32 loopCount = textIndexTable->numEntries;
+
+        for ( u32 i = 0; i < loopCount; i++ )
+        {
+            if ( entry->messageId == msgId )
+            {
+                return static_cast<s32>( i );
+            }
+            entry++;
+        }
+
+        // Didn't find the index
+        return -1;
+    }
+
+    s32 Mod::getItemMsgIndex( const void* TProcessor, u16 unk2, u32 itemId )
+    {
+        // Increment itemId to be at the start of the table entries for items
+        u32 msgId = itemId + 0x65;
+        return getMsgIndex( TProcessor, unk2, msgId );
+    }
+
+    s32 Mod::getItemIdFromMsgId( const void* TProcessor, u16 unk3, u32 msgId )
+    {
+        void* unk = tp::processor::getResource_groupID( TProcessor, unk3 );
+        if ( !unk )
+        {
+            return -1;
+        }
+
+        gc::bmgres::TextIndexTable* textIndexTable =
+            *reinterpret_cast<gc::bmgres::TextIndexTable**>( reinterpret_cast<u32>( unk ) + 0xC );
+
+        gc::bmgres::MessageEntry* entry = &textIndexTable->entry[0];
+        u32 loopCount = textIndexTable->numEntries;
+
+        // Loop through the item IDs until msgId is found
+        u32 itemId = items::Item::Recovery_Heart;
+        for ( u32 i = 0; i < loopCount; i++ )
+        {
+            u16 entryMessageId = entry->messageId;
+            if ( entryMessageId == ( itemId + 0x64 ) )
+            {
+                if ( entryMessageId == msgId )
+                {
+                    return static_cast<s32>( itemId );
+                }
+                else
+                {
+                    itemId++;
+
+                    // Make sure itemId is valid
+                    if ( itemId > items::Item::NullItem )
+                    {
+                        break;
+                    }
+                }
+            }
+            entry++;
+        }
+
+        // Didn't find the index
+        return -1;
+    }
+
+    u32 Mod::getCustomMsgColor( u8 colorId )
+    {
+        u32 newColorCode;     // RGBA
+        switch ( colorId )
+        {
+            case CUSTOM_MSG_COLOR_DARK_GREEN_HEX:
+            {
+                newColorCode = 0x4BBE4BFF;
+                break;
+            }
+            case CUSTOM_MSG_COLOR_BLUE_HEX:
+            {
+                newColorCode = 0x4B96D7FF;
+                break;
+            }
+            case CUSTOM_MSG_COLOR_SILVER_HEX:
+            {
+                newColorCode = 0xBFBFBFFF;
+                break;
+            }
+            default:
+            {
+                // Return the color white if there is not a match
+                newColorCode = 0xFFFFFFFF;
+                break;
+            }
+        }
+        return newColorCode;
     }
 
 }     // namespace mod

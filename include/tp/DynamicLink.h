@@ -20,5 +20,7 @@ namespace tp::dynamic_link
     extern "C"
     {
         bool do_link( DynamicModuleControl* dmc );
+
+#define SET_LOAD_IMMEDIATE( register, value ) ( 0x38000000 + ( register * 0x200000 ) ) | static_cast<int16_t>( value )
     }
 }     // namespace tp::dynamic_link
