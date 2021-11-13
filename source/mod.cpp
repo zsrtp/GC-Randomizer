@@ -661,7 +661,7 @@ hudConsole->addWatch(page, "throw:", &throwResult, 'x', WatchInterpretation::_u1
                     condition = tp::d_a_alink::dComIfGs_isEventBit( 0xb40 );     // Escaped Burning Tent in Bublin Camp
                     if ( condition != false )
                     {
-                        if ( ( gameInfo.localAreaNodes.unk_0[0xB] & 0x10 ) == 0 )
+                        if (tp::d_kankyo::env_light.currentRoom == 3)
                         {
                             chosenLayer = 0x1;
                         }
